@@ -22,3 +22,6 @@ cmake_install.cmake
 /local_nav/goals/*.png
 /calibration/*.jpg
 /calibration/*.png
+# Session console output is local; structured experiment results are versioned.
+local_nav/goals/*.service.log
+local_nav/goals/*.stdout.log

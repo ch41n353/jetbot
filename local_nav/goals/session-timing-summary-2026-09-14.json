@@ -1,0 +1,17 @@
+{
+  "startup_seconds": 5.499545749044046,
+  "command_to_result_seconds": 3.0214932640083134,
+  "powered_seconds": 1.3797143448609859,
+  "requested_cm": 15,
+  "estimated_final_cm": 16.37692474443452,
+  "outcome": "overshot_goal",
+  "capture_to_first_controller_frame_seconds": 72.61937496205792,
+  "initial_delay_includes_one_time_code_and_preview_preparation": true,
+  "automatic_capture_preview_local_seconds": [
+    0.05259250896051526,
+    0.04952746303752065
+  ],
+  "second_route_executed": false,
+  "second_route_blocked_by": "person in or near corridor",
+  "service_shutdown": true
+}

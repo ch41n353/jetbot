@@ -1,0 +1,26 @@
+{
+  "waypoints_cm": [
+    5,
+    10,
+    15
+  ],
+  "inspected_free_rectangle_cm": [
+    -18,
+    -24,
+    18,
+    30
+  ],
+  "obstacle_rectangles_cm": [
+    [
+      -60,
+      55,
+      60,
+      160
+    ]
+  ],
+  "image_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-120113-4b7ca5-1125399.942906.jpg",
+  "captured_monotonic": 1125399.942905672,
+  "session_id": "08e362ad42c0441baa078e44474e179f",
+  "control_epoch": 0,
+  "clearance_source": "Fresh RGB clear front carpet and user statement unplugged and free to move. Distant bottle/boxes retained conservatively beyond the short route; side/rear starting clearance relies on operator context."
+}

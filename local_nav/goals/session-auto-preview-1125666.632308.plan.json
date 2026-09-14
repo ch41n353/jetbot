@@ -1,0 +1,28 @@
+{
+  "waypoints_cm": [],
+  "inspected_free_rectangle_cm": [
+    -18,
+    -24,
+    18,
+    30
+  ],
+  "obstacle_rectangles_cm": [
+    [
+      -60,
+      35,
+      60,
+      160
+    ]
+  ],
+  "image_path": "/home/jetbot/jetbot/local_nav/goals/session-auto-preview-1125666.632308.jpg",
+  "captured_monotonic": 1125666.632308018,
+  "session_id": "08e362ad42c0441baa078e44474e179f",
+  "control_epoch": 2,
+  "clearance_source": "Candidate carried from the just-observed clear carpet and operator confirmation; must inspect returned image before execution.",
+  "proposed_waypoints_cm": [
+    5,
+    10,
+    15
+  ],
+  "blocked_reason": "Not executed: person entered or approached the proposed corridor; session subsequently shut down."
+}
