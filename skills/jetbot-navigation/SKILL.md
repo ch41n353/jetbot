@@ -4,12 +4,12 @@ description: Operate and iterate the local JetBot camera/IMU navigation tools fo
 metadata:
   baseline-date: "2026-09-13"
   timezone: America/Los_Angeles
-  revision: "1"
+  revision: "2"
 ---
 
 # JetBot navigation
 
-Baseline **2026-09-13**, revision **1**, America/Los_Angeles.
+Baseline **2026-09-13**, current revision **2**, America/Los_Angeles.
 Workspace: `/home/jetbot/jetbot`. Use `/usr/bin/python3` for the local tools.
 
 Read [the dated algorithm and evidence](references/baseline-2026-09-13.md)
@@ -17,6 +17,9 @@ before operating or changing these controllers. Read [operating commands](refere
 when running the robot. `baseline-manifest.json` fingerprints the implementation
 and calibration files at capture time; inspect changed files rather than assuming
 the dated instructions describe a newer implementation.
+
+Read [revision 2](references/revision-2026-09-13-r2.md) for the new straight
+route executor and its validation limits. The original baseline is preserved.
 
 ## Scope and control division
 
@@ -26,7 +29,8 @@ the dated instructions describe a newer implementation.
 - Local processes acquire camera/IMU data, estimate motion, issue expiring motor
   leases, and stop on health, timing, tracking, tilt, or motion limits.
 - There is no implemented global map, object tracker, automatic obstacle
-  segmentation, swept-footprint collision checker, or automatic recovery planner.
+  segmentation or automatic recovery planner. Revision 2 adds a conservative
+  straight swept-rectangle checker for explicitly inspected static maps.
   Do not represent a sketched route as machine-verified free space.
 
 ## Before movement
@@ -68,6 +72,10 @@ validated. A preview explains a plan; it is not a collision sensor.
 
 Use the shortest suitable bounded action:
 
+- **Straight waypoint batch:** `route_executor.py`, total 1–15 cm, no model calls
+  or intermediate waypoint stops. Requires a fresh preview and inspected static
+  map including side/rear clearance; see revision 2. Not yet tested powered.
+
 - **Straight travel:** `smooth_drive_probe.py`, 1–15 cm requested per invocation,
   at most two seconds powered. Hold commands between valid sensor updates.
   Check the frame and remaining full-chassis clearance before the next segment.
@@ -89,7 +97,8 @@ measurement. The user previously reported concern about motor damage.
 ## Stop and report
 
 Shut down the service on stop/hold or at the end of a motion batch. A standalone
-`stop` can be overwritten by a controller that is still running; terminate that
+`stop` cancels revision-2 route tokens. For older scripts it
+can be overwritten by a controller that is still running; terminate that
 controller and/or use `shutdown` to prevent renewal. Ctrl+C in the service
 terminal invokes its stop/cleanup path. A hardware power cut remains the fallback
 if software cannot communicate; do not claim a failed stop request succeeded.

@@ -110,7 +110,7 @@ class FloorTracker:
         return rotation,translation,dict(matches=int(select.sum()),residual_cm=residual,scale=scale,yaw_variance=yaw_variance)
 
 
-def frame(timeline=None):
+def frame(timeline=None, settled=True):
     snap=call('observation',since=timeline.last if timeline and timeline.last else time.monotonic()-.3) if timeline else call('snapshot')
     image=cv2.imdecode(np.frombuffer(base64.b64decode(snap['jpeg_base64']),dtype=np.uint8),cv2.IMREAD_COLOR) if timeline else cv2.imread(snap['path'])
     if image is None or image.shape[:2]!=(480,640):raise RuntimeError('Invalid camera frame')
@@ -120,7 +120,7 @@ def frame(timeline=None):
             with open(stem+'.json','w') as f:json.dump({k:v for k,v in snap.items() if k!='jpeg_base64'},f)
             cv2.imwrite(stem+'.jpg',image)
         timeline.feed(snap['imu_samples'])
-        return image,snap['time'],timeline.settled_at(snap['time'])
+        return image,snap['time'],(timeline.settled_at(snap['time']) if settled else timeline.at(snap['time']))
     return image,snap['time']
 
 

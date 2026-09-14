@@ -13,7 +13,7 @@ import socket
 import sys
 import time
 
-from core import allowed
+from core import allowed, ControlGeneration
 from hardware import BNO055, ROOT, robot
 
 
@@ -129,6 +129,7 @@ def main():
     camera, imu = {}, {}
     imu_history = deque(maxlen=512)
     motor_status = {'output': [0,0]}
+    generation = ControlGeneration()
     try:
         motor.start()
         child.close()
@@ -196,6 +197,10 @@ def main():
                                 healthy=healthy, motion_enabled=args.enable_motion,
                                 timestamp_basis='host acquisition completion; hardware offset uncalibrated')
                     elif action in ('stop', 'motors', 'motors_hold'):
+                        if action == 'stop':
+                            generation.invalidate()
+                        else:
+                            generation.validate(request)
                         if action != 'motors_hold':
                             parent.send({})  # Original pulse behavior.
                         if action in ('motors', 'motors_hold'):
@@ -207,12 +212,15 @@ def main():
                             parent.send(command)
                         response = {'accepted': True}
                     elif action == 'shutdown':
+                        generation.invalidate()
                         parent.send({})
                         stop.set()
                         response = {'accepted':True}
                     else: raise ValueError('Unknown action')
+                    response.update(generation.token())
                     conn.sendall(json.dumps(response).encode()+b'\n')
                 except (ValueError, KeyError, TypeError, OSError) as exc:
+                    generation.invalidate()
                     parent.send({})
                     try: conn.sendall(json.dumps({'error':str(exc)}).encode()+b'\n')
                     except OSError: pass
