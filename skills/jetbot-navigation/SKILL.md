@@ -4,12 +4,12 @@ description: Operate and iterate the local JetBot camera/IMU navigation tools fo
 metadata:
   baseline-date: "2026-09-13"
   timezone: America/Los_Angeles
-  revision: "3"
+  revision: "4"
 ---
 
 # JetBot navigation
 
-Baseline **2026-09-13**, current revision **3**, America/Los_Angeles.
+Baseline **2026-09-13**, current revision **4**, America/Los_Angeles.
 Workspace: `/home/jetbot/jetbot`. Use `/usr/bin/python3` for the local tools.
 
 Read [the dated algorithm and evidence](references/baseline-2026-09-13.md)
@@ -20,7 +20,9 @@ the dated instructions describe a newer implementation.
 
 Read [revision 2](references/revision-2026-09-13-r2.md) for the new straight
 route executor and its validation limits. The original baseline is preserved. Read [revision 3](references/revision-2026-09-14-r3.md)
-for opt-in predictive braking and post-stop arrival measurement.
+for opt-in predictive braking and post-stop arrival measurement. Read
+[revision 4](references/revision-2026-09-14-r4.md) for offline simulation tools,
+feature-budget experiments and the slow-camera settling fix.
 
 ## Scope and control division
 

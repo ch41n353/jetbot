@@ -19,7 +19,7 @@ def load_json(path):
         return json.load(source)
 
 
-def execute(plan, route, log, predictive_braking=False):
+def execute(plan, route, log, predictive_braking=False, feature_budget=250):
     import cv2
     import numpy as np
     from point_controller import ROOT, FloorTracker, call, frame
@@ -43,7 +43,7 @@ def execute(plan, route, log, predictive_braking=False):
         if not math.isfinite(age) or not 0 <= age <= 120:
             raise RuntimeError('Plan image expired; inspect and preview a fresh route')
         profile = load_json(os.path.join(ROOT, 'calibration/floor_geometry.json'))
-        tracker = FloorTracker(profile, load_json(profile['intrinsics_path']))
+        tracker = FloorTracker(profile, load_json(profile['intrinsics_path']), max_features=feature_budget)
         timeline = AttitudeTimeline(load_json(os.path.join(ROOT, 'calibration/imu_mount.json')))
         if predictive_braking:
             timeline.record_directory = log + '.observations'
@@ -115,6 +115,8 @@ def execute(plan, route, log, predictive_braking=False):
                             result.update(assessment)
                             result['passed_waypoints_cm'] = [v for v in route.waypoints if z >= v]
                             break
+                    if result['outcome'] == 'final_position_unverified':
+                        result['reason'] = 'No stable post-stop window within one second'
                 break
             if started is not None:
                 if elapsed >= 2:
@@ -147,6 +149,8 @@ def main():
     parser.add_argument('plan')
     parser.add_argument('--execute', action='store_true')
     parser.add_argument('--log')
+    parser.add_argument('--feature-budget', type=int, choices=(80, 125, 250), default=250,
+                        help='Experimental lower-cost tracking; default remains 250')
     parser.add_argument('--predictive-braking', action='store_true',
                         help='Experimental early stop and post-stop arrival measurement')
     args = parser.parse_args()
@@ -156,7 +160,7 @@ def main():
         plan = json.load(source)
     route = StraightRoute(plan)
     if args.execute:
-        result = execute(plan, route, args.log, args.predictive_braking)
+        result = execute(plan, route, args.log, args.predictive_braking, args.feature_budget)
         print(json.dumps({k: v for k, v in result.items() if k not in ('samples', 'settling_samples')}, indent=2))
         return 0 if result['outcome'] in ('distance_threshold_reached', 'goal_reached') else 1
     print(json.dumps(dict(outcome='static_map_check_passed', swept_rectangle_cm=route.corridor,

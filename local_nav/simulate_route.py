@@ -21,7 +21,8 @@ from route_geometry import StraightRoute
 class Plant:
     def __init__(self, speed=12., coast=.08, camera_hz=12., latency=.025,
                  compute=.045, stall=False, seed=1, noise=0.,
-                 cancel_after=None, frame_fault_after=None, blocked_frame_after=None):
+                 cancel_after=None, frame_fault_after=None, blocked_frame_after=None,
+                 height_scale=1., imu_yaw_bias_dps=0., low_texture=False, exposure_jump=0.):
         self.time = 100.
         self.x = self.z = self.yaw = self.velocity = self.yaw_rate = 0.
         self.left = self.right = 0.
@@ -36,6 +37,8 @@ class Plant:
         self.stop_position = None
         self.watchdog_stops = 0
         self.sequence = 0
+        self.imu_yaw_bias_dps = imu_yaw_bias_dps
+        self.exposure_jump = exposure_jump
         self.token = dict(session_id='simulation', control_epoch=0)
         self.external_cancel_at = None
         self.cancel_after = cancel_after
@@ -55,12 +58,14 @@ class Plant:
         denominator = rays @ self.down
         self.floor_valid = denominator > .08
         safe_denominator = np.maximum(denominator, .08)
-        self.floor_x = (rays[:, 0] * p['camera_height_cm'] / safe_denominator).reshape(480, 640)
-        self.floor_z = ((rays @ forward) * p['camera_height_cm'] / safe_denominator).reshape(480, 640)
+        self.floor_x = (rays[:, 0] * p['camera_height_cm'] * height_scale / safe_denominator).reshape(480, 640)
+        self.floor_z = ((rays @ forward) * p['camera_height_cm'] * height_scale / safe_denominator).reshape(480, 640)
         # Reproducible random carpet with useful structure at several scales.
         texture_rng = np.random.RandomState(seed)
         tex = texture_rng.randint(45, 210, (1536, 1536)).astype(np.uint8)
         self.texture = cv2.GaussianBlur(tex, (3, 3), .55)
+        if low_texture:
+            self.texture.fill(128)
 
     def advance(self, duration):
         destination = self.time + duration
@@ -91,6 +96,8 @@ class Plant:
                          (384 + 8 * z).astype(np.float32), cv2.INTER_LINEAR,
                          borderMode=cv2.BORDER_REFLECT_101)
         gray.reshape(-1)[~self.floor_valid] = 128
+        if self.exposure_jump:
+            gray = np.clip(gray.astype(float) + self.exposure_jump * (1 if self.sequence % 2 else -1), 0, 255).astype(np.uint8)
         if self.noise:
             gray = np.clip(gray.astype(float) + self.rng.normal(0, self.noise, gray.shape), 0, 255).astype(np.uint8)
         return cv2.cvtColor(gray, cv2.COLOR_GRAY2BGR)
@@ -106,7 +113,8 @@ class Plant:
         self.last_capture = self.time
         ts = self.time
         image = self.render()
-        attitude = dict(time=ts, down_camera=self.down, yaw=self.yaw,
+        attitude = dict(time=ts, down_camera=self.down,
+                        yaw=self.yaw + math.radians(self.imu_yaw_bias_dps) * (ts - 100.),
                         variance=math.radians(.25) ** 2, extrapolation_ms=0.)
         self.advance(self.latency)
         self.sequence += 1
@@ -136,11 +144,11 @@ class Plant:
         raise RuntimeError('Simulation prohibits socket action: ' + action)
 
 
-def run_case(parameters, predictive=True):
+def run_case(parameters, predictive=True, feature_budget=250, target_cm=5.):
     plant = Plant(**parameters)
-    target = 5.
+    target = target_cm
     profile = load_json(os.path.join(ROOT, 'calibration/floor_geometry.json'))
-    tracker = FloorTracker(profile, load_json(profile['intrinsics_path']))
+    tracker = FloorTracker(profile, load_json(profile['intrinsics_path']), max_features=feature_budget)
     original_motion = tracker.motion
 
     def motion(*args):
@@ -156,7 +164,7 @@ def run_case(parameters, predictive=True):
     with tempfile.TemporaryDirectory(prefix='jetbot-simulation-') as directory:
         path = os.path.join(directory, 'anchor.png')
         cv2.imwrite(path, plant.render())
-        plan = dict(waypoints_cm=[1., 3., target], inspected_free_rectangle_cm=[-20, -30, 20, 30],
+        plan = dict(waypoints_cm=[v for v in (1., 3.) if v < target] + [target], inspected_free_rectangle_cm=[-20, -30, 20, 30],
                     obstacle_rectangles_cm=[], captured_monotonic=plant.time, image_path=path, **plant.token)
         with patch('point_controller.call', side_effect=plant.call), \
                 patch('point_controller.frame', side_effect=plant.frame), \
@@ -165,11 +173,11 @@ def run_case(parameters, predictive=True):
                 patch('state_estimator.AttitudeTimeline', Timeline), \
                 patch('route_executor.time.monotonic', side_effect=lambda: plant.time), \
                 patch('route_executor.time.sleep', side_effect=plant.advance):
-            result = execute(plan, StraightRoute(plan), os.path.join(directory, 'result.json'), predictive)
+            result = execute(plan, StraightRoute(plan), os.path.join(directory, 'result.json'), predictive, feature_budget)
         # Independently integrate remaining coast to compare true final positions.
         plant.advance(1.)
     first_stop = next((i for i, c in enumerate(plant.commands) if c['action'] == 'stop'), len(plant.commands))
-    return dict(parameters=parameters, predictive=predictive, result=result,
+    return dict(parameters=parameters, predictive=predictive, feature_budget=feature_budget, target_cm=target, result=result,
                 true_final_position_cm=[plant.x, plant.z], true_error_cm=plant.z-target,
                 true_stop_position_cm=plant.stop_position, max_power=plant.max_power,
                 renewed_after_stop=any(c['action'] == 'motors_hold' for c in plant.commands[first_stop:]),

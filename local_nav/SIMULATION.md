@@ -50,3 +50,21 @@ production still uses 250 features unless explicitly changed after validation.
 for the main comparison. Preserve completed output and failed trials. JSON outputs
 are replaced atomically as paired cases complete; `complete: false` is partial
 progress, not a finished campaign.
+
+## Stress scenarios and faster tracking option
+
+```bash
+/usr/bin/python3 local_nav/simulation_stress.py \
+  --output local_nav/goals/simulation-stress-after-2026-09-14.json
+```
+
+This adds 10/15 cm goals, slow processing, camera freezes, read noise, exposure
+steps, wrong camera height, IMU drift and explicit fault cases. Each runs with
+250 and 125 features. `run_case(..., feature_budget=125, target_cm=10)` is also
+available from Python. The simulated compute delay is kept equal between feature
+budgets to isolate tracking quality; real timing is measured separately.
+
+`route_executor.py --feature-budget 125` exposes the reduced budget for later
+supervised physical validation. The default remains 250. Do not treat a simulated
+clear rectangle or generated carpet image as authorization or evidence for a
+physical route.

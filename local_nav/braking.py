@@ -25,7 +25,7 @@ class SettlingCheck:
         if self.samples and timestamp <= self.samples[-1][0]:
             raise RuntimeError('Settling requires distinct increasing frames')
         self.samples.append((timestamp, x, z))
-        self.samples = [s for s in self.samples if timestamp - s[0] <= .3]
+        self.samples = [s for s in self.samples if timestamp - s[0] <= .4]
         if len(self.samples) < 3 or timestamp - self.samples[0][0] < .18:
             return None
         xs, zs = [s[1] for s in self.samples], [s[2] for s in self.samples]

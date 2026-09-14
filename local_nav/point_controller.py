@@ -36,7 +36,10 @@ def call(action, **fields):
 
 
 class FloorTracker:
-    def __init__(self,profile,intrinsics):
+    def __init__(self,profile,intrinsics,max_features=250):
+        if type(max_features) is not int or max_features not in (80, 125, 250):
+            raise ValueError("Feature budget must be 80, 125 or 250")
+        self.max_features=max_features
         self.p,self.i=profile,intrinsics
 
     def ground(self,points,attitude=None):
@@ -66,7 +69,7 @@ class FloorTracker:
         gray1=np.clip(gray1.astype(np.float32)-gray1[280:460,160:480].mean()+128,0,255).astype(np.uint8)
         mask=np.zeros_like(gray0)
         mask[280:460,160:480]=255
-        p0=cv2.goodFeaturesToTrack(gray0,250,.005,7,mask=mask)
+        p0=cv2.goodFeaturesToTrack(gray0,self.max_features,.005,7,mask=mask)
         if p0 is None or len(p0)<25:raise RuntimeError('Insufficient carpet texture')
         guess=None
         flags=0

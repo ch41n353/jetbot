@@ -30,3 +30,15 @@ class SimulatedRouteTests(unittest.TestCase):
         self.assertEqual(r['result']['outcome'], 'stopped')
         self.assertGreaterEqual(r['watchdog_stops'], 1)
         self.assertFalse(r['renewed_after_stop'])
+
+    def test_low_texture_prevents_any_power_command(self):
+        r = run_case(dict(low_texture=True), feature_budget=125)
+        self.assertEqual(r['result']['outcome'], 'stopped')
+        self.assertEqual(r['max_power'], 0)
+        self.assertIsNone(r['result']['powered_seconds'])
+
+    def test_lower_feature_budget_reaches_rendered_goal(self):
+        r = run_case(dict(seed=404), feature_budget=125, target_cm=10.)
+        self.assertEqual(r['result']['outcome'], 'goal_reached', r['result'])
+        self.assertLess(abs(r['true_error_cm']), 1)
+        self.assertFalse(r['renewed_after_stop'])

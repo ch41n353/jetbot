@@ -1,0 +1,22 @@
+{
+  "completed_utc": "2026-09-14T07:37:33.061637Z",
+  "hardware_access": "none",
+  "tests_passed": 62,
+  "paired_campaign_source_commit": "53d12ee",
+  "sha256": {
+    "local_nav/braking.py": "8b3b97a38dd35c6e18acc1e86debba79b39b4b78ec7dbfd72a034ac10ead43fe",
+    "local_nav/point_controller.py": "868c7a2b6c87f17bd13851c2ee181bcba31471e67ec8df8e7641ad7e6742707b",
+    "local_nav/route_executor.py": "012a1ac94443523355f1642f130db10263cd86bb5025acbe0c0e729deb8c320b",
+    "local_nav/simulate_route.py": "b647ad85c3d435e0af58d036891378a526aead6b4e85a445eebef3228a879cf9",
+    "local_nav/simulation_stress.py": "3e5ec761785fae5b6dc373bb019fbff3dc704b12e8209c7f140b2435a728b046",
+    "local_nav/evaluate_braking_candidate.py": "a3949ac3bb8f2ae00ac944ebd63026f50209bdb1028360e13c5f42af482501ef",
+    "local_nav/benchmark_tracker.py": "06142d16ec5ddc4290a1f766faf09d390efe21e686e428f104597091a2269aa3",
+    "local_nav/evaluate_feature_budget.py": "aac01277f4a3f65a503ef6617f5c79191b06cc04b175dab14486c10aa4279ef9",
+    "local_nav/goals/route-simulation-2026-09-14.json": "1db704b6fbdef6db278d3cfba9cde5af26cb495fb82c4fb4980266c0a3c31e86",
+    "local_nav/goals/braking-candidate-holdout-2026-09-14.json": "47dad40bed5b9a9754a03a5a8896c7c9ece8360d59fc8e89024737a826df5c91",
+    "local_nav/goals/feature-budget-benchmark-2026-09-14.json": "c5995b0c6e38d5887f2f4c847f74f937984c4a616cd4623493dff1ea118821d6",
+    "local_nav/goals/simulation-stress-2026-09-14.json": "9e374adeef5c9364b92dde7f41a36667ac5faa20b972e2c23d72dba097413bbe",
+    "local_nav/goals/simulation-stress-after-2026-09-14.json": "9ea59397ef833a6f08b478caa4f7124547ddd7deeda8c85513326a33354117e7",
+    "reports/2026-09-14-morning.md": "6c1997ac9576e2ae823a585574d8e85daf0c1b0ac292221e9b3b83aa95631d42"
+  }
+}

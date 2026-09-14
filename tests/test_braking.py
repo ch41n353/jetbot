@@ -100,3 +100,13 @@ class BrakingExecutorTests(unittest.TestCase):
         self.assertEqual(result['outcome'], 'stopped')
         self.assertIn('tracking loss', result['reason'])
         self.assertNotIn('final_position_cm', result)
+
+
+class SlowSettlingTests(unittest.TestCase):
+    def test_supported_slow_camera_can_confirm_stationary_position(self):
+        check = SettlingCheck(5)
+        self.assertIsNone(check.update(1., 0, 5))
+        self.assertIsNone(check.update(1.17, 0, 5))
+        result = check.update(1.34, 0, 5)
+        self.assertEqual(result['outcome'], 'goal_reached')
+        self.assertGreaterEqual(result['settled_window_seconds'], .18)

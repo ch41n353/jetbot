@@ -80,3 +80,19 @@ tracking failure and no motor renewal after braking.
 First live predictive-braking trial (2026-09-14): 5 cm requested, brake at
 4.218 cm, settled at 5.340 cm after a 0.264-second stable window; powered
 interval 0.935 seconds. One trial only; no measured speedup claim.
+
+## Offline-validated options — 2026-09-14, revision 4
+
+`--feature-budget 125` reduces corner tracking work; the default remains 250.
+80 is an additional experimental option. Across 95 recorded frame pairs, both
+lower budgets retained valid tracking; this does not establish robustness in new
+scenes. See `SIMULATION.md` and the morning report for timing and error comparisons.
+
+The settling history retains 400 ms so three frames at supported slow frame rates
+can fit in the window. It still requires at least 180 ms of stability, at least
+three distinct post-stop frames and no more than 0.10 cm coordinate variation.
+The one-second observation deadline is unchanged; expiry now reports a reason.
+
+All arrival errors remain camera/IMU estimates. Simulation demonstrated that an
+incorrect camera height can produce an estimated arrival despite true position
+error exceeding 1 cm. Correct calibration remains necessary.
