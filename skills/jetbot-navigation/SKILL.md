@@ -4,12 +4,12 @@ description: Operate and iterate the local JetBot camera/IMU navigation tools fo
 metadata:
   baseline-date: "2026-09-13"
   timezone: America/Los_Angeles
-  revision: "2"
+  revision: "3"
 ---
 
 # JetBot navigation
 
-Baseline **2026-09-13**, current revision **2**, America/Los_Angeles.
+Baseline **2026-09-13**, current revision **3**, America/Los_Angeles.
 Workspace: `/home/jetbot/jetbot`. Use `/usr/bin/python3` for the local tools.
 
 Read [the dated algorithm and evidence](references/baseline-2026-09-13.md)
@@ -19,7 +19,8 @@ and calibration files at capture time; inspect changed files rather than assumin
 the dated instructions describe a newer implementation.
 
 Read [revision 2](references/revision-2026-09-13-r2.md) for the new straight
-route executor and its validation limits. The original baseline is preserved.
+route executor and its validation limits. The original baseline is preserved. Read [revision 3](references/revision-2026-09-14-r3.md)
+for opt-in predictive braking and post-stop arrival measurement.
 
 ## Scope and control division
 
@@ -74,7 +75,8 @@ Use the shortest suitable bounded action:
 
 - **Straight waypoint batch:** `route_executor.py`, total 1–15 cm, no model calls
   or intermediate waypoint stops. Requires a fresh preview and inspected static
-  map including side/rear clearance; see revision 2. Not yet tested powered.
+  map including side/rear clearance; see revisions 2 and 3. Revision 2 has one successful powered 5 cm trial;
+  predictive braking has separate validation requirements.
 
 - **Straight travel:** `smooth_drive_probe.py`, 1–15 cm requested per invocation,
   at most two seconds powered. Hold commands between valid sensor updates.

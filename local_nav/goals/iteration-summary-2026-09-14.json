@@ -1,0 +1,22 @@
+{
+  "requested_turn_degrees": 180,
+  "accumulated_imu_degrees": 177.3398795410024,
+  "controller_seconds": 21.074589651077986,
+  "steps": 6,
+  "outcomes": [
+    "turn_reached_imu_estimate",
+    "turn_reached_imu_estimate",
+    "turn_reached_imu_estimate",
+    "turn_reached_imu_estimate",
+    "turn_reached_imu_estimate",
+    "turn_reached_imu_estimate"
+  ],
+  "translation_replay_cm": [
+    2.4529572859,
+    -12.4401910652
+  ],
+  "visual_gyro_yaw_degrees": 175.6810504,
+  "pivot_estimate_cm": 6.70748719175,
+  "pivot_status": "experimental estimate from 74 frame pairs; not installed as measured calibration",
+  "braking_result": "braking-live-2026-09-14-01.result.json"
+}

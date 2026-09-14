@@ -1,0 +1,110 @@
+{
+  "target_degrees": 30.0,
+  "power": 0.14,
+  "samples": [
+    {
+      "time": 1082686.75746766,
+      "angle_degrees": -0.0002715830714747476,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1082687.026303508,
+      "angle_degrees": 2.520037844400821,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1082687.324236292,
+      "angle_degrees": 4.770963970061857,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1082687.590879835,
+      "angle_degrees": 6.819726194035448,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1082687.861561949,
+      "angle_degrees": 9.466771910197192,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1082688.161132924,
+      "angle_degrees": 11.865722984222389,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1082688.425894996,
+      "angle_degrees": 14.331186207867658,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1082688.692982085,
+      "angle_degrees": 16.662911049942625,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1082688.991150864,
+      "angle_degrees": 19.704945635526304,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1082689.257579148,
+      "angle_degrees": 21.89798171681971,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1082689.558773316,
+      "angle_degrees": 23.83704282806425,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1082689.825461759,
+      "angle_degrees": 26.289425184676364,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1082690.09164025,
+      "angle_degrees": 28.648523102889836,
+      "command": null
+    }
+  ],
+  "mode": "execute",
+  "outcome": "turn_reached_imu_estimate",
+  "elapsed": 3.446528530912474
+}

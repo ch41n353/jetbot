@@ -61,3 +61,22 @@ intermediate stop, obstacle/unknown-space rejection, stalled motion and token
 cancellation. Live stationary preflight: estimated drift 0.0274 cm; no powered
 trial of this executor yet. Turn batches await a measured axle offset and a
 separately tested turning envelope/controller.
+
+## Experimental predictive braking — 2026-09-14
+
+Add `--predictive-braking` to stop based on measured speed before crossing the
+final waypoint and continue observing after the stop. No extra motor pulses are
+issued. Final estimated error within 1 cm after a stable 180 ms window reports
+`goal_reached`; otherwise the result distinguishes short, overshoot or unverified
+stops. Inspect `brake_position_cm`, `final_position_cm`, `final_error_cm` and
+`settling_samples`. The initial coast estimate is experimental. This option does
+not change the checked corridor or allow closer obstacle approaches.
+
+Without the flag, revision-2 behavior remains available. That mode completed a
+live 5 cm request at a 5.776 cm threshold crossing in 0.659 seconds; final braking
+travel was not measured. Current offline suite: 55 tests, including post-stop
+tracking failure and no motor renewal after braking.
+
+First live predictive-braking trial (2026-09-14): 5 cm requested, brake at
+4.218 cm, settled at 5.340 cm after a 0.264-second stable window; powered
+interval 0.935 seconds. One trial only; no measured speedup claim.

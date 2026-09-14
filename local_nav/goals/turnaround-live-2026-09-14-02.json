@@ -1,0 +1,94 @@
+{
+  "target_degrees": 30.0,
+  "power": 0.14,
+  "samples": [
+    {
+      "time": 1082657.698711648,
+      "angle_degrees": -0.0038632142920583317,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1082657.965632159,
+      "angle_degrees": 2.388027179020624,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1082658.264772713,
+      "angle_degrees": 4.187844961876335,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1082658.531628016,
+      "angle_degrees": 6.677726938631491,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1082658.798369098,
+      "angle_degrees": 9.417114413855762,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1082659.064307669,
+      "angle_degrees": 13.70390960679558,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1082659.364353443,
+      "angle_degrees": 16.93827750545494,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1082659.63065103,
+      "angle_degrees": 19.79086715511545,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1082659.897038774,
+      "angle_degrees": 23.204361500560204,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1082660.197514137,
+      "angle_degrees": 26.318757806369288,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1082660.463844224,
+      "angle_degrees": 30.93859000520165,
+      "command": null
+    }
+  ],
+  "mode": "execute",
+  "outcome": "turn_reached_imu_estimate",
+  "elapsed": 2.8511582990176976
+}
