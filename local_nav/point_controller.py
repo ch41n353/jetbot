@@ -62,8 +62,8 @@ class FloorTracker:
         gray1=cv2.cvtColor(after,cv2.COLOR_BGR2GRAY)
         # Remove global exposure offsets using the tracked floor region.
         # Geometric inlier and forward/backward checks still validate motion.
-        gray0=np.clip(gray0.astype(float)-gray0[280:460,160:480].mean()+128,0,255).astype(np.uint8)
-        gray1=np.clip(gray1.astype(float)-gray1[280:460,160:480].mean()+128,0,255).astype(np.uint8)
+        gray0=np.clip(gray0.astype(np.float32)-gray0[280:460,160:480].mean()+128,0,255).astype(np.uint8)
+        gray1=np.clip(gray1.astype(np.float32)-gray1[280:460,160:480].mean()+128,0,255).astype(np.uint8)
         mask=np.zeros_like(gray0)
         mask[280:460,160:480]=255
         p0=cv2.goodFeaturesToTrack(gray0,250,.005,7,mask=mask)

@@ -1,0 +1,53 @@
+{
+  "predictive_False": {
+    "n": 60,
+    "median_abs_cm": 2.085408882308538,
+    "p95_abs_cm": 3.2465817669974415,
+    "max_abs_cm": 3.4270068824932345,
+    "within_1cm": 2,
+    "outcomes": {
+      "distance_threshold_reached": 60
+    },
+    "false_arrival": 0,
+    "renewed_after_stop": 0
+  },
+  "predictive_True": {
+    "n": 60,
+    "median_abs_cm": 0.6851908025422508,
+    "p95_abs_cm": 1.618372575486119,
+    "max_abs_cm": 1.9939961964022794,
+    "within_1cm": 45,
+    "outcomes": {
+      "goal_reached": 45,
+      "overshot_goal": 15
+    },
+    "false_arrival": 0,
+    "renewed_after_stop": 0
+  },
+  "holdout_original": {
+    "n": 16,
+    "median_abs_cm": 0.7575585692957296,
+    "p95_abs_cm": 1.4065324860802595,
+    "max_abs_cm": 1.769992330842011,
+    "within_1cm": 9,
+    "outcomes": {
+      "overshot_goal": 7,
+      "goal_reached": 9
+    },
+    "false_arrival": 0,
+    "renewed_after_stop": 0
+  },
+  "holdout_candidate": {
+    "n": 16,
+    "median_abs_cm": 0.2959061141402213,
+    "p95_abs_cm": 1.1423788107808366,
+    "max_abs_cm": 1.1553356714261254,
+    "within_1cm": 14,
+    "outcomes": {
+      "overshot_goal": 2,
+      "goal_reached": 14
+    },
+    "false_arrival": 0,
+    "renewed_after_stop": 0
+  }
+}

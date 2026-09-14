@@ -1,0 +1,45 @@
+{
+  "source_sha256": {
+    "local_nav/simulate_route.py": "9bf03d882fecdc4d5e7039b9adc0ff614974a6aaa755b417d7069737a505824b",
+    "local_nav/route_executor.py": "d8c237a8f1b29bf07ddfec89254224850e203b31adecaea92f4f49384bcebebb",
+    "local_nav/point_controller.py": "c8baa445c763ba8cdad25e5acd76f997d35a5a52da1b7b0853434bf254006df9",
+    "local_nav/state_estimator.py": "2e38dad5ba04bfdadc5114ab62def4bf2b619fb13499161713f9a2e8a101cd47",
+    "local_nav/braking.py": "efe3ee127afb054d2b1967d8710651830b30d9fdb0ced75e7710d1ea8f1a8f47",
+    "local_nav/route_geometry.py": "16a0484b06c19f802607e87cf25e9ffd4badae361fbf3144ab297080e0800b46",
+    "calibration/floor_geometry.json": "4c424cbebd79da73716f131047beee881969f702da3c3f7703caafb0125d32cf",
+    "calibration/imu_mount.json": "ba9e850cf3bd21d8dcd8d438849bc7238b42e7725a8fb824ea55e97f0d1a0589",
+    "calibration/fisheye_calibration.json": "0d216393e689925997f8c27279313f70a565c55a889d52663ed0bc629fec4bbb"
+  },
+  "hardware_access": "none; simulation mocks socket, camera, IMU attitude and clock",
+  "simulation_seed": 20260914,
+  "parameter_distributions": {
+    "speed_cm_s": [
+      8,
+      16
+    ],
+    "coast_time_constant_s": [
+      0.035,
+      0.12
+    ],
+    "camera_hz": [
+      10,
+      15
+    ],
+    "acquisition_latency_s": [
+      0.005,
+      0.035
+    ],
+    "compute_delay_s": 0.045,
+    "pixel_noise_sigma": [
+      0,
+      2
+    ]
+  },
+  "limitations": [
+    "Flat carpet only",
+    "Perfect synthetic IMU yaw and fixed tilt",
+    "No wheel slip, charger cable or contact model",
+    "No new-obstacle detection",
+    "Parameter ranges are hypotheses, not independently measured calibration"
+  ]
+}
