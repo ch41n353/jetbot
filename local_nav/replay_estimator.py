@@ -12,7 +12,11 @@ timeline=AttitudeTimeline(json.load(open(os.path.join(ROOT,'calibration','imu_mo
 tracker=FloorTracker(profile,i)
 previous=None
 for path in sorted(glob.glob(os.path.join(a.directory,'*.json'))):
-    obs=json.load(open(path));timeline.feed(obs['imu_samples'])
+    obs=json.load(open(path))
+    if timeline.last is None and obs.get('attitude_initialization')=='stationary_5deg':
+        timeline.initialize_stationary(obs['imu_samples'],obs['time'])
+    else:
+        timeline.feed(obs['imu_samples'])
     att=timeline.settled_at(obs['time']);image=cv2.imread(path[:-5]+'.jpg')
     if previous:
         rotation,translation,quality=tracker.motion(previous[0],image,previous[1],att)

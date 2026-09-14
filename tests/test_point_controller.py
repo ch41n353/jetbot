@@ -1,11 +1,23 @@
-import json,os,sys,unittest
+import json,os,sys,unittest,tempfile
 import cv2
 import numpy as np
 ROOT=os.path.dirname(os.path.dirname(__file__))
 sys.path.insert(0,os.path.join(ROOT,'local_nav'))
 from point_controller import FloorTracker
 from unittest.mock import patch
-from point_controller import settled_frame
+from point_controller import settled_frame, record_observation
+
+class ObservationTests(unittest.TestCase):
+    def test_duplicate_frame_preserves_startup_and_imu_history(self):
+        image=np.zeros((480,640,3),dtype=np.uint8)
+        first=dict(time=1.,imu_samples=[{'time':.8},{'time':.9}],attitude_initialization='stationary_5deg')
+        second=dict(time=1.,imu_samples=[{'time':.9},{'time':1.}])
+        with tempfile.TemporaryDirectory() as directory:
+            record_observation(directory,first,image)
+            record_observation(directory,second,image)
+            with open(os.path.join(directory,'1.000000.json')) as source:record=json.load(source)
+        self.assertEqual(record['attitude_initialization'],'stationary_5deg')
+        self.assertEqual([s['time'] for s in record['imu_samples']],[.8,.9,1.])
 
 class SettledFrameTests(unittest.TestCase):
     def test_waits_for_quiet_observation(self):

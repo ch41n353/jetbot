@@ -1,0 +1,37 @@
+<div id="spatial-route-preview">
+<strong>Local route · drives and turns</strong>
+<svg data-camera viewBox="0 0 640 480" style="width:100%;height:auto" role="img" aria-label="Fresh camera image with the visible part of the proposed full-chassis route envelope."></svg>
+<svg data-map style="width:100%;height:320px" role="img" aria-label="Top-down route including retained side and rear obstacles, inspected space and target."></svg>
+<div class="text-small">Solid: next action · Dashed: remaining predicted route · Shaded: chassis, clearance and uncertainty · Red: retained obstacles</div>
+<script type="application/json" data-route>SPATIAL_DATA</script>
+<script>
+(() => {
+  const root=document.getElementById('spatial-route-preview');
+  const d=JSON.parse(root.querySelector('[data-route]').textContent);
+  const ns='http://www.w3.org/2000/svg';
+  function add(parent,tag,attrs,text){const e=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs))e.setAttribute(k,v);if(text)e.textContent=text;parent.appendChild(e);return e;}
+  const camera=root.querySelector('[data-camera]');
+  add(camera,'image',{href:d.image,width:640,height:480});
+  d.projected.forEach((points,i)=>add(camera,'polygon',{points:points.map(p=>p.join(',')).join(' '),fill:'var(--viz-series-1)','fill-opacity':i===0?.22:.06,stroke:'var(--viz-series-1)','stroke-width':i===0?3:1,'stroke-dasharray':i===0?'none':'6 4'}));
+  const map=root.querySelector('[data-map]');
+  function draw(){
+    map.replaceChildren();const w=map.getBoundingClientRect().width,h=320;
+    map.setAttribute('viewBox',`0 0 ${w} ${h}`);
+    const [xmin,zmin,xmax,zmax]=d.free;
+    const scale=Math.min((w-40)/(xmax-xmin),(h-40)/(zmax-zmin));
+    const x=v=>w/2+(v-(xmin+xmax)/2)*scale;
+    const z=v=>h/2-(v-(zmin+zmax)/2)*scale;
+    function rect(b,color,opacity,stroke,dash){add(map,'rect',{x:x(b[0]),y:z(b[3]),width:(b[2]-b[0])*scale,height:(b[3]-b[1])*scale,fill:color,'fill-opacity':opacity,stroke:stroke||'none','stroke-dasharray':dash||'none'});}
+    rect(d.free,'var(--foreground)',.03,'var(--border)');
+    d.actions.forEach((a,i)=>{rect(a.swept_bounds_cm,'var(--viz-series-1)',i===0?.2:.06,'var(--viz-series-1)',i===0?'none':'5 3');const p=a.predicted_start_pose,q=a.predicted_end_pose;add(map,'line',{x1:x(p[0]),y1:z(p[1]),x2:x(q[0]),y2:z(q[1]),stroke:'var(--viz-series-1)','stroke-width':2,'stroke-dasharray':i===0?'none':'5 3'});});
+    d.obstacles.forEach(b=>rect(b,'var(--red)',.35));
+    const [rx,rz,yaw]=d.initial_pose;const c=Math.cos(yaw*Math.PI/180),s=Math.sin(yaw*Math.PI/180);
+    const body=[[-6,-15],[-6,0],[6,0],[6,-15]].map(([u,v])=>[x(rx+c*u+s*v),z(rz-s*u+c*v)].join(',')).join(' ');
+    add(map,'polygon',{points:body,fill:'var(--foreground)','fill-opacity':.6});
+    d.goals.forEach((g,i)=>{add(map,'circle',{cx:x(g[0]),cy:z(g[1]),r:5,fill:'var(--viz-series-2)'});add(map,'text',{x:x(g[0])+8,y:z(g[1]),fill:'var(--foreground)'},`Target ${i+1}`);});
+    add(map,'text',{x:12,y:h-7,fill:'var(--foreground)'},`${d.actions.length} planned actions · floor coordinates in cm`);
+  }
+  new ResizeObserver(draw).observe(map);draw();
+})();
+</script>
+</div>

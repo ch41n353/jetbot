@@ -34,6 +34,7 @@ def execute(plan, route, log, predictive_braking=False, feature_budget=250, atti
         if (footprint['width_cm'], footprint['length_cm'], footprint['camera_location']) != (12, 15, 'front_center'):
             raise RuntimeError('Footprint differs from checked geometry')
         status = call('status')
+        result['power_start']=status.get('power')
         token = {k: status[k] for k in ('session_id', 'control_epoch')}
         if any(plan.get(k) != v for k, v in token.items()):
             raise RuntimeError('Plan belongs to an old service/control generation')
@@ -78,7 +79,11 @@ def execute(plan, route, log, predictive_braking=False, feature_budget=250, atti
             r, t, q = tracker.motion(old, current, a0, a1)
             pose = state.update(r, t, dt, q)
             x, z = pose['position_cm']
-            route.check_pose(x, z, pose['yaw_degrees'])
+            try:
+                route.check_pose(x, z, pose['yaw_degrees'])
+            except RuntimeError:
+                result['rejected_pose'] = dict(phase='powered', **pose)
+                raise
             if timeline.up.dot(initial_up) < math.cos(math.radians(5)):
                 raise RuntimeError('Tilt guard')
             elapsed = 0 if started is None else time.monotonic() - started
@@ -109,7 +114,11 @@ def execute(plan, route, log, predictive_braking=False, feature_budget=250, atti
                         r, t, q = tracker.motion(old, current, a0, a1)
                         final_pose = state.update(r, t, t1 - t0, q)
                         x, z = final_pose['position_cm']
-                        route.check_pose(x, z, final_pose['yaw_degrees'])
+                        try:
+                            route.check_pose(x, z, final_pose['yaw_degrees'])
+                        except RuntimeError:
+                            result['rejected_pose'] = dict(phase='settling', **final_pose)
+                            raise
                         result['settling_samples'].append(dict(time=t1, **final_pose))
                         # Only frames acquired after the stop can establish settling.
                         assessment = checker.update(t1, x, direction*z) if t1 >= stopped_at else None
@@ -149,6 +158,8 @@ def execute(plan, route, log, predictive_braking=False, feature_budget=250, atti
             call('stop')
         except Exception as exc:
             result.update(outcome='stopped', stop_error=str(exc))
+        try:result['power_end']=call('status').get('power')
+        except Exception as exc:result['power_end_error']=str(exc)
         result['powered_seconds'] = powered_seconds if powered_seconds is not None else (None if started is None else time.monotonic() - started)
         with open(log, 'w') as out:
             json.dump(result, out, indent=2)

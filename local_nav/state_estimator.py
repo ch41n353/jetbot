@@ -38,6 +38,37 @@ class AttitudeTimeline:
         self.gyro=None
         self.acceleration_bad_since=None
         self.rejected_acceleration_samples=0
+        self.startup_limit_degrees=4.
+
+    def initialize_stationary(self, samples, frame_time):
+        """Initialize from a quiet gravity window, bounded to five degrees.
+
+        Single-sample feed initialization retains its original four-degree cap.
+        This path requires 150 ms of low-noise, near-1g measurements first.
+        """
+        if self.last is not None:
+            raise RuntimeError('Stationary initialization requires a new timeline')
+        window=[s for s in samples if frame_time-.2 <= s['time'] <= frame_time]
+        if len(window)<6 or window[-1]['time']-window[0]['time']<.15:
+            raise RuntimeError('Insufficient stationary startup history')
+        acc=np.array([s['acceleration'] for s in window],dtype=float)
+        gyro=[]
+        for s in window:
+            if s['gyro_units'] not in ('rad/s','deg/s'):
+                raise ValueError('Unknown gyro units')
+            gyro.append(np.array(s['gyro'])*(math.pi/180 if s['gyro_units']=='deg/s' else 1)-self.bias)
+        mean=acc.mean(0)
+        if (not np.isfinite(acc).all() or not np.isfinite(gyro).all()
+                or np.max(acc.std(0))>.12 or abs(np.linalg.norm(mean)-9.80665)>.35
+                or np.max(np.linalg.norm(gyro,axis=1))>math.radians(1.5)):
+            raise RuntimeError('Robot is not quiet enough for stationary startup')
+        first=dict(window[0],acceleration=mean.tolist())
+        remaining=[s for s in samples if s['time']>first['time']]
+        self.startup_limit_degrees=5.
+        try:
+            self.feed([first]+remaining)
+        finally:
+            self.startup_limit_degrees=4.
 
     def feed(self,samples):
         for sample in samples:
@@ -65,7 +96,7 @@ class AttitudeTimeline:
                 self.acceleration_bad_since=None
             measured=unit(acceleration)
             if self.last is None:
-                if measured.dot(self.reference_up)<math.cos(math.radians(4)):
+                if measured.dot(self.reference_up)<math.cos(math.radians(self.startup_limit_degrees)):
                     raise RuntimeError('Starting pose differs from calibrated floor pose')
                 self.up=measured
             else:

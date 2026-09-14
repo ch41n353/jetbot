@@ -29,7 +29,8 @@ class WatchdogProcessTests(unittest.TestCase):
         original=service.robot
         service.robot=lambda:FakeRobot()
         parent,child=ctx.Pipe()
-        process=ctx.Process(target=service.motor_worker,args=(child,True))
+        power_shared=ctx.Array('d',[time.monotonic(),5.04,1.])
+        process=ctx.Process(target=service.motor_worker,args=(child,True,power_shared))
         try:
             process.start()
             child.close()

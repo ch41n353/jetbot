@@ -1,0 +1,86 @@
+{
+  "outcome": "stopped",
+  "actions": [
+    {
+      "plan": {
+        "kind": "turn",
+        "value": 2.1668960012976015,
+        "swept_bounds_cm": [
+          -14.58597641440951,
+          -9.259329771620921,
+          17.412408711513585,
+          24.70443905810373
+        ],
+        "predicted_start_pose": [
+          1.1296377376698874,
+          15.217191611426157,
+          -2.1668960012976015
+        ],
+        "predicted_end_pose": [
+          1.4132161487217714,
+          15.222554643247827,
+          0.0
+        ]
+      },
+      "result_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-142321-17f02c-route-03.json.action-01.json",
+      "outcome": "turn_reached_estimate",
+      "reason": null,
+      "target_index": 0
+    },
+    {
+      "plan": {
+        "kind": "drive",
+        "value": 5.0,
+        "swept_bounds_cm": [
+          -14.479836873879357,
+          -8.770085046533124,
+          17.545315865971844,
+          33.24907578474738
+        ],
+        "predicted_start_pose": [
+          1.5309424616971588,
+          15.239494830885006,
+          -0.03432082976394213
+        ],
+        "predicted_end_pose": [
+          1.5279474044692842,
+          20.239493933848145,
+          -0.03432082976394213
+        ]
+      },
+      "result_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-142321-17f02c-route-03.json.action-02.json",
+      "outcome": "goal_reached",
+      "reason": null,
+      "target_index": 0
+    }
+  ],
+  "local_planning_seconds": 0.008950021117925644,
+  "intermediate_model_calls": 0,
+  "requires_planner": true,
+  "reached_targets": [
+    {
+      "goal_cm": [
+        0,
+        20
+      ],
+      "measured_pose": [
+        2.4597813588527573,
+        20.84473914015202,
+        1.6070474029619675
+      ],
+      "elapsed_seconds": 2.1888597330544144
+    }
+  ],
+  "local_searches": 2,
+  "last_verified_pose": [
+    2.4597813588527573,
+    20.84473914015202,
+    1.6070474029619675
+  ],
+  "travel_cm": 6.083605586655606,
+  "position_variance_cm2": 0.1788771048452853,
+  "yaw_variance_deg2": 3.7806406102099537,
+  "goal_error_cm": 2.600789985420639,
+  "reason": "Local planning: no_checked_route",
+  "elapsed_seconds": 2.1935757091268897
+}

@@ -1,0 +1,11 @@
+{
+  "start_utc": "2026-09-14 20:38:28 UTC",
+  "end_utc": "2026-09-14 23:38:28 UTC",
+  "objective": "Iterate object navigation for three hours, identify new reachable objects, use local control and preserve evidence",
+  "status": "active",
+  "initial_position": "Near Advil bottle, about 17\u201320 cm projected clearance",
+  "authorization": "User requested continuing robot navigation and iteration for three hours",
+  "live_motion": "paused_after_empty_battery_and_reboot",
+  "current_work": "Local planner simulation and power telemetry integration",
+  "power_monitor": "INA3221 input voltage; state of charge unknown"
+}

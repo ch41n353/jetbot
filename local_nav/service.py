@@ -15,6 +15,7 @@ import time
 
 from core import allowed, ControlGeneration
 from hardware import BNO055, ROOT, robot
+from battery import worker as battery_worker, power_permitted, read_shared
 
 
 def latest(q, value):
@@ -70,7 +71,7 @@ def imu_worker(q, stop):
             sensor.close()
 
 
-def motor_worker(pipe, enabled):
+def motor_worker(pipe, enabled, power_shared):
     # Separate process: parent stalls or dies -> lease expires -> stop.
     def terminate(*args):
         raise SystemExit()
@@ -80,6 +81,8 @@ def motor_worker(pipe, enabled):
     r.stop()
     current = {}
     output = (0, 0)
+    power_seen = power_latched = False
+    power_values=[0.,0.,0.]
     try:
         pipe.send({'ready': True})
         while True:
@@ -90,7 +93,12 @@ def motor_worker(pipe, enabled):
                     break
                 if current.get('shutdown'):
                     break
-            valid = allowed(current, time.monotonic(), enabled)
+            now=time.monotonic()
+            power_values=read_shared(power_shared,power_values)
+            power_ok=power_permitted(power_values,now)
+            if power_seen and not power_ok:power_latched=True
+            power_seen=power_seen or power_ok
+            valid = allowed(current, now, enabled) and power_ok and not power_latched
             desired = (current['left'], current['right']) if valid else (0, 0)
             if desired != output:
                 if desired == (0, 0):
@@ -108,6 +116,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--enable-motion', action='store_true')
     parser.add_argument('--directory', default='/tmp/jetbot-local-nav')
+    parser.add_argument('--power-log')
     args = parser.parse_args()
     os.umask(0o077)
     os.makedirs(args.directory, mode=0o700, exist_ok=True)
@@ -119,17 +128,23 @@ def main():
     stop = ctx.Event()
     signal.signal(signal.SIGTERM, lambda *a: stop.set())
     signal.signal(signal.SIGINT, lambda *a: stop.set())
-    cameraq, imuq = ctx.Queue(2), ctx.Queue(4)
+    cameraq, imuq, powerq = ctx.Queue(2), ctx.Queue(4), ctx.Queue(2)
+    power_shared=ctx.Array('d',[0.,0.,0.])
     parent, child = ctx.Pipe()
-    motor = ctx.Process(target=motor_worker, args=(child, args.enable_motion))
+    motor = ctx.Process(target=motor_worker, args=(child, args.enable_motion,power_shared))
     workers = [ctx.Process(target=camera_worker, args=(cameraq, stop)),
-               ctx.Process(target=imu_worker, args=(imuq, stop))]
+               ctx.Process(target=imu_worker, args=(imuq, stop)),
+               ctx.Process(target=battery_worker,args=(power_shared,powerq,stop,
+                           args.power_log or os.path.join(args.directory,'power.jsonl')))]
     path = os.path.join(args.directory, 'control.sock')
     server = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
     camera, imu = {}, {}
     imu_history = deque(maxlen=512)
     motor_status = {'output': [0,0]}
     generation = ControlGeneration()
+    power_status=dict(battery_percent=None,motion_allowed=False)
+    power_seen = power_latched = False
+    power_values=[0.,0.,0.]
     try:
         motor.start()
         child.close()
@@ -144,13 +159,14 @@ def main():
         server.settimeout(.02)
         print('READY '+path+' motion_enabled='+str(args.enable_motion), flush=True)
         while not stop.is_set():
-            for q, name in ((cameraq, 'camera'), (imuq, 'imu')):
+            for q, name in ((cameraq, 'camera'), (imuq, 'imu'), (powerq,'power')):
                 while True:
                     try:
                         value = q.get_nowait()
                     except queue.Empty:
                         break
-                    if name == 'camera': camera = value
+                    if name == 'power':power_status=value
+                    elif name == 'camera': camera = value
                     else:
                         imu = value
                         if "time" in value:
@@ -160,7 +176,17 @@ def main():
             if not motor.is_alive():
                 raise RuntimeError('Motor watchdog exited')
             now = time.monotonic()
-            healthy = (all(w.is_alive() for w in workers) and now-camera.get('time', 0) < .5
+            power_values=read_shared(power_shared,power_values)
+            power_ok=power_permitted(power_values,now)
+            if power_seen and not power_ok and not power_latched:
+                power_latched=True
+                generation.invalidate()
+                parent.send({})
+            power_seen=power_seen or power_ok
+            power_status=dict(power_status,motion_allowed=power_ok and not power_latched,
+                              stale=not 0<=now-power_values[0]<=.6,
+                              service_stop_latched=power_latched)
+            healthy = (all(w.is_alive() for w in workers[:2]) and now-camera.get('time', 0) < .5
                        and now-imu.get('time', 0) < .2 and imu.get('error') == 0
                        and imu.get('system_status') == 5)
             try:
@@ -180,7 +206,8 @@ def main():
                     request = json.loads(data.split(b'\n')[0])
                     action = request.get('action')
                     if action == 'status':
-                        response = dict(healthy=healthy, motion_enabled=args.enable_motion,
+                        response = dict(healthy=healthy, motion_enabled=args.enable_motion and power_ok and not power_latched,
+                            power=power_status,
                             camera={k:v for k,v in camera.items() if k != 'jpeg'}, imu=imu,
                             camera_age=now-camera.get('time',now), imu_age=now-imu.get('time',now), motor=motor_status)
                     elif action in ('snapshot', 'observation'):
@@ -194,7 +221,8 @@ def main():
                             since = float(request.get('since', camera['time']-2.0))
                             response.update(jpeg_base64=base64.b64encode(camera['jpeg']).decode('ascii'),
                                 imu_samples=[s for s in imu_history if s['time'] >= since-.1],
-                                healthy=healthy, motion_enabled=args.enable_motion,
+                                healthy=healthy, motion_enabled=args.enable_motion and power_ok and not power_latched,
+                                power=power_status,
                                 timestamp_basis='host acquisition completion; hardware offset uncalibrated')
                     elif action in ('stop', 'motors', 'motors_hold'):
                         if action == 'stop':
@@ -205,6 +233,7 @@ def main():
                             parent.send({})  # Original pulse behavior.
                         if action in ('motors', 'motors_hold'):
                             if not healthy or not args.enable_motion: raise ValueError('Motion disabled or sensors unhealthy')
+                            if not power_ok or power_latched: raise ValueError('Power guard: low, stale or unavailable voltage; motion blocked')
                             issued = time.monotonic()
                             command = dict(left=request['left'],right=request['right'],issued=issued,
                                 expires=issued+.2,camera_time=camera['time'],imu_time=imu['time'])

@@ -1,0 +1,45 @@
+{
+  "outcome": "stopped",
+  "actions": [
+    {
+      "plan": {
+        "kind": "drive",
+        "value": 15.0,
+        "swept_bounds_cm": [
+          -16.0,
+          -24.0,
+          16.0,
+          28.0
+        ],
+        "predicted_start_pose": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "predicted_end_pose": [
+          0.0,
+          15.0,
+          0.0
+        ]
+      },
+      "result_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-142321-17f02c-route-02.json.action-01.json",
+      "outcome": "goal_reached",
+      "reason": null,
+      "target_index": 0
+    }
+  ],
+  "local_planning_seconds": 0.0045705370139330626,
+  "intermediate_model_calls": 0,
+  "requires_planner": true,
+  "reached_targets": [],
+  "local_searches": 2,
+  "last_verified_pose": [
+    1.1296377376698874,
+    15.217191611426157,
+    -2.1668960012976015
+  ],
+  "travel_cm": 15.25906294492642,
+  "goal_error_cm": 4.914401031680286,
+  "reason": "Local planning: no_checked_route",
+  "elapsed_seconds": 2.173589670099318
+}

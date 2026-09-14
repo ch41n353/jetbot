@@ -3,7 +3,7 @@ import sys
 import unittest
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), 'local_nav'))
 from core import ControlGeneration
-from route_geometry import StraightRoute, ProgressGuard
+from route_geometry import StraightRoute, ProgressGuard, swept_pose_bounds, contains
 
 
 def plan():
@@ -57,9 +57,31 @@ class RouteTests(unittest.TestCase):
 
     def test_pose_escape_stops(self):
         route = StraightRoute(plan())
-        for pose in ((1.1, 5, 0), (0, 5, 6), (0, -1, 0), (0, 20, 0), (float('nan'), 0, 0)):
+        for pose in ((3, 5, 0), (0, 5, 6), (0, -1, 0), (0, 20, 0), (float('nan'), 0, 0)):
             with self.assertRaises((RuntimeError, ValueError)):
                 route.check_pose(*pose)
+
+    def test_replayed_pose_keeps_clearance_despite_one_cm_lateral_error(self):
+        route=StraightRoute(plan())
+        route.check_pose(1.0181472,12.2935938,-1.1181605)
+        with self.assertRaises(RuntimeError):route.check_pose(2,12,-5)
+
+    def test_analytic_sweep_contains_dense_corner_samples(self):
+        import math
+        for direction in (-1,1):
+            for yaw in (-5,0,5):
+                x,z=.6,10*direction
+                bounds=swept_pose_bounds(x,z,yaw,direction,15)
+                for i in range(101):
+                    a=math.radians(yaw-2+4*i/100)
+                    for px in (-6,6):
+                        for pz in ((-15,4) if direction==1 else (-19,0)):
+                            xx=x+px*math.cos(a)+pz*math.sin(a)
+                            zz=z-px*math.sin(a)+pz*math.cos(a)
+                            self.assertLessEqual(bounds[0],xx-7+1e-9)
+                            self.assertGreaterEqual(bounds[2],xx+7-1e-9)
+                            self.assertLessEqual(bounds[1],zz-7+1e-9)
+                            self.assertGreaterEqual(bounds[3],zz+7-1e-9)
 
     def test_stall_and_healthy_progress(self):
         guard = ProgressGuard()
@@ -132,5 +154,5 @@ class ExecutorTests(unittest.TestCase):
             result = execute(p, route, log.name)
         self.assertEqual(result['outcome'], 'distance_threshold_reached', result)
         self.assertEqual(result['passed_waypoints_cm'], [1, 2, 3])
-        self.assertEqual([a for a, _ in commands], ['status', 'motors_hold', 'motors_hold', 'stop'])
+        self.assertEqual([a for a, _ in commands if a!='status'], ['motors_hold', 'motors_hold', 'stop'])
         self.assertTrue(all(fields['control_epoch'] == 0 for a, fields in commands if a == 'motors_hold'))

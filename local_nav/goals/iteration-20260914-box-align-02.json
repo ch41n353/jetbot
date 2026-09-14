@@ -1,0 +1,30 @@
+{
+  "target_degrees": -5.0,
+  "power": 0.14,
+  "samples": [
+    {
+      "time": 1132590.518184829,
+      "angle_degrees": -0.0007793758127862492,
+      "command": {
+        "left": -0.14,
+        "right": 0.14
+      }
+    },
+    {
+      "time": 1132590.783707501,
+      "angle_degrees": -1.6321683966791498,
+      "command": {
+        "left": -0.14,
+        "right": 0.14
+      }
+    },
+    {
+      "time": 1132591.050250186,
+      "angle_degrees": -4.056313287732777,
+      "command": null
+    }
+  ],
+  "mode": "execute",
+  "outcome": "turn_reached_imu_estimate",
+  "elapsed": 0.6188378951046616
+}

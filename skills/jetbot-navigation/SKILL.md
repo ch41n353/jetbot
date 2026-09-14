@@ -4,12 +4,12 @@ description: Operate and iterate the local JetBot camera/IMU navigation tools fo
 metadata:
   baseline-date: "2026-09-13"
   timezone: America/Los_Angeles
-  revision: "7"
+  revision: "8"
 ---
 
 # JetBot navigation
 
-Baseline **2026-09-13**, current revision **7**, America/Los_Angeles.
+Baseline **2026-09-13**, current revision **8**, America/Los_Angeles.
 Workspace: `/home/jetbot/jetbot`. Use `/usr/bin/python3` for the local tools.
 
 Read [the dated algorithm and evidence](references/baseline-2026-09-13.md)
@@ -29,6 +29,8 @@ automatic previews when optimizing end-to-end maneuver time. Read
 and opt-in local batches that avoid VLM calls at internal segment boundaries.
 Read [revision 7](references/revision-2026-09-14-r7.md) for live return evidence,
 persistent IMU state across segments, and supervised reverse repositioning.
+Read [revision 8](references/revision-2026-09-14-r8.md) for local spatial planning,
+measured turns, target queues, live results, and mandatory input-voltage monitoring.
 
 ## Scope and control division
 
@@ -37,8 +39,9 @@ persistent IMU state across segments, and supervised reverse repositioning.
   evaluates results between actions. It does not steer on each model call.
 - Local processes acquire camera/IMU data, estimate motion, issue expiring motor
   leases, and stop on health, timing, tracking, tilt, or motion limits.
-- There is no implemented global map, object tracker, automatic obstacle
-  segmentation or automatic recovery planner. Revision 2 adds a conservative
+- There is no implemented global SLAM map, object tracker or automatic obstacle
+  segmentation. Revision 8 adds local static-map search and bounded replanning;
+  revision 2 adds a conservative
   straight swept-rectangle checker for explicitly inspected static maps.
   Do not represent a sketched route as machine-verified free space.
 
@@ -50,6 +53,13 @@ persistent IMU state across segments, and supervised reverse repositioning.
 2. Read current service status and a fresh camera image. Sensor startup needs
    approximately three seconds; `READY` alone does not mean healthy sensors.
    Never use an old `latest.jpg` after a failed/stale snapshot request.
+   Check `status.power`: the service now samples input voltage about five times
+   per second and independently gates motors. Warning below4.9V; latched stop
+   below4.8V, above5.5V, missing telemetry or sample age>0.6s. A stopped power
+   guard needs a fresh service after resolving the supply problem. This is
+   regulated input voltage, **not battery charge percentage**. A reported empty
+   battery invalidates subsequent powered benchmarking until power is restored.
+   Never infer state of charge from the 5V rail.
 3. Verify calibration and geometry against the actual setup. The robot is
    **12 cm wide × 15 cm long including wheels**, with the lens at **front center**,
    9.5 cm above the carpet. Relative to the lens's ground projection, the chassis
@@ -79,7 +89,19 @@ visualization skill when using that surface. Projection uses calibrated floor
 rays, but large off-axis and near-field projections are not independently
 validated. A preview explains a plan; it is not a collision sensor.
 
-Use the shortest suitable bounded action:
+Prefer a whole inspected route over model calls between small movements:
+
+- **Spatial target or target queue:** revision-8 `plan_navigation` and `execute`
+  with `spatial: true`, up to four targets in one inspected static map. Local
+  code chooses drives/turns and rechecks a retained route using measured pose.
+  Limits remain12 actions,60seconds,90cm total and existing primitive limits.
+  Turns have measured VIO translation and cancellation tokens. This is
+  experimental; live straight continuation and turn-to-drive continuation
+  succeeded, while full live out-and-back remained blocked by map clearance.
+  The opt-in `measured_map_drive` adapter is still under validation; do not
+  describe it as proven obstacle avoidance.
+
+Other bounded options:
 
 - **Whole straight approach:** revision-6 `plan_approach` and `execute` with
   `batch: true`, up to 30 cm in an inspected static corridor. Preview the entire

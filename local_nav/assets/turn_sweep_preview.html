@@ -1,0 +1,15 @@
+<div id="turn-sweep-preview">
+<strong>TURN_LABEL</strong>
+<svg viewBox="0 0 640 480" style="width:100%;height:auto" role="img" aria-label="Current camera image and visible portion of the conservative whole-chassis turn sweep.">
+<image href="CAMERA_IMAGE" width="640" height="480"/>
+<polygon points="FLOOR_POLYGON" fill="var(--viz-series-1)" fill-opacity=".2" stroke="var(--viz-series-1)"/>
+</svg>
+<div class="viz-row">
+<svg viewBox="0 0 320 340" style="width:320px;max-width:100%;height:auto" role="img" aria-label="Top-down full turn envelope over all pivot locations inside the chassis, including offscreen space.">
+<polygon points="TOP_POLYGON" fill="var(--viz-series-1)" fill-opacity=".2"/>
+<rect x="142" y="120" width="36" height="45" fill="var(--foreground)" fill-opacity=".4"/>
+<path d="DIRECTION_LINE" fill="none" stroke="var(--viz-series-1)" stroke-width="3"/>
+</svg>
+<div class="text-small">Shaded: full chassis sweep, any pivot within the body, clearance and uncertainty.<br>Rear and side clearance uses retained scene information.<br>Direction arrow is schematic.</div>
+</div>
+</div>

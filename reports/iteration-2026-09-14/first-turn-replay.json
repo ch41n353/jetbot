@@ -1,0 +1,22 @@
+{
+  "outcome": "unverified",
+  "reason": "Starting pose differs from calibrated floor pose",
+  "segments": [
+    {
+      "segment": 1,
+      "position_cm": [
+        4.6981847446227425,
+        -0.3764077729845424
+      ],
+      "yaw_degrees": 30.701435759710236
+    },
+    {
+      "segment": 2,
+      "position_cm": [
+        3.941446984698577,
+        -0.2859379807209823
+      ],
+      "yaw_degrees": 29.94320568499742
+    }
+  ]
+}

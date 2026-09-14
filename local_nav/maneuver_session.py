@@ -18,13 +18,18 @@ import uuid
 from point_controller import ROOT, call
 
 
-def route_command(plan, log, predictive=False, feature_budget=250, batch=False):
+def route_command(plan, log, predictive=False, feature_budget=250, batch=False, spatial=False):
     if type(predictive) is not bool or type(feature_budget) is not int or feature_budget not in (80, 125, 250):
         raise ValueError('Invalid route options')
     if not isinstance(plan, str) or not plan:
         raise ValueError('Expected plan file path')
     if type(batch) is not bool:
         raise ValueError('batch must be boolean')
+    if type(spatial) is not bool or (spatial and batch):
+        raise ValueError('spatial must be boolean and cannot combine with batch')
+    if spatial:
+        return [sys.executable, os.path.join(ROOT,'local_nav/spatial_executor.py'),
+                os.path.abspath(plan),'--execute','--log',log]
     executable = 'approach_batch.py' if batch else 'route_executor.py'
     command = [sys.executable, os.path.join(ROOT, 'local_nav', executable),
                os.path.abspath(plan), '--execute', '--log', log,
@@ -57,11 +62,14 @@ def main():
     run_count = 0
     input_buffer = b''
     last_capture = None
+    next_power_check=0.
+    last_power_state=None
     try:
         # Do not replace, attach to or shut down an unrelated service.
         if os.path.exists('/tmp/jetbot-local-nav/control.sock'):
             raise RuntimeError('Existing service detected; stop that service first')
-        command = [sys.executable, os.path.join(ROOT, 'local_nav/service.py')]
+        command = [sys.executable, os.path.join(ROOT, 'local_nav/service.py'),
+                   '--power-log',prefix+'.power.jsonl']
         if args.enable_motion:
             command.append('--enable-motion')
         service = subprocess.Popen(command, stdout=service_output, stderr=service_output)
@@ -84,6 +92,19 @@ def main():
         while True:
             if service.poll() is not None:
                 raise RuntimeError('Sensing service exited; session stopped')
+            if time.monotonic()>=next_power_check:
+                power=call('status').get('power',{})
+                state=('stopped' if not power.get('motion_allowed') else
+                       ('warning' if power.get('warning') else 'normal'))
+                if state!=last_power_state and (state!='normal' or last_power_state is not None):
+                    event=dict(event='power_'+state,power=power,monotonic=time.monotonic())
+                    events.append(event)
+                    emit(**event)
+                if state=='stopped' and worker is not None and worker.poll() is None:
+                    call('stop')
+                    worker.terminate()
+                last_power_state=state
+                next_power_check=time.monotonic()+1.
             if worker is not None and worker.poll() is not None:
                 worker_output.close()
                 worker_output = None
@@ -172,15 +193,36 @@ def main():
                     event = dict(event='approach_planned', **assessment)
                     events.append(event)
                     emit(**event)
+                elif command == 'plan_navigation':
+                    if worker is not None or last_capture is None:
+                        raise ValueError('Capture a stationary scene before planning navigation')
+                    if not args.preview_directory:
+                        raise ValueError('Navigation needs --preview-directory')
+                    from spatial_plan import prepare
+                    from spatial_preview import write_preview
+                    plan,actions=prepare(last_capture,request)
+                    path=last_capture['image_path'][:-4]+'-navigation-'+uuid.uuid4().hex[:6]
+                    with open(path+'.plan.json','w') as output:
+                        json.dump(plan,output,indent=2)
+                    preview=os.path.join(args.preview_directory,'iteration-current-route.html')
+                    write_preview(plan,preview)
+                    event=dict(event='navigation_planned',plan_path=path+'.plan.json',
+                               preview_path=preview,actions=actions,goals_cm=plan['goals_cm'],
+                               static_map_only=True)
+                    events.append(event)
+                    emit(**event)
                 elif command == 'execute':
                     if not args.enable_motion:
                         raise ValueError('Session is disarmed')
+                    if last_power_state=='stopped':
+                        raise ValueError('Power guard blocks motion')
                     if worker is not None:
                         raise ValueError('A route is already running')
                     run_count += 1
                     route_log = prefix + '-route-%02d.json' % run_count
                     argv = route_command(request['plan'], route_log, request.get('predictive_braking', False),
-                                         request.get('feature_budget', 250), request.get('batch', False))
+                                         request.get('feature_budget', 250), request.get('batch', False),
+                                         request.get('spatial', False))
                     worker_output = open(route_log+'.stdout.log', 'w')
                     with open(os.path.abspath(request['plan'])) as source:
                         plan_metadata = json.load(source)

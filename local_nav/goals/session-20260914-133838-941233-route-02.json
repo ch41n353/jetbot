@@ -1,0 +1,13 @@
+{
+  "outcome": "stopped",
+  "segments": [
+    {
+      "log_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-133838-941233-route-02.json.segment-01.json",
+      "outcome": "stopped"
+    }
+  ],
+  "intermediate_planner_calls": 0,
+  "requires_planner": true,
+  "reason": "Segment failed or final position unverified: stopped",
+  "elapsed_seconds": 1.614663888933137
+}

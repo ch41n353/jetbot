@@ -25,3 +25,6 @@ cmake_install.cmake
 # Session console output is local; structured experiment results are versioned.
 local_nav/goals/*.service.log
 local_nav/goals/*.stdout.log
+
+# Full-rate power traces stay local; selected short validation traces live in reports.
+local_nav/goals/*.power.jsonl

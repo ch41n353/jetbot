@@ -16,7 +16,7 @@ class SessionTests(unittest.TestCase):
         self.assertNotIn('--predictive-braking', command)
         self.assertIn('--execute', command)
 
-    def run_session(self, armed, commands):
+    def run_session(self, armed, commands, power_allowed=True):
         created, operations, emitted = [], [], []
 
         class Process:
@@ -40,7 +40,8 @@ class SessionTests(unittest.TestCase):
             operations.append(action)
             if action == 'shutdown':
                 created[0].returncode = 0
-            return dict(healthy=True, motion_enabled=armed, session_id='owned')
+            return dict(healthy=True, motion_enabled=armed, session_id='owned',
+                        power=dict(motion_allowed=power_allowed,voltage_v=5.04 if power_allowed else 4.7))
 
         original_exists = os.path.exists
         with tempfile.TemporaryDirectory() as directory:
@@ -66,6 +67,12 @@ class SessionTests(unittest.TestCase):
         self.assertNotIn('--enable-motion', created[0].command)
         self.assertTrue(any(e.get('reason') == 'Session is disarmed' for e in emitted))
         self.assertIn('shutdown', operations)
+
+    def test_power_fault_prevents_new_route_and_emits_event(self):
+        created,operations,emitted=self.run_session(True,'{"command":"execute","plan":"/tmp/plan.json"}\n{"command":"shutdown"}\n',False)
+        self.assertEqual(len(created),1)
+        self.assertTrue(any(e.get('event')=='power_stopped' for e in emitted))
+        self.assertTrue(any(e.get('reason')=='Power guard blocks motion' for e in emitted))
 
     def test_stop_is_handled_while_worker_is_running(self):
         created, operations, emitted = self.run_session(True, '{"command":"execute","plan":"/tmp/plan.json"}\n{"command":"stop"}\n{"command":"shutdown"}\n')

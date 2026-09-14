@@ -23,8 +23,12 @@ class Plant:
     def __init__(self, speed=12., coast=.08, camera_hz=12., latency=.025,
                  compute=.045, stall=False, seed=1, noise=0.,
                  cancel_after=None, frame_fault_after=None, blocked_frame_after=None,
-                 height_scale=1., imu_yaw_bias_dps=0., low_texture=False, exposure_jump=0.):
+                 height_scale=1., imu_yaw_bias_dps=0., low_texture=False, exposure_jump=0., pivot_cm=0.,
+                 drive_yaw_bias_dps=0.):
         self.time = 100.
+        self.pivot_cm = pivot_cm
+        self.drive_yaw_bias_dps = drive_yaw_bias_dps
+        self.pose_audit = None
         self.x = self.z = self.yaw = self.velocity = self.yaw_rate = 0.
         self.left = self.right = 0.
         self.expiry = 0.
@@ -81,12 +85,19 @@ class Plant:
                 self.watchdog_stops += 1
             desired_v = 0. if self.stall else self.speed * (self.left + self.right) / .32
             desired_yaw = 0. if self.stall else math.radians(70) * (self.left - self.right) / .28
+            if desired_v:
+                desired_yaw += math.radians(self.drive_yaw_bias_dps)
             tau = .07 if desired_v else self.coast
             self.velocity += (desired_v - self.velocity) * (1 - math.exp(-dt / tau))
             self.yaw_rate += (desired_yaw - self.yaw_rate) * (1 - math.exp(-dt / .05))
+            old_yaw = self.yaw
             self.yaw += self.yaw_rate * dt
+            self.x += self.pivot_cm*(math.sin(self.yaw)-math.sin(old_yaw))
+            self.z += self.pivot_cm*(math.cos(self.yaw)-math.cos(old_yaw))
             self.x += math.sin(self.yaw) * self.velocity * dt
             self.z += math.cos(self.yaw) * self.velocity * dt
+            if self.pose_audit is not None:
+                self.pose_audit(self.x,self.z,self.yaw)
             self.time += dt
 
     def render(self):

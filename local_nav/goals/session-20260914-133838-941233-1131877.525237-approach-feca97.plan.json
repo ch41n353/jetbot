@@ -1,0 +1,37 @@
+{
+  "session_id": "400bfd61f22f4b089531c5bdb19666e7",
+  "control_epoch": 83,
+  "captured_monotonic": 1131877.525237367,
+  "image_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-133838-941233-1131877.525237.jpg",
+  "inspected_free_rectangle_cm": [
+    -22,
+    -30,
+    22,
+    46
+  ],
+  "obstacle_rectangles_cm": [
+    [
+      -60,
+      -15,
+      -24,
+      25
+    ],
+    [
+      -25,
+      60,
+      25,
+      100
+    ]
+  ],
+  "target_base_pixel": [
+    315,
+    213
+  ],
+  "target_ground_cm": [
+    -2.1344337197438845,
+    77.82574062280125
+  ],
+  "standoff_cm": 15,
+  "projection_allowance_cm": 5,
+  "approach_distance_cm": 30
+}

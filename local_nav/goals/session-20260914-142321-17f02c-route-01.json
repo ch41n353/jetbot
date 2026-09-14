@@ -1,0 +1,72 @@
+{
+  "outcome": "target_reached_estimate",
+  "actions": [
+    {
+      "plan": {
+        "kind": "drive",
+        "value": -10.0,
+        "swept_bounds_cm": [
+          -16.0,
+          -38.0,
+          16.0,
+          9.0
+        ],
+        "predicted_start_pose": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "predicted_end_pose": [
+          0.0,
+          -10.0,
+          0.0
+        ]
+      },
+      "result_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-142321-17f02c-route-01.json.action-01.json",
+      "outcome": "goal_reached",
+      "reason": null
+    },
+    {
+      "plan": {
+        "kind": "drive",
+        "value": -10.0,
+        "swept_bounds_cm": [
+          -15.802681865574879,
+          -48.18716753603033,
+          17.20555278119025,
+          -0.5065981129796739
+        ],
+        "predicted_start_pose": [
+          0.38807874939001846,
+          -9.850269165677997,
+          -1.2383044586032668
+        ],
+        "predicted_end_pose": [
+          0.6041868239171031,
+          -19.84793375797775,
+          -1.2383044586032668
+        ]
+      },
+      "result_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-142321-17f02c-route-01.json.action-02.json",
+      "outcome": "goal_reached",
+      "reason": null
+    }
+  ],
+  "local_planning_seconds": 0.002383278915658593,
+  "intermediate_model_calls": 0,
+  "requires_planner": false,
+  "local_searches": 1,
+  "last_verified_pose": [
+    1.2942137785137442,
+    -19.704427597592282,
+    -1.6755223090425488
+  ],
+  "travel_cm": 19.753643289957573,
+  "goal_error_cm": 1.327536195197665,
+  "final_pose": [
+    1.2942137785137442,
+    -19.704427597592282,
+    -1.6755223090425488
+  ],
+  "elapsed_seconds": 3.5664398761000484
+}

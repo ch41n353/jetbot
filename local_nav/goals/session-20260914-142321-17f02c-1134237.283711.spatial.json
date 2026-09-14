@@ -1,0 +1,43 @@
+{
+  "goals_cm": [
+    [
+      0,
+      20
+    ],
+    [
+      0,
+      0
+    ]
+  ],
+  "goal_tolerance_cm": 3,
+  "inspected_free_rectangle_cm": [
+    -18,
+    -30,
+    18,
+    34
+  ],
+  "obstacle_rectangles_cm": [
+    [
+      -9,
+      37,
+      15,
+      60
+    ],
+    [
+      -26,
+      38,
+      -8,
+      65
+    ],
+    [
+      26,
+      5,
+      100,
+      100
+    ]
+  ],
+  "image_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-142321-17f02c-1134237.283711.jpg",
+  "captured_monotonic": 1134237.283711243,
+  "session_id": "1df044e0818c43aab409ce5b9f128d81",
+  "control_epoch": 5
+}

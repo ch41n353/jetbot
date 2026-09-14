@@ -113,16 +113,34 @@ class FloorTracker:
         return rotation,translation,dict(matches=int(select.sum()),residual_cm=residual,scale=scale,yaw_variance=yaw_variance)
 
 
+def record_observation(directory, snap, image):
+    """Preserve initialization/history when multiple reads share one camera frame."""
+    stem=os.path.join(directory,'%.6f' % snap['time'])
+    record={k:v for k,v in snap.items() if k!='jpeg_base64'}
+    if os.path.exists(stem+'.json'):
+        with open(stem+'.json') as source:previous=json.load(source)
+        samples={s['time']:s for s in previous['imu_samples']+record['imu_samples']}
+        record['imu_samples']=[samples[t] for t in sorted(samples)]
+        if 'attitude_initialization' in previous:
+            record.setdefault('attitude_initialization',previous['attitude_initialization'])
+    with open(stem+'.json','w') as target:json.dump(record,target)
+    if not cv2.imwrite(stem+'.jpg',image):raise RuntimeError('Could not save observation image')
+
+
 def frame(timeline=None, settled=True):
     snap=call('observation',since=timeline.last if timeline and timeline.last else time.monotonic()-.3) if timeline else call('snapshot')
     image=cv2.imdecode(np.frombuffer(base64.b64decode(snap['jpeg_base64']),dtype=np.uint8),cv2.IMREAD_COLOR) if timeline else cv2.imread(snap['path'])
     if image is None or image.shape[:2]!=(480,640):raise RuntimeError('Invalid camera frame')
     if timeline:
+        initialize = timeline.last is None
+        if initialize:
+            snap['attitude_initialization']='stationary_5deg'
         if hasattr(timeline, 'record_directory'):
-            stem=os.path.join(timeline.record_directory, '%.6f' % snap['time'])
-            with open(stem+'.json','w') as f:json.dump({k:v for k,v in snap.items() if k!='jpeg_base64'},f)
-            cv2.imwrite(stem+'.jpg',image)
-        timeline.feed(snap['imu_samples'])
+            record_observation(timeline.record_directory,snap,image)
+        if initialize:
+            timeline.initialize_stationary(snap['imu_samples'],snap['time'])
+        else:
+            timeline.feed(snap['imu_samples'])
         return image,snap['time'],(timeline.settled_at(snap['time']) if settled else timeline.at(snap['time']))
     return image,snap['time']
 

@@ -14,6 +14,24 @@ def sample(t,gyro=(0,0,0),acc=(0,0,9.8)):
     return dict(time=t,gyro=gyro,gyro_units='deg/s',acceleration=acc,error=0,system_status=5)
 
 class EstimatorTests(unittest.TestCase):
+    def test_quiet_start_averages_and_bounds_tilt(self):
+        def samples(degrees):
+            a=math.radians(degrees)
+            return [sample(1+i*.02,acc=(9.8*math.sin(a),0,9.8*math.cos(a))) for i in range(11)]
+        f=AttitudeTimeline(mount())
+        with self.assertRaises(RuntimeError):f.feed(samples(4.2)[:1])
+        f=AttitudeTimeline(mount());f.initialize_stationary(samples(4.2),1.2)
+        self.assertAlmostEqual(math.degrees(math.acos(f.up[2])),4.2,places=2)
+        self.assertEqual(f.startup_limit_degrees,4)
+        with self.assertRaises(RuntimeError):
+            AttitudeTimeline(mount()).initialize_stationary(samples(6),1.2)
+
+    def test_stationary_start_rejects_motion_and_short_history(self):
+        for readings in ([sample(1+i*.02,gyro=(0,0,3)) for i in range(11)],
+                         [sample(1+i*.02,acc=(i*.1,0,9.8)) for i in range(11)],
+                         [sample(1),sample(1.02)]):
+            with self.assertRaises(RuntimeError):
+                AttitudeTimeline(mount()).initialize_stationary(readings,readings[-1]['time'])
     def test_calibration_geometry(self):
         m=mount();r=np.array(m['imu_to_camera'])
         np.testing.assert_allclose(r@r.T,np.eye(3),atol=1e-6)

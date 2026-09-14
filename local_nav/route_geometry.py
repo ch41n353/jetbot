@@ -30,6 +30,32 @@ def contains(outer, inner):
                 outer[2] >= inner[2], outer[3] >= inner[3]))
 
 
+def swept_pose_bounds(x, z, yaw_degrees, direction, goal):
+    """Actual chassis plus 5 cm clearance, 2 cm position uncertainty and braking.
+
+    Include +/-2 degrees of heading uncertainty using analytic extrema, rather
+    than spending the maximum heading allowance at every measured heading.
+    The existing four-centimetre overrun cap bounds remaining braking travel.
+    """
+    x, z, yaw_degrees, goal = map(finite, (x, z, yaw_degrees, goal))
+    if direction not in (-1, 1):
+        raise ValueError('Invalid travel direction')
+    coast = min(4., max(0., goal+4-direction*z))
+    rear, front = (-15., coast) if direction==1 else (-15.-coast, 0.)
+    lo, hi = math.radians(yaw_degrees-2), math.radians(yaw_degrees+2)
+    points=[]
+    for px in (-6.,6.):
+        for pz in (rear,front):
+            angles=[lo,hi]
+            for root in (math.atan2(pz,px), math.atan2(-px,pz)):
+                angles += [root+k*math.pi for k in (-1,0,1) if lo<=root+k*math.pi<=hi]
+            for a in angles:
+                points.append((x+px*math.cos(a)+pz*math.sin(a),
+                               z-px*math.sin(a)+pz*math.cos(a)))
+    return [min(p[0] for p in points)-7, min(p[1] for p in points)-7,
+            max(p[0] for p in points)+7, max(p[1] for p in points)+7]
+
+
 class StraightRoute:
     def __init__(self, plan):
         self.waypoints = [finite(v) for v in plan['waypoints_cm']]
@@ -58,8 +84,10 @@ class StraightRoute:
     def check_pose(self, x, z, yaw_degrees):
         x, z, yaw_degrees = map(finite, (x, z, yaw_degrees))
         progress = self.direction*z
-        if abs(x) > 1 or abs(yaw_degrees) > 5 or progress < -.5 or progress > self.waypoints[-1] + 4:
+        if abs(yaw_degrees) > 5 or progress < -.5 or progress > self.waypoints[-1] + 4:
             raise RuntimeError('Measured pose left the checked route envelope')
+        if not contains(self.corridor, swept_pose_bounds(x,z,yaw_degrees,self.direction,self.waypoints[-1])):
+            raise RuntimeError('Swept chassis left the checked route envelope')
 
 
 class ProgressGuard:

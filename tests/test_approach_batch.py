@@ -27,7 +27,7 @@ class BatchTests(unittest.TestCase):
         capture = dict(session_id='test',control_epoch=0,captured_monotonic=0,image_path='test.jpg')
         self.assertIsNotNone(batch.segment(capture, [.5,15], 1))
         with self.assertRaises(RuntimeError):
-            batch.segment(capture, [3,15], 0)
+            batch.segment(capture, [8,15], 0)
 
     def test_production_batch_finishes_without_planner(self):
         case = run_batch_case(dict(speed=12,coast=.05,seed=3))

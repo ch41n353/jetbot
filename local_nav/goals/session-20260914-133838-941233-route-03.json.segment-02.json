@@ -1,0 +1,57 @@
+{
+  "outcome": "stopped",
+  "samples": [
+    {
+      "time": 1132076.183468177,
+      "elapsed": 0,
+      "position_cm": [
+        0.0007085077032352638,
+        -0.00031004972002562215
+      ],
+      "velocity_cm_s": [
+        0.0036587063919345346,
+        -0.0016010847691497567
+      ],
+      "yaw_degrees": -0.0021724148722500843,
+      "position_sigma_cm": 0.03605551275463989,
+      "yaw_sigma_degrees": 0.2763348641063261,
+      "braking_lead_cm": 0.0
+    },
+    {
+      "time": 1132076.252528152,
+      "elapsed": 0.07664148206822574,
+      "position_cm": [
+        -0.0008845225414290793,
+        -0.0019376515433437386
+      ],
+      "velocity_cm_s": [
+        -0.009704319131127431,
+        -0.01258451583517839
+      ],
+      "yaw_degrees": 0.0013906428247347819,
+      "position_sigma_cm": 0.05099019513592785,
+      "yaw_sigma_degrees": 0.3837790036603703,
+      "braking_lead_cm": 0.0
+    },
+    {
+      "time": 1132076.3501943,
+      "elapsed": 0.15239769709296525,
+      "position_cm": [
+        0.0033426724527918046,
+        -0.018845899397915544
+      ],
+      "velocity_cm_s": [
+        0.016788885344141448,
+        -0.09285371336628818
+      ],
+      "yaw_degrees": 0.16071319944392112,
+      "position_sigma_cm": 0.06613193471331466,
+      "yaw_sigma_degrees": 0.47308599087590086,
+      "braking_lead_cm": 0.0
+    }
+  ],
+  "passed_waypoints_cm": [],
+  "travel_direction": "forward",
+  "reason": "Camera tilt/height or tracking changed (scale 0.970)",
+  "powered_seconds": 0.22869547898881137
+}

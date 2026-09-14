@@ -11,7 +11,7 @@ import math
 import os
 import time
 
-from route_geometry import StraightRoute, finite, rectangle, contains, overlap
+from route_geometry import StraightRoute, finite, rectangle, contains, overlap, swept_pose_bounds
 
 
 class BatchRoute:
@@ -30,8 +30,10 @@ class BatchRoute:
     def segment(self, capture, position, yaw):
         x, z = map(finite, position)
         yaw = finite(yaw)
-        if abs(x) > 2 or abs(yaw) > 5 or z < -.5 or z > self.distance + 4:
+        if abs(yaw) > 5 or z < -.5 or z > self.distance + 4:
             raise RuntimeError('Batch pose left its checked envelope')
+        if not contains(self.corridor,swept_pose_bounds(x,z,yaw,1,self.distance)):
+            raise RuntimeError('Batch chassis left its checked envelope')
         remaining = self.distance - z
         if remaining < -1:
             raise RuntimeError('Batch overshot final distance')

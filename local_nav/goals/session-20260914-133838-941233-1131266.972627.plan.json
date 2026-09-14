@@ -1,0 +1,25 @@
+{
+  "waypoints_cm": [
+    15
+  ],
+  "travel_direction": "reverse",
+  "inspected_free_rectangle_cm": [
+    -18,
+    -44,
+    18,
+    12
+  ],
+  "obstacle_rectangles_cm": [
+    [
+      0,
+      14,
+      13,
+      28
+    ]
+  ],
+  "session_id": "400bfd61f22f4b089531c5bdb19666e7",
+  "control_epoch": 0,
+  "captured_monotonic": 1131266.972626809,
+  "image_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-133838-941233-1131266.972627.jpg",
+  "clearance_basis": "Retained corridor from recent reverse/return trials; current scene still matches stopped position near Advil."
+}
