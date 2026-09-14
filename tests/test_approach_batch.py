@@ -1,9 +1,11 @@
 import os
 import sys
 import unittest
+import tempfile
+from unittest.mock import patch
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), 'local_nav'))
-from approach_batch import BatchRoute
+from approach_batch import BatchRoute, execute_batch
 from simulate_route import run_batch_case
 
 
@@ -32,6 +34,7 @@ class BatchTests(unittest.TestCase):
         self.assertEqual(case['result']['outcome'], 'approach_distance_reached_estimate', case['result'])
         self.assertEqual(len(case['result']['segments']), 2)
         self.assertEqual(case['result']['intermediate_planner_calls'], 0)
+        self.assertEqual(len(case['timeline_initializations']), 1)
         self.assertLess(abs(case['true_error_cm']), 2)
 
     def test_external_stop_between_segments_prevents_restart(self):
@@ -50,3 +53,31 @@ class BatchTests(unittest.TestCase):
         commands = case['motor_commands']
         first_stop = next(i for i,c in enumerate(commands) if c['action']=='stop')
         self.assertFalse(any(c['action']=='motors_hold' for c in commands[first_stop:]))
+
+    def test_internal_overshoot_updates_remaining_distance(self):
+        import time
+        plan = self.plan()
+        plan.update(approach_distance_cm=19,session_id='test',control_epoch=0,
+                    captured_monotonic=time.monotonic(),image_path='anchor.jpg')
+        distances = []
+        epoch = [0]
+        def execute(local, route, log, **kwargs):
+            distances.append(route.waypoints[-1])
+            distance = 16.4 if len(distances)==1 else route.waypoints[-1]
+            return dict(outcome='overshot_goal' if len(distances)==1 else 'goal_reached',
+                        final_position_cm=[0,distance],
+                        final_anchor=dict(image_path='settled.jpg',captured_monotonic=time.monotonic()),
+                        settling_samples=[dict(position_sigma_cm=.2,yaw_sigma_degrees=.2,yaw_degrees=0)])
+        def call(action, **kwargs):
+            if action=='observation':
+                epoch[0]+=2
+            return dict(session_id='test',control_epoch=epoch[0])
+        with tempfile.TemporaryDirectory() as directory, \
+                patch('route_executor.execute',side_effect=execute), \
+                patch('point_controller.call',side_effect=call):
+            result=execute_batch(plan,os.path.join(directory,'result.json'))
+        self.assertEqual(result['outcome'],'approach_distance_reached_estimate')
+        self.assertEqual(len(distances),2)
+        self.assertAlmostEqual(distances[1],2.6)
+        with self.assertRaises(RuntimeError):
+            BatchRoute(plan).segment(plan,[0,20.1],0)

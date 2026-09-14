@@ -4,12 +4,12 @@ description: Operate and iterate the local JetBot camera/IMU navigation tools fo
 metadata:
   baseline-date: "2026-09-13"
   timezone: America/Los_Angeles
-  revision: "6"
+  revision: "7"
 ---
 
 # JetBot navigation
 
-Baseline **2026-09-13**, current revision **6**, America/Los_Angeles.
+Baseline **2026-09-13**, current revision **7**, America/Los_Angeles.
 Workspace: `/home/jetbot/jetbot`. Use `/usr/bin/python3` for the local tools.
 
 Read [the dated algorithm and evidence](references/baseline-2026-09-13.md)
@@ -27,6 +27,8 @@ feature-budget experiments and the slow-camera settling fix. Read
 automatic previews when optimizing end-to-end maneuver time. Read
 [revision 6](references/revision-2026-09-14-r6.md) for object approach planning
 and opt-in local batches that avoid VLM calls at internal segment boundaries.
+Read [revision 7](references/revision-2026-09-14-r7.md) for live return evidence,
+persistent IMU state across segments, and supervised reverse repositioning.
 
 ## Scope and control division
 
@@ -82,13 +84,17 @@ Use the shortest suitable bounded action:
 - **Whole straight approach:** revision-6 `plan_approach` and `execute` with
   `batch: true`, up to 30 cm in an inspected static corridor. Preview the entire
   route once. Internal segments retain 15 cm / two-second limits and verified
-  stops. Simulation validated; full batch physical validation is pending.
+  stops. One live two-segment return exercised continuation without planner calls;
+  final overshoot was correctly reported. See revision 7 for limits.
 
 - **Straight waypoint batch:** `route_executor.py`, total 1–15 cm, no model calls
   or intermediate waypoint stops. Requires a fresh preview and inspected static
   map including side/rear clearance; see revisions 2 and 3. Revision 2 has one successful powered 5 cm trial;
   predictive braking has separate validation requirements.
 
+- **Reverse repositioning:** ordinary route executor with `travel_direction:
+  "reverse"`, up to 15 cm / two seconds, only with inspected or retained rear
+  clearance. Results use negative physical z. See revision 7.
 - **Straight travel:** `smooth_drive_probe.py`, 1–15 cm requested per invocation,
   at most two seconds powered. Hold commands between valid sensor updates.
   Check the frame and remaining full-chassis clearance before the next segment.

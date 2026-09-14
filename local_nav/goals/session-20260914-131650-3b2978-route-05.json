@@ -1,0 +1,13 @@
+{
+  "outcome": "stopped",
+  "segments": [
+    {
+      "log_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-131650-3b2978-route-05.json.segment-01.json",
+      "outcome": "overshot_goal"
+    }
+  ],
+  "intermediate_planner_calls": 0,
+  "requires_planner": true,
+  "reason": "Segment failed or final position unverified: overshot_goal",
+  "elapsed_seconds": 2.134258671896532
+}

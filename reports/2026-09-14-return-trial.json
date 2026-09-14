@@ -1,0 +1,20 @@
+{
+  "requested_return_cm": 19,
+  "composed_return_position_cm": [
+    1.0128209175681218,
+    21.30912309098679
+  ],
+  "return_yaw_degrees": -3.2767140860928308,
+  "final_error_cm": 2.309123090986791,
+  "return_command_to_result_seconds": 4.022783532971516,
+  "controller_seconds": 3.2468068092130125,
+  "powered_seconds": 1.6150708959903568,
+  "intermediate_planner_calls": 0,
+  "outcome": "stopped",
+  "reason": "Batch overshot final distance",
+  "final_base_projection_cm": [
+    5.314023968767163,
+    17.158123956300773
+  ],
+  "independent_ground_truth": false
+}

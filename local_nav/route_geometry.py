@@ -36,15 +36,20 @@ class StraightRoute:
         if not self.waypoints or len(self.waypoints) > 15:
             raise ValueError('Expected 1 to 15 forward waypoints')
         if any(b <= a for a, b in zip([0] + self.waypoints, self.waypoints)):
-            raise ValueError('Waypoints must increase; turns and reverse are unsupported')
+            raise ValueError('Waypoints must be increasing positive travel distances')
         if not 1 <= self.waypoints[-1] <= 15:
             raise ValueError('Total route distance must be 1 to 15 cm')
         self.free = rectangle(plan['inspected_free_rectangle_cm'])
         self.obstacles = [rectangle(r) for r in plan['obstacle_rectangles_cm']]
+        direction = plan.get('travel_direction', 'forward')
+        if direction not in ('forward', 'reverse'):
+            raise ValueError('Unknown travel direction')
+        self.direction = 1 if direction == 'forward' else -1
         # 12x15 body, 5 clearance, 2 pose uncertainty, 2 heading envelope,
         # 1 lateral tracking allowance; plus 4 forward braking allowance.
         # 2 cm covers rotation of every chassis corner through +/-5 degrees.
-        self.corridor = [-16, -24, 16, self.waypoints[-1] + 13]
+        self.corridor = ([-16, -24, 16, self.waypoints[-1] + 13] if self.direction == 1
+                         else [-16, -self.waypoints[-1]-28, 16, 9])
         if not contains(self.free, self.corridor):
             raise ValueError('Swept chassis corridor enters uninspected space')
         if any(overlap(self.corridor, obstacle) for obstacle in self.obstacles):
@@ -52,7 +57,8 @@ class StraightRoute:
 
     def check_pose(self, x, z, yaw_degrees):
         x, z, yaw_degrees = map(finite, (x, z, yaw_degrees))
-        if abs(x) > 1 or abs(yaw_degrees) > 5 or z < -.5 or z > self.waypoints[-1] + 4:
+        progress = self.direction*z
+        if abs(x) > 1 or abs(yaw_degrees) > 5 or progress < -.5 or progress > self.waypoints[-1] + 4:
             raise RuntimeError('Measured pose left the checked route envelope')
 
 

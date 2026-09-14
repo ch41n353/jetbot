@@ -1,0 +1,18 @@
+<div id="reverse-route-preview">
+<strong>Reverse DISTANCE cm along the previously crossed corridor</strong>
+<svg viewBox="0 0 640 480" style="width:100%;height:auto" role="img" aria-label="Fresh forward camera view; reverse travel continues below the image, outside camera view.">
+<image href="CAMERA_IMAGE" width="640" height="480"/>
+<path d="M323 385 L323 465 M309 448 L323 465 L337 448" fill="none" stroke="var(--viz-series-1)" stroke-width="4"/>
+</svg>
+<div class="viz-row">
+<svg viewBox="0 0 320 320" style="width:320px;max-width:100%;height:auto" role="img" aria-label="Top-down full chassis sweep in reverse, with bottle ahead and goal lens position behind.">
+<rect x="96" y="24" width="128" height="SWEEP_HEIGHT" fill="var(--viz-series-1)" fill-opacity=".2"/>
+<rect x="136" y="60" width="48" height="60" fill="var(--foreground)" fill-opacity=".4"/>
+<rect x="136" y="TARGET_Y" width="48" height="60" fill="none" stroke="var(--viz-series-1)" stroke-width="2"/>
+<path d="M160 60 L160 TARGET_Y" stroke="var(--viz-series-1)" stroke-width="3"/>
+<circle cx="160" cy="TARGET_Y" r="5" fill="var(--viz-series-1)"/>
+<circle cx="180" cy="4" r="8" fill="var(--viz-series-2)"/>
+</svg>
+<div class="text-small">Solid: current chassis. Outline: goal chassis.<br>Shaded: body, 5 cm clearance, uncertainty and braking.<br>Rear clearance comes from the retained traversed corridor, not this camera view.</div>
+</div>
+</div>

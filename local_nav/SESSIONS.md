@@ -109,3 +109,28 @@ Show the returned whole-route preview, then:
 ```
 
 Use `stop` to cancel the whole worker, or `shutdown` to close the session.
+
+## Live return trial — revision 7, 2026-09-14
+
+A real two-segment return completed local continuation with zero intermediate
+planner calls: 4.023 seconds command-to-result, 21.309 cm estimated against a
+19 cm plan. It reported `stopped / Batch overshot final distance`, not arrival.
+The robot ended approximately 17–20 cm from the bottle by floor projection.
+Report: `/home/jetbot/jetbot/reports/2026-09-14-return-trial.md`.
+
+The first trial exposed IMU reinitialization on a recent braking sample. Batches
+now preserve one attitude timeline and the original tilt reference across all
+segments; the calibration and tilt limits are unchanged. Verified internal
+waypoint overshoot/undershoot updates remaining distance locally, provided the
+full map, pose and accumulated uncertainty checks continue to pass. Missing
+settling verification, motor-stop error, or final error beyond 1 cm still stops
+the batch. Results retain the last verified pose even when completion fails.
+
+For supervised repositioning, ordinary route plans now support
+`travel_direction: "reverse"`, with positive increasing travel distances up to
+15 cm. The physical reverse corridor is `[-16, -distance-28, 16, 9]`, including
+rear body, 5 cm clearance, uncertainty and braking. Requires explicitly retained
+or inspected rear clearance; the front camera cannot establish it. Positions in
+results remain camera-frame coordinates (negative z is backward); progress and
+final distance error follow the requested direction. Use ordinary `execute`,
+not `batch: true`. Existing two-second, sensing, token and stall limits remain.

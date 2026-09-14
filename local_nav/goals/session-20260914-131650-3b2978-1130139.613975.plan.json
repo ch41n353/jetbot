@@ -1,0 +1,25 @@
+{
+  "waypoints_cm": [
+    10
+  ],
+  "travel_direction": "reverse",
+  "inspected_free_rectangle_cm": [
+    -18,
+    -39,
+    18,
+    25
+  ],
+  "obstacle_rectangles_cm": [
+    [
+      0,
+      28,
+      12,
+      40
+    ]
+  ],
+  "session_id": "306b583670ca42d7b3db72b6d4bc6012",
+  "control_epoch": 2,
+  "captured_monotonic": 1130139.613974663,
+  "image_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-131650-3b2978-1130139.613975.jpg",
+  "clearance_basis": "Continuation within retained carpet corridor from preceding approach; first reverse settled at 15.46 cm."
+}

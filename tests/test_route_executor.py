@@ -30,6 +30,18 @@ class RouteTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             StraightRoute(p)
 
+    def test_reverse_checks_rear_body_and_rejects_wrong_direction(self):
+        p = plan()
+        p.update(travel_direction='reverse', inspected_free_rectangle_cm=[-20,-50,20,10])
+        route = StraightRoute(p)
+        self.assertEqual(route.corridor, [-16,-43,16,9])
+        route.check_pose(0,-10,0)
+        with self.assertRaises(RuntimeError):
+            route.check_pose(0,1,0)
+        p['obstacle_rectangles_cm'] = [[-2,-40,2,-38]]
+        with self.assertRaises(ValueError):
+            StraightRoute(p)
+
     def test_narrow_or_unknown_space_rejected(self):
         p = plan()
         p['inspected_free_rectangle_cm'][0] = -10
@@ -116,6 +128,7 @@ class ExecutorTests(unittest.TestCase):
                 patch('cv2.imread', return_value=image):
             tracker.return_value.motion.side_effect = lambda *a: next(motion)
             timeline.return_value.up = np.array([0., 0., 1.])
+            timeline.return_value.route_reference_up = None
             result = execute(p, route, log.name)
         self.assertEqual(result['outcome'], 'distance_threshold_reached', result)
         self.assertEqual(result['passed_waypoints_cm'], [1, 2, 3])

@@ -32,6 +32,7 @@ class AttitudeTimeline:
         self.states=deque(maxlen=600)
         self.last=None
         self.up=None
+        self.route_reference_up=None
         self.yaw=0.
         self.variance=0.
         self.gyro=None

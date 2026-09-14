@@ -33,6 +33,8 @@ class BatchRoute:
         if abs(x) > 2 or abs(yaw) > 5 or z < -.5 or z > self.distance + 4:
             raise RuntimeError('Batch pose left its checked envelope')
         remaining = self.distance - z
+        if remaining < -1:
+            raise RuntimeError('Batch overshot final distance')
         if remaining <= 1:
             return None
         distance = min(15, remaining)
@@ -58,13 +60,15 @@ class BatchRoute:
 
 
 def execute_batch(plan, log, feature_budget=125):
-    from point_controller import call
-    from route_executor import execute
+    from point_controller import call, ROOT
+    from route_executor import execute, load_json
+    from state_estimator import AttitudeTimeline
     result = dict(outcome='stopped', segments=[], intermediate_planner_calls=0,
                   requires_planner=False)
     started = time.monotonic()
     try:
         batch = BatchRoute(plan)
+        timeline = AttitudeTimeline(load_json(os.path.join(ROOT, 'calibration/imu_mount.json')))
         capture = {k: plan[k] for k in ('session_id', 'control_epoch',
                                         'captured_monotonic', 'image_path')}
         position, yaw = [0., 0.], 0.
@@ -81,9 +85,11 @@ def execute_batch(plan, log, feature_budget=125):
                 raise RuntimeError('Batch segment limit reached')
             segment_log = log+'.segment-%02d.json' % (index+1)
             segment = execute(local, StraightRoute(local), segment_log,
-                              predictive_braking=True, feature_budget=feature_budget)
+                              predictive_braking=True, feature_budget=feature_budget,
+                              attitude_timeline=timeline)
             result['segments'].append(dict(log_path=segment_log, outcome=segment['outcome']))
-            if segment['outcome'] != 'goal_reached' or 'stop_error' in segment:
+            verified = segment['outcome'] in ('goal_reached', 'overshot_goal', 'stopped_short')
+            if not verified or 'stop_error' in segment or 'final_anchor' not in segment:
                 raise RuntimeError('Segment failed or final position unverified: '+segment['outcome'])
             final = segment['settling_samples'][-1]
             position_variance += final['position_sigma_cm']**2
@@ -94,6 +100,8 @@ def execute_batch(plan, log, feature_budget=125):
             c, s = math.cos(math.radians(yaw)), math.sin(math.radians(yaw))
             position = [position[0]+c*dx+s*dz, position[1]-s*dx+c*dz]
             yaw += final['yaw_degrees']
+            result.update(last_verified_position_cm=position[:], last_verified_yaw_degrees=yaw,
+                          final_distance_error_cm=position[1]-batch.distance)
             # Successful predictive execution has exactly two owned stop calls.
             # Never adopt an arbitrary newer generation: an external stop cancels
             # continuation even when it lands between two segments.

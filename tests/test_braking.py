@@ -82,6 +82,7 @@ class BrakingExecutorTests(unittest.TestCase):
                 patch('cv2.imread', return_value=image):
             tracker.return_value.motion.side_effect = motion
             timeline.return_value.up = np.array([0., 0., 1.])
+            timeline.return_value.route_reference_up = None
             result = execute(p, StraightRoute(p), directory + '/run.json', predictive_braking=True)
         first_stop = [a for a, _ in commands].index('stop')
         self.assertFalse(any(a == 'motors_hold' for a, _ in commands[first_stop:]))

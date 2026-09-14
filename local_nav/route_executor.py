@@ -19,12 +19,14 @@ def load_json(path):
         return json.load(source)
 
 
-def execute(plan, route, log, predictive_braking=False, feature_budget=250):
+def execute(plan, route, log, predictive_braking=False, feature_budget=250, attitude_timeline=None):
     import cv2
     import numpy as np
     from point_controller import ROOT, FloorTracker, call, frame
     from state_estimator import AttitudeTimeline, PlanarState
     result = dict(outcome='stopped', samples=[], passed_waypoints_cm=[])
+    direction = route.direction
+    result['travel_direction'] = 'forward' if direction == 1 else 'reverse'
     started = None
     powered_seconds = None
     try:
@@ -44,7 +46,8 @@ def execute(plan, route, log, predictive_braking=False, feature_budget=250):
             raise RuntimeError('Plan image expired; inspect and preview a fresh route')
         profile = load_json(os.path.join(ROOT, 'calibration/floor_geometry.json'))
         tracker = FloorTracker(profile, load_json(profile['intrinsics_path']), max_features=feature_budget)
-        timeline = AttitudeTimeline(load_json(os.path.join(ROOT, 'calibration/imu_mount.json')))
+        timeline = (attitude_timeline if attitude_timeline is not None else
+                    AttitudeTimeline(load_json(os.path.join(ROOT, 'calibration/imu_mount.json'))))
         if predictive_braking:
             timeline.record_directory = log + '.observations'
             os.makedirs(timeline.record_directory, exist_ok=True)
@@ -58,7 +61,9 @@ def execute(plan, route, log, predictive_braking=False, feature_budget=250):
         state = PlanarState()
         progress = ProgressGuard()
         last_command = None
-        initial_up = timeline.up.copy()
+        if getattr(timeline, 'route_reference_up', None) is None:
+            timeline.route_reference_up = timeline.up.copy()
+        initial_up = timeline.route_reference_up
         while True:
             current, t1, a1 = frame(timeline, settled=False)
             now = time.monotonic()
@@ -78,11 +83,12 @@ def execute(plan, route, log, predictive_braking=False, feature_budget=250):
                 raise RuntimeError('Tilt guard')
             elapsed = 0 if started is None else time.monotonic() - started
             result['samples'].append(dict(time=t1, elapsed=elapsed, **pose))
-            result['passed_waypoints_cm'] = [v for v in route.waypoints if z >= v]
-            lead = braking_distance(pose['velocity_cm_s'][1], time.monotonic() - t1, dt) if predictive_braking else 0.
+            forward = direction*z
+            result['passed_waypoints_cm'] = [v for v in route.waypoints if forward >= v]
+            lead = braking_distance(direction*pose['velocity_cm_s'][1], time.monotonic() - t1, dt) if predictive_braking else 0.
             result['samples'][-1]['braking_lead_cm'] = lead
-            if z >= route.waypoints[-1] or (predictive_braking and started is not None
-                                           and route.waypoints[-1] - z <= lead):
+            if forward >= route.waypoints[-1] or (predictive_braking and started is not None
+                                           and route.waypoints[-1] - forward <= lead):
                 result['outcome'] = 'distance_threshold_reached'
                 if predictive_braking:
                     call('stop')
@@ -106,7 +112,7 @@ def execute(plan, route, log, predictive_braking=False, feature_budget=250):
                         route.check_pose(x, z, final_pose['yaw_degrees'])
                         result['settling_samples'].append(dict(time=t1, **final_pose))
                         # Only frames acquired after the stop can establish settling.
-                        assessment = checker.update(t1, x, z) if t1 >= stopped_at else None
+                        assessment = checker.update(t1, x, direction*z) if t1 >= stopped_at else None
                         old, t0, a0 = current, t1, a1
                         if assessment:
                             status = call('status')
@@ -117,7 +123,8 @@ def execute(plan, route, log, predictive_braking=False, feature_budget=250):
                                 raise RuntimeError('Could not preserve settled frame for continuation')
                             result['final_anchor'] = dict(image_path=anchor_path, captured_monotonic=t1)
                             result.update(assessment)
-                            result['passed_waypoints_cm'] = [v for v in route.waypoints if z >= v]
+                            result['final_position_cm'] = [x, z]
+                            result['passed_waypoints_cm'] = [v for v in route.waypoints if direction*z >= v]
                             break
                     if result['outcome'] == 'final_position_unverified':
                         result['reason'] = 'No stable post-stop window within one second'
@@ -125,12 +132,12 @@ def execute(plan, route, log, predictive_braking=False, feature_budget=250):
             if started is not None:
                 if elapsed >= 2:
                     raise RuntimeError('Two-second powered limit; target not reached')
-                progress.check(elapsed, z)
+                progress.check(elapsed, forward)
             # Vision gates every renewal. No background heartbeat can mask stale tracking.
             if last_command is not None and time.monotonic() - last_command > .18:
                 raise RuntimeError('Processing exceeded lease budget')
-            steer = float(np.clip(-.3 * state.yaw - .02 * x, -.025, .025))
-            call('motors_hold', left=.16 + steer, right=.16 - steer, **token)
+            steer = float(np.clip(-.3 * state.yaw - .02 * direction * x, -.025, .025))
+            call('motors_hold', left=.16*direction + steer, right=.16*direction - steer, **token)
             last_command = time.monotonic()
             if started is None:
                 started = last_command

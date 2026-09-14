@@ -145,7 +145,7 @@ class Plant:
         raise RuntimeError('Simulation prohibits socket action: ' + action)
 
 
-def run_case(parameters, predictive=True, feature_budget=250, target_cm=5.):
+def run_case(parameters, predictive=True, feature_budget=250, target_cm=5., reverse=False):
     plant = Plant(**parameters)
     target = target_cm
     profile = load_json(os.path.join(ROOT, 'calibration/floor_geometry.json'))
@@ -167,6 +167,8 @@ def run_case(parameters, predictive=True, feature_budget=250, target_cm=5.):
         cv2.imwrite(path, plant.render())
         plan = dict(waypoints_cm=[v for v in (1., 3.) if v < target] + [target], inspected_free_rectangle_cm=[-20, -30, 20, 30],
                     obstacle_rectangles_cm=[], captured_monotonic=plant.time, image_path=path, **plant.token)
+        if reverse:
+            plan.update(travel_direction='reverse', inspected_free_rectangle_cm=[-20,-target-30,20,10])
         with patch('point_controller.call', side_effect=plant.call), \
                 patch('point_controller.frame', side_effect=plant.frame), \
                 patch('point_controller.FloorTracker', return_value=tracker), \
@@ -179,7 +181,7 @@ def run_case(parameters, predictive=True, feature_budget=250, target_cm=5.):
         plant.advance(1.)
     first_stop = next((i for i, c in enumerate(plant.commands) if c['action'] == 'stop'), len(plant.commands))
     return dict(parameters=parameters, predictive=predictive, feature_budget=feature_budget, target_cm=target, result=result,
-                true_final_position_cm=[plant.x, plant.z], true_error_cm=plant.z-target,
+                true_final_position_cm=[plant.x, plant.z], true_error_cm=(-plant.z if reverse else plant.z)-target,
                 true_stop_position_cm=plant.stop_position, max_power=plant.max_power,
                 renewed_after_stop=any(c['action'] == 'motors_hold' for c in plant.commands[first_stop:]),
                 watchdog_stops=plant.watchdog_stops)
@@ -192,6 +194,7 @@ def run_batch_case(parameters, target_cm=30., cancel_between_segments=False, dis
     profile = load_json(os.path.join(ROOT, 'calibration/floor_geometry.json'))
     tracker = FloorTracker(profile, load_json(profile['intrinsics_path']), max_features=125)
     original_motion = tracker.motion
+    timeline_initializations = []
 
     def motion(*args):
         try:
@@ -212,6 +215,7 @@ def run_batch_case(parameters, target_cm=30., cancel_between_segments=False, dis
     class Timeline:
         def __init__(self, mount):
             self.up = plant.initial_up.copy()
+            timeline_initializations.append(plant.time)
 
     with tempfile.TemporaryDirectory(prefix='jetbot-batch-simulation-') as directory:
         path = os.path.join(directory, 'anchor.png')
@@ -234,7 +238,8 @@ def run_batch_case(parameters, target_cm=30., cancel_between_segments=False, dis
         plant.advance(1.)
     return dict(parameters=parameters, result=result, true_final_position_cm=[plant.x, plant.z],
                 true_error_cm=plant.z-target_cm, motor_commands=plant.commands,
-                cancel_between_segments=cancel_between_segments)
+                cancel_between_segments=cancel_between_segments,
+                timeline_initializations=timeline_initializations)
 
 
 def main():
