@@ -14,6 +14,13 @@ def prepare(capture, request):
     plan.update(inspected_free_rectangle_cm=request['inspected_free_rectangle_cm'],
                 obstacle_rectangles_cm=request['obstacle_rectangles_cm'],
                 goals_cm=request['goals_cm'],goal_tolerance_cm=request.get('goal_tolerance_cm',3.))
+    for flag in ('measured_map_drive','precise_turn_sweep','coalesce_drives'):
+        value=request.get(flag,False)
+        if type(value) is not bool:
+            raise ValueError(flag+' must be boolean')
+        plan[flag]=value
+    if plan['coalesce_drives'] and not plan['measured_map_drive']:
+        raise ValueError('coalesce_drives requires measured_map_drive')
     goals=plan['goals_cm']
     if not isinstance(goals,list) or not 1<=len(goals)<=4:
         raise ValueError('Expected one to four targets in the initial camera frame')

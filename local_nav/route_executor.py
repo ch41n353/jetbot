@@ -30,6 +30,10 @@ def execute(plan, route, log, predictive_braking=False, feature_budget=250, atti
     started = None
     powered_seconds = None
     try:
+        powered_limit=getattr(route,'powered_limit_seconds',2.)
+        if powered_limit not in (2.,4.):
+            raise ValueError('Unsupported powered duration limit')
+        result['powered_limit_seconds']=powered_limit
         footprint = load_json(os.path.join(ROOT, 'calibration/robot_footprint.json'))
         if (footprint['width_cm'], footprint['length_cm'], footprint['camera_location']) != (12, 15, 'front_center'):
             raise RuntimeError('Footprint differs from checked geometry')
@@ -139,8 +143,8 @@ def execute(plan, route, log, predictive_braking=False, feature_budget=250, atti
                         result['reason'] = 'No stable post-stop window within one second'
                 break
             if started is not None:
-                if elapsed >= 2:
-                    raise RuntimeError('Two-second powered limit; target not reached')
+                if elapsed >= powered_limit:
+                    raise RuntimeError('%g-second powered limit; target not reached' % powered_limit)
                 progress.check(elapsed, forward)
             # Vision gates every renewal. No background heartbeat can mask stale tracking.
             if last_command is not None and time.monotonic() - last_command > .18:

@@ -15,6 +15,21 @@ from spatial_planner import SpatialPlanner, sweep, transform, normalize, predict
 from route_geometry import StraightRoute, finite, contains
 
 
+def drive_group(pending,enabled):
+    """Join only adjacent, same-direction drives; never cross a turn or target."""
+    first=dict(pending[0])
+    count=1
+    if enabled and first['kind']=='drive':
+        for candidate in pending[1:]:
+            if (candidate['kind']!='drive' or candidate['value']*first['value']<=0
+                    or abs(first['value']+candidate['value'])>30):
+                break
+            first['value']+=candidate['value']
+            count+=1
+    first['primitive_count']=count
+    return first,count
+
+
 def execute_navigation(plan, log):
     from point_controller import call, ROOT
     from route_executor import execute, load_json
@@ -30,6 +45,11 @@ def execute_navigation(plan, log):
         planners = [SpatialPlanner(dict(plan,goal_cm=goal)) for goal in goals]
         goal_index = 0
         planner = planners[0]
+        coalesce=plan.get('coalesce_drives',False)
+        if type(coalesce) is not bool or (coalesce and not planner.measured_map_drive):
+            raise ValueError('coalesce_drives requires boolean true and measured_map_drive')
+        result['coalesce_drives']=coalesce
+        primitive_count=0
         result['reached_targets'] = []
         timeline = AttitudeTimeline(load_json(os.path.join(ROOT,'calibration/imu_mount.json')))
         capture = {k:plan[k] for k in ('session_id','control_epoch','image_path','captured_monotonic')}
@@ -84,7 +104,14 @@ def execute_navigation(plan, log):
                 pending = route['actions']
             if index == 12:
                 raise RuntimeError('Navigation action budget exceeded')
-            action = dict(pending.pop(0))
+            action,consumed=drive_group(pending,coalesce)
+            if primitive_count+consumed>12:
+                raise RuntimeError('Navigation primitive budget exceeded')
+            if action['kind']=='drive' and travel+abs(action['value'])>90:
+                raise RuntimeError('Navigation travel budget would be exceeded')
+            del pending[:consumed]
+            primitive_count+=consumed
+            result['primitive_count']=primitive_count
             primitive = (action['kind'],action['value'])
             action.update(predicted_start_pose=list(pose),predicted_end_pose=list(predict(pose,primitive)),
                           swept_bounds_cm=planner.envelope(pose,primitive))
@@ -94,12 +121,13 @@ def execute_navigation(plan, log):
                 distance = action['value']
                 local.update(waypoints_cm=[abs(distance)],
                              travel_direction='forward' if distance>0 else 'reverse',
-                             inspected_free_rectangle_cm=sweep((0,0,0),('drive',distance)),
+                             inspected_free_rectangle_cm=[-16,-24,16,distance+13] if distance>0
+                                 else [-16,distance-28,16,9],
                              obstacle_rectangles_cm=[])
                 # Local free rectangle is backed by the world-map sweep proof.
                 if planner.measured_map_drive:
                     from mapped_drive import MappedDriveRoute
-                    drive_route=MappedDriveRoute(planner,pose,distance)
+                    drive_route=MappedDriveRoute(planner,pose,distance,coalesced=coalesce)
                 else:
                     drive_route=StraightRoute(local)
                 step = execute(local,drive_route,action_log,predictive_braking=True,

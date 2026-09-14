@@ -17,7 +17,7 @@ from spatial_executor import execute_navigation
 
 
 def run_spatial_case(parameters, goal=(30,30), obstacles=None, cancel_between=False, goals=None, free=None,
-                     measured_map_drive=False, initial_pose=None, precise_turn_sweep=False):
+                     measured_map_drive=False, initial_pose=None, precise_turn_sweep=False,coalesce_drives=False):
     plant = Plant(**parameters)
     if initial_pose is not None:
         plant.x,plant.z=initial_pose[:2]
@@ -59,6 +59,7 @@ def run_spatial_case(parameters, goal=(30,30), obstacles=None, cancel_between=Fa
         cv2.imwrite(path,plant.render())
         plan = dict(goal_cm=list(goal),inspected_free_rectangle_cm=free or [-120,-120,120,160],
                     measured_map_drive=measured_map_drive,
+                    coalesce_drives=coalesce_drives,
                     precise_turn_sweep=precise_turn_sweep,
                     obstacle_rectangles_cm=obstacles or [],image_path=path,
                     captured_monotonic=plant.time,**plant.token)

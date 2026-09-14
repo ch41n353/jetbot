@@ -4,12 +4,12 @@ description: Operate and iterate the local JetBot camera/IMU navigation tools fo
 metadata:
   baseline-date: "2026-09-13"
   timezone: America/Los_Angeles
-  revision: "9"
+  revision: "10"
 ---
 
 # JetBot navigation
 
-Baseline **2026-09-13**, current revision **9**, America/Los_Angeles.
+Baseline **2026-09-13**, current revision **10**, America/Los_Angeles.
 Workspace: `/home/jetbot/jetbot`. Use `/usr/bin/python3` for the local tools.
 
 Read [the dated algorithm and evidence](references/baseline-2026-09-13.md)
@@ -33,6 +33,8 @@ Read [revision 8](references/revision-2026-09-14-r8.md) for local spatial planni
 measured turns, target queues, live results, and mandatory input-voltage monitoring.
 Read [revision9](references/revision-2026-09-14-r9.md) for the subsequently found
 INA219 battery-pack monitor, current power thresholds, and paired simulation results.
+Read [revision10](references/revision-2026-09-14-r10.md) for opt-in joining of
+adjacent drives into up to30cm/four-second runs and its simulation-only evidence.
 
 ## Scope and control division
 
@@ -98,7 +100,9 @@ Prefer a whole inspected route over model calls between small movements:
 - **Spatial target or target queue:** revision-8 `plan_navigation` and `execute`
   with `spatial: true`, up to four targets in one inspected static map. Local
   code chooses drives/turns and rechecks a retained route using measured pose.
-  Limits remain12 actions,60seconds,90cm total and existing primitive limits.
+  Limits remain12 search primitives,60seconds and90cm total. Default drives retain
+  15cm/two-second limits; revision10 opt-in joined drives permit30cm/four seconds
+  with continuous visual checks. Stops remain at target, turn and direction changes.
   Turns have measured VIO translation and cancellation tokens. This is
   experimental; live straight continuation and turn-to-drive continuation
   succeeded, while full live out-and-back remained blocked by map clearance.

@@ -126,3 +126,16 @@ cases (camera failure/blocking, stall, cancellation, texture loss, slow camera;
 straight and mixed missions) all stopped with zero final motor output and no
 audited clearance violations. Full suite now106 tests, including freshness of
 the older of the two required power readings.
+
+## Opt-in joined drives — reduce local pauses
+
+User requested reducing stops inside the local loop. Added coalesce_drives
+(requires measured_map_drive), joining adjacent same-sign drives up to30cm,
+with4s powered limit for runs over15cm. Keeps vision-gated leases, battery,
+progress, tilt, pose uncertainty and geometry checks; stops at targets, turns
+and reversals. Preview matches grouping. Default mode remains15cm/2s.
+32 paired simulations: joined16/16 successful vs default15/16; no audited
+clearance violations. Forward30 median3.987→3.195s, out-and-back6.487→4.820s.
+Maximum joined true error2.782cm. Default reverse seed4 failed travel budget.
+112-test full suite and seven focused tests passed; the narrowed return-corridor
+check passed too. No hardware motion; current charger status remains unresolved.

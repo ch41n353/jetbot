@@ -7,6 +7,7 @@ import cv2
 import numpy as np
 from point_controller import ROOT
 from spatial_planner import SpatialPlanner
+from spatial_executor import drive_group
 
 
 def write_preview(plan,destination):
@@ -15,10 +16,20 @@ def write_preview(plan,destination):
     pose=initial
     route=dict(outcome='route_found',actions=[],elapsed_seconds=0.)
     for goal in goals:
-        leg=SpatialPlanner(dict(plan,goal_cm=goal)).search(pose)
+        planner=SpatialPlanner(dict(plan,goal_cm=goal))
+        leg=planner.search(pose)
         if leg['outcome']!='route_found':
             raise ValueError('No complete local route to preview: '+leg['outcome'])
-        route['actions'].extend(leg['actions'])
+        pending=list(leg['actions'])
+        while pending:
+            action,count=drive_group(pending,plan.get('coalesce_drives',False))
+            action['predicted_end_pose']=pending[count-1]['predicted_end_pose']
+            action['swept_bounds_cm']=planner.envelope(action['predicted_start_pose'],
+                                                       (action['kind'],action['value']))
+            if not planner.clear(action['swept_bounds_cm']):
+                raise ValueError('Joined drive does not fit the inspected map')
+            route['actions'].append(action)
+            del pending[:count]
         route['elapsed_seconds']+=leg['elapsed_seconds']
         pose=tuple(leg['predicted_final_pose'])
     with open(os.path.join(ROOT,'calibration/floor_geometry.json')) as source:

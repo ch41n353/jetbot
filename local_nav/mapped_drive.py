@@ -26,10 +26,14 @@ def nominal_bounds(pose,distance):
 
 
 class MappedDriveRoute:
-    def __init__(self,planner,pose,distance):
+    def __init__(self,planner,pose,distance,coalesced=False):
         distance=finite(distance)
-        if not 1<=abs(distance)<=15:
-            raise ValueError('Mapped drive must be 1 to 15 cm')
+        if type(coalesced) is not bool:
+            raise ValueError('coalesced must be boolean')
+        limit=30 if coalesced else 15
+        if not 1<=abs(distance)<=limit:
+            raise ValueError('Mapped drive exceeds its distance limit')
+        self.powered_limit_seconds=4. if coalesced and abs(distance)>15 else 2.
         self.waypoints=[abs(distance)]
         self.direction=1 if distance>0 else -1
         self.planner=planner
