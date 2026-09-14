@@ -1,0 +1,28 @@
+{
+  "date": "2026-09-14",
+  "target": "Advil bottle",
+  "first_capture_to_final_capture_seconds": 219.0246316541452,
+  "drive_command_to_result_seconds": [
+    2.417772614164278,
+    2.7180011570453644,
+    2.818296408979222
+  ],
+  "drive_powered_seconds": [
+    1.222806402016431,
+    1.207832854008302,
+    1.1130543621256948
+  ],
+  "final_base_ground_estimate_cm": [
+    5.1174,
+    14.1301
+  ],
+  "final_clearance_estimate_cm": [
+    14,
+    16
+  ],
+  "independent_ground_truth": false,
+  "motion_service_shutdown": true,
+  "first_route_failure": "Floor scale 1.038 during post-stop tracking; final odometry unverified",
+  "turn_degrees": -17.56783637633297,
+  "turn_controller_seconds": 2.5707826809957623
+}

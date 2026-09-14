@@ -6,6 +6,7 @@ socket calls, camera frames, IMU attitude and clock inside a scoped mock context
 No hardware is opened. Simulation parameters are hypotheses, not calibration.
 """
 import argparse
+import base64
 import json
 import math
 import os
@@ -182,6 +183,58 @@ def run_case(parameters, predictive=True, feature_budget=250, target_cm=5.):
                 true_stop_position_cm=plant.stop_position, max_power=plant.max_power,
                 renewed_after_stop=any(c['action'] == 'motors_hold' for c in plant.commands[first_stop:]),
                 watchdog_stops=plant.watchdog_stops)
+
+
+def run_batch_case(parameters, target_cm=30., cancel_between_segments=False, displacement_between_segments=0.):
+    """Same independent plant, production batch/segment controllers, no hardware."""
+    from approach_batch import execute_batch
+    plant = Plant(**parameters)
+    profile = load_json(os.path.join(ROOT, 'calibration/floor_geometry.json'))
+    tracker = FloorTracker(profile, load_json(profile['intrinsics_path']), max_features=125)
+    original_motion = tracker.motion
+
+    def motion(*args):
+        try:
+            return original_motion(*args)
+        finally:
+            plant.advance(plant.compute)
+
+    def call(action, **fields):
+        if action != 'observation':
+            return plant.call(action, **fields)
+        if cancel_between_segments:
+            plant.token['control_epoch'] += 1
+        plant.z += displacement_between_segments
+        image, timestamp, _ = plant.frame(None)
+        encoded = cv2.imencode('.jpg', image)[1].tobytes()
+        return dict(time=timestamp, jpeg_base64=base64.b64encode(encoded).decode(), **plant.token)
+
+    class Timeline:
+        def __init__(self, mount):
+            self.up = plant.initial_up.copy()
+
+    with tempfile.TemporaryDirectory(prefix='jetbot-batch-simulation-') as directory:
+        path = os.path.join(directory, 'anchor.png')
+        cv2.imwrite(path, plant.render())
+        plan = dict(approach_distance_cm=target_cm,
+                    inspected_free_rectangle_cm=[-22, -30, 22, target_cm+16],
+                    obstacle_rectangles_cm=[], captured_monotonic=plant.time,
+                    image_path=path, **plant.token)
+        with patch('point_controller.call', side_effect=call), \
+                patch('point_controller.frame', side_effect=plant.frame), \
+                patch('point_controller.FloorTracker', return_value=tracker), \
+                patch.object(tracker, 'motion', side_effect=motion), \
+                patch('state_estimator.AttitudeTimeline', Timeline), \
+                patch('route_executor.time.monotonic', side_effect=lambda: plant.time), \
+                patch('route_executor.time.sleep', side_effect=plant.advance):
+            result = execute_batch(plan, os.path.join(directory, 'batch.json'))
+        for segment in result['segments']:
+            with open(segment.pop('log_path')) as source:
+                segment['result'] = json.load(source)
+        plant.advance(1.)
+    return dict(parameters=parameters, result=result, true_final_position_cm=[plant.x, plant.z],
+                true_error_cm=plant.z-target_cm, motor_commands=plant.commands,
+                cancel_between_segments=cancel_between_segments)
 
 
 def main():

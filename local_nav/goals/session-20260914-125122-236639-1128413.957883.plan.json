@@ -1,0 +1,26 @@
+{
+  "waypoints_cm": [
+    5,
+    10,
+    15
+  ],
+  "inspected_free_rectangle_cm": [
+    -18,
+    -24,
+    18,
+    30
+  ],
+  "obstacle_rectangles_cm": [
+    [
+      -35,
+      40,
+      0,
+      65
+    ]
+  ],
+  "session_id": "a3c866adc81c44d4a4c7a1acd12189e2",
+  "control_epoch": 0,
+  "captured_monotonic": 1128413.957883356,
+  "image_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-125122-236639-1128413.957883.jpg",
+  "clearance_basis": "Fresh front image and current user-confirmed free-to-move setup; no new side/rear obstacle observed since prior supervised forward move."
+}

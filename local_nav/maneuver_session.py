@@ -18,15 +18,18 @@ import uuid
 from point_controller import ROOT, call
 
 
-def route_command(plan, log, predictive=False, feature_budget=250):
+def route_command(plan, log, predictive=False, feature_budget=250, batch=False):
     if type(predictive) is not bool or type(feature_budget) is not int or feature_budget not in (80, 125, 250):
         raise ValueError('Invalid route options')
     if not isinstance(plan, str) or not plan:
         raise ValueError('Expected plan file path')
-    command = [sys.executable, os.path.join(ROOT, 'local_nav/route_executor.py'),
+    if type(batch) is not bool:
+        raise ValueError('batch must be boolean')
+    executable = 'approach_batch.py' if batch else 'route_executor.py'
+    command = [sys.executable, os.path.join(ROOT, 'local_nav', executable),
                os.path.abspath(plan), '--execute', '--log', log,
                '--feature-budget', str(feature_budget)]
-    if predictive:
+    if predictive and not batch:
         command.append('--predictive-braking')
     return command
 
@@ -53,6 +56,7 @@ def main():
     events = []
     run_count = 0
     input_buffer = b''
+    last_capture = None
     try:
         # Do not replace, attach to or shut down an unrelated service.
         if os.path.exists('/tmp/jetbot-local-nav/control.sock'):
@@ -142,6 +146,32 @@ def main():
                         event['clearance_checked'] = False
                     events.append(event)
                     emit(**event)
+                    last_capture = event
+                elif command == 'plan_approach':
+                    if worker is not None or last_capture is None:
+                        raise ValueError('Capture a stationary scene before planning an approach')
+                    if not args.preview_directory:
+                        raise ValueError('Approach planning needs --preview-directory')
+                    from approach_plan import prepare
+                    from point_controller import FloorTracker
+                    from route_preview import write_preview
+                    with open(os.path.join(ROOT, 'calibration/floor_geometry.json')) as source:
+                        profile = json.load(source)
+                    with open(profile['intrinsics_path']) as source:
+                        tracker = FloorTracker(profile, json.load(source))
+                    assessment = prepare(last_capture, request, tracker)
+                    if 'plan' in assessment:
+                        path = last_capture['image_path'][:-4] + '-approach-' + uuid.uuid4().hex[:6]
+                        with open(path+'.plan.json', 'w') as out:
+                            json.dump(assessment.pop('plan'), out, indent=2)
+                        assessment['plan_path'] = path+'.plan.json'
+                        assessment['preview_path'] = write_preview(last_capture['image_path'],
+                            assessment['approach_distance_cm'],
+                            os.path.join(args.preview_directory, os.path.basename(path)+'.html'),
+                            batch=assessment['batch'])
+                    event = dict(event='approach_planned', **assessment)
+                    events.append(event)
+                    emit(**event)
                 elif command == 'execute':
                     if not args.enable_motion:
                         raise ValueError('Session is disarmed')
@@ -150,7 +180,7 @@ def main():
                     run_count += 1
                     route_log = prefix + '-route-%02d.json' % run_count
                     argv = route_command(request['plan'], route_log, request.get('predictive_braking', False),
-                                         request.get('feature_budget', 250))
+                                         request.get('feature_budget', 250), request.get('batch', False))
                     worker_output = open(route_log+'.stdout.log', 'w')
                     with open(os.path.abspath(request['plan'])) as source:
                         plan_metadata = json.load(source)

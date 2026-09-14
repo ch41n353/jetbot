@@ -9,10 +9,10 @@ from point_controller import ROOT
 from route_geometry import finite
 
 
-def write_preview(image_path, distance_cm, destination):
+def write_preview(image_path, distance_cm, destination, batch=False):
     distance_cm = finite(distance_cm)
-    if not 1 <= distance_cm <= 15:
-        raise ValueError('Preview distance must be 1 to 15 cm')
+    if type(batch) is not bool or not 1 <= distance_cm <= (30 if batch else 15):
+        raise ValueError('Preview distance exceeds mode limit')
     with open(os.path.join(ROOT, 'calibration/floor_geometry.json')) as source:
         profile = json.load(source)
     with open(profile['intrinsics_path']) as source:
@@ -27,9 +27,10 @@ def write_preview(image_path, distance_cm, destination):
                                         np.array(intrinsics['K']), np.array(intrinsics['D']))
         return uv.reshape(-1,2)
 
-    front = distance_cm + 13
+    front = distance_cm + (15 if batch else 13)
+    half_width, rear = (20, 28) if batch else (16, 24)
     points = []
-    corners = [(-16,0), (-16,front), (16,front), (16,0), (-16,0)]
+    corners = [(-half_width,0), (-half_width,front), (half_width,front), (half_width,0), (-half_width,0)]
     for a,b in zip(corners,corners[1:]):
         points.extend(np.array(a)*(1-f)+np.array(b)*f for f in np.linspace(0,1,30))
     boundary = project(points)
@@ -43,7 +44,10 @@ def write_preview(image_path, distance_cm, destination):
                   FLOOR_POLYGON=' '.join('%.2f,%.2f' % tuple(v) for v in boundary),
                   FLOOR_LINE='M '+' L '.join('%.2f %.2f' % tuple(v) for v in path),
                   GOAL_X='%.2f' % goal[0], GOAL_Y='%.2f' % goal[1],
-                  SWEEP_Y='%.2f' % (170-5*front), SWEEP_HEIGHT='%.2f' % (5*(front+24)),
+                  SWEEP_Y='%.2f' % (170-5*front), SWEEP_HEIGHT='%.2f' % (5*(front+rear)),
+                  SWEEP_X=str(160-5*half_width), SWEEP_WIDTH=str(10*half_width),
+                  TOP_VIEW_Y=str(min(0,160-5*front)), TOP_VIEW_HEIGHT=str(340-min(0,160-5*front)),
+                  MANEUVER_LABEL='One inspected approach; local segments up to 15 cm' if batch else 'One local maneuver',
                   TARGET_Y='%.2f' % (170-5*distance_cm))
     for key,value in values.items():
         markup = markup.replace(key,value)

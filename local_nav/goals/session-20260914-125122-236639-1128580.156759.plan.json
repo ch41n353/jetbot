@@ -1,0 +1,35 @@
+{
+  "waypoints_cm": [
+    5,
+    10,
+    15
+  ],
+  "inspected_free_rectangle_cm": [
+    -18,
+    -24,
+    18,
+    28.5
+  ],
+  "obstacle_rectangles_cm": [
+    [
+      -1,
+      29,
+      12,
+      40
+    ]
+  ],
+  "session_id": "a3c866adc81c44d4a4c7a1acd12189e2",
+  "control_epoch": 24,
+  "captured_monotonic": 1128580.156759449,
+  "image_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-125122-236639-1128580.156759.jpg",
+  "target": "Advil",
+  "target_base_pixel": [
+    365,
+    263
+  ],
+  "target_ground_cm": [
+    4.63,
+    32.52
+  ],
+  "clearance_basis": "Fresh front carpet; rear retained from previous 15.42 cm forward route; bottle bounds include floor-projection uncertainty."
+}

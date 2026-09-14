@@ -1,0 +1,147 @@
+{
+  "elapsed_seconds": 256.08397426991723,
+  "events": [
+    {
+      "event": "captured",
+      "image_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-125122-236639-1128413.957883.jpg",
+      "metadata_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-125122-236639-1128413.957883.json",
+      "captured_monotonic": 1128413.957883356,
+      "session_id": "a3c866adc81c44d4a4c7a1acd12189e2",
+      "control_epoch": 0,
+      "preview_path": "/home/jetbot/.codex/visualizations/2026/09/10/01a088e8-29c5-7473-92d9-59b23900f569/session-20260914-125122-236639-1128413.957883-preview.html",
+      "clearance_checked": false
+    },
+    {
+      "event": "route_started",
+      "result_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-125122-236639-route-01.json",
+      "started_monotonic": 1128455.243667265,
+      "plan_image_age_seconds": 41.285783909028396
+    },
+    {
+      "event": "route_finished",
+      "started_monotonic": 1128455.243667265,
+      "finished_monotonic": 1128457.661439201,
+      "elapsed_seconds": 2.417772614164278,
+      "exit_code": 1,
+      "result_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-125122-236639-route-01.json",
+      "result": {
+        "outcome": "stopped",
+        "passed_waypoints_cm": [
+          5,
+          10
+        ],
+        "brake_position_cm": [
+          0.6158854683200743,
+          13.403809862193505
+        ],
+        "brake_lead_cm": 2.0,
+        "reason": "Camera tilt/height or tracking changed (scale 1.038)",
+        "powered_seconds": 1.222806402016431
+      }
+    },
+    {
+      "event": "captured",
+      "image_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-125122-236639-1128464.913801.jpg",
+      "metadata_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-125122-236639-1128464.913801.json",
+      "captured_monotonic": 1128464.913801254,
+      "session_id": "a3c866adc81c44d4a4c7a1acd12189e2",
+      "control_epoch": 2
+    },
+    {
+      "event": "captured",
+      "image_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-125122-236639-1128553.197385.jpg",
+      "metadata_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-125122-236639-1128553.197385.json",
+      "captured_monotonic": 1128553.19738493,
+      "session_id": "a3c866adc81c44d4a4c7a1acd12189e2",
+      "control_epoch": 22,
+      "preview_path": "/home/jetbot/.codex/visualizations/2026/09/10/01a088e8-29c5-7473-92d9-59b23900f569/session-20260914-125122-236639-1128553.197385-preview.html",
+      "clearance_checked": false
+    },
+    {
+      "event": "route_started",
+      "result_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-125122-236639-route-02.json",
+      "started_monotonic": 1128572.171835514,
+      "plan_image_age_seconds": 18.974450584035367
+    },
+    {
+      "event": "route_finished",
+      "started_monotonic": 1128572.171835514,
+      "finished_monotonic": 1128574.889835629,
+      "elapsed_seconds": 2.7180011570453644,
+      "exit_code": 0,
+      "result_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-125122-236639-route-02.json",
+      "result": {
+        "outcome": "goal_reached",
+        "passed_waypoints_cm": [
+          5,
+          10,
+          15
+        ],
+        "brake_position_cm": [
+          0.5669821449665683,
+          13.045596734418288
+        ],
+        "brake_lead_cm": 2.0,
+        "final_position_cm": [
+          0.46339731165445086,
+          15.419282473711622
+        ],
+        "final_error_cm": 0.41928247371162186,
+        "settled_window_seconds": 0.33176408195868134,
+        "powered_seconds": 1.207832854008302
+      }
+    },
+    {
+      "event": "captured",
+      "image_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-125122-236639-1128580.156759.jpg",
+      "metadata_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-125122-236639-1128580.156759.json",
+      "captured_monotonic": 1128580.156759449,
+      "session_id": "a3c866adc81c44d4a4c7a1acd12189e2",
+      "control_epoch": 24,
+      "preview_path": "/home/jetbot/.codex/visualizations/2026/09/10/01a088e8-29c5-7473-92d9-59b23900f569/session-20260914-125122-236639-1128580.156759-preview.html",
+      "clearance_checked": false
+    },
+    {
+      "event": "route_started",
+      "result_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-125122-236639-route-03.json",
+      "started_monotonic": 1128617.137541081,
+      "plan_image_age_seconds": 36.980781632009894
+    },
+    {
+      "event": "route_finished",
+      "started_monotonic": 1128617.137541081,
+      "finished_monotonic": 1128619.955836552,
+      "elapsed_seconds": 2.818296408979222,
+      "exit_code": 0,
+      "result_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-125122-236639-route-03.json",
+      "result": {
+        "outcome": "goal_reached",
+        "passed_waypoints_cm": [
+          5,
+          10,
+          15
+        ],
+        "brake_position_cm": [
+          0.6416782944721605,
+          13.467137488879207
+        ],
+        "brake_lead_cm": 2.0,
+        "final_position_cm": [
+          0.6028152492967618,
+          15.948033616929065
+        ],
+        "final_error_cm": 0.9480336169290648,
+        "settled_window_seconds": 0.3990894800517708,
+        "powered_seconds": 1.1130543621256948
+      }
+    },
+    {
+      "event": "captured",
+      "image_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-125122-236639-1128632.982515.jpg",
+      "metadata_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-125122-236639-1128632.982515.json",
+      "captured_monotonic": 1128632.98251501,
+      "session_id": "a3c866adc81c44d4a4c7a1acd12189e2",
+      "control_epoch": 26
+    }
+  ]
+}

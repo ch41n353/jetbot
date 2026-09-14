@@ -1,0 +1,26 @@
+{
+  "waypoints_cm": [
+    5,
+    10,
+    15
+  ],
+  "inspected_free_rectangle_cm": [
+    -20,
+    -27,
+    20,
+    30
+  ],
+  "obstacle_rectangles_cm": [
+    [
+      -4,
+      40,
+      10,
+      55
+    ]
+  ],
+  "session_id": "a3c866adc81c44d4a4c7a1acd12189e2",
+  "control_epoch": 22,
+  "captured_monotonic": 1128553.19738493,
+  "image_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-125122-236639-1128553.197385.jpg",
+  "clearance_basis": "Fresh carpet corridor, retained cleared space from preceding forward movement and bounded alignment turn; chair and person left outside corridor."
+}

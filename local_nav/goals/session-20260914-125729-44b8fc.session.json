@@ -1,0 +1,25 @@
+{
+  "elapsed_seconds": 38.1034532089252,
+  "events": [
+    {
+      "event": "captured",
+      "image_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-125729-44b8fc-1128788.854786.jpg",
+      "metadata_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-125729-44b8fc-1128788.854786.json",
+      "captured_monotonic": 1128788.854785633,
+      "session_id": "f5bce296b3d04db2a0fb08a39d5d04e4",
+      "control_epoch": 0
+    },
+    {
+      "event": "approach_planned",
+      "target_ground_cm": [
+        5.117430158359756,
+        14.130113496611122
+      ],
+      "standoff_cm": 15,
+      "bearing_degrees": 19.908605443415055,
+      "projection_allowance_cm": 3,
+      "independent_ground_truth": false,
+      "outcome": "within_standoff_band_estimate"
+    }
+  ]
+}

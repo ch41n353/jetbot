@@ -1,5 +1,5 @@
 <div id="straight-route-preview">
-  <div class="viz-row"><strong>STRAIGHT_DISTANCE cm straight ahead</strong><span>One local maneuver</span></div>
+  <div class="viz-row"><strong>STRAIGHT_DISTANCE cm straight ahead</strong><span>MANEUVER_LABEL</span></div>
   <svg viewBox="0 0 640 480" style="width:100%;height:auto" role="img" aria-label="Fresh camera image with the goal point and visible portion of the complete chassis corridor.">
     <image href="CAMERA_IMAGE" width="640" height="480"/>
     <polygon points="FLOOR_POLYGON" fill="var(--viz-series-1)" fill-opacity="0.2" stroke="var(--viz-series-1)" stroke-width="2"/>
@@ -8,8 +8,8 @@
   </svg>
   <div class="text-small">Candidate geometry; scene clearance is checked separately. Rear chassis is outside the camera view.</div>
   <div class="viz-row">
-    <svg viewBox="0 0 320 340" style="width:320px;max-width:100%;height:auto" role="img" aria-label="Top-down inset of the full chassis corridor, current body and body at the target.">
-      <rect x="80" y="SWEEP_Y" width="160" height="SWEEP_HEIGHT" fill="var(--viz-series-1)" fill-opacity="0.2"/>
+    <svg viewBox="0 TOP_VIEW_Y 320 TOP_VIEW_HEIGHT" style="width:320px;max-width:100%;height:auto" role="img" aria-label="Top-down inset of the full chassis corridor, current body and body at the target.">
+      <rect x="SWEEP_X" y="SWEEP_Y" width="SWEEP_WIDTH" height="SWEEP_HEIGHT" fill="var(--viz-series-1)" fill-opacity="0.2"/>
       <rect x="130" y="170" width="60" height="75" fill="var(--foreground)" fill-opacity="0.3"/>
       <rect x="130" y="TARGET_Y" width="60" height="75" stroke="var(--viz-series-1)" stroke-width="2" fill="none"/>
       <path d="M 160 170 L 160 TARGET_Y" stroke="var(--viz-series-1)" stroke-width="3"/>

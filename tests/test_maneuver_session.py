@@ -10,6 +10,12 @@ import maneuver_session
 
 
 class SessionTests(unittest.TestCase):
+    def test_batch_dispatch_uses_cancellable_worker(self):
+        command = maneuver_session.route_command('plan.json', 'result.json', True, 125, batch=True)
+        self.assertTrue(command[1].endswith('approach_batch.py'))
+        self.assertNotIn('--predictive-braking', command)
+        self.assertIn('--execute', command)
+
     def run_session(self, armed, commands):
         created, operations, emitted = [], [], []
 

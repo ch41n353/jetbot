@@ -4,12 +4,12 @@ description: Operate and iterate the local JetBot camera/IMU navigation tools fo
 metadata:
   baseline-date: "2026-09-13"
   timezone: America/Los_Angeles
-  revision: "5"
+  revision: "6"
 ---
 
 # JetBot navigation
 
-Baseline **2026-09-13**, current revision **5**, America/Los_Angeles.
+Baseline **2026-09-13**, current revision **6**, America/Los_Angeles.
 Workspace: `/home/jetbot/jetbot`. Use `/usr/bin/python3` for the local tools.
 
 Read [the dated algorithm and evidence](references/baseline-2026-09-13.md)
@@ -24,7 +24,9 @@ for opt-in predictive braking and post-stop arrival measurement. Read
 [revision 4](references/revision-2026-09-14-r4.md) for offline simulation tools,
 feature-budget experiments and the slow-camera settling fix. Read
 [revision 5](references/revision-2026-09-14-r5.md) for persistent sessions and
-automatic previews when optimizing end-to-end maneuver time.
+automatic previews when optimizing end-to-end maneuver time. Read
+[revision 6](references/revision-2026-09-14-r6.md) for object approach planning
+and opt-in local batches that avoid VLM calls at internal segment boundaries.
 
 ## Scope and control division
 
@@ -76,6 +78,11 @@ rays, but large off-axis and near-field projections are not independently
 validated. A preview explains a plan; it is not a collision sensor.
 
 Use the shortest suitable bounded action:
+
+- **Whole straight approach:** revision-6 `plan_approach` and `execute` with
+  `batch: true`, up to 30 cm in an inspected static corridor. Preview the entire
+  route once. Internal segments retain 15 cm / two-second limits and verified
+  stops. Simulation validated; full batch physical validation is pending.
 
 - **Straight waypoint batch:** `route_executor.py`, total 1–15 cm, no model calls
   or intermediate waypoint stops. Requires a fresh preview and inspected static

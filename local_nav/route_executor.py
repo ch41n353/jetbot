@@ -112,6 +112,10 @@ def execute(plan, route, log, predictive_braking=False, feature_budget=250):
                             status = call('status')
                             if status['motor']['output'] != [0, 0]:
                                 raise RuntimeError('Motor output nonzero after stop')
+                            anchor_path = log + '.settled.jpg'
+                            if not cv2.imwrite(anchor_path, current):
+                                raise RuntimeError('Could not preserve settled frame for continuation')
+                            result['final_anchor'] = dict(image_path=anchor_path, captured_monotonic=t1)
                             result.update(assessment)
                             result['passed_waypoints_cm'] = [v for v in route.waypoints if z >= v]
                             break

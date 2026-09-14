@@ -1,0 +1,2711 @@
+{
+  "path": "/tmp/jetbot-local-nav/latest.jpg",
+  "time": 1128788.854785633,
+  "imu_samples": [
+    {
+      "acceleration": [
+        9.4,
+        -1.13,
+        0.57
+      ],
+      "gyro": [
+        0.0,
+        -0.125,
+        0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128786.775385872,
+      "sequence": 633
+    },
+    {
+      "acceleration": [
+        9.42,
+        -1.11,
+        0.59
+      ],
+      "gyro": [
+        0.0,
+        0.125,
+        0.125
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128786.797485583,
+      "sequence": 634
+    },
+    {
+      "acceleration": [
+        9.37,
+        -1.12,
+        0.55
+      ],
+      "gyro": [
+        0.0,
+        0.0625,
+        0.125
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128786.823700243,
+      "sequence": 635
+    },
+    {
+      "acceleration": [
+        9.42,
+        -1.15,
+        0.58
+      ],
+      "gyro": [
+        0.0,
+        -0.0625,
+        -0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128786.845698755,
+      "sequence": 636
+    },
+    {
+      "acceleration": [
+        9.38,
+        -1.13,
+        0.58
+      ],
+      "gyro": [
+        0.0625,
+        -0.125,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128786.867580651,
+      "sequence": 637
+    },
+    {
+      "acceleration": [
+        9.41,
+        -1.14,
+        0.58
+      ],
+      "gyro": [
+        0.0,
+        0.0625,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128786.889675675,
+      "sequence": 638
+    },
+    {
+      "acceleration": [
+        9.4,
+        -1.12,
+        0.56
+      ],
+      "gyro": [
+        0.0625,
+        0.0,
+        0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128786.914356409,
+      "sequence": 639
+    },
+    {
+      "acceleration": [
+        9.4,
+        -1.12,
+        0.57
+      ],
+      "gyro": [
+        -0.125,
+        0.0625,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128786.936410495,
+      "sequence": 640
+    },
+    {
+      "acceleration": [
+        9.41,
+        -1.13,
+        0.57
+      ],
+      "gyro": [
+        0.0,
+        -0.0625,
+        -0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128786.961614048,
+      "sequence": 641
+    },
+    {
+      "acceleration": [
+        9.41,
+        -1.13,
+        0.58
+      ],
+      "gyro": [
+        0.0625,
+        -0.0625,
+        -0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128786.984875441,
+      "sequence": 642
+    },
+    {
+      "acceleration": [
+        9.41,
+        -1.1,
+        0.58
+      ],
+      "gyro": [
+        -0.0625,
+        -0.125,
+        0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.006732493,
+      "sequence": 643
+    },
+    {
+      "acceleration": [
+        9.39,
+        -1.11,
+        0.57
+      ],
+      "gyro": [
+        0.0625,
+        -0.125,
+        0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.03046884,
+      "sequence": 644
+    },
+    {
+      "acceleration": [
+        9.39,
+        -1.12,
+        0.59
+      ],
+      "gyro": [
+        -0.0625,
+        -0.0625,
+        0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.05495129,
+      "sequence": 645
+    },
+    {
+      "acceleration": [
+        9.41,
+        -1.12,
+        0.57
+      ],
+      "gyro": [
+        0.0625,
+        0.0625,
+        0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.076803343,
+      "sequence": 646
+    },
+    {
+      "acceleration": [
+        9.42,
+        -1.13,
+        0.59
+      ],
+      "gyro": [
+        0.0,
+        0.0,
+        0.125
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.099450509,
+      "sequence": 647
+    },
+    {
+      "acceleration": [
+        9.4,
+        -1.12,
+        0.57
+      ],
+      "gyro": [
+        0.0625,
+        -0.125,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.125276102,
+      "sequence": 648
+    },
+    {
+      "acceleration": [
+        9.39,
+        -1.14,
+        0.58
+      ],
+      "gyro": [
+        0.0,
+        0.0,
+        -0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.147259406,
+      "sequence": 649
+    },
+    {
+      "acceleration": [
+        9.4,
+        -1.12,
+        0.56
+      ],
+      "gyro": [
+        0.125,
+        0.0625,
+        0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.170644135,
+      "sequence": 650
+    },
+    {
+      "acceleration": [
+        9.41,
+        -1.11,
+        0.58
+      ],
+      "gyro": [
+        -0.0625,
+        0.0,
+        -0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.194198709,
+      "sequence": 651
+    },
+    {
+      "acceleration": [
+        9.41,
+        -1.13,
+        0.52
+      ],
+      "gyro": [
+        0.0625,
+        0.0625,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.216246232,
+      "sequence": 652
+    },
+    {
+      "acceleration": [
+        9.4,
+        -1.12,
+        0.58
+      ],
+      "gyro": [
+        0.0,
+        -0.0625,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.237973023,
+      "sequence": 653
+    },
+    {
+      "acceleration": [
+        9.41,
+        -1.11,
+        0.55
+      ],
+      "gyro": [
+        -0.0625,
+        0.0,
+        -0.125
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.263441944,
+      "sequence": 654
+    },
+    {
+      "acceleration": [
+        9.4,
+        -1.14,
+        0.59
+      ],
+      "gyro": [
+        -0.0625,
+        -0.0625,
+        0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.286462085,
+      "sequence": 655
+    },
+    {
+      "acceleration": [
+        9.4,
+        -1.14,
+        0.58
+      ],
+      "gyro": [
+        -0.0625,
+        0.125,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.308452472,
+      "sequence": 656
+    },
+    {
+      "acceleration": [
+        9.39,
+        -1.12,
+        0.58
+      ],
+      "gyro": [
+        0.0,
+        0.1875,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.33501422,
+      "sequence": 657
+    },
+    {
+      "acceleration": [
+        9.42,
+        -1.12,
+        0.56
+      ],
+      "gyro": [
+        0.0,
+        -0.1875,
+        0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.357873057,
+      "sequence": 658
+    },
+    {
+      "acceleration": [
+        9.41,
+        -1.12,
+        0.54
+      ],
+      "gyro": [
+        -0.125,
+        0.0625,
+        -0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.381957169,
+      "sequence": 659
+    },
+    {
+      "acceleration": [
+        9.4,
+        -1.12,
+        0.58
+      ],
+      "gyro": [
+        -0.0625,
+        0.1875,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.406483162,
+      "sequence": 660
+    },
+    {
+      "acceleration": [
+        9.4,
+        -1.13,
+        0.55
+      ],
+      "gyro": [
+        0.0,
+        0.0625,
+        0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.42820516,
+      "sequence": 661
+    },
+    {
+      "acceleration": [
+        9.4,
+        -1.13,
+        0.56
+      ],
+      "gyro": [
+        -0.0625,
+        0.0,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.449968513,
+      "sequence": 662
+    },
+    {
+      "acceleration": [
+        9.4,
+        -1.13,
+        0.57
+      ],
+      "gyro": [
+        0.0625,
+        -0.0625,
+        -0.1875
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.476572294,
+      "sequence": 663
+    },
+    {
+      "acceleration": [
+        9.43,
+        -1.11,
+        0.57
+      ],
+      "gyro": [
+        0.0625,
+        0.0,
+        -0.125
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.498293042,
+      "sequence": 664
+    },
+    {
+      "acceleration": [
+        9.41,
+        -1.13,
+        0.56
+      ],
+      "gyro": [
+        0.0,
+        0.125,
+        -0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.520241606,
+      "sequence": 665
+    },
+    {
+      "acceleration": [
+        9.42,
+        -1.12,
+        0.58
+      ],
+      "gyro": [
+        -0.0625,
+        0.0,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.541996418,
+      "sequence": 666
+    },
+    {
+      "acceleration": [
+        9.39,
+        -1.13,
+        0.58
+      ],
+      "gyro": [
+        -0.0625,
+        -0.0625,
+        0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.567164554,
+      "sequence": 667
+    },
+    {
+      "acceleration": [
+        9.4,
+        -1.13,
+        0.55
+      ],
+      "gyro": [
+        0.0,
+        0.1875,
+        -0.125
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.590966475,
+      "sequence": 668
+    },
+    {
+      "acceleration": [
+        9.39,
+        -1.12,
+        0.56
+      ],
+      "gyro": [
+        0.0625,
+        0.0,
+        0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.617353794,
+      "sequence": 669
+    },
+    {
+      "acceleration": [
+        9.41,
+        -1.11,
+        0.58
+      ],
+      "gyro": [
+        0.0,
+        -0.0625,
+        0.125
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.639346317,
+      "sequence": 670
+    },
+    {
+      "acceleration": [
+        9.38,
+        -1.13,
+        0.59
+      ],
+      "gyro": [
+        0.125,
+        0.0,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.662995372,
+      "sequence": 671
+    },
+    {
+      "acceleration": [
+        9.42,
+        -1.11,
+        0.54
+      ],
+      "gyro": [
+        0.125,
+        0.0,
+        -0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.688085591,
+      "sequence": 672
+    },
+    {
+      "acceleration": [
+        9.39,
+        -1.12,
+        0.59
+      ],
+      "gyro": [
+        -0.125,
+        0.0625,
+        -0.125
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.709926237,
+      "sequence": 673
+    },
+    {
+      "acceleration": [
+        9.39,
+        -1.13,
+        0.54
+      ],
+      "gyro": [
+        -0.0625,
+        0.0,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.733606854,
+      "sequence": 674
+    },
+    {
+      "acceleration": [
+        9.43,
+        -1.14,
+        0.57
+      ],
+      "gyro": [
+        0.0,
+        0.0625,
+        -0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.758182275,
+      "sequence": 675
+    },
+    {
+      "acceleration": [
+        9.39,
+        -1.12,
+        0.57
+      ],
+      "gyro": [
+        -0.0625,
+        0.0625,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.780408707,
+      "sequence": 676
+    },
+    {
+      "acceleration": [
+        9.4,
+        -1.09,
+        0.56
+      ],
+      "gyro": [
+        0.0,
+        -0.0625,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.805603459,
+      "sequence": 677
+    },
+    {
+      "acceleration": [
+        9.4,
+        -1.12,
+        0.56
+      ],
+      "gyro": [
+        -0.0625,
+        0.0625,
+        0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.828636099,
+      "sequence": 678
+    },
+    {
+      "acceleration": [
+        9.4,
+        -1.13,
+        0.57
+      ],
+      "gyro": [
+        0.0,
+        -0.125,
+        0.125
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.850492995,
+      "sequence": 679
+    },
+    {
+      "acceleration": [
+        9.41,
+        -1.14,
+        0.54
+      ],
+      "gyro": [
+        0.0625,
+        0.0,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.873866369,
+      "sequence": 680
+    },
+    {
+      "acceleration": [
+        9.42,
+        -1.13,
+        0.56
+      ],
+      "gyro": [
+        0.0625,
+        0.0,
+        -0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.896745257,
+      "sequence": 681
+    },
+    {
+      "acceleration": [
+        9.42,
+        -1.13,
+        0.58
+      ],
+      "gyro": [
+        -0.0625,
+        -0.0625,
+        -0.125
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.919067785,
+      "sequence": 682
+    },
+    {
+      "acceleration": [
+        9.39,
+        -1.12,
+        0.58
+      ],
+      "gyro": [
+        -0.0625,
+        -0.0625,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.941095933,
+      "sequence": 683
+    },
+    {
+      "acceleration": [
+        9.4,
+        -1.11,
+        0.58
+      ],
+      "gyro": [
+        0.0,
+        0.0625,
+        -0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.965118951,
+      "sequence": 684
+    },
+    {
+      "acceleration": [
+        9.4,
+        -1.12,
+        0.55
+      ],
+      "gyro": [
+        -0.0625,
+        0.0625,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128787.98957114,
+      "sequence": 685
+    },
+    {
+      "acceleration": [
+        9.42,
+        -1.12,
+        0.58
+      ],
+      "gyro": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.012891545,
+      "sequence": 686
+    },
+    {
+      "acceleration": [
+        9.4,
+        -1.13,
+        0.58
+      ],
+      "gyro": [
+        -0.0625,
+        0.125,
+        -0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.039214853,
+      "sequence": 687
+    },
+    {
+      "acceleration": [
+        9.41,
+        -1.13,
+        0.56
+      ],
+      "gyro": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.060915914,
+      "sequence": 688
+    },
+    {
+      "acceleration": [
+        9.42,
+        -1.13,
+        0.54
+      ],
+      "gyro": [
+        0.0,
+        0.125,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.082864583,
+      "sequence": 689
+    },
+    {
+      "acceleration": [
+        9.41,
+        -1.12,
+        0.58
+      ],
+      "gyro": [
+        -0.0625,
+        0.125,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.109347997,
+      "sequence": 690
+    },
+    {
+      "acceleration": [
+        9.42,
+        -1.11,
+        0.58
+      ],
+      "gyro": [
+        0.0,
+        -0.25,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.131187654,
+      "sequence": 691
+    },
+    {
+      "acceleration": [
+        9.39,
+        -1.12,
+        0.59
+      ],
+      "gyro": [
+        0.0625,
+        -0.0625,
+        0.125
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.1533032,
+      "sequence": 692
+    },
+    {
+      "acceleration": [
+        9.4,
+        -1.13,
+        0.56
+      ],
+      "gyro": [
+        -0.0625,
+        -0.125,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.179854584,
+      "sequence": 693
+    },
+    {
+      "acceleration": [
+        9.39,
+        -1.13,
+        0.61
+      ],
+      "gyro": [
+        0.0625,
+        -0.1875,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.20198565,
+      "sequence": 694
+    },
+    {
+      "acceleration": [
+        9.41,
+        -1.11,
+        0.54
+      ],
+      "gyro": [
+        0.0,
+        -0.0625,
+        0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.226908784,
+      "sequence": 695
+    },
+    {
+      "acceleration": [
+        9.4,
+        -1.11,
+        0.6
+      ],
+      "gyro": [
+        -0.0625,
+        0.0,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.250438359,
+      "sequence": 696
+    },
+    {
+      "acceleration": [
+        9.41,
+        -1.11,
+        0.57
+      ],
+      "gyro": [
+        0.125,
+        0.0,
+        -0.1875
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.272251869,
+      "sequence": 697
+    },
+    {
+      "acceleration": [
+        9.38,
+        -1.13,
+        0.54
+      ],
+      "gyro": [
+        0.0625,
+        -0.125,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.294933308,
+      "sequence": 698
+    },
+    {
+      "acceleration": [
+        9.4,
+        -1.14,
+        0.55
+      ],
+      "gyro": [
+        0.0625,
+        -0.0625,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.3208676,
+      "sequence": 699
+    },
+    {
+      "acceleration": [
+        9.41,
+        -1.14,
+        0.54
+      ],
+      "gyro": [
+        0.0,
+        0.0,
+        -0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.342720226,
+      "sequence": 700
+    },
+    {
+      "acceleration": [
+        9.39,
+        -1.12,
+        0.56
+      ],
+      "gyro": [
+        0.0,
+        0.0,
+        -0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.366035162,
+      "sequence": 701
+    },
+    {
+      "acceleration": [
+        9.42,
+        -1.13,
+        0.54
+      ],
+      "gyro": [
+        -0.0625,
+        -0.0625,
+        -0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.391086787,
+      "sequence": 702
+    },
+    {
+      "acceleration": [
+        9.4,
+        -1.13,
+        0.6
+      ],
+      "gyro": [
+        0.0625,
+        0.0,
+        -0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.41304681,
+      "sequence": 703
+    },
+    {
+      "acceleration": [
+        9.4,
+        -1.14,
+        0.56
+      ],
+      "gyro": [
+        -0.0625,
+        0.0625,
+        -0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.436393049,
+      "sequence": 704
+    },
+    {
+      "acceleration": [
+        9.39,
+        -1.14,
+        0.59
+      ],
+      "gyro": [
+        0.0,
+        -0.0625,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.461282953,
+      "sequence": 705
+    },
+    {
+      "acceleration": [
+        9.41,
+        -1.11,
+        0.54
+      ],
+      "gyro": [
+        0.0625,
+        -0.125,
+        -0.125
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.483610898,
+      "sequence": 706
+    },
+    {
+      "acceleration": [
+        9.41,
+        -1.11,
+        0.6
+      ],
+      "gyro": [
+        0.0625,
+        -0.0625,
+        -0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.509321333,
+      "sequence": 707
+    },
+    {
+      "acceleration": [
+        9.42,
+        -1.13,
+        0.54
+      ],
+      "gyro": [
+        0.0,
+        0.0,
+        -0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.5317773,
+      "sequence": 708
+    },
+    {
+      "acceleration": [
+        9.39,
+        -1.12,
+        0.58
+      ],
+      "gyro": [
+        0.0,
+        -0.125,
+        0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.553660551,
+      "sequence": 709
+    },
+    {
+      "acceleration": [
+        9.4,
+        -1.14,
+        0.58
+      ],
+      "gyro": [
+        0.0625,
+        -0.125,
+        -0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.579335361,
+      "sequence": 710
+    },
+    {
+      "acceleration": [
+        9.41,
+        -1.11,
+        0.56
+      ],
+      "gyro": [
+        0.0625,
+        -0.1875,
+        -0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.602050706,
+      "sequence": 711
+    },
+    {
+      "acceleration": [
+        9.4,
+        -1.13,
+        0.57
+      ],
+      "gyro": [
+        0.0,
+        0.125,
+        -0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.623928645,
+      "sequence": 712
+    },
+    {
+      "acceleration": [
+        9.4,
+        -1.12,
+        0.58
+      ],
+      "gyro": [
+        0.125,
+        0.0625,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.645907522,
+      "sequence": 713
+    },
+    {
+      "acceleration": [
+        9.41,
+        -1.14,
+        0.59
+      ],
+      "gyro": [
+        0.0,
+        0.0,
+        0.125
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.671972494,
+      "sequence": 714
+    },
+    {
+      "acceleration": [
+        9.4,
+        -1.13,
+        0.58
+      ],
+      "gyro": [
+        0.0625,
+        -0.1875,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.69363845,
+      "sequence": 715
+    },
+    {
+      "acceleration": [
+        9.39,
+        -1.12,
+        0.56
+      ],
+      "gyro": [
+        0.0,
+        0.0625,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.715423315,
+      "sequence": 716
+    },
+    {
+      "acceleration": [
+        9.39,
+        -1.13,
+        0.58
+      ],
+      "gyro": [
+        0.0625,
+        0.0,
+        -0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.742436423,
+      "sequence": 717
+    },
+    {
+      "acceleration": [
+        9.41,
+        -1.12,
+        0.59
+      ],
+      "gyro": [
+        0.0,
+        0.0625,
+        0.1875
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.764424311,
+      "sequence": 718
+    },
+    {
+      "acceleration": [
+        9.39,
+        -1.13,
+        0.57
+      ],
+      "gyro": [
+        0.125,
+        -0.125,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.788065085,
+      "sequence": 719
+    },
+    {
+      "acceleration": [
+        9.39,
+        -1.13,
+        0.57
+      ],
+      "gyro": [
+        0.0,
+        0.0,
+        0.1875
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.813164055,
+      "sequence": 720
+    },
+    {
+      "acceleration": [
+        9.41,
+        -1.12,
+        0.59
+      ],
+      "gyro": [
+        0.0,
+        -0.0625,
+        0.0625
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.834934231,
+      "sequence": 721
+    },
+    {
+      "acceleration": [
+        9.42,
+        -1.13,
+        0.56
+      ],
+      "gyro": [
+        0.0,
+        0.1875,
+        0.0
+      ],
+      "euler": [
+        63.1875,
+        82.3125,
+        58.8125
+      ],
+      "gyro_units": "deg/s",
+      "euler_units": "deg",
+      "calibration": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "self_test": 15,
+      "system_status": 5,
+      "error": 0,
+      "time": 1128788.86237422,
+      "sequence": 722
+    }
+  ],
+  "healthy": true,
+  "motion_enabled": false,
+  "timestamp_basis": "host acquisition completion; hardware offset uncalibrated",
+  "session_id": "f5bce296b3d04db2a0fb08a39d5d04e4",
+  "control_epoch": 0
+}
