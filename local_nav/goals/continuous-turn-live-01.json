@@ -1,0 +1,4663 @@
+{
+  "target_degrees": -15.0,
+  "continuous": true,
+  "samples": [
+    {
+      "time": 1061116.331756581,
+      "angle_degrees": -0.00047720817801218606,
+      "rate_degrees_s": -0.055133208170097876,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1061116.358716384,
+      "angle_degrees": -0.0011237120410457332,
+      "rate_degrees_s": 0.00717220445915247,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1061116.38473498,
+      "angle_degrees": -0.0010304066958427376,
+      "rate_degrees_s": -0.0,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1061116.406756348,
+      "angle_degrees": -0.0016453939663699266,
+      "rate_degrees_s": -0.05585201398480387,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1061116.428560786,
+      "angle_degrees": -0.07465120122781037,
+      "rate_degrees_s": -6.640577646074737,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1061116.450237827,
+      "angle_degrees": -0.2701698204091347,
+      "rate_degrees_s": -11.3983448542649,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1061116.476482675,
+      "angle_degrees": -0.3673216776441061,
+      "rate_degrees_s": 3.99519542614537,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1061116.500267081,
+      "angle_degrees": -0.32537451693209407,
+      "rate_degrees_s": -0.4684724977126256,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1061116.526716202,
+      "angle_degrees": -0.3121398629703638,
+      "rate_degrees_s": 1.4708696509890422,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1061116.548522151,
+      "angle_degrees": -0.2354796272806904,
+      "rate_degrees_s": 5.558730469562541,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1061116.577091553,
+      "angle_degrees": -0.2857646032742208,
+      "rate_degrees_s": -9.07822702079549,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1061116.599220214,
+      "angle_degrees": -0.3575064845526152,
+      "rate_degrees_s": 2.5930480873896453,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1061116.623166757,
+      "angle_degrees": -0.3101135522303009,
+      "rate_degrees_s": 1.3656061076001555,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1061116.644901403,
+      "angle_degrees": -0.47179603778489815,
+      "rate_degrees_s": -16.243334829024814,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1061116.668171325,
+      "angle_degrees": -0.6657731317546145,
+      "rate_degrees_s": -0.42907532431378526,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1061116.689924722,
+      "angle_degrees": -0.6643129126296984,
+      "rate_degrees_s": 0.5629770513473816,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1061116.716892962,
+      "angle_degrees": -0.7097629739898139,
+      "rate_degrees_s": -3.933636566221852,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1061116.741662326,
+      "angle_degrees": -0.6364476451731,
+      "rate_degrees_s": 9.8529641915333,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1061116.768440669,
+      "angle_degrees": -0.6551831880926503,
+      "rate_degrees_s": -11.250786237303748,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1061116.790149586,
+      "angle_degrees": -0.7160282672737891,
+      "rate_degrees_s": 5.646466477527736,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1061116.817454444,
+      "angle_degrees": -0.7797287417978519,
+      "rate_degrees_s": -10.314791004906795,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1061116.83947227,
+      "angle_degrees": -0.9048532028002743,
+      "rate_degrees_s": -1.0523750205859324,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1061116.861250614,
+      "angle_degrees": -1.133532554007821,
+      "rate_degrees_s": -19.947963101093507,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1061116.888349481,
+      "angle_degrees": -1.450927412414051,
+      "rate_degrees_s": -3.47624179350976,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1061116.910069388,
+      "angle_degrees": -1.5679145968176966,
+      "rate_degrees_s": -7.296718289464853,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1061116.934143484,
+      "angle_degrees": -1.8950798359781633,
+      "rate_degrees_s": -19.88602664653822,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1061116.955814536,
+      "angle_degrees": -2.427317334464005,
+      "rate_degrees_s": -29.235362070385484,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1061116.97880633,
+      "angle_degrees": -3.182995262997683,
+      "rate_degrees_s": -36.499187166213034,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.000710457,
+      "angle_degrees": -3.7884425476224273,
+      "rate_degrees_s": -18.782611167400894,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.024162048,
+      "angle_degrees": -4.062609827510269,
+      "rate_degrees_s": -4.598591895716175,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.045802786,
+      "angle_degrees": -4.211577798725762,
+      "rate_degrees_s": -9.169133408150566,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.070940956,
+      "angle_degrees": -4.3218239458934535,
+      "rate_degrees_s": 0.39707855562612904,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.092995033,
+      "angle_degrees": -4.301182586006355,
+      "rate_degrees_s": 1.4748215739272124,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.118992743,
+      "angle_degrees": -4.35618463925539,
+      "rate_degrees_s": -5.706145109171446,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.140849473,
+      "angle_degrees": -4.492388364155441,
+      "rate_degrees_s": -6.758219312266786,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.162558025,
+      "angle_degrees": -4.582331459368464,
+      "rate_degrees_s": -1.5280707717982343,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.189442411,
+      "angle_degrees": -4.741457581298651,
+      "rate_degrees_s": -10.30950225262314,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.211564926,
+      "angle_degrees": -4.931794680783437,
+      "rate_degrees_s": -6.89796847340182,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.235441937,
+      "angle_degrees": -5.043459977804438,
+      "rate_degrees_s": -2.455606268401968,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.260141405,
+      "angle_degrees": -5.064077521689637,
+      "rate_degrees_s": 0.7862715820933305,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.282104699,
+      "angle_degrees": -5.064202132008026,
+      "rate_degrees_s": -0.7975093195561416,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.305105816,
+      "angle_degrees": -5.1520342534155175,
+      "rate_degrees_s": -6.839858688787584,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.330201017,
+      "angle_degrees": -5.173071843256353,
+      "rate_degrees_s": 5.163683031587168,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.351975663,
+      "angle_degrees": -5.065139625277291,
+      "rate_degrees_s": 4.7503113851483345,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.373712132,
+      "angle_degrees": -5.083404534161861,
+      "rate_degrees_s": -6.430913513761155,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.395468654,
+      "angle_degrees": -5.087437702728015,
+      "rate_degrees_s": 6.060528826987052,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.420614897,
+      "angle_degrees": -5.111133280300526,
+      "rate_degrees_s": -7.945082757455334,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.442324855,
+      "angle_degrees": -5.218655903825015,
+      "rate_degrees_s": -1.9599479257095938,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.464462682,
+      "angle_degrees": -5.305827873641015,
+      "rate_degrees_s": -5.915324588527324,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.490921699,
+      "angle_degrees": -5.378881289231218,
+      "rate_degrees_s": 0.39331103122080846,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.513007286,
+      "angle_degrees": -5.3744311935628035,
+      "rate_degrees_s": 0.009747461789840702,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.538189519,
+      "angle_degrees": -5.4047322728633835,
+      "rate_degrees_s": -2.4164926240879816,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.561290637,
+      "angle_degrees": -5.514773204674875,
+      "rate_degrees_s": -7.11102269146901,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.58314643,
+      "angle_degrees": -5.53226990293769,
+      "rate_degrees_s": 5.510606516319695,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.605580511,
+      "angle_degrees": -5.540609049512514,
+      "rate_degrees_s": -6.254618703797795,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.631293999,
+      "angle_degrees": -5.566750856695533,
+      "rate_degrees_s": 4.220936473797795,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.653005884,
+      "angle_degrees": -5.470821802624901,
+      "rate_degrees_s": 4.614795582616519,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.674673446,
+      "angle_degrees": -5.492806754784388,
+      "rate_degrees_s": -6.644307907294628,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.696420436,
+      "angle_degrees": -5.503888142412799,
+      "rate_degrees_s": 5.62473951179622,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.721853193,
+      "angle_degrees": -5.5067641000283665,
+      "rate_degrees_s": -5.85093333413647,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.743556536,
+      "angle_degrees": -5.63890484451104,
+      "rate_degrees_s": -6.3264438228246105,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.765595508,
+      "angle_degrees": -5.65817655851051,
+      "rate_degrees_s": 4.577641727138206,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.792214214,
+      "angle_degrees": -5.6592019125052655,
+      "rate_degrees_s": -4.654580836128534,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.813895995,
+      "angle_degrees": -5.725016858915385,
+      "rate_degrees_s": -1.4167125919892758,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.842028466,
+      "angle_degrees": -5.712264010586714,
+      "rate_degrees_s": 2.3230590963037785,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.863760925,
+      "angle_degrees": -5.794693089068549,
+      "rate_degrees_s": -9.909128268416293,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.885763386,
+      "angle_degrees": -5.841240135462351,
+      "rate_degrees_s": 5.678826979129371,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.907501938,
+      "angle_degrees": -5.805365158405933,
+      "rate_degrees_s": -2.3783261342465587,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.932757974,
+      "angle_degrees": -5.816870780187925,
+      "rate_degrees_s": 1.4671568588886137,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.954645955,
+      "angle_degrees": -5.756484151050957,
+      "rate_degrees_s": 4.050318373629645,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.976364247,
+      "angle_degrees": -5.777551892001913,
+      "rate_degrees_s": -5.990877262573788,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061117.999841723,
+      "angle_degrees": -5.83702021069052,
+      "rate_degrees_s": 0.9254100085907541,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.023328991,
+      "angle_degrees": -5.909290342190816,
+      "rate_degrees_s": -7.079359181466924,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.045154211,
+      "angle_degrees": -5.985421200465432,
+      "rate_degrees_s": 0.10312750775685833,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.071074368,
+      "angle_degrees": -6.076377752287377,
+      "rate_degrees_s": -7.121347597522013,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.094198611,
+      "angle_degrees": -6.236404835337504,
+      "rate_degrees_s": -6.719876699148062,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.115973414,
+      "angle_degrees": -6.246863763595819,
+      "rate_degrees_s": 5.759104362422172,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.143377284,
+      "angle_degrees": -6.285139182428531,
+      "rate_degrees_s": -8.55273150391124,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.165141722,
+      "angle_degrees": -6.33561542890835,
+      "rate_degrees_s": 3.9136369172974295,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.187109287,
+      "angle_degrees": -6.324450626351214,
+      "rate_degrees_s": -2.89723444983771,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.209458731,
+      "angle_degrees": -6.337241688861598,
+      "rate_degrees_s": 1.7526145535151532,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.234142834,
+      "angle_degrees": -6.497680860646142,
+      "rate_degrees_s": -14.7520366083481,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.255902585,
+      "angle_degrees": -6.656667658754308,
+      "rate_degrees_s": 0.13906819580843813,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.277732076,
+      "angle_degrees": -6.6860287095237885,
+      "rate_degrees_s": -2.829037278809734,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.300179906,
+      "angle_degrees": -6.68604741130644,
+      "rate_degrees_s": 2.827434442970365,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.324567443,
+      "angle_degrees": -6.734585550967875,
+      "rate_degrees_s": -6.807948134713359,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.346509852,
+      "angle_degrees": -6.984805953768968,
+      "rate_degrees_s": -15.999044307702336,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.373501687,
+      "angle_degrees": -7.361028655489644,
+      "rate_degrees_s": -11.87767096412614,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.395321542,
+      "angle_degrees": -7.5116831227582646,
+      "rate_degrees_s": -1.931522949850495,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.417022906,
+      "angle_degrees": -7.506615965772102,
+      "rate_degrees_s": 2.3994256655568917,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.440483039,
+      "angle_degrees": -7.4787710636250635,
+      "rate_degrees_s": -0.025355910982028676,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.462539146,
+      "angle_degrees": -7.502947905756419,
+      "rate_degrees_s": -2.1665980916647065,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.485373804,
+      "angle_degrees": -7.452108199010898,
+      "rate_degrees_s": 6.619354123587738,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.507061991,
+      "angle_degrees": -7.452029057423114,
+      "rate_degrees_s": -6.612172235078129,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.529793366,
+      "angle_degrees": -7.467960817236725,
+      "rate_degrees_s": 5.209756236163287,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.551673743,
+      "angle_degrees": -7.481153475922185,
+      "rate_degrees_s": -6.415672882762626,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.575546119,
+      "angle_degrees": -7.608798601325483,
+      "rate_degrees_s": -4.278676439919691,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.597323057,
+      "angle_degrees": -7.605734717566452,
+      "rate_degrees_s": 4.559425024026336,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.620435686,
+      "angle_degrees": -7.635681377121173,
+      "rate_degrees_s": -7.151094281155401,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.645878234,
+      "angle_degrees": -7.64832794211898,
+      "rate_degrees_s": 6.158560652020876,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.668873101,
+      "angle_degrees": -7.529390484464788,
+      "rate_degrees_s": 4.187106825015523,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.695882383,
+      "angle_degrees": -7.586191316379229,
+      "rate_degrees_s": -8.393471847405072,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.717570571,
+      "angle_degrees": -7.655329202218941,
+      "rate_degrees_s": 2.0175578572984776,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.739215372,
+      "angle_degrees": -7.6180160520011055,
+      "rate_degrees_s": 1.430062001130327,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.766239082,
+      "angle_degrees": -7.676684596596974,
+      "rate_degrees_s": -5.771613015112336,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.787959978,
+      "angle_degrees": -7.700668427597788,
+      "rate_degrees_s": 3.5628936465503798,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.809868272,
+      "angle_degrees": -7.653795093363999,
+      "rate_degrees_s": 0.7161332960739905,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.836693855,
+      "angle_degrees": -7.709486809063539,
+      "rate_degrees_s": -4.868054441239405,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.858478709,
+      "angle_degrees": -7.719010533134955,
+      "rate_degrees_s": 3.993322112670687,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.88031768,
+      "angle_degrees": -7.678440075393655,
+      "rate_degrees_s": -0.27831323605267866,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.904112919,
+      "angle_degrees": -7.698260362836427,
+      "rate_degrees_s": -1.3876816752838015,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.927501176,
+      "angle_degrees": -7.650701550521936,
+      "rate_degrees_s": 5.454518096170592,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.949457699,
+      "angle_degrees": -7.6394192956361575,
+      "rate_degrees_s": -4.4269957954056185,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.976096926,
+      "angle_degrees": -7.63356878695347,
+      "rate_degrees_s": 4.867243350402455,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061118.998172044,
+      "angle_degrees": -7.54814820949818,
+      "rate_degrees_s": 2.8724538926746415,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.019862055,
+      "angle_degrees": -7.558930748223453,
+      "rate_degrees_s": -3.8667310121711513,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.041543888,
+      "angle_degrees": -7.562346256041085,
+      "rate_degrees_s": 3.5520239198722234,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.063362493,
+      "angle_degrees": -7.565582950516695,
+      "rate_degrees_s": -3.8488073716017634,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.087795552,
+      "angle_degrees": -7.608374783174261,
+      "rate_degrees_s": 0.34607482942875684,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.109522385,
+      "angle_degrees": -7.718431653295567,
+      "rate_degrees_s": -10.478145610682976,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.133756536,
+      "angle_degrees": -7.8127595792991915,
+      "rate_degrees_s": 2.6939161722355043,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.158265012,
+      "angle_degrees": -7.853146306982995,
+      "rate_degrees_s": -5.989102035378454,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.179976585,
+      "angle_degrees": -7.976553296830139,
+      "rate_degrees_s": -5.378281143401579,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.203779533,
+      "angle_degrees": -7.977389197494991,
+      "rate_degrees_s": 5.308201630252701,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.228847598,
+      "angle_degrees": -8.011807483848594,
+      "rate_degrees_s": -8.054284524262707,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.250744694,
+      "angle_degrees": -8.15145444653586,
+      "rate_degrees_s": -4.701063127751963,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.272484288,
+      "angle_degrees": -8.154128982050803,
+      "rate_degrees_s": 4.45503706322713,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.298879242,
+      "angle_degrees": -8.184824749499853,
+      "rate_degrees_s": -6.781387926096555,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.320798421,
+      "angle_degrees": -8.258243294848338,
+      "rate_degrees_s": 0.08255536081252708,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.342459421,
+      "angle_degrees": -8.277418079631698,
+      "rate_degrees_s": -1.8529854435900963,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.36888875,
+      "angle_degrees": -8.289931645849004,
+      "rate_degrees_s": 0.9062695820128617,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.390573916,
+      "angle_degrees": -8.203443734632677,
+      "rate_degrees_s": 7.0696639715014085,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.412222936,
+      "angle_degrees": -8.250569562388776,
+      "rate_degrees_s": -11.423052686403148,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.439002217,
+      "angle_degrees": -8.301471194340644,
+      "rate_degrees_s": 7.622425826728073,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.461020511,
+      "angle_degrees": -8.333787853639082,
+      "rate_degrees_s": -10.558126863567534,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.482723386,
+      "angle_degrees": -8.389559466254347,
+      "rate_degrees_s": 5.418636668898035,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.504520377,
+      "angle_degrees": -8.36703999385082,
+      "rate_degrees_s": -3.3525385608689264,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.529717245,
+      "angle_degrees": -8.512236801010642,
+      "rate_degrees_s": -8.171522075785573,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.551452777,
+      "angle_degrees": -8.521254757138438,
+      "rate_degrees_s": 7.342208270726621,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.573196486,
+      "angle_degrees": -8.525315630251306,
+      "rate_degrees_s": -7.7163355959600315,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.599918161,
+      "angle_degrees": -8.525606346325583,
+      "rate_degrees_s": 7.695016326806632,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.621704996,
+      "angle_degrees": -8.554786588709138,
+      "rate_degrees_s": -10.374932828708523,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.644429079,
+      "angle_degrees": -8.581895285069834,
+      "rate_degrees_s": 7.990097925466424,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.670161109,
+      "angle_degrees": -8.539254339665582,
+      "rate_degrees_s": -4.674194729851957,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.692062111,
+      "angle_degrees": -8.563223861234171,
+      "rate_degrees_s": 2.4859033676608884,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.713789569,
+      "angle_degrees": -8.558803275319478,
+      "rate_degrees_s": -2.0784524384587026,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.74027442,
+      "angle_degrees": -8.585522559604081,
+      "rate_degrees_s": 0.060251197389545735,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.76245131,
+      "angle_degrees": -8.605105006450398,
+      "rate_degrees_s": -1.826313134142924,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.784255071,
+      "angle_degrees": -8.628280733692671,
+      "rate_degrees_s": -0.2995410882129375,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.806184094,
+      "angle_degrees": -8.652762980174307,
+      "rate_degrees_s": -1.9332613587859766,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.831650497,
+      "angle_degrees": -8.668775435913945,
+      "rate_degrees_s": 0.6760098914198799,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.853471134,
+      "angle_degrees": -8.740832724598224,
+      "rate_degrees_s": -7.280997822550714,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.879528375,
+      "angle_degrees": -8.740884632936027,
+      "rate_degrees_s": 7.276902395786673,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.903009133,
+      "angle_degrees": -8.718349324708372,
+      "rate_degrees_s": -5.358696632604023,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.926631038,
+      "angle_degrees": -8.706927598721839,
+      "rate_degrees_s": 6.3266123273511665,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.951698009,
+      "angle_degrees": -8.735502867785407,
+      "rate_degrees_s": -8.60600928128607,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.973600886,
+      "angle_degrees": -8.77823598292134,
+      "rate_degrees_s": 4.704308774150009,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061119.996966799,
+      "angle_degrees": -8.761286539141913,
+      "rate_degrees_s": -3.253635739653716,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.018726705,
+      "angle_degrees": -8.773752598071708,
+      "rate_degrees_s": 2.107891867631509,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.041981106,
+      "angle_degrees": -8.683579983610073,
+      "rate_degrees_s": 5.647661366636163,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.063793097,
+      "angle_degrees": -8.681971879875892,
+      "rate_degrees_s": -5.499854457324106,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.085711495,
+      "angle_degrees": -8.795885745700557,
+      "rate_degrees_s": -4.894561793805921,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.107467652,
+      "angle_degrees": -8.86181093541773,
+      "rate_degrees_s": -1.1660316640968449,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.132247173,
+      "angle_degrees": -8.956110983476908,
+      "rate_degrees_s": -6.444942977390437,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.153956871,
+      "angle_degrees": -9.05316337529945,
+      "rate_degrees_s": -2.4962744311161456,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.175629849,
+      "angle_degrees": -9.075249586287978,
+      "rate_degrees_s": 0.4579650180972514,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.200909531,
+      "angle_degrees": -9.099580034638784,
+      "rate_degrees_s": -2.3829681671969873,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.222839492,
+      "angle_degrees": -9.03897894862334,
+      "rate_degrees_s": 7.909498146478325,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.244626326,
+      "angle_degrees": -9.013366833617901,
+      "rate_degrees_s": -5.5581582933642455,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.266422015,
+      "angle_degrees": -9.036317634895934,
+      "rate_degrees_s": 3.4523079311876947,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.292832645,
+      "angle_degrees": -9.064014273701092,
+      "rate_degrees_s": -5.549900904459236,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.314568125,
+      "angle_degrees": -9.178934088824583,
+      "rate_degrees_s": -5.024756247450681,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.342599241,
+      "angle_degrees": -9.180203244324288,
+      "rate_degrees_s": 4.933911295591151,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.3643642,
+      "angle_degrees": -9.136703807570974,
+      "rate_degrees_s": -0.9373602299042516,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.386093585,
+      "angle_degrees": -9.121749632060052,
+      "rate_degrees_s": 2.3137642825086697,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.407858232,
+      "angle_degrees": -9.077114766376456,
+      "rate_degrees_s": 1.7877903356339322,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.433465,
+      "angle_degrees": -9.137241289319952,
+      "rate_degrees_s": -6.483238317088638,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.455194022,
+      "angle_degrees": -9.155660715369754,
+      "rate_degrees_s": 4.78719459277245,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.476982366,
+      "angle_degrees": -9.109089603420468,
+      "rate_degrees_s": -0.512328297803176,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.503847325,
+      "angle_degrees": -9.165515942722795,
+      "rate_degrees_s": -3.6883490038187148,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.525737545,
+      "angle_degrees": -9.143087432853163,
+      "rate_degrees_s": 5.737461044281481,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.547368649,
+      "angle_degrees": -9.119055766395464,
+      "rate_degrees_s": -3.5153058283192213,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.569278661,
+      "angle_degrees": -9.0980547118709,
+      "rate_degrees_s": 5.432189144920979,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.594243027,
+      "angle_degrees": -9.143749841776051,
+      "rate_degrees_s": -9.093206028820026,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.615928715,
+      "angle_degrees": -9.226747468925222,
+      "rate_degrees_s": 1.4385120506736224,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.64377061,
+      "angle_degrees": -9.187966727861502,
+      "rate_degrees_s": 1.3471137620295008,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.665970365,
+      "angle_degrees": -9.259748556260035,
+      "rate_degrees_s": -7.81348302722084,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.68772048,
+      "angle_degrees": -9.254070750716624,
+      "rate_degrees_s": 8.336317597658473,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.709425647,
+      "angle_degrees": -9.216822719955003,
+      "rate_degrees_s": -4.904000706109128,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.734784913,
+      "angle_degrees": -9.265066890090704,
+      "rate_degrees_s": 1.099814662849398,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.756479246,
+      "angle_degrees": -9.20061342700667,
+      "rate_degrees_s": 4.84285864246673,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.778187902,
+      "angle_degrees": -9.210869762779005,
+      "rate_degrees_s": -5.787738618043613,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.805270259,
+      "angle_degrees": -9.283303505226788,
+      "rate_degrees_s": 0.4391100052321608,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.827106364,
+      "angle_degrees": -9.363231341114696,
+      "rate_degrees_s": -7.760359617545554,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.85045337,
+      "angle_degrees": -9.41491013765905,
+      "rate_degrees_s": 3.333761046225198,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.872149058,
+      "angle_degrees": -9.446760138818167,
+      "rate_degrees_s": -6.269777414220497,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.895805755,
+      "angle_degrees": -9.584919960474338,
+      "rate_degrees_s": -5.4100905067659735,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.917662798,
+      "angle_degrees": -9.667459188198102,
+      "rate_degrees_s": -2.1427399263862656,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.939610623,
+      "angle_degrees": -9.687013812286486,
+      "rate_degrees_s": 0.36089775290055576,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.961526677,
+      "angle_degrees": -9.704727345377677,
+      "rate_degrees_s": -1.9773940641773422,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061120.986071456,
+      "angle_degrees": -9.738320930435417,
+      "rate_degrees_s": -0.759653540755704,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.00816996,
+      "angle_degrees": -9.83182127573373,
+      "rate_degrees_s": -7.703260853334118,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.034681321,
+      "angle_degrees": -9.933524107610587,
+      "rate_degrees_s": 0.03210817907210699,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.056847899,
+      "angle_degrees": -10.012404777050058,
+      "rate_degrees_s": -7.1493375591878,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.078605931,
+      "angle_degrees": -10.246108567161144,
+      "rate_degrees_s": -14.333705485882712,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.104375878,
+      "angle_degrees": -10.517988630414447,
+      "rate_degrees_s": -6.76694699209957,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.126936939,
+      "angle_degrees": -10.53673377313881,
+      "rate_degrees_s": 5.105661291323934,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.148820232,
+      "angle_degrees": -10.44971474342336,
+      "rate_degrees_s": 2.8479875351396493,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.170564618,
+      "angle_degrees": -10.463767573664521,
+      "rate_degrees_s": -4.140372876728212,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.196828164,
+      "angle_degrees": -10.476020948993163,
+      "rate_degrees_s": 3.206911786179555,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.218537393,
+      "angle_degrees": -10.394148575309677,
+      "rate_degrees_s": 4.334904411327322,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.240668033,
+      "angle_degrees": -10.403704112400181,
+      "rate_degrees_s": -5.198278649069882,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.262556691,
+      "angle_degrees": -10.404687192270739,
+      "rate_degrees_s": 5.1073047405366205,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.287138345,
+      "angle_degrees": -10.40968808431697,
+      "rate_degrees_s": -5.514995943732192,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.308869398,
+      "angle_degrees": -10.458339791315883,
+      "rate_degrees_s": 1.0377119137446826,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.330699982,
+      "angle_degrees": -10.451609557271658,
+      "rate_degrees_s": -0.42101455475232247,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.357508638,
+      "angle_degrees": -10.447565110869162,
+      "rate_degrees_s": 0.7227435911998047,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.379243388,
+      "angle_degrees": -10.372738106879511,
+      "rate_degrees_s": 6.163024450029405,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.407681383,
+      "angle_degrees": -10.351647757725674,
+      "rate_degrees_s": -4.679589501069624,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.429710251,
+      "angle_degrees": -10.431593285654282,
+      "rate_degrees_s": -2.5788104215709673,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.452583763,
+      "angle_degrees": -10.4358976533554,
+      "rate_degrees_s": 2.2021978028676803,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.474244554,
+      "angle_degrees": -10.454061814998594,
+      "rate_degrees_s": -3.8793730334588976,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.49819839,
+      "angle_degrees": -10.457924360451306,
+      "rate_degrees_s": 3.5574917097181578,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.51991064,
+      "angle_degrees": -10.45606862888996,
+      "rate_degrees_s": -3.386440895880381,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.541648828,
+      "angle_degrees": -10.464213200620154,
+      "rate_degrees_s": 2.6366895182598267,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.563685977,
+      "angle_degrees": -10.445662322608822,
+      "rate_degrees_s": -0.9530265164816076,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.588524144,
+      "angle_degrees": -10.46106337121655,
+      "rate_degrees_s": -0.28699215186648774,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.610187696,
+      "angle_degrees": -10.411654374659511,
+      "rate_degrees_s": 4.8486311614036355,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.632091458,
+      "angle_degrees": -10.415679716843028,
+      "rate_degrees_s": -5.216194154971479,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.65888277,
+      "angle_degrees": -10.413167937650712,
+      "rate_degrees_s": 5.404183005209944,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.680656219,
+      "angle_degrees": -10.311690113917512,
+      "rate_degrees_s": 3.9173756128947375,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.706396738,
+      "angle_degrees": -10.31974960114723,
+      "rate_degrees_s": -4.543608635467062,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.729279313,
+      "angle_degrees": -10.387371963823755,
+      "rate_degrees_s": -1.3667147877209818,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.75110245,
+      "angle_degrees": -10.404419366335768,
+      "rate_degrees_s": -0.1955756985792111,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.772776366,
+      "angle_degrees": -10.392125508079099,
+      "rate_degrees_s": 1.3301976681067582,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.79931554,
+      "angle_degrees": -10.342529383743088,
+      "rate_degrees_s": 2.4071954393482184,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.821055759,
+      "angle_degrees": -10.372669163437667,
+      "rate_degrees_s": -5.18010683341963,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.842682331,
+      "angle_degrees": -10.355577952183927,
+      "rate_degrees_s": 6.7605247200758996,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.866744501,
+      "angle_degrees": -10.329675799817084,
+      "rate_degrees_s": -4.607783902133765,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.890012183,
+      "angle_degrees": -10.457567140922,
+      "rate_degrees_s": -6.385619722690172,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.911709017,
+      "angle_degrees": -10.518901808387866,
+      "rate_degrees_s": 0.7325008787097541,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.934082992,
+      "angle_degrees": -10.537388227596432,
+      "rate_degrees_s": -2.3851783638035564,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.960279767,
+      "angle_degrees": -10.542716571057507,
+      "rate_degrees_s": 1.9778749892935246,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061121.982084049,
+      "angle_degrees": -10.556270108728823,
+      "rate_degrees_s": -3.221174575664165,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.003937863,
+      "angle_degrees": -10.589970629817218,
+      "rate_degrees_s": 0.13709447302801545,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.025924543,
+      "angle_degrees": -10.585778380802145,
+      "rate_degrees_s": 0.24429577352539947,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.050350779,
+      "angle_degrees": -10.64400015547277,
+      "rate_degrees_s": -5.0111331035991205,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.072056883,
+      "angle_degrees": -10.640164185384544,
+      "rate_degrees_s": 5.364034432915727,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.093947104,
+      "angle_degrees": -10.635715034399114,
+      "rate_degrees_s": -4.957766141598786,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.116113733,
+      "angle_degrees": -10.642965837741803,
+      "rate_degrees_s": 4.303742644877374,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.140807003,
+      "angle_degrees": -10.653018445481075,
+      "rate_degrees_s": -5.117983099804098,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.162603421,
+      "angle_degrees": -10.792535410688659,
+      "rate_degrees_s": -7.683976468467335,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.184253379,
+      "angle_degrees": -10.814347771136191,
+      "rate_degrees_s": 5.66947950403118,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.209779261,
+      "angle_degrees": -10.809883716476723,
+      "rate_degrees_s": -5.319369083255215,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.231574637,
+      "angle_degrees": -10.783826709196099,
+      "rate_degrees_s": 7.709971689798077,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.253253241,
+      "angle_degrees": -10.778679721974509,
+      "rate_degrees_s": -7.2349018323550895,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.274960022,
+      "angle_degrees": -10.797590853901447,
+      "rate_degrees_s": 5.492116310886513,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.303712552,
+      "angle_degrees": -10.781130290085963,
+      "rate_degrees_s": -4.347317531549449,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.326765493,
+      "angle_degrees": -10.928905736851913,
+      "rate_degrees_s": -8.473368518194425,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.351630066,
+      "angle_degrees": -10.957237946326229,
+      "rate_degrees_s": 6.19488103383113,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.3741917,
+      "angle_degrees": -10.977973413662195,
+      "rate_degrees_s": -8.034681703293934,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.396574738,
+      "angle_degrees": -10.99268599291407,
+      "rate_degrees_s": 6.720595317845319,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.418289488,
+      "angle_degrees": -11.014910738716122,
+      "rate_degrees_s": -8.767673033837701,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.442304418,
+      "angle_degrees": -11.109318959679158,
+      "rate_degrees_s": 0.9069628689820181,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.464164274,
+      "angle_degrees": -11.078857780019778,
+      "rate_degrees_s": 1.8812121925753604,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.487511593,
+      "angle_degrees": -11.063359106079163,
+      "rate_degrees_s": -0.5531596098193354,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.51264419,
+      "angle_degrees": -11.049647548674043,
+      "rate_degrees_s": 1.6445970980792182,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.537269646,
+      "angle_degrees": -11.028657722078464,
+      "rate_degrees_s": 0.06116659151723912,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.562744747,
+      "angle_degrees": -11.05275015898454,
+      "rate_degrees_s": -1.952464046010452,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.584543404,
+      "angle_degrees": -11.013628224102362,
+      "rate_degrees_s": 5.542446309576958,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.606196904,
+      "angle_degrees": -11.06780807232205,
+      "rate_degrees_s": -10.546931685771387,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.628454211,
+      "angle_degrees": -11.108186725488196,
+      "rate_degrees_s": 6.91699663740942,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.652957271,
+      "angle_degrees": -11.090808781972463,
+      "rate_degrees_s": -5.499001361770871,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.674666813,
+      "angle_degrees": -11.21681771832077,
+      "rate_degrees_s": -6.110906200849308,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.696636253,
+      "angle_degrees": -11.238330948324048,
+      "rate_degrees_s": 4.15280840130443,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.718362982,
+      "angle_degrees": -11.230692171930958,
+      "rate_degrees_s": -3.449682874953525,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.743274171,
+      "angle_degrees": -11.234750972764973,
+      "rate_degrees_s": 3.12328358166709,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.765248195,
+      "angle_degrees": -11.256000283525431,
+      "rate_degrees_s": -5.056976727415513,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.787920559,
+      "angle_degrees": -11.290018768748606,
+      "rate_degrees_s": 2.056333805501809,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.813696027,
+      "angle_degrees": -11.261605532764566,
+      "rate_degrees_s": 0.1488239061834116,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.836131722,
+      "angle_degrees": -11.351961272049392,
+      "rate_degrees_s": -8.203161502601128,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.859772012,
+      "angle_degrees": -11.357455558785974,
+      "rate_degrees_s": 7.737952392162294,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.881494471,
+      "angle_degrees": -11.359763299167977,
+      "rate_degrees_s": -7.950694329423131,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.904341524,
+      "angle_degrees": -11.472860105193213,
+      "rate_degrees_s": -1.9509091289218874,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.927189463,
+      "angle_degrees": -11.454789833459664,
+      "rate_degrees_s": 3.5323348488170696,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.952553364,
+      "angle_degrees": -11.491620945564636,
+      "rate_degrees_s": -6.436455112299397,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.974440825,
+      "angle_degrees": -11.475404307604279,
+      "rate_degrees_s": 7.91658591546266,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061122.996247763,
+      "angle_degrees": -11.45234892702016,
+      "rate_degrees_s": -5.802083720560662,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.017965951,
+      "angle_degrees": -11.46415637536756,
+      "rate_degrees_s": 4.715688463820973,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.044524187,
+      "angle_degrees": -11.491949754323144,
+      "rate_degrees_s": -6.809401325926081,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.067342074,
+      "angle_degrees": -11.596170837353664,
+      "rate_degrees_s": -2.327057674974535,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.094036718,
+      "angle_degrees": -11.566732552373562,
+      "rate_degrees_s": 4.532015194342658,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.115714905,
+      "angle_degrees": -11.568680678102057,
+      "rate_degrees_s": -4.712403276304172,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.137447624,
+      "angle_degrees": -11.568519389151566,
+      "rate_degrees_s": 4.727109978423681,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.161351876,
+      "angle_degrees": -11.535680857832226,
+      "rate_degrees_s": -1.9795443336300238,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.183030792,
+      "angle_degrees": -11.579281161885692,
+      "rate_degrees_s": -2.0428488948431665,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.205633885,
+      "angle_degrees": -11.52726466929165,
+      "rate_degrees_s": 6.645369188364338,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.227418896,
+      "angle_degrees": -11.409574779440607,
+      "rate_degrees_s": 4.157798693411068,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.252329408,
+      "angle_degrees": -11.341577140138252,
+      "rate_degrees_s": 1.3018254396775433,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.275694695,
+      "angle_degrees": -11.320812941981101,
+      "rate_degrees_s": 0.4758489907435585,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.300293589,
+      "angle_degrees": -11.323929316236548,
+      "rate_degrees_s": -0.7292304143689602,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.322028756,
+      "angle_degrees": -11.33631721358545,
+      "rate_degrees_s": -0.4106806743937441,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.346074936,
+      "angle_degrees": -11.296798575816156,
+      "rate_degrees_s": 3.69736383317943,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.369978302,
+      "angle_degrees": -11.31823750621528,
+      "rate_degrees_s": -5.491685564971785,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.395586946,
+      "angle_degrees": -11.366701460260515,
+      "rate_degrees_s": 1.7063101137141874,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.417341228,
+      "angle_degrees": -11.32779554586031,
+      "rate_degrees_s": 1.8700927911752037,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.439027176,
+      "angle_degrees": -11.348678011426934,
+      "rate_degrees_s": -3.7962192925573848,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.467889446,
+      "angle_degrees": -11.358643949054658,
+      "rate_degrees_s": 3.105984244676538,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.489675343,
+      "angle_degrees": -11.270681508753034,
+      "rate_degrees_s": 4.968396257281991,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.516419883,
+      "angle_degrees": -11.271150064084344,
+      "rate_degrees_s": -5.002960680748568,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.538062706,
+      "angle_degrees": -11.308677704514931,
+      "rate_degrees_s": 1.534971113730234,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.559808237,
+      "angle_degrees": -11.342455447831814,
+      "rate_degrees_s": -4.64177173368098,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.581643249,
+      "angle_degrees": -11.344409641820468,
+      "rate_degrees_s": 4.462477884117679,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.606828086,
+      "angle_degrees": -11.364822841548888,
+      "rate_degrees_s": -6.083601607698328,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.629116957,
+      "angle_degrees": -11.443490876336428,
+      "rate_degrees_s": -0.9757203711468861,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.654646589,
+      "angle_degrees": -11.46055170467222,
+      "rate_degrees_s": -0.3607555704209328,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.676677384,
+      "angle_degrees": -11.476365806000928,
+      "rate_degrees_s": -1.0749028427769902,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.698533178,
+      "angle_degrees": -11.409834031209497,
+      "rate_degrees_s": 7.162555141438153,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.720319387,
+      "angle_degrees": -11.428856860030331,
+      "rate_degrees_s": -8.908972716796786,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.742853989,
+      "angle_degrees": -11.433350248830392,
+      "rate_degrees_s": 8.509935870397129,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.768272318,
+      "angle_degrees": -11.450102450205668,
+      "rate_degrees_s": -9.827260351731795,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.790224467,
+      "angle_degrees": -11.484720282736824,
+      "rate_degrees_s": 6.671244516593158,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.817244531,
+      "angle_degrees": -11.478992488782037,
+      "rate_degrees_s": -6.245644749859583,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.839105585,
+      "angle_degrees": -11.600875991690463,
+      "rate_degrees_s": -4.904619102375639,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.861053723,
+      "angle_degrees": -11.633371102283244,
+      "rate_degrees_s": 1.9435942779377895,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.882741025,
+      "angle_degrees": -11.597034251805956,
+      "rate_degrees_s": 1.4074247181584536,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.908182427,
+      "angle_degrees": -11.560815910500137,
+      "rate_degrees_s": 1.4397821729327138,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.930230931,
+      "angle_degrees": -11.521501876403393,
+      "rate_degrees_s": 2.1263471126830957,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.952202506,
+      "angle_degrees": -11.535674582090623,
+      "rate_degrees_s": -3.416623781529736,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.973880277,
+      "angle_degrees": -11.53022444584924,
+      "rate_degrees_s": 3.91906809855434,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061123.998719798,
+      "angle_degrees": -11.551140065048125,
+      "rate_degrees_s": -5.603178945773082,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.020571425,
+      "angle_degrees": -11.56778987481384,
+      "rate_degrees_s": 4.079000319335922,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.04228904,
+      "angle_degrees": -11.560500232074942,
+      "rate_degrees_s": -3.407725956949474,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.06905931,
+      "angle_degrees": -11.57393432541922,
+      "rate_degrees_s": 2.40406399419523,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.091231356,
+      "angle_degrees": -11.472743776219277,
+      "rate_degrees_s": 6.723428782880098,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.114720187,
+      "angle_degrees": -11.471093288616956,
+      "rate_degrees_s": -6.583064980907157,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.136698273,
+      "angle_degrees": -11.479182691465923,
+      "rate_degrees_s": 5.846994003873616,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.159749443,
+      "angle_degrees": -11.349071149211017,
+      "rate_degrees_s": 5.441603736188965,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.181549923,
+      "angle_degrees": -11.35335242177678,
+      "rate_degrees_s": -5.83423270670342,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.203718428,
+      "angle_degrees": -11.367504031929062,
+      "rate_degrees_s": 4.557312715184824,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.226071778,
+      "angle_degrees": -11.374808752082787,
+      "rate_degrees_s": -5.210677718713385,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.249811236,
+      "angle_degrees": -11.380550413451353,
+      "rate_degrees_s": 4.727102345417384,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.271489528,
+      "angle_degrees": -11.35254705863795,
+      "rate_degrees_s": -2.1431613690547,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.293274383,
+      "angle_degrees": -11.382822136687988,
+      "rate_degrees_s": -0.636106501300065,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.319438241,
+      "angle_degrees": -11.382424699741566,
+      "rate_degrees_s": 0.666721295893419,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.341097417,
+      "angle_degrees": -11.435173842111737,
+      "rate_degrees_s": -5.538391977023387,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.362818834,
+      "angle_degrees": -11.427751152640292,
+      "rate_degrees_s": 6.22271535059053,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.384630773,
+      "angle_degrees": -11.45041883121147,
+      "rate_degrees_s": -8.301024596933406,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.410256657,
+      "angle_degrees": -11.44778347507087,
+      "rate_degrees_s": 8.50623002028964,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.432115367,
+      "angle_degrees": -11.331769774104227,
+      "rate_degrees_s": 2.1084583304967617,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.453902357,
+      "angle_degrees": -11.34029628540482,
+      "rate_degrees_s": -2.891028753090175,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.475681431,
+      "angle_degrees": -11.351683950318979,
+      "rate_degrees_s": 1.8450790955122365,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.503504472,
+      "angle_degrees": -11.356254650105742,
+      "rate_degrees_s": -2.1735655792791526,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.525370578,
+      "angle_degrees": -11.313759756057792,
+      "rate_degrees_s": 6.060178493175596,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.550816199,
+      "angle_degrees": -11.291896170734574,
+      "rate_degrees_s": -4.341651542944245,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.572577668,
+      "angle_degrees": -11.410263241533988,
+      "rate_degrees_s": -6.536813490103236,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.59450315,
+      "angle_degrees": -11.411567294422383,
+      "rate_degrees_s": 6.417893536402109,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.621003365,
+      "angle_degrees": -11.40370172057186,
+      "rate_degrees_s": -5.824652887279136,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.643049681,
+      "angle_degrees": -11.529187210897724,
+      "rate_degrees_s": -5.559959244106646,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.66487636,
+      "angle_degrees": -11.53922118084766,
+      "rate_degrees_s": 4.640707505542291,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.686652048,
+      "angle_degrees": -11.536777831448848,
+      "rate_degrees_s": -4.41659485173675,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.711658446,
+      "angle_degrees": -11.524538246450948,
+      "rate_degrees_s": 5.3953094257037595,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.734631959,
+      "angle_degrees": -11.532335922520474,
+      "rate_degrees_s": -6.0749422647995965,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.761654992,
+      "angle_degrees": -11.60208254484591,
+      "rate_degrees_s": 0.9129667339660127,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.783361461,
+      "angle_degrees": -11.63446982766345,
+      "rate_degrees_s": -3.897676270226381,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.80507819,
+      "angle_degrees": -11.639690990449488,
+      "rate_degrees_s": 3.4174130137970016,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.826812732,
+      "angle_degrees": -11.663753710041325,
+      "rate_degrees_s": -5.631533364148016,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.852291114,
+      "angle_degrees": -11.680514448948589,
+      "rate_degrees_s": 4.3161848722786464,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.874098157,
+      "angle_degrees": -11.586384105608873,
+      "rate_degrees_s": 4.316516492123632,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.895786396,
+      "angle_degrees": -11.603961868295038,
+      "rate_degrees_s": -5.93758520818191,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.922791304,
+      "angle_degrees": -11.60852470580769,
+      "rate_degrees_s": 5.599395547167583,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.944635326,
+      "angle_degrees": -11.572283768957037,
+      "rate_degrees_s": -2.2821516015641743,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.97019423,
+      "angle_degrees": -11.58465965211817,
+      "rate_degrees_s": 1.3138121558691358,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061124.993760301,
+      "angle_degrees": -11.483216449779752,
+      "rate_degrees_s": 7.294657516962115,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.015569948,
+      "angle_degrees": -11.478939409440658,
+      "rate_degrees_s": -6.90262214780342,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.037463658,
+      "angle_degrees": -11.489700083643303,
+      "rate_degrees_s": 5.919867614288228,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.063049594,
+      "angle_degrees": -11.48512817814074,
+      "rate_degrees_s": -5.56288564024506,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.085012992,
+      "angle_degrees": -11.617913552143483,
+      "rate_degrees_s": -6.529296513612582,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.106804931,
+      "angle_degrees": -11.624242877471335,
+      "rate_degrees_s": 5.948216278592487,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.128725933,
+      "angle_degrees": -11.618569464070026,
+      "rate_degrees_s": -5.430014916072568,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.153552902,
+      "angle_degrees": -11.654735119251635,
+      "rate_degrees_s": 2.5171176311614536,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.175282444,
+      "angle_degrees": -11.719012619901898,
+      "rate_degrees_s": -8.43483246437385,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.197102508,
+      "angle_degrees": -11.76173758401555,
+      "rate_degrees_s": 4.520283816346297,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.223819965,
+      "angle_degrees": -11.684537952895345,
+      "rate_degrees_s": 1.2609236564440045,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.245602945,
+      "angle_degrees": -11.678506149178794,
+      "rate_degrees_s": -0.7072457704862035,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.269061723,
+      "angle_degrees": -11.658183499205668,
+      "rate_degrees_s": 2.4399799981009944,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.290920329,
+      "angle_degrees": -11.697662727402069,
+      "rate_degrees_s": -6.052112947018907,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.31454963,
+      "angle_degrees": -11.766823006574825,
+      "rate_degrees_s": 0.19892423390382066,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.336285005,
+      "angle_degrees": -11.736783370905744,
+      "rate_degrees_s": 2.565159814563081,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.360584365,
+      "angle_degrees": -11.754494472858388,
+      "rate_degrees_s": -4.022332642741163,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.382250052,
+      "angle_degrees": -11.755207885042251,
+      "rate_degrees_s": 3.9564456374166186,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.404894916,
+      "angle_degrees": -11.757398930543385,
+      "rate_degrees_s": -4.149895118369124,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.426713626,
+      "angle_degrees": -11.772686527991016,
+      "rate_degrees_s": 2.748484377029707,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.448529471,
+      "angle_degrees": -11.764143271884148,
+      "rate_degrees_s": -1.965378702135474,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.474967654,
+      "angle_degrees": -11.783867527268763,
+      "rate_degrees_s": 0.47326676796084294,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.496960897,
+      "angle_degrees": -11.695836363072162,
+      "rate_degrees_s": 7.5317306962723665,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.518713616,
+      "angle_degrees": -11.70492920766263,
+      "rate_degrees_s": -8.36812598617898,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.540414408,
+      "angle_degrees": -11.817987867342838,
+      "rate_degrees_s": -2.0525347389856035,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.565432889,
+      "angle_degrees": -11.946764517435973,
+      "rate_degrees_s": -8.241011544229131,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.587140452,
+      "angle_degrees": -12.11879486301367,
+      "rate_degrees_s": -7.609363379951259,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.608794785,
+      "angle_degrees": -12.133123428120598,
+      "rate_degrees_s": 6.286434423046109,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.630513285,
+      "angle_degrees": -12.119917992044297,
+      "rate_degrees_s": -5.07054213497136,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.655610465,
+      "angle_degrees": -12.1374178012676,
+      "rate_degrees_s": 3.6758567965529383,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.677526936,
+      "angle_degrees": -12.019646832352272,
+      "rate_degrees_s": 7.071225688240333,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.705818628,
+      "angle_degrees": -12.027660174571508,
+      "rate_degrees_s": -7.638483674382909,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.727647806,
+      "angle_degrees": -12.138204008574858,
+      "rate_degrees_s": -2.489752404543931,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.749461776,
+      "angle_degrees": -12.136623718434537,
+      "rate_degrees_s": 2.634755793965267,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.775684645,
+      "angle_degrees": -12.135637393766304,
+      "rate_degrees_s": -2.5591642480822023,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.801790429,
+      "angle_degrees": -12.095484022012453,
+      "rate_degrees_s": 5.634898946647584,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.826747973,
+      "angle_degrees": -12.091963962111524,
+      "rate_degrees_s": -5.353072521693647,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.848621579,
+      "angle_degrees": -12.223025369558762,
+      "rate_degrees_s": -6.63033516786561,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.87606597,
+      "angle_degrees": -12.20326432793675,
+      "rate_degrees_s": 8.07200274298681,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.904520371,
+      "angle_degrees": -12.166996806555783,
+      "rate_degrees_s": -5.523038022144209,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.927426853,
+      "angle_degrees": -12.300782654257956,
+      "rate_degrees_s": -6.157423035318271,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.949175926,
+      "angle_degrees": -12.301598439043058,
+      "rate_degrees_s": 6.0828251380197385,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.974766653,
+      "angle_degrees": -12.31317346803805,
+      "rate_degrees_s": -6.987803726409948,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061125.999213983,
+      "angle_degrees": -12.316617144564251,
+      "rate_degrees_s": 6.705673555194281,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.026966398,
+      "angle_degrees": -12.166208838278928,
+      "rate_degrees_s": 4.131915242095048,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.048830525,
+      "angle_degrees": -12.207973653547166,
+      "rate_degrees_s": -7.953255678673964,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.070516889,
+      "angle_degrees": -12.195410694665293,
+      "rate_degrees_s": 9.11173760910586,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.09253758,
+      "angle_degrees": -12.193610264293367,
+      "rate_degrees_s": -8.948519861404964,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.117627469,
+      "angle_degrees": -12.210657987175377,
+      "rate_degrees_s": 7.591183528316128,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.139277166,
+      "angle_degrees": -12.088089612904758,
+      "rate_degrees_s": 3.7325920096057446,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.162920478,
+      "angle_degrees": -12.104682734954272,
+      "rate_degrees_s": -5.135982962858817,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.184688614,
+      "angle_degrees": -12.110382711301593,
+      "rate_degrees_s": 4.612612733272232,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.208262862,
+      "angle_degrees": -12.096086580786956,
+      "rate_degrees_s": -3.4000305731274434,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.237934047,
+      "angle_degrees": -12.12193291396883,
+      "rate_degrees_s": 1.6577264196714647,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.259673172,
+      "angle_degrees": -12.019065546139815,
+      "rate_degrees_s": 7.805700136620922,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.281370683,
+      "angle_degrees": -12.008160383720089,
+      "rate_degrees_s": -6.80058860032237,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.308134546,
+      "angle_degrees": -12.07857388055258,
+      "rate_degrees_s": 1.540150378743481,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.329937006,
+      "angle_degrees": -12.128606753414374,
+      "rate_degrees_s": -6.131076243657152,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.351690819,
+      "angle_degrees": -12.13309918716136,
+      "rate_degrees_s": 5.718757215310066,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.375641842,
+      "angle_degrees": -12.139272495184194,
+      "rate_degrees_s": -6.235216040795188,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.398267278,
+      "angle_degrees": -12.146494355303156,
+      "rate_degrees_s": 5.596683624783363,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.420143176,
+      "angle_degrees": -12.021607257038273,
+      "rate_degrees_s": 5.820307310668607,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.443749039,
+      "angle_degrees": -12.051164476873796,
+      "rate_degrees_s": -8.3245412088392,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.469384923,
+      "angle_degrees": -12.079182417995098,
+      "rate_degrees_s": 6.136493252270672,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.491185351,
+      "angle_degrees": -12.065657335905005,
+      "rate_degrees_s": -4.896046694056787,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.516741442,
+      "angle_degrees": -12.043989996519299,
+      "rate_degrees_s": 6.592985031564343,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.538687288,
+      "angle_degrees": -12.076177105660713,
+      "rate_degrees_s": -9.526179928339086,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.56044782,
+      "angle_degrees": -12.180256671612803,
+      "rate_degrees_s": -0.04127870634434401,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.5821308,
+      "angle_degrees": -12.152782713527511,
+      "rate_degrees_s": 2.575076774891009,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.608916591,
+      "angle_degrees": -12.165440441524371,
+      "rate_degrees_s": -3.520081530255583,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.630722019,
+      "angle_degrees": -12.34572118685365,
+      "rate_degrees_s": -13.014571273633676,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.652507082,
+      "angle_degrees": -12.42699147616496,
+      "rate_degrees_s": 5.554294706726756,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.679656314,
+      "angle_degrees": -12.372425480487085,
+      "rate_degrees_s": -1.5337103913340397,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.701743256,
+      "angle_degrees": -12.316983783714592,
+      "rate_degrees_s": 6.552225862788086,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.727233305,
+      "angle_degrees": -12.31255900645575,
+      "rate_degrees_s": -6.205381337643443,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.748946857,
+      "angle_degrees": -12.314952210424671,
+      "rate_degrees_s": 5.985201249170803,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.770865516,
+      "angle_degrees": -12.196346639328645,
+      "rate_degrees_s": 4.83681283357722,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.79270209,
+      "angle_degrees": -12.209053353356222,
+      "rate_degrees_s": -6.000917423944864,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.814358454,
+      "angle_degrees": -12.209960862024426,
+      "rate_degrees_s": 5.916880076668149,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.836128101,
+      "angle_degrees": -12.229675568614457,
+      "rate_degrees_s": -7.728183701521011,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.860873507,
+      "angle_degrees": -12.249404946780508,
+      "rate_degrees_s": 6.134065851033777,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.882652581,
+      "angle_degrees": -12.225497920505651,
+      "rate_degrees_s": -3.939007516415786,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.90441629,
+      "angle_degrees": -12.266755646124265,
+      "rate_degrees_s": 0.14769005549472372,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.931186612,
+      "angle_degrees": -12.263518961693885,
+      "rate_degrees_s": 0.09417392083001228,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.953327773,
+      "angle_degrees": -12.342596305576064,
+      "rate_degrees_s": -7.237473583638358,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.976701654,
+      "angle_degrees": -12.369506373320384,
+      "rate_degrees_s": 4.935194097400363,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061126.998685366,
+      "angle_degrees": -12.35476684388399,
+      "rate_degrees_s": -3.5942984863342398,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.021772734,
+      "angle_degrees": -12.493921022394263,
+      "rate_degrees_s": -8.459987134145399,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.043485765,
+      "angle_degrees": -12.495966663334285,
+      "rate_degrees_s": 8.271556545845241,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.065413226,
+      "angle_degrees": -12.503727830802372,
+      "rate_degrees_s": -8.979972988296387,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.087114591,
+      "angle_degrees": -12.522602273387145,
+      "rate_degrees_s": 7.24064436748895,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.111735516,
+      "angle_degrees": -12.512522388469806,
+      "rate_degrees_s": -6.422730732504319,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.133789958,
+      "angle_degrees": -12.60933391959476,
+      "rate_degrees_s": -2.357264886679391,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.155586792,
+      "angle_degrees": -12.641536361919009,
+      "rate_degrees_s": -0.5973755412602125,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.182226175,
+      "angle_degrees": -12.628441155038777,
+      "rate_degrees_s": 1.580744675747619,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.203982541,
+      "angle_degrees": -12.546770429033655,
+      "rate_degrees_s": 5.92654534436691,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.227077096,
+      "angle_degrees": -12.55189607382006,
+      "rate_degrees_s": -6.370973612384962,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.248722784,
+      "angle_degrees": -12.530262110598832,
+      "rate_degrees_s": 8.369862318973167,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.272628546,
+      "angle_degrees": -12.372218924458199,
+      "rate_degrees_s": 4.851740305956798,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.29444137,
+      "angle_degrees": -12.394556781642796,
+      "rate_degrees_s": -6.9001160520733515,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.316151224,
+      "angle_degrees": -12.426685962338707,
+      "rate_degrees_s": 3.940795312865818,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.337780661,
+      "angle_degrees": -12.41598622997911,
+      "rate_degrees_s": -2.950613021528285,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.362945602,
+      "angle_degrees": -12.382042815203647,
+      "rate_degrees_s": 5.64813921549913,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.384695405,
+      "angle_degrees": -12.362913767351492,
+      "rate_degrees_s": -3.8894042313925237,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.406902869,
+      "angle_degrees": -12.345710831540444,
+      "rate_degrees_s": 5.4386493639548465,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.433352511,
+      "angle_degrees": -12.319959173892531,
+      "rate_degrees_s": -3.491109077715691,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.455078719,
+      "angle_degrees": -12.450208560365303,
+      "rate_degrees_s": -8.498170808870645,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.47838635,
+      "angle_degrees": -12.444593686856845,
+      "rate_degrees_s": 8.98138248038116,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.500818035,
+      "angle_degrees": -12.438959623841175,
+      "rate_degrees_s": -8.479853935459648,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.523880351,
+      "angle_degrees": -12.558696039351949,
+      "rate_degrees_s": -1.9035686998524037,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.545649425,
+      "angle_degrees": -12.562120135037096,
+      "rate_degrees_s": 1.5892496401885061,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.5707015,
+      "angle_degrees": -12.567455565891596,
+      "rate_degrees_s": -2.014922847203331,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.594205748,
+      "angle_degrees": -12.584214655902391,
+      "rate_degrees_s": 0.5885744023421468,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.61622222,
+      "angle_degrees": -12.586203597645412,
+      "rate_degrees_s": -0.76959149026433,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.637913064,
+      "angle_degrees": -12.586389452595602,
+      "rate_degrees_s": 0.7524289030913236,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.66437906,
+      "angle_degrees": -12.594008790287651,
+      "rate_degrees_s": -1.3280370186600783,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.686043549,
+      "angle_degrees": -12.632748958999862,
+      "rate_degrees_s": -2.2489087751158245,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.707699913,
+      "angle_degrees": -12.605400624399868,
+      "rate_degrees_s": 4.774636574939166,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.735194618,
+      "angle_degrees": -12.633770393908447,
+      "rate_degrees_s": -6.838980368759607,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.757319945,
+      "angle_degrees": -12.70451406998417,
+      "rate_degrees_s": 0.4436832185247571,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.779047039,
+      "angle_degrees": -12.712793973482578,
+      "rate_degrees_s": -1.2058336045882003,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.805031624,
+      "angle_degrees": -12.821774822606619,
+      "rate_degrees_s": -7.182946151216735,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.826773302,
+      "angle_degrees": -12.825677118066197,
+      "rate_degrees_s": 6.824685316942527,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.849244102,
+      "angle_degrees": -12.874338002985581,
+      "rate_degrees_s": -11.156336083668661,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.874993684,
+      "angle_degrees": -12.973537001006198,
+      "rate_degrees_s": 3.45160531930337,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.896863749,
+      "angle_degrees": -12.966244292498152,
+      "rate_degrees_s": -2.7855000821259397,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.918579124,
+      "angle_degrees": -12.956714369773929,
+      "rate_degrees_s": 3.663818467474145,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.940295853,
+      "angle_degrees": -12.945186241758167,
+      "rate_degrees_s": -2.6017481938240663,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.965546525,
+      "angle_degrees": -13.020168362426814,
+      "rate_degrees_s": -3.3365091426243496,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061127.987251431,
+      "angle_degrees": -13.055064834938062,
+      "rate_degrees_s": 0.12107704704416757,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061128.008951285,
+      "angle_degrees": -13.026124016432549,
+      "rate_degrees_s": 2.545912252576945,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061128.035750566,
+      "angle_degrees": -13.006498425691282,
+      "rate_degrees_s": -1.0811630187706982,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061128.05766261,
+      "angle_degrees": -12.942960232617013,
+      "rate_degrees_s": 6.879951465489247,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061128.079424444,
+      "angle_degrees": -12.945897588423303,
+      "rate_degrees_s": -7.149784755864255,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061128.104725377,
+      "angle_degrees": -12.958503958736017,
+      "rate_degrees_s": 6.153397229420843,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061128.126688202,
+      "angle_degrees": -12.843292522508298,
+      "rate_degrees_s": 4.337993793899773,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061128.148357015,
+      "angle_degrees": -12.807023675776477,
+      "rate_degrees_s": -0.989734917450339,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061128.170024317,
+      "angle_degrees": -12.812647207498678,
+      "rate_degrees_s": 0.470298856684007,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061128.191935579,
+      "angle_degrees": -12.849896672689313,
+      "rate_degrees_s": -3.8703606973173903,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061128.216660204,
+      "angle_degrees": -12.865886057182246,
+      "rate_degrees_s": 2.5771802929619634,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061128.23856355,
+      "angle_degrees": -12.877178206095904,
+      "rate_degrees_s": -3.608364066157092,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061128.262093631,
+      "angle_degrees": -12.896101974533448,
+      "rate_degrees_s": 1.9997467441375705,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061128.287203103,
+      "angle_degrees": -12.88557574845046,
+      "rate_degrees_s": -1.1614279015541282,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    },
+    {
+      "time": 1061128.309119886,
+      "angle_degrees": -12.978280015704645,
+      "rate_degrees_s": -7.298538567073197,
+      "command": {
+        "left": -0.1,
+        "right": 0.1
+      }
+    }
+  ],
+  "mode": "execute",
+  "outcome": "stopped",
+  "reason": "Turn timeout",
+  "elapsed": 12.0030825228896
+}

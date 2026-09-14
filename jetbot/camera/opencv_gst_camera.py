@@ -4,6 +4,7 @@ import cv2
 import threading
 import numpy as np
 from .camera_base import CameraBase
+from .color_balance import correct_bgr
 
 
 class OpenCvGstCamera(CameraBase):
@@ -29,7 +30,7 @@ class OpenCvGstCamera(CameraBase):
             if not re:
                 raise RuntimeError('Could not read image from camera.')
 
-            self.value = image
+            self.value = correct_bgr(image)
             self.start()
         except:
             self.stop()
@@ -42,7 +43,7 @@ class OpenCvGstCamera(CameraBase):
         while True:
             re, image = self.cap.read()
             if re:
-                self.value = image
+                self.value = correct_bgr(image)
             else:
                 break
                 

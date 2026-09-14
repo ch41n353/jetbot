@@ -1,0 +1,54 @@
+{
+  "target_degrees": 15.0,
+  "power": 0.14,
+  "samples": [
+    {
+      "time": 1076819.534967458,
+      "angle_degrees": -0.0004190799852680498,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1076819.793873063,
+      "angle_degrees": 3.3782139711329386,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1076820.097093853,
+      "angle_degrees": 5.598749626792755,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1076820.362252036,
+      "angle_degrees": 8.818316239927714,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1076820.629164615,
+      "angle_degrees": 12.04994744645469,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1076820.92693414,
+      "angle_degrees": 16.257703988133194,
+      "command": null
+    }
+  ],
+  "mode": "execute",
+  "outcome": "turn_reached_imu_estimate",
+  "elapsed": 1.4713717808481306
+}

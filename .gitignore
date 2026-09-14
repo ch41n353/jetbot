@@ -3,3 +3,22 @@
 
 # MkDocs documentation
 site/
+
+# Local Python/build outputs
+__pycache__/
+*.py[cod]
+*.egg-info/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+/Makefile
+/jetbot/Makefile
+/jetbot/ssd_tensorrt/Makefile
+/jetbot/ssd_tensorrt/libssd_tensorrt.so
+
+# Robot camera captures and raw sensor sessions stay local.
+/local_nav/goals/*.observations/
+/local_nav/goals/*.jpg
+/local_nav/goals/*.png
+/calibration/*.jpg
+/calibration/*.png

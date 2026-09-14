@@ -1,0 +1,102 @@
+{
+  "target_degrees": 30.0,
+  "power": 0.14,
+  "samples": [
+    {
+      "time": 1077859.115503651,
+      "angle_degrees": -3.592614514435445e-05,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1077859.374614307,
+      "angle_degrees": 2.7980765155379124,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1077859.674635773,
+      "angle_degrees": 4.612534850868494,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1077859.942021321,
+      "angle_degrees": 7.222480737169348,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1077860.209165564,
+      "angle_degrees": 10.265326986924373,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1077860.508369729,
+      "angle_degrees": 12.355984413356975,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1077860.77520001,
+      "angle_degrees": 15.548334542599914,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1077861.042302586,
+      "angle_degrees": 18.590823241629717,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1077861.341997486,
+      "angle_degrees": 21.27202736701125,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1077861.60843745,
+      "angle_degrees": 23.13227592164622,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1077861.875130646,
+      "angle_degrees": 26.61370466160321,
+      "command": {
+        "left": 0.14,
+        "right": -0.14
+      }
+    },
+    {
+      "time": 1077862.175511179,
+      "angle_degrees": 29.08668123387729,
+      "command": null
+    }
+  ],
+  "mode": "execute",
+  "outcome": "turn_reached_imu_estimate",
+  "elapsed": 3.13213111506775
+}

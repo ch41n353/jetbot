@@ -1,0 +1,19 @@
+{
+  "goal_pixel": [
+    320.0,
+    249.0
+  ],
+  "initial_target_cm": [
+    -0.4413918286831079,
+    39.077574855376355
+  ],
+  "mode": "execute",
+  "samples": [],
+  "outcome": "stopped",
+  "reason": "[Errno 2] No such file or directory",
+  "elapsed": 0.00023031607270240784,
+  "final_target_cm": [
+    -0.4413918286831079,
+    39.077574855376355
+  ]
+}

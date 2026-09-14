@@ -1,0 +1,293 @@
+{
+  "target_degrees": -30.0,
+  "samples": [
+    {
+      "time": 1060730.45802839,
+      "angle_degrees": 0.0005636733582939283,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060730.719854932,
+      "angle_degrees": -1.3141932395370837,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060731.019783242,
+      "angle_degrees": -1.7303097510462133,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060731.288508131,
+      "angle_degrees": -2.2203345653816813,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060731.552596675,
+      "angle_degrees": -2.543675376146975,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060731.820647391,
+      "angle_degrees": -3.452658981519499,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060732.120303303,
+      "angle_degrees": -3.3924753374837495,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060732.387175572,
+      "angle_degrees": -3.4957215794981895,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060732.686713671,
+      "angle_degrees": -3.805273475382093,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060732.953429948,
+      "angle_degrees": -4.017034673378426,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060733.253510656,
+      "angle_degrees": -4.346636865984944,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060733.520070006,
+      "angle_degrees": -5.316833161821724,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060733.7871641,
+      "angle_degrees": -6.081133948726576,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060734.088405184,
+      "angle_degrees": -6.65657313123645,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060734.352094403,
+      "angle_degrees": -7.51043183755406,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060734.620034599,
+      "angle_degrees": -7.676690889648935,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060734.919913223,
+      "angle_degrees": -8.730964066709047,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060735.186488876,
+      "angle_degrees": -9.284649137722518,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060735.452568534,
+      "angle_degrees": -10.137808863084555,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060735.751162512,
+      "angle_degrees": -10.225201171241963,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060736.019389795,
+      "angle_degrees": -11.48788502783285,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060736.28665134,
+      "angle_degrees": -12.746291558024025,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060736.587980708,
+      "angle_degrees": -13.83114735084956,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060736.854879907,
+      "angle_degrees": -14.495696853771324,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060737.117750265,
+      "angle_degrees": -15.69905802359197,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060737.420551418,
+      "angle_degrees": -16.72473964082853,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060737.685387837,
+      "angle_degrees": -17.80673210156016,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060737.985767093,
+      "angle_degrees": -18.913607396188045,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060738.25261749,
+      "angle_degrees": -19.70002867904538,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060738.552378563,
+      "angle_degrees": -20.789976481447596,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060738.819170105,
+      "angle_degrees": -22.201227242428946,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060739.085672478,
+      "angle_degrees": -23.356768282500735,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060739.385782826,
+      "angle_degrees": -24.877515283617782,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060739.652561088,
+      "angle_degrees": -26.458273897041902,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060739.918868251,
+      "angle_degrees": -28.42934421376551,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 1060740.218876411,
+      "angle_degrees": -29.529314877213743,
+      "command": null
+    }
+  ],
+  "mode": "execute",
+  "outcome": "turn_reached_imu_estimate",
+  "elapsed": 9.837532186182216
+}

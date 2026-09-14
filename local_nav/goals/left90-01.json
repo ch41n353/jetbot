@@ -1,0 +1,8 @@
+{
+  "target_degrees": -30.0,
+  "samples": [],
+  "mode": "execute",
+  "outcome": "stopped",
+  "reason": "Starting pose differs from calibrated floor pose",
+  "elapsed": 0.03920077905058861
+}

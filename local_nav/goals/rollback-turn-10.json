@@ -1,0 +1,105 @@
+{
+  "target_degrees": 10.0,
+  "samples": [
+    {
+      "time": 1061880.511447656,
+      "angle_degrees": -0.0025355125214410004,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061880.778673637,
+      "angle_degrees": -0.013149901491443383,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061881.081626086,
+      "angle_degrees": -0.050887164835558656,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061881.344208112,
+      "angle_degrees": -0.0463817489839841,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061881.644623816,
+      "angle_degrees": -0.0263622418465465,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061881.944333314,
+      "angle_degrees": 0.11475262346080572,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061882.212710766,
+      "angle_degrees": 0.37668833821058756,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061882.478820537,
+      "angle_degrees": 0.4001941417822604,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061882.77922973,
+      "angle_degrees": 0.3315236259119467,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061883.044229334,
+      "angle_degrees": 0.28754624894718317,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061883.34569708,
+      "angle_degrees": 0.3304643111361858,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061883.612609308,
+      "angle_degrees": 0.2869256492456626,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    }
+  ],
+  "mode": "execute",
+  "outcome": "stopped",
+  "reason": "Turn made no measured progress",
+  "elapsed": 3.190947022056207
+}

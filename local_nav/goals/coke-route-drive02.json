@@ -1,0 +1,9 @@
+{
+  "mode": "continuous",
+  "samples": [],
+  "outcome": "stopped",
+  "reason": "[Errno 2] No such file or directory",
+  "stop_error": "[Errno 2] No such file or directory",
+  "travel_cm": 0.0,
+  "drive_elapsed": null
+}

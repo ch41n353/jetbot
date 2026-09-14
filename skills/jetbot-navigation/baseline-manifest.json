@@ -1,0 +1,118 @@
+{
+  "baseline_date": "2026-09-13",
+  "timezone": "America/Los_Angeles",
+  "revision": 1,
+  "note": "Fingerprints only; live code remains in the workspace. Compare before operating a changed version.",
+  "files": [
+    {
+      "path": "/home/jetbot/jetbot/calibration/floor_geometry.json",
+      "sha256": "4c424cbebd79da73716f131047beee881969f702da3c3f7703caafb0125d32cf",
+      "bytes": 1501
+    },
+    {
+      "path": "/home/jetbot/jetbot/calibration/imu_mount.json",
+      "sha256": "ba9e850cf3bd21d8dcd8d438849bc7238b42e7725a8fb824ea55e97f0d1a0589",
+      "bytes": 922
+    },
+    {
+      "path": "/home/jetbot/jetbot/calibration/robot_footprint.json",
+      "sha256": "33cfe02edf3a9b9eb75b09052a915e466bdcbe1732251dcbcf09f763425ebd8d",
+      "bytes": 378
+    },
+    {
+      "path": "/home/jetbot/jetbot/local_nav/calibrate_imu_mount.py",
+      "sha256": "c6648b6f5a4d5da5d027914fdabb4e55b631d7bd659969670ef9e6c66def6c3f",
+      "bytes": 3529
+    },
+    {
+      "path": "/home/jetbot/jetbot/local_nav/client.py",
+      "sha256": "4fc18d3cb630e91a9c21dc277ec92b9a08c2230c73890fc3eaa34c3e59e4b120",
+      "bytes": 590
+    },
+    {
+      "path": "/home/jetbot/jetbot/local_nav/core.py",
+      "sha256": "bfabe8be0dd2abd8c6282258e4beb55e385e891cb2a52a24917f86058ba43b0a",
+      "bytes": 735
+    },
+    {
+      "path": "/home/jetbot/jetbot/local_nav/floor_geometry.py",
+      "sha256": "e6df8c2e27a779f72d66afa8593a3e1a9da7e1de5b5f539016355d7ba8d36f03",
+      "bytes": 2355
+    },
+    {
+      "path": "/home/jetbot/jetbot/local_nav/hardware.py",
+      "sha256": "5943a3158e58bc01e19e01dba88a8a2dd029e924384310c4e4d419c03dc06bf7",
+      "bytes": 3066
+    },
+    {
+      "path": "/home/jetbot/jetbot/local_nav/point_controller.py",
+      "sha256": "16e961c1baa61f3469871b40309daf2dd5f596c8e812dde1fbee6eaed0736686",
+      "bytes": 13675
+    },
+    {
+      "path": "/home/jetbot/jetbot/local_nav/replay_estimator.py",
+      "sha256": "ffb8f818d97436c18e9490b570ce8d56e9b0c6e6928a8880f280c18663347846",
+      "bytes": 1082
+    },
+    {
+      "path": "/home/jetbot/jetbot/local_nav/service.py",
+      "sha256": "0073e0386c7bb2e3295748a1b791a1849291dfd3d328f731c6ffd07e2134a01a",
+      "bytes": 9866
+    },
+    {
+      "path": "/home/jetbot/jetbot/local_nav/smooth_drive_probe.py",
+      "sha256": "c2aaa003089ac8266919add90e9fbaf1f1f9be181f3dcbfae1c56df494ef6037",
+      "bytes": 3660
+    },
+    {
+      "path": "/home/jetbot/jetbot/local_nav/smooth_turn_probe.py",
+      "sha256": "7d5821c8f014b76ca20801d60faab4b0f07f1621b5ff540cbe4dd8742426bbf0",
+      "bytes": 2855
+    },
+    {
+      "path": "/home/jetbot/jetbot/local_nav/state_estimator.py",
+      "sha256": "2e38dad5ba04bfdadc5114ab62def4bf2b619fb13499161713f9a2e8a101cd47",
+      "bytes": 8140
+    },
+    {
+      "path": "/home/jetbot/jetbot/local_nav/turn_controller.py",
+      "sha256": "f857d033321619ea38448fd38dfe3d251687989e8aab1da95b8303a3ccee1387",
+      "bytes": 3816
+    },
+    {
+      "path": "/home/jetbot/jetbot/tests/test_color_calibration.py",
+      "sha256": "37ef8b98b6dabf0a966379327ecf392d97de86c052c09b212bbcf8546107ff31",
+      "bytes": 1892
+    },
+    {
+      "path": "/home/jetbot/jetbot/tests/test_floor_geometry.py",
+      "sha256": "ec94f199a7a581cc11a884ad4974d99b4b9e93b2b8132182eff3905e8b6a5cd5",
+      "bytes": 1351
+    },
+    {
+      "path": "/home/jetbot/jetbot/tests/test_local_nav.py",
+      "sha256": "88f7fe1960731facb2d2084cf2f54fd157fb2f5e12459e8b2f0de0af7c10fb18",
+      "bytes": 2366
+    },
+    {
+      "path": "/home/jetbot/jetbot/tests/test_point_controller.py",
+      "sha256": "c8159401ac99984c249c79229b719b52f279e6fd8f44c69e2343a7db5aafc2fc",
+      "bytes": 4570
+    },
+    {
+      "path": "/home/jetbot/jetbot/tests/test_state_estimator.py",
+      "sha256": "b1e645555a7ecbd4ca4bdc5bab9785d29c55fdfdbe7a4121c7731e8777aae7e3",
+      "bytes": 4166
+    },
+    {
+      "path": "/home/jetbot/jetbot/tests/test_turn_controller.py",
+      "sha256": "42c2f4884b0ec6b7138279e968324ef9e0977292c61b60723e2ea25a919cfb5a",
+      "bytes": 864
+    },
+    {
+      "path": "/home/jetbot/Projects/car/calibration/fisheye_calibration.json",
+      "sha256": "0d216393e689925997f8c27279313f70a565c55a889d52663ed0bc629fec4bbb",
+      "bytes": 455
+    }
+  ]
+}

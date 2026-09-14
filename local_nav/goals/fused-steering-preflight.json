@@ -1,0 +1,19 @@
+{
+  "goal_pixel": [
+    320,
+    257
+  ],
+  "initial_target_cm": [
+    -0.3989002134327231,
+    35.08139801996232
+  ],
+  "mode": "stationary_preflight",
+  "samples": [],
+  "outcome": "stopped",
+  "reason": "Measured attitude places goal outside initial test corridor",
+  "elapsed": 0.05250523297581822,
+  "final_target_cm": [
+    -0.33277681716579666,
+    29.199066320288352
+  ]
+}

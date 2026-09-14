@@ -1,4 +1,6 @@
 import argparse
+import os
+import sys
 import signal
 import zmq
 import time
@@ -9,6 +11,9 @@ import logging
 import atexit
 import numpy as np
 from gi.repository import GObject, Gst
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'jetbot', 'camera'))
+from color_balance import correct_bgr
 
 
 Gst.init(None)
@@ -76,6 +81,7 @@ class GstCamera(object):
             dtype=np.uint8
         )
         
+        image = correct_bgr(image)
         for cb in self._on_image_callbacks:
             cb(image)
             

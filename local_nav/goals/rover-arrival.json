@@ -1,0 +1,23 @@
+{
+  "pixels": [
+    [
+      403,
+      307
+    ],
+    [
+      259,
+      312
+    ]
+  ],
+  "positions_cm": [
+    [
+      5.504929587347367,
+      18.277131445145997
+    ],
+    [
+      -4.165149716668464,
+      17.413288723678793
+    ]
+  ],
+  "note": "Manually selected wheel and loose component contact pixels; not independent ground truth"
+}

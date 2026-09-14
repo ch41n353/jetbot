@@ -1,0 +1,10 @@
+{
+  "id": "goal-a",
+  "action": "navigate_to_floor_pixel",
+  "image": "/home/jetbot/jetbot/local_nav/goals/goal-a.jpg",
+  "image_size": [640, 480],
+  "pixel": [320, 340],
+  "status": "not_dispatched",
+  "reason": "Position controller and current camera-to-floor calibration are not yet available",
+  "motion_enabled": false
+}

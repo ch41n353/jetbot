@@ -1,0 +1,378 @@
+{
+  "target_degrees": 90.0,
+  "continuous": true,
+  "samples": [
+    {
+      "time": 1061373.588250735,
+      "angle_degrees": 0.0006810675246611091,
+      "rate_degrees_s": -0.06241666024483409,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061373.611085814,
+      "angle_degrees": -0.0014350228507033565,
+      "rate_degrees_s": -0.12291816501035918,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061373.638094217,
+      "angle_degrees": -0.0029713381427842454,
+      "rate_degrees_s": 0.009148139073365237,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061373.659845378,
+      "angle_degrees": -0.0028319159582330246,
+      "rate_degrees_s": 0.0036714112547251688,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061373.681661332,
+      "angle_degrees": -0.0007714719210797968,
+      "rate_degrees_s": 0.185222852501475,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061373.708420878,
+      "angle_degrees": 0.001583498257164888,
+      "rate_degrees_s": -0.009219124932889377,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061373.730140528,
+      "angle_degrees": 0.002160640762700371,
+      "rate_degrees_s": 0.06236380370695188,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061373.751846273,
+      "angle_degrees": 0.0027373928974710874,
+      "rate_degrees_s": -0.009216856075741102,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061373.773813894,
+      "angle_degrees": 0.0026970069940118503,
+      "rate_degrees_s": 0.005538895185745876,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061373.798878944,
+      "angle_degrees": 0.0018926921519705879,
+      "rate_degrees_s": -0.06971181227374527,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061373.820887347,
+      "angle_degrees": 0.0017509343532666787,
+      "rate_degrees_s": 0.05682935651189705,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061373.845855625,
+      "angle_degrees": 0.0032162844537860272,
+      "rate_degrees_s": 0.0605461514790161,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061373.86987832,
+      "angle_degrees": 0.0030397018511308365,
+      "rate_degrees_s": -0.07524299776323594,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061373.891605367,
+      "angle_degrees": 0.002182373094091041,
+      "rate_degrees_s": -0.003676970740533231,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061373.915902387,
+      "angle_degrees": 0.0012907304178429535,
+      "rate_degrees_s": -0.06971911212611599,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061373.939844925,
+      "angle_degrees": 0.0004342073517332254,
+      "rate_degrees_s": -0.0018339785281962357,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061373.961797287,
+      "angle_degrees": 0.0011187309345885132,
+      "rate_degrees_s": 0.064197267354242,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061373.986741658,
+      "angle_degrees": 0.002697231443047489,
+      "rate_degrees_s": 0.062364311633808026,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061374.011078419,
+      "angle_degrees": 0.004237266000839215,
+      "rate_degrees_s": 0.0641964613939488,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061374.03285083,
+      "angle_degrees": 0.004835913581951151,
+      "rate_degrees_s": -0.009205260449194504,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061374.05985767,
+      "angle_degrees": 0.0047117853710229255,
+      "rate_degrees_s": 5.628704397143848e-06,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061374.082745354,
+      "angle_degrees": 0.004585513946697865,
+      "rate_degrees_s": -0.011036048313993463,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061374.110774861,
+      "angle_degrees": 0.003556822281928189,
+      "rate_degrees_s": -0.06236477978562144,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061374.132629513,
+      "angle_degrees": 0.002935549717076816,
+      "rate_degrees_s": 0.005511264727315874,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061374.156233922,
+      "angle_degrees": 0.003736793395910546,
+      "rate_degrees_s": 0.06237856151440389,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061374.180876468,
+      "angle_degrees": 0.003850231600955581,
+      "rate_degrees_s": -0.053166575986023853,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061374.202878308,
+      "angle_degrees": 0.002579283584606785,
+      "rate_degrees_s": -0.062364565613511065,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061374.22474645,
+      "angle_degrees": 0.0006341306112904471,
+      "rate_degrees_s": -0.11553442835442952,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061374.250752551,
+      "angle_degrees": -0.0008203827293676901,
+      "rate_degrees_s": 0.0036809283934798333,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061374.272654495,
+      "angle_degrees": -0.0008605991965527476,
+      "rate_degrees_s": -0.007346316053660347,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061374.294654253,
+      "angle_degrees": -0.00096160050210305,
+      "rate_degrees_s": -0.0018373933085153932,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061374.321275829,
+      "angle_degrees": -0.0009860804207405727,
+      "rate_degrees_s": -1.7346102180635462e-06,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061374.343172252,
+      "angle_degrees": -0.000986099411619972,
+      "rate_degrees_s": -0.0,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061374.367058904,
+      "angle_degrees": -0.0010737582060605106,
+      "rate_degrees_s": -0.0073405174895853605,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061374.391565146,
+      "angle_degrees": -0.002826957311780092,
+      "rate_degrees_s": -0.13574090952584214,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061374.414309859,
+      "angle_degrees": -0.0031604214780735383,
+      "rate_degrees_s": 0.10642783415585699,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061374.441591233,
+      "angle_degrees": -0.0006331357025703146,
+      "rate_degrees_s": 0.07885067587267781,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061374.463509636,
+      "angle_degrees": 0.0008738582542090785,
+      "rate_degrees_s": 0.058670232348031544,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061374.485222463,
+      "angle_degrees": 0.0015108065576171393,
+      "rate_degrees_s": -0.0,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061374.513986613,
+      "angle_degrees": 0.0016163546729678162,
+      "rate_degrees_s": 0.0073402371254637664,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    },
+    {
+      "time": 1061374.537636857,
+      "angle_degrees": 0.0009222740734292,
+      "rate_degrees_s": -0.06603604061624996,
+      "command": {
+        "left": 0.12,
+        "right": -0.12
+      }
+    }
+  ],
+  "mode": "preflight",
+  "outcome": "stationary_preflight_passed",
+  "elapsed": 1.0175064578652382
+}

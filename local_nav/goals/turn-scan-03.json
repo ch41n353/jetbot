@@ -1,0 +1,9 @@
+{
+  "target_degrees": -30.0,
+  "samples": [],
+  "mode": "execute",
+  "outcome": "stopped",
+  "reason": "[Errno 2] No such file or directory",
+  "stop_error": "[Errno 2] No such file or directory",
+  "elapsed": 0.0002058349782600999
+}

@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "camera_height_cm": 9.5,
+  "height_source": "User measurement: camera lens center above carpet",
+  "intrinsics_path": "/home/jetbot/Projects/car/calibration/fisheye_calibration.json",
+  "image_width": 640,
+  "image_height": 480,
+  "pitch_degrees": 14.246572651136718,
+  "roll_degrees": 0.0,
+  "mounting_verified": true,
+  "notes": "Measured height and confirmed 30 cm floor reference determine pitch under a zero-roll assumption. Independent 50 cm reference passed within 5 cm. Revalidate after moving the camera mount.",
+  "roll_source": "Assumed zero; not independently measured",
+  "calibration_reference": {
+    "image": "/home/jetbot/jetbot/calibration/floor-reference-30cm.jpg",
+    "pixel": [
+      327,
+      270
+    ],
+    "forward_cm": 30.0,
+    "confirmed_by_user": true,
+    "description": "Tape entry at black housing; horizontal distance from directly below lens"
+  },
+  "verification_status": "Passed independent near-center 50 cm check",
+  "validation": {
+    "image": "/home/jetbot/jetbot/calibration/floor-reference-50cm.jpg",
+    "pixel": [
+      331,
+      235
+    ],
+    "measured_forward_cm": 50.0,
+    "predicted_forward_cm": 48.609168190152936,
+    "error_cm": -1.3908318098470644,
+    "relative_error_percent": -2.781663619694129,
+    "acceptance_tolerance_cm": 5.0,
+    "passed": true,
+    "pixel_selection_uncertainty_px": 2,
+    "scope": "Near-center floor points, tested at 30 and 50 cm; zero roll assumed. Not validated across the whole image."
+  }
+}

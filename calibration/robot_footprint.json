@@ -1,0 +1,9 @@
+{
+  "width_cm": 12,
+  "length_cm": 15,
+  "camera_location": "front_center",
+  "clearance_margin_cm": 5,
+  "source": "User-confirmed dimensions including wheels and front-center lens",
+  "pivot_location": "not_measured",
+  "notes": "Straight chassis occupies x=-6..6, z=-15..0 relative to lens. Include five cm margin. Do not assume unseen side or rear obstacles are cleared."
+}

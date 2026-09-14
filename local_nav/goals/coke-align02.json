@@ -1,0 +1,18 @@
+{
+  "target_degrees": 18.0,
+  "power": 0.16,
+  "samples": [
+    {
+      "time": 1076795.73187902,
+      "angle_degrees": -0.00010318196599221856,
+      "command": {
+        "left": 0.16,
+        "right": -0.16
+      }
+    }
+  ],
+  "mode": "execute",
+  "outcome": "stopped",
+  "reason": "Excessive IMU rotation",
+  "elapsed": 0.34708930598571897
+}

@@ -1,0 +1,165 @@
+{
+  "target_degrees": -30.0,
+  "samples": [
+    {
+      "time": 995055.822094236,
+      "angle_degrees": -7.116106333639774e-05,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 995056.089140854,
+      "angle_degrees": -1.220111266192328,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 995056.389485382,
+      "angle_degrees": -2.2111579944103084,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 995056.656367051,
+      "angle_degrees": -3.352855427788739,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 995056.923620912,
+      "angle_degrees": -4.354250606241134,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 995057.223754084,
+      "angle_degrees": -5.728467569633045,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 995057.490542263,
+      "angle_degrees": -7.341803681466056,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 995057.790310067,
+      "angle_degrees": -9.165841293146746,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 995058.057009078,
+      "angle_degrees": -11.000075113183499,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 995058.323571422,
+      "angle_degrees": -13.180067168625348,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 995058.623527094,
+      "angle_degrees": -14.426697857482518,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 995058.890531059,
+      "angle_degrees": -17.052449218161104,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 995059.15721778,
+      "angle_degrees": -18.778494440202795,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 995059.456621415,
+      "angle_degrees": -19.82985178725008,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 995059.723355585,
+      "angle_degrees": -20.748135341752935,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 995060.023700014,
+      "angle_degrees": -21.844371612487787,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 995060.289771104,
+      "angle_degrees": -23.85034760039963,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 995060.557689196,
+      "angle_degrees": -25.3509633653255,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 995060.855949433,
+      "angle_degrees": -27.162807881110684,
+      "command": {
+        "left": -0.12,
+        "right": 0.12
+      }
+    },
+    {
+      "time": 995061.123333822,
+      "angle_degrees": -28.967949049598,
+      "command": null
+    }
+  ],
+  "mode": "execute",
+  "outcome": "turn_reached_imu_estimate",
+  "elapsed": 5.381182185024954
+}

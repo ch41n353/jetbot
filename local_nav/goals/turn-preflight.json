@@ -1,0 +1,72 @@
+{
+  "target_degrees": -15.0,
+  "samples": [
+    {
+      "time": 994829.08964914,
+      "angle_degrees": -2.4011454002164067e-05,
+      "command": {
+        "left": -0.18,
+        "right": 0.18
+      }
+    },
+    {
+      "time": 994829.222864463,
+      "angle_degrees": -0.0006727503316829838,
+      "command": {
+        "left": -0.18,
+        "right": 0.18
+      }
+    },
+    {
+      "time": 994829.389884534,
+      "angle_degrees": 0.0019834015916762866,
+      "command": {
+        "left": -0.18,
+        "right": 0.18
+      }
+    },
+    {
+      "time": 994829.524737636,
+      "angle_degrees": 0.00421069804885557,
+      "command": {
+        "left": -0.18,
+        "right": 0.18
+      }
+    },
+    {
+      "time": 994829.656244242,
+      "angle_degrees": -0.003484425255289828,
+      "command": {
+        "left": -0.18,
+        "right": 0.18
+      }
+    },
+    {
+      "time": 994829.757283065,
+      "angle_degrees": -0.00022419108261649095,
+      "command": {
+        "left": -0.18,
+        "right": 0.18
+      }
+    },
+    {
+      "time": 994829.924492565,
+      "angle_degrees": 0.0015959077846783433,
+      "command": {
+        "left": -0.18,
+        "right": 0.18
+      }
+    },
+    {
+      "time": 994830.024595336,
+      "angle_degrees": 0.0011647155076978935,
+      "command": {
+        "left": -0.18,
+        "right": 0.18
+      }
+    }
+  ],
+  "mode": "preflight",
+  "outcome": "stationary_preflight_passed",
+  "elapsed": 1.005897031049244
+}
