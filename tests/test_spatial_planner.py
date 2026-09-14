@@ -82,6 +82,24 @@ class SpatialPlannerTests(unittest.TestCase):
         self.assertEqual(result['actions'][0]['kind'],'turn')
         self.assertLess(abs(result['actions'][0]['value']),5.)
 
+    def test_precise_turn_bounds_cover_pivots_and_angles_in_world_frame(self):
+        for yaw in (-35,0,80):
+            pose=(3,-2,yaw)
+            envelope=sweep(pose,('turn',30),precise_turn=True)
+            for px in (-6,0,6):
+                for pz in (-15,-7.5,0):
+                    for bx in (-6,6):
+                        for bz in (-15,0):
+                            for i in range(101):
+                                a=math.radians(-2+39*i/100)
+                                x=px+math.cos(a)*(bx-px)+math.sin(a)*(bz-pz)
+                                z=pz-math.sin(a)*(bx-px)+math.cos(a)*(bz-pz)
+                                x,z=transform(pose,x,z)
+                                self.assertLessEqual(envelope[0],x-7+1e-8)
+                                self.assertLessEqual(envelope[1],z-7+1e-8)
+                                self.assertGreaterEqual(envelope[2],x+7-1e-8)
+                                self.assertGreaterEqual(envelope[3],z+7-1e-8)
+
 
 if __name__ == '__main__':
     unittest.main()

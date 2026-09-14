@@ -95,3 +95,34 @@ low battery cannot be retrospectively separated from software/geometry effects.
 
 Offline work continues within the requested three-hour window. Live navigation
 is paused following the reported empty battery and reboot.
+
+## Pack monitor discovery and offline comparison
+
+A further targeted read found INA219-compatible hardware on motor-board bus1,
+address0x41 (config0x399f, bus voltage12.276V). This matches the Waveshare
+three-cell JetBot battery monitor. Added it as required telemetry alongside the
+regulated5V rail. Combined stationary and disarmed-service tests measured about
+12.24–12.29V pack voltage. Current/power calibration is unset, and no battery
+percentage or charging-state estimate is claimed. Three-cell profile is inferred
+from matching hardware and voltage; user model confirmation remains pending.
+
+Pack warning11.4V and latched stop10.8V provide margin before the manufacturer's
+rough10V recharge recommendation. Input guard remains4.9V warning/4.8V stop;
+upper input cap is now5.25V. Pack failure or loss cannot fall back to regulated
+input-only monitoring. Full suite passed104 tests after adding pack telemetry
+and measured-map tests. No powered test followed the depletion/reboot report.
+
+The72-run paired spatial matrix completed: fixed rectangles20/36 successes,
+measured-map drive36/36. No simulated expanded-body boundary violations, max
+successful true error3.061cm. These were clear-floor/corridor scenarios; further
+obstacle tests exposed additional conservatism in rotated turn rectangles.
+Implementing an opt-in exact fixed-pivot turn bound with a world-map runtime
+chassis check; this is still offline work.
+
+The first explicit obstacle detour executed ten verified primitives without an
+audited clearance violation, then stopped at the unchanged accumulated yaw
+uncertainty limit. It did not reach the target. The12 initial injected fault
+cases (camera failure/blocking, stall, cancellation, texture loss, slow camera;
+straight and mixed missions) all stopped with zero final motor output and no
+audited clearance violations. Full suite now106 tests, including freshness of
+the older of the two required power readings.

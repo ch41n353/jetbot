@@ -13,7 +13,7 @@ from route_geometry import contains
 from turn_controller import turn_command
 
 
-def execute_turn(plan, degrees, envelope, log, timeline):
+def execute_turn(plan, degrees, envelope, log, timeline, world_guard=None):
     import cv2
     import numpy as np
     from point_controller import ROOT, call, frame, FloorTracker
@@ -64,6 +64,8 @@ def execute_turn(plan, degrees, envelope, log, timeline):
                            for u in (-6.,6.) for v in (-15.,0.)],7.)
             if not contains(envelope,body):
                 raise RuntimeError('Measured turn chassis left inspected sweep')
+            if world_guard is not None:
+                world_guard(x,z,pose['yaw_degrees'])
             if timeline.up.dot(timeline.route_reference_up) < math.cos(math.radians(5)):
                 raise RuntimeError('Turn tilt guard')
             result['samples'].append(dict(time=t1,**pose))

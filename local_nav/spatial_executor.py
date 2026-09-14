@@ -11,8 +11,8 @@ import math
 import os
 import time
 
-from spatial_planner import SpatialPlanner, sweep, transform, normalize, predict
-from route_geometry import StraightRoute, finite
+from spatial_planner import SpatialPlanner, sweep, transform, normalize, predict, bounds
+from route_geometry import StraightRoute, finite, contains
 
 
 def execute_navigation(plan, log):
@@ -107,8 +107,14 @@ def execute_navigation(plan, log):
                 expected_stops = 2
                 accepted = ('goal_reached','overshot_goal','stopped_short')
             else:
+                def world_guard(x,z,heading):
+                    gx,gz=transform(pose,x,z)
+                    body=bounds([transform((gx,gz,pose[2]+heading),u,v)
+                                 for u in (-6.,6.) for v in (-15.,0.)],7.)
+                    if not contains(action['swept_bounds_cm'],body) or not planner.clear(body):
+                        raise RuntimeError('Measured turn chassis left the checked world-map sweep')
                 step = execute_turn(local,action['value'],sweep((0,0,0),('turn',action['value'])),
-                                    action_log,timeline)
+                                    action_log,timeline,world_guard=world_guard)
                 expected_stops = 1
                 accepted = ('turn_reached_estimate',)
             result['actions'].append(dict(plan=action,result_path=action_log,outcome=step['outcome'],

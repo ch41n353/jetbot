@@ -1,0 +1,4505 @@
+{
+  "complete": true,
+  "cases": [
+    {
+      "seed": 1,
+      "scenario": "offset_return",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 12.209068139455525,
+        "coast": 0.04219312872098362,
+        "camera_hz": 13.998337330605032,
+        "latency": 0.03487083542667245,
+        "compute": 0.045,
+        "seed": 1,
+        "pivot_cm": 8.728188950482227,
+        "drive_yaw_bias_dps": 1.1919406926601601,
+        "height_scale": 0.9976464876695482
+      },
+      "outcome": "stopped",
+      "reason": "Local planning: no_checked_route",
+      "true_goal_error_cm": 20.989370504056996,
+      "true_final_pose": [
+        2.4597813589,
+        20.8447391402,
+        1.607047403
+      ],
+      "estimated_final_pose": null,
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 0.0,
+      "simulation_wall_seconds": 0.393987788000004,
+      "local_planning_seconds": 0.004007326999953875,
+      "local_searches": 1,
+      "actions": [],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 1,
+      "scenario": "offset_return",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 12.209068139455525,
+        "coast": 0.04219312872098362,
+        "camera_hz": 13.998337330605032,
+        "latency": 0.03487083542667245,
+        "compute": 0.045,
+        "seed": 1,
+        "pivot_cm": 8.728188950482227,
+        "drive_yaw_bias_dps": 1.1919406926601601,
+        "height_scale": 0.9976464876695482
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 1.8053820826812392,
+      "true_final_pose": [
+        1.8035787001569925,
+        0.0806742635941738,
+        2.860205695807189
+      ],
+      "estimated_final_pose": [
+        1.7992200543164882,
+        0.04639669866950058,
+        2.8636206413940215
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 3.1948334170670023,
+      "simulation_wall_seconds": 3.4752660820001893,
+      "local_planning_seconds": 0.005613278000055288,
+      "local_searches": 1,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 1,
+      "scenario": "narrow_out_and_back",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 12.209068139455525,
+        "coast": 0.04219312872098362,
+        "camera_hz": 13.998337330605032,
+        "latency": 0.03487083542667245,
+        "compute": 0.045,
+        "seed": 1,
+        "pivot_cm": 8.728188950482227,
+        "drive_yaw_bias_dps": 1.1919406926601601,
+        "height_scale": 0.9976464876695482
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 0.08022313181905547,
+      "true_final_pose": [
+        -0.08021430898613756,
+        0.0011897532239924678,
+        1.745510902966461
+      ],
+      "estimated_final_pose": [
+        -0.07457347527110864,
+        0.00589654234848247,
+        1.744787665538098
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 6.389666834134005,
+      "simulation_wall_seconds": 5.9884254860000965,
+      "local_planning_seconds": 0.004561758999898302,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 1,
+      "scenario": "narrow_out_and_back",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 12.209068139455525,
+        "coast": 0.04219312872098362,
+        "camera_hz": 13.998337330605032,
+        "latency": 0.03487083542667245,
+        "compute": 0.045,
+        "seed": 1,
+        "pivot_cm": 8.728188950482227,
+        "drive_yaw_bias_dps": 1.1919406926601601,
+        "height_scale": 0.9976464876695482
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 0.08022313181905547,
+      "true_final_pose": [
+        -0.08021430898613756,
+        0.0011897532239924678,
+        1.745510902966461
+      ],
+      "estimated_final_pose": [
+        -0.07457347527110864,
+        0.00589654234848247,
+        1.744787665538098
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 6.389666834134005,
+      "simulation_wall_seconds": 5.893500581999888,
+      "local_planning_seconds": 0.008220176000122592,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 1,
+      "scenario": "turn_and_drive",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 12.209068139455525,
+        "coast": 0.04219312872098362,
+        "camera_hz": 13.998337330605032,
+        "latency": 0.03487083542667245,
+        "compute": 0.045,
+        "seed": 1,
+        "pivot_cm": 8.728188950482227,
+        "drive_yaw_bias_dps": 1.1919406926601601,
+        "height_scale": 0.9976464876695482
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 2.9338626325987605,
+      "true_final_pose": [
+        27.066370540993432,
+        30.03698843343753,
+        60.13424083770459
+      ],
+      "estimated_final_pose": [
+        27.122952640548476,
+        30.149273838855517,
+        60.078496566640695
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 12.980366984852651,
+      "simulation_wall_seconds": 10.925951497999904,
+      "local_planning_seconds": 0.0177121880001323,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 1,
+      "scenario": "turn_and_drive",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 12.209068139455525,
+        "coast": 0.04219312872098362,
+        "camera_hz": 13.998337330605032,
+        "latency": 0.03487083542667245,
+        "compute": 0.045,
+        "seed": 1,
+        "pivot_cm": 8.728188950482227,
+        "drive_yaw_bias_dps": 1.1919406926601601,
+        "height_scale": 0.9976464876695482
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 2.9338626325987605,
+      "true_final_pose": [
+        27.066370540993432,
+        30.03698843343753,
+        60.13424083770459
+      ],
+      "estimated_final_pose": [
+        27.122952640548476,
+        30.149273838855517,
+        60.078496566640695
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 12.980366984852651,
+      "simulation_wall_seconds": 11.223293646000002,
+      "local_planning_seconds": 0.06459823800014419,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 2,
+      "scenario": "offset_return",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 13.241725742648267,
+        "coast": 0.11762168684418242,
+        "camera_hz": 11.293084409958574,
+        "latency": 0.030389891603710546,
+        "compute": 0.045,
+        "seed": 2,
+        "pivot_cm": 4.931923081811012,
+        "drive_yaw_bias_dps": -0.7194144631079462,
+        "height_scale": 0.9878005400579392
+      },
+      "outcome": "stopped",
+      "reason": "Local planning: no_checked_route",
+      "true_goal_error_cm": 20.989370504056996,
+      "true_final_pose": [
+        2.4597813589,
+        20.8447391402,
+        1.607047403
+      ],
+      "estimated_final_pose": null,
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 0.0,
+      "simulation_wall_seconds": 0.36715116899995337,
+      "local_planning_seconds": 0.003808785000046555,
+      "local_searches": 1,
+      "actions": [],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 2,
+      "scenario": "offset_return",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 13.241725742648267,
+        "coast": 0.11762168684418242,
+        "camera_hz": 11.293084409958574,
+        "latency": 0.030389891603710546,
+        "compute": 0.045,
+        "seed": 2,
+        "pivot_cm": 4.931923081811012,
+        "drive_yaw_bias_dps": -0.7194144631079462,
+        "height_scale": 0.9878005400579392
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 2.4492082991648685,
+      "true_final_pose": [
+        1.9239218693089706,
+        -1.5156338388584312,
+        0.9962036575844588
+      ],
+      "estimated_final_pose": [
+        1.9167623083335474,
+        -1.7962608573077539,
+        0.9939612413047598
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 3.528830828041393,
+      "simulation_wall_seconds": 3.131493275000139,
+      "local_planning_seconds": 0.004785095999977784,
+      "local_searches": 1,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 2,
+      "scenario": "narrow_out_and_back",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 13.241725742648267,
+        "coast": 0.11762168684418242,
+        "camera_hz": 11.293084409958574,
+        "latency": 0.030389891603710546,
+        "compute": 0.045,
+        "seed": 2,
+        "pivot_cm": 4.931923081811012,
+        "drive_yaw_bias_dps": -0.7194144631079462,
+        "height_scale": 0.9878005400579392
+      },
+      "outcome": "stopped",
+      "reason": "Local planning: no_checked_route",
+      "true_goal_error_cm": 15.873754218611976,
+      "true_final_pose": [
+        -0.05250296294338629,
+        15.873667390738149,
+        -0.1116058556808008
+      ],
+      "estimated_final_pose": [
+        -0.052674274169792486,
+        16.09436276419575,
+        -0.11607670572479378
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 2.1120345464259316,
+      "simulation_wall_seconds": 2.012802147000002,
+      "local_planning_seconds": 0.004382383999882222,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 2,
+      "scenario": "narrow_out_and_back",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 13.241725742648267,
+        "coast": 0.11762168684418242,
+        "camera_hz": 11.293084409958574,
+        "latency": 0.030389891603710546,
+        "compute": 0.045,
+        "seed": 2,
+        "pivot_cm": 4.931923081811012,
+        "drive_yaw_bias_dps": -0.7194144631079462,
+        "height_scale": 0.9878005400579392
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 0.12203555284863418,
+      "true_final_pose": [
+        0.12203525526332099,
+        -0.00026950303871321247,
+        -0.9404754602650035
+      ],
+      "estimated_final_pose": [
+        0.11534858868434605,
+        0.014360099937830384,
+        -0.9346232017770433
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 7.070821532080046,
+      "simulation_wall_seconds": 5.934092366000186,
+      "local_planning_seconds": 0.008221898000101646,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 2,
+      "scenario": "turn_and_drive",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 13.241725742648267,
+        "coast": 0.11762168684418242,
+        "camera_hz": 11.293084409958574,
+        "latency": 0.030389891603710546,
+        "compute": 0.045,
+        "seed": 2,
+        "pivot_cm": 4.931923081811012,
+        "drive_yaw_bias_dps": -0.7194144631079462,
+        "height_scale": 0.9878005400579392
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 2.589566940562782,
+      "true_final_pose": [
+        28.495604998269858,
+        32.10776009508318,
+        58.16224879410315
+      ],
+      "estimated_final_pose": [
+        28.856085682461615,
+        32.59143419154659,
+        58.11610333066295
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 12.331171183366692,
+      "simulation_wall_seconds": 9.823977807999881,
+      "local_planning_seconds": 0.0264196200000697,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 2,
+      "scenario": "turn_and_drive",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 13.241725742648267,
+        "coast": 0.11762168684418242,
+        "camera_hz": 11.293084409958574,
+        "latency": 0.030389891603710546,
+        "compute": 0.045,
+        "seed": 2,
+        "pivot_cm": 4.931923081811012,
+        "drive_yaw_bias_dps": -0.7194144631079462,
+        "height_scale": 0.9878005400579392
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 2.589566940562782,
+      "true_final_pose": [
+        28.495604998269858,
+        32.10776009508318,
+        58.16224879410315
+      ],
+      "estimated_final_pose": [
+        28.856085682461615,
+        32.59143419154659,
+        58.11610333066295
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 12.331171183366692,
+      "simulation_wall_seconds": 9.78654146399981,
+      "local_planning_seconds": 0.08384630999989895,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 3,
+      "scenario": "offset_return",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 15.709234019640505,
+        "coast": 0.03601096528819264,
+        "camera_hz": 13.506790133999903,
+        "latency": 0.011391688270846035,
+        "compute": 0.045,
+        "seed": 3,
+        "pivot_cm": 5.678344042497944,
+        "drive_yaw_bias_dps": 3.46379284067378,
+        "height_scale": 1.0020265914041473
+      },
+      "outcome": "stopped",
+      "reason": "Local planning: no_checked_route",
+      "true_goal_error_cm": 20.989370504056996,
+      "true_final_pose": [
+        2.4597813589,
+        20.8447391402,
+        1.607047403
+      ],
+      "estimated_final_pose": null,
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 0.0,
+      "simulation_wall_seconds": 0.34908258199993725,
+      "local_planning_seconds": 0.0037804000000960514,
+      "local_searches": 1,
+      "actions": [],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 3,
+      "scenario": "offset_return",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 15.709234019640505,
+        "coast": 0.03601096528819264,
+        "camera_hz": 13.506790133999903,
+        "latency": 0.011391688270846035,
+        "compute": 0.045,
+        "seed": 3,
+        "pivot_cm": 5.678344042497944,
+        "drive_yaw_bias_dps": 3.46379284067378,
+        "height_scale": 1.0020265914041473
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 1.8983977015745794,
+      "true_final_pose": [
+        1.615896463039331,
+        0.9963897099431654,
+        4.452833679966243
+      ],
+      "estimated_final_pose": [
+        1.6166609930526037,
+        1.0336439616493358,
+        4.457133143440217
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 2.647680932626429,
+      "simulation_wall_seconds": 2.904760776000103,
+      "local_planning_seconds": 0.005084111000087432,
+      "local_searches": 1,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 3,
+      "scenario": "narrow_out_and_back",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 15.709234019640505,
+        "coast": 0.03601096528819264,
+        "camera_hz": 13.506790133999903,
+        "latency": 0.011391688270846035,
+        "compute": 0.045,
+        "seed": 3,
+        "pivot_cm": 5.678344042497944,
+        "drive_yaw_bias_dps": 3.46379284067378,
+        "height_scale": 1.0020265914041473
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 0.3728951236307051,
+      "true_final_pose": [
+        -0.3725496770424293,
+        0.016047160594337778,
+        4.389284501834481
+      ],
+      "estimated_final_pose": [
+        -0.3714187003233368,
+        0.025384770481622354,
+        4.39529645385673
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 5.313007012535024,
+      "simulation_wall_seconds": 5.249202854000032,
+      "local_planning_seconds": 0.004610721000062767,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 3,
+      "scenario": "narrow_out_and_back",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 15.709234019640505,
+        "coast": 0.03601096528819264,
+        "camera_hz": 13.506790133999903,
+        "latency": 0.011391688270846035,
+        "compute": 0.045,
+        "seed": 3,
+        "pivot_cm": 5.678344042497944,
+        "drive_yaw_bias_dps": 3.46379284067378,
+        "height_scale": 1.0020265914041473
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 0.3728951236307051,
+      "true_final_pose": [
+        -0.3725496770424293,
+        0.016047160594337778,
+        4.389284501834481
+      ],
+      "estimated_final_pose": [
+        -0.3714187003233368,
+        0.025384770481622354,
+        4.39529645385673
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 5.313007012535024,
+      "simulation_wall_seconds": 5.28747558200007,
+      "local_planning_seconds": 0.008889617000022554,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 3,
+      "scenario": "turn_and_drive",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 15.709234019640505,
+        "coast": 0.03601096528819264,
+        "camera_hz": 13.506790133999903,
+        "latency": 0.011391688270846035,
+        "compute": 0.045,
+        "seed": 3,
+        "pivot_cm": 5.678344042497944,
+        "drive_yaw_bias_dps": 3.46379284067378,
+        "height_scale": 1.0020265914041473
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 2.16021838747217,
+      "true_final_pose": [
+        28.98768569515493,
+        31.90834043864791,
+        61.79111286204588
+      ],
+      "estimated_final_pose": [
+        28.92703568670482,
+        31.919951570085562,
+        61.7424490011268
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 10.052037741551658,
+      "simulation_wall_seconds": 9.294343287999936,
+      "local_planning_seconds": 0.015881403000093997,
+      "local_searches": 1,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 3,
+      "scenario": "turn_and_drive",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 15.709234019640505,
+        "coast": 0.03601096528819264,
+        "camera_hz": 13.506790133999903,
+        "latency": 0.011391688270846035,
+        "compute": 0.045,
+        "seed": 3,
+        "pivot_cm": 5.678344042497944,
+        "drive_yaw_bias_dps": 3.46379284067378,
+        "height_scale": 1.0020265914041473
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 2.16021838747217,
+      "true_final_pose": [
+        28.98768569515493,
+        31.90834043864791,
+        61.79111286204588
+      ],
+      "estimated_final_pose": [
+        28.92703568670482,
+        31.919951570085562,
+        61.7424490011268
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 10.052037741551658,
+      "simulation_wall_seconds": 9.422045986000057,
+      "local_planning_seconds": 0.058859739000126865,
+      "local_searches": 1,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 4,
+      "scenario": "offset_return",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 10.672800268761964,
+        "coast": 0.035432741929100044,
+        "camera_hz": 10.903177510918397,
+        "latency": 0.02453168306689772,
+        "compute": 0.045,
+        "seed": 4,
+        "pivot_cm": 5.109551956326916,
+        "drive_yaw_bias_dps": 2.697130554926729,
+        "height_scale": 1.005706888786041
+      },
+      "outcome": "stopped",
+      "reason": "Local planning: no_checked_route",
+      "true_goal_error_cm": 20.989370504056996,
+      "true_final_pose": [
+        2.4597813589,
+        20.8447391402,
+        1.607047403
+      ],
+      "estimated_final_pose": null,
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 0.0,
+      "simulation_wall_seconds": 0.3476849700000457,
+      "local_planning_seconds": 0.003783266000027652,
+      "local_searches": 1,
+      "actions": [],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 4,
+      "scenario": "offset_return",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 10.672800268761964,
+        "coast": 0.035432741929100044,
+        "camera_hz": 10.903177510918397,
+        "latency": 0.02453168306689772,
+        "compute": 0.045,
+        "seed": 4,
+        "pivot_cm": 5.109551956326916,
+        "drive_yaw_bias_dps": 2.697130554926729,
+        "height_scale": 1.005706888786041
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 1.5529323094181553,
+      "true_final_pose": [
+        1.5514084242790855,
+        0.06877978417158606,
+        3.8192130717566393
+      ],
+      "estimated_final_pose": [
+        1.5632470322840881,
+        0.16965472370664259,
+        3.8129494368201904
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 3.463037838767832,
+      "simulation_wall_seconds": 2.9533838360000573,
+      "local_planning_seconds": 0.004754160999937085,
+      "local_searches": 1,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 4,
+      "scenario": "narrow_out_and_back",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 10.672800268761964,
+        "coast": 0.035432741929100044,
+        "camera_hz": 10.903177510918397,
+        "latency": 0.02453168306689772,
+        "compute": 0.045,
+        "seed": 4,
+        "pivot_cm": 5.109551956326916,
+        "drive_yaw_bias_dps": 2.697130554926729,
+        "height_scale": 1.005706888786041
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 0.4101114152187544,
+      "true_final_pose": [
+        -0.4099097410108138,
+        0.012859903466866213,
+        3.42145907219164
+      ],
+      "estimated_final_pose": [
+        -0.39627390811915336,
+        0.025941250408243022,
+        3.411047260294538
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 6.948260377055277,
+      "simulation_wall_seconds": 5.784150913999838,
+      "local_planning_seconds": 0.0038445689999662136,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 4,
+      "scenario": "narrow_out_and_back",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 10.672800268761964,
+        "coast": 0.035432741929100044,
+        "camera_hz": 10.903177510918397,
+        "latency": 0.02453168306689772,
+        "compute": 0.045,
+        "seed": 4,
+        "pivot_cm": 5.109551956326916,
+        "drive_yaw_bias_dps": 2.697130554926729,
+        "height_scale": 1.005706888786041
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 0.4101114152187544,
+      "true_final_pose": [
+        -0.4099097410108138,
+        0.012859903466866213,
+        3.42145907219164
+      ],
+      "estimated_final_pose": [
+        -0.39627390811915336,
+        0.025941250408243022,
+        3.411047260294538
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 6.948260377055277,
+      "simulation_wall_seconds": 5.660624617999929,
+      "local_planning_seconds": 0.009247174999927665,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 4,
+      "scenario": "turn_and_drive",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 10.672800268761964,
+        "coast": 0.035432741929100044,
+        "camera_hz": 10.903177510918397,
+        "latency": 0.02453168306689772,
+        "compute": 0.045,
+        "seed": 4,
+        "pivot_cm": 5.109551956326916,
+        "drive_yaw_bias_dps": 2.697130554926729,
+        "height_scale": 1.005706888786041
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 1.6261587524756722,
+      "true_final_pose": [
+        30.00310955120226,
+        31.626155779421072,
+        90.33767577247733
+      ],
+      "estimated_final_pose": [
+        29.831395962891563,
+        31.517839886016734,
+        90.27866445727432
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 15.079692294061402,
+      "simulation_wall_seconds": 11.476950893999856,
+      "local_planning_seconds": 0.01907753400018919,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 4,
+      "scenario": "turn_and_drive",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 10.672800268761964,
+        "coast": 0.035432741929100044,
+        "camera_hz": 10.903177510918397,
+        "latency": 0.02453168306689772,
+        "compute": 0.045,
+        "seed": 4,
+        "pivot_cm": 5.109551956326916,
+        "drive_yaw_bias_dps": 2.697130554926729,
+        "height_scale": 1.005706888786041
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 1.6261587524756722,
+      "true_final_pose": [
+        30.00310955120226,
+        31.626155779421072,
+        90.33767577247733
+      ],
+      "estimated_final_pose": [
+        29.831395962891563,
+        31.517839886016734,
+        90.27866445727432
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 15.079692294061402,
+      "simulation_wall_seconds": 11.672160415000008,
+      "local_planning_seconds": 0.0646654929998931,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 5,
+      "scenario": "offset_return",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 14.569919248773932,
+        "coast": 0.04751788724390455,
+        "camera_hz": 13.148281049984643,
+        "latency": 0.030387730352919678,
+        "compute": 0.045,
+        "seed": 5,
+        "pivot_cm": 5.100657996717652,
+        "drive_yaw_bias_dps": 3.157554742171211,
+        "height_scale": 1.0135603149032137
+      },
+      "outcome": "stopped",
+      "reason": "Local planning: no_checked_route",
+      "true_goal_error_cm": 20.989370504056996,
+      "true_final_pose": [
+        2.4597813589,
+        20.8447391402,
+        1.607047403
+      ],
+      "estimated_final_pose": null,
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 0.0,
+      "simulation_wall_seconds": 0.36781648400005906,
+      "local_planning_seconds": 0.0038044140001147753,
+      "local_searches": 1,
+      "actions": [],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 5,
+      "scenario": "offset_return",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 14.569919248773932,
+        "coast": 0.04751788724390455,
+        "camera_hz": 13.148281049984643,
+        "latency": 0.030387730352919678,
+        "compute": 0.045,
+        "seed": 5,
+        "pivot_cm": 5.100657996717652,
+        "drive_yaw_bias_dps": 3.157554742171211,
+        "height_scale": 1.0135603149032137
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 1.628872592767038,
+      "true_final_pose": [
+        1.498103642634346,
+        -0.6394618044835181,
+        4.229564375306432
+      ],
+      "estimated_final_pose": [
+        1.509944151441561,
+        -0.34950056073425984,
+        4.2368013408053855
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 3.0415549313535024,
+      "simulation_wall_seconds": 3.0938207899998815,
+      "local_planning_seconds": 0.004729266999902393,
+      "local_searches": 1,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 5,
+      "scenario": "narrow_out_and_back",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 14.569919248773932,
+        "coast": 0.04751788724390455,
+        "camera_hz": 13.148281049984643,
+        "latency": 0.030387730352919678,
+        "compute": 0.045,
+        "seed": 5,
+        "pivot_cm": 5.100657996717652,
+        "drive_yaw_bias_dps": 3.157554742171211,
+        "height_scale": 1.0135603149032137
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 1.1938666786155077,
+      "true_final_pose": [
+        -0.48663685081932284,
+        -1.090184489769083,
+        4.042342883485932
+      ],
+      "estimated_final_pose": [
+        -0.4776935101768044,
+        -1.0639637804593214,
+        4.041532939913509
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 6.00772213235409,
+      "simulation_wall_seconds": 5.886161595000203,
+      "local_planning_seconds": 0.0039201439999487775,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 5,
+      "scenario": "narrow_out_and_back",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 14.569919248773932,
+        "coast": 0.04751788724390455,
+        "camera_hz": 13.148281049984643,
+        "latency": 0.030387730352919678,
+        "compute": 0.045,
+        "seed": 5,
+        "pivot_cm": 5.100657996717652,
+        "drive_yaw_bias_dps": 3.157554742171211,
+        "height_scale": 1.0135603149032137
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 1.1938666786155077,
+      "true_final_pose": [
+        -0.48663685081932284,
+        -1.090184489769083,
+        4.042342883485932
+      ],
+      "estimated_final_pose": [
+        -0.4776935101768044,
+        -1.0639637804593214,
+        4.041532939913509
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 6.00772213235409,
+      "simulation_wall_seconds": 5.873050526000043,
+      "local_planning_seconds": 0.009122072999844022,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 5,
+      "scenario": "turn_and_drive",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 14.569919248773932,
+        "coast": 0.04751788724390455,
+        "camera_hz": 13.148281049984643,
+        "latency": 0.030387730352919678,
+        "compute": 0.045,
+        "seed": 5,
+        "pivot_cm": 5.100657996717652,
+        "drive_yaw_bias_dps": 3.157554742171211,
+        "height_scale": 1.0135603149032137
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 1.1884698143403098,
+      "true_final_pose": [
+        30.361908706589954,
+        31.132025877660258,
+        90.89272225231102
+      ],
+      "estimated_final_pose": [
+        29.964209723761073,
+        30.76417957253435,
+        90.82036312769912
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 13.490254194404315,
+      "simulation_wall_seconds": 11.845621228000027,
+      "local_planning_seconds": 0.018781964000027074,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 5,
+      "scenario": "turn_and_drive",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 14.569919248773932,
+        "coast": 0.04751788724390455,
+        "camera_hz": 13.148281049984643,
+        "latency": 0.030387730352919678,
+        "compute": 0.045,
+        "seed": 5,
+        "pivot_cm": 5.100657996717652,
+        "drive_yaw_bias_dps": 3.157554742171211,
+        "height_scale": 1.0135603149032137
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 1.1884698143403098,
+      "true_final_pose": [
+        30.361908706589954,
+        31.132025877660258,
+        90.89272225231102
+      ],
+      "estimated_final_pose": [
+        29.964209723761073,
+        30.76417957253435,
+        90.82036312769912
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 13.490254194404315,
+      "simulation_wall_seconds": 12.020140653999988,
+      "local_planning_seconds": 0.0696818130002157,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 6,
+      "scenario": "offset_return",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 15.906255932832826,
+        "coast": 0.09066937827043646,
+        "camera_hz": 10.11892038756419,
+        "latency": 0.012055921816870535,
+        "compute": 0.045,
+        "seed": 6,
+        "pivot_cm": 10.26675126555568,
+        "drive_yaw_bias_dps": 2.498080729858799,
+        "height_scale": 1.0021244614976967
+      },
+      "outcome": "stopped",
+      "reason": "Local planning: no_checked_route",
+      "true_goal_error_cm": 20.989370504056996,
+      "true_final_pose": [
+        2.4597813589,
+        20.8447391402,
+        1.607047403
+      ],
+      "estimated_final_pose": null,
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 0.0,
+      "simulation_wall_seconds": 0.3821976760000325,
+      "local_planning_seconds": 0.0038731649999590445,
+      "local_searches": 1,
+      "actions": [],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 6,
+      "scenario": "offset_return",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 15.906255932832826,
+        "coast": 0.09066937827043646,
+        "camera_hz": 10.11892038756419,
+        "latency": 0.012055921816870535,
+        "compute": 0.045,
+        "seed": 6,
+        "pivot_cm": 10.26675126555568,
+        "drive_yaw_bias_dps": 2.498080729858799,
+        "height_scale": 1.0021244614976967
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 2.49583330413616,
+      "true_final_pose": [
+        1.7191840374727851,
+        -1.8093065321647392,
+        4.178816789624669
+      ],
+      "estimated_final_pose": [
+        1.724006947304044,
+        -1.7696533502133818,
+        4.17637828167733
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 3.3182733972062977,
+      "simulation_wall_seconds": 2.7394971400001396,
+      "local_planning_seconds": 0.004804789000218079,
+      "local_searches": 1,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 6,
+      "scenario": "narrow_out_and_back",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 15.906255932832826,
+        "coast": 0.09066937827043646,
+        "camera_hz": 10.11892038756419,
+        "latency": 0.012055921816870535,
+        "compute": 0.045,
+        "seed": 6,
+        "pivot_cm": 10.26675126555568,
+        "drive_yaw_bias_dps": 2.498080729858799,
+        "height_scale": 1.0021244614976967
+      },
+      "outcome": "stopped",
+      "reason": "Local planning: no_checked_route",
+      "true_goal_error_cm": 16.048427489215225,
+      "true_final_pose": [
+        0.18454543062961543,
+        16.04736638394701,
+        0.32097049516080495
+      ],
+      "estimated_final_pose": [
+        0.18379030643423885,
+        16.030387653204787,
+        0.32079370676180474
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 1.9347265894653276,
+      "simulation_wall_seconds": 1.7943233080000027,
+      "local_planning_seconds": 0.004259733000253618,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 6,
+      "scenario": "narrow_out_and_back",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 15.906255932832826,
+        "coast": 0.09066937827043646,
+        "camera_hz": 10.11892038756419,
+        "latency": 0.012055921816870535,
+        "compute": 0.045,
+        "seed": 6,
+        "pivot_cm": 10.26675126555568,
+        "drive_yaw_bias_dps": 2.498080729858799,
+        "height_scale": 1.0021244614976967
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 0.1041145649501109,
+      "true_final_pose": [
+        -0.10411455516617929,
+        4.5136453888491146e-05,
+        3.554751288731111
+      ],
+      "estimated_final_pose": [
+        -0.1033766346023231,
+        0.01547103358343982,
+        3.5563236788502763
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 6.678315644577225,
+      "simulation_wall_seconds": 5.174585993999926,
+      "local_planning_seconds": 0.008285659999955897,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 6,
+      "scenario": "turn_and_drive",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 15.906255932832826,
+        "coast": 0.09066937827043646,
+        "camera_hz": 10.11892038756419,
+        "latency": 0.012055921816870535,
+        "compute": 0.045,
+        "seed": 6,
+        "pivot_cm": 10.26675126555568,
+        "drive_yaw_bias_dps": 2.498080729858799,
+        "height_scale": 1.0021244614976967
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 2.497310024600141,
+      "true_final_pose": [
+        31.1471136843065,
+        32.21826228256379,
+        60.76911073587925
+      ],
+      "estimated_final_pose": [
+        31.088354600904427,
+        32.235053114052285,
+        60.715446537504164
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 11.874790341345346,
+      "simulation_wall_seconds": 8.946069337000154,
+      "local_planning_seconds": 0.01987802200005717,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 6,
+      "scenario": "turn_and_drive",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 15.906255932832826,
+        "coast": 0.09066937827043646,
+        "camera_hz": 10.11892038756419,
+        "latency": 0.012055921816870535,
+        "compute": 0.045,
+        "seed": 6,
+        "pivot_cm": 10.26675126555568,
+        "drive_yaw_bias_dps": 2.498080729858799,
+        "height_scale": 1.0021244614976967
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 2.497310024600141,
+      "true_final_pose": [
+        31.1471136843065,
+        32.21826228256379,
+        60.76911073587925
+      ],
+      "estimated_final_pose": [
+        31.088354600904427,
+        32.235053114052285,
+        60.715446537504164
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 11.874790341345346,
+      "simulation_wall_seconds": 8.760071205000031,
+      "local_planning_seconds": 0.06808884199995191,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 7,
+      "scenario": "offset_return",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 10.925939013147094,
+        "coast": 0.04602901766504114,
+        "camera_hz": 14.71331500236249,
+        "latency": 0.01603415678680482,
+        "compute": 0.045,
+        "seed": 7,
+        "pivot_cm": 5.869441075591583,
+        "drive_yaw_bias_dps": -1.8139531679047591,
+        "height_scale": 0.9939237686416584
+      },
+      "outcome": "stopped",
+      "reason": "Local planning: no_checked_route",
+      "true_goal_error_cm": 20.989370504056996,
+      "true_final_pose": [
+        2.4597813589,
+        20.8447391402,
+        1.607047403
+      ],
+      "estimated_final_pose": null,
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 0.0,
+      "simulation_wall_seconds": 0.3503579799998988,
+      "local_planning_seconds": 0.003798476999918421,
+      "local_searches": 1,
+      "actions": [],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 7,
+      "scenario": "offset_return",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 10.925939013147094,
+        "coast": 0.04602901766504114,
+        "camera_hz": 14.71331500236249,
+        "latency": 0.01603415678680482,
+        "compute": 0.045,
+        "seed": 7,
+        "pivot_cm": 5.869441075591583,
+        "drive_yaw_bias_dps": -1.8139531679047591,
+        "height_scale": 0.9939237686416584
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 2.15675377239297,
+      "true_final_pose": [
+        2.077254225751679,
+        0.5801738673260799,
+        0.05005816053050503
+      ],
+      "estimated_final_pose": [
+        2.071251347459025,
+        0.4485206031325166,
+        0.05046520393420906
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 3.119488352376152,
+      "simulation_wall_seconds": 3.475104857000133,
+      "local_planning_seconds": 0.004950677999886466,
+      "local_searches": 1,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 7,
+      "scenario": "narrow_out_and_back",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 10.925939013147094,
+        "coast": 0.04602901766504114,
+        "camera_hz": 14.71331500236249,
+        "latency": 0.01603415678680482,
+        "compute": 0.045,
+        "seed": 7,
+        "pivot_cm": 5.869441075591583,
+        "drive_yaw_bias_dps": -1.8139531679047591,
+        "height_scale": 0.9939237686416584
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 0.7742764795977722,
+      "true_final_pose": [
+        0.23543491114215934,
+        -0.7376140382841171,
+        -2.354741579392749
+      ],
+      "estimated_final_pose": [
+        0.2353555077900023,
+        -0.7171195877123289,
+        -2.355048285426676
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 6.1779425479655,
+      "simulation_wall_seconds": 6.597660130999884,
+      "local_planning_seconds": 0.004029678000279091,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 7,
+      "scenario": "narrow_out_and_back",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 10.925939013147094,
+        "coast": 0.04602901766504114,
+        "camera_hz": 14.71331500236249,
+        "latency": 0.01603415678680482,
+        "compute": 0.045,
+        "seed": 7,
+        "pivot_cm": 5.869441075591583,
+        "drive_yaw_bias_dps": -1.8139531679047591,
+        "height_scale": 0.9939237686416584
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 0.7742764795977722,
+      "true_final_pose": [
+        0.23543491114215934,
+        -0.7376140382841171,
+        -2.354741579392749
+      ],
+      "estimated_final_pose": [
+        0.2353555077900023,
+        -0.7171195877123289,
+        -2.355048285426676
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 6.1779425479655,
+      "simulation_wall_seconds": 6.599303945999964,
+      "local_planning_seconds": 0.008245712999951138,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 7,
+      "scenario": "turn_and_drive",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 10.925939013147094,
+        "coast": 0.04602901766504114,
+        "camera_hz": 14.71331500236249,
+        "latency": 0.01603415678680482,
+        "compute": 0.045,
+        "seed": 7,
+        "pivot_cm": 5.869441075591583,
+        "drive_yaw_bias_dps": -1.8139531679047591,
+        "height_scale": 0.9939237686416584
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 1.8502217379964485,
+      "true_final_pose": [
+        28.23052120358882,
+        30.540615638698913,
+        86.77143947783382
+      ],
+      "estimated_final_pose": [
+        28.401220033854358,
+        30.823889143207072,
+        86.71682581212087
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 13.069461363101397,
+      "simulation_wall_seconds": 12.699323982999886,
+      "local_planning_seconds": 0.018912285000169504,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 7,
+      "scenario": "turn_and_drive",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 10.925939013147094,
+        "coast": 0.04602901766504114,
+        "camera_hz": 14.71331500236249,
+        "latency": 0.01603415678680482,
+        "compute": 0.045,
+        "seed": 7,
+        "pivot_cm": 5.869441075591583,
+        "drive_yaw_bias_dps": -1.8139531679047591,
+        "height_scale": 0.9939237686416584
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 1.8502217379964485,
+      "true_final_pose": [
+        28.23052120358882,
+        30.540615638698913,
+        86.77143947783382
+      ],
+      "estimated_final_pose": [
+        28.401220033854358,
+        30.823889143207072,
+        86.71682581212087
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 13.069461363101397,
+      "simulation_wall_seconds": 12.624207321000085,
+      "local_planning_seconds": 0.07004898299987872,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 8,
+      "scenario": "offset_return",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 11.257718999968313,
+        "coast": 0.11687352175688165,
+        "camera_hz": 13.27855997343239,
+        "latency": 0.02422171995542295,
+        "compute": 0.045,
+        "seed": 8,
+        "pivot_cm": 10.387863981396613,
+        "drive_yaw_bias_dps": -0.8629534081803953,
+        "height_scale": 1.0082583229000606
+      },
+      "outcome": "stopped",
+      "reason": "Local planning: no_checked_route",
+      "true_goal_error_cm": 20.989370504056996,
+      "true_final_pose": [
+        2.4597813589,
+        20.8447391402,
+        1.607047403
+      ],
+      "estimated_final_pose": null,
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 0.0,
+      "simulation_wall_seconds": 0.3510027069999069,
+      "local_planning_seconds": 0.003806760000088616,
+      "local_searches": 1,
+      "actions": [],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 8,
+      "scenario": "offset_return",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 11.257718999968313,
+        "coast": 0.11687352175688165,
+        "camera_hz": 13.27855997343239,
+        "latency": 0.02422171995542295,
+        "compute": 0.045,
+        "seed": 8,
+        "pivot_cm": 10.387863981396613,
+        "drive_yaw_bias_dps": -0.8629534081803953,
+        "height_scale": 1.0082583229000606
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 1.973973194450795,
+      "true_final_pose": [
+        1.8956125472867542,
+        -0.5506571010885988,
+        0.6036316150836742
+      ],
+      "estimated_final_pose": [
+        1.9013111706106594,
+        -0.37369601686536136,
+        0.6028788681080641
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 3.608762159132283,
+      "simulation_wall_seconds": 3.703262886999937,
+      "local_planning_seconds": 0.004783072999998694,
+      "local_searches": 1,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 8,
+      "scenario": "narrow_out_and_back",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 11.257718999968313,
+        "coast": 0.11687352175688165,
+        "camera_hz": 13.27855997343239,
+        "latency": 0.02422171995542295,
+        "compute": 0.045,
+        "seed": 8,
+        "pivot_cm": 10.387863981396613,
+        "drive_yaw_bias_dps": -0.8629534081803953,
+        "height_scale": 1.0082583229000606
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 0.03319133345712028,
+      "true_final_pose": [
+        0.03317759122105189,
+        -0.0009550169791854518,
+        -1.3277359931913506
+      ],
+      "estimated_final_pose": [
+        0.03904771064999707,
+        0.012204972997180263,
+        -1.3274212487015973
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 7.22361196935546,
+      "simulation_wall_seconds": 7.048278177999919,
+      "local_planning_seconds": 0.0038455099997918296,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 8,
+      "scenario": "narrow_out_and_back",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 11.257718999968313,
+        "coast": 0.11687352175688165,
+        "camera_hz": 13.27855997343239,
+        "latency": 0.02422171995542295,
+        "compute": 0.045,
+        "seed": 8,
+        "pivot_cm": 10.387863981396613,
+        "drive_yaw_bias_dps": -0.8629534081803953,
+        "height_scale": 1.0082583229000606
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 0.03319133345712028,
+      "true_final_pose": [
+        0.03317759122105189,
+        -0.0009550169791854518,
+        -1.3277359931913506
+      ],
+      "estimated_final_pose": [
+        0.03904771064999707,
+        0.012204972997180263,
+        -1.3274212487015973
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 7.22361196935546,
+      "simulation_wall_seconds": 7.063642547999962,
+      "local_planning_seconds": 0.008225974999959362,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 8,
+      "scenario": "turn_and_drive",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 11.257718999968313,
+        "coast": 0.11687352175688165,
+        "camera_hz": 13.27855997343239,
+        "latency": 0.02422171995542295,
+        "compute": 0.045,
+        "seed": 8,
+        "pivot_cm": 10.387863981396613,
+        "drive_yaw_bias_dps": -0.8629534081803953,
+        "height_scale": 1.0082583229000606
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 1.9118691864853319,
+      "true_final_pose": [
+        28.401182553899886,
+        31.04834467627684,
+        57.85246655095476
+      ],
+      "estimated_final_pose": [
+        28.17221127305092,
+        30.850375579904558,
+        57.79361417363344
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 13.701897053601016,
+      "simulation_wall_seconds": 12.427253030999964,
+      "local_planning_seconds": 0.022360920999972222,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 8,
+      "scenario": "turn_and_drive",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 11.257718999968313,
+        "coast": 0.11687352175688165,
+        "camera_hz": 13.27855997343239,
+        "latency": 0.02422171995542295,
+        "compute": 0.045,
+        "seed": 8,
+        "pivot_cm": 10.387863981396613,
+        "drive_yaw_bias_dps": -0.8629534081803953,
+        "height_scale": 1.0082583229000606
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 1.9118691864853319,
+      "true_final_pose": [
+        28.401182553899886,
+        31.04834467627684,
+        57.85246655095476
+      ],
+      "estimated_final_pose": [
+        28.17221127305092,
+        30.850375579904558,
+        57.79361417363344
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 13.701897053601016,
+      "simulation_wall_seconds": 13.162633200000073,
+      "local_planning_seconds": 0.06221047400003954,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 9,
+      "scenario": "offset_return",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 9.53113877366767,
+        "coast": 0.10880870693835436,
+        "camera_hz": 10.60445906763342,
+        "latency": 0.02421315455703522,
+        "compute": 0.045,
+        "seed": 9,
+        "pivot_cm": 9.650958258679577,
+        "drive_yaw_bias_dps": -2.222181724507567,
+        "height_scale": 1.0055567461043078
+      },
+      "outcome": "stopped",
+      "reason": "Local planning: no_checked_route",
+      "true_goal_error_cm": 20.989370504056996,
+      "true_final_pose": [
+        2.4597813589,
+        20.8447391402,
+        1.607047403
+      ],
+      "estimated_final_pose": null,
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 0.0,
+      "simulation_wall_seconds": 0.3502697490000628,
+      "local_planning_seconds": 0.0038215519998630043,
+      "local_searches": 1,
+      "actions": [],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 9,
+      "scenario": "offset_return",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 9.53113877366767,
+        "coast": 0.10880870693835436,
+        "camera_hz": 10.60445906763342,
+        "latency": 0.02421315455703522,
+        "compute": 0.045,
+        "seed": 9,
+        "pivot_cm": 9.650958258679577,
+        "drive_yaw_bias_dps": -2.222181724507567,
+        "height_scale": 1.0055567461043078
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 2.491818832788458,
+      "true_final_pose": [
+        2.0182318456588706,
+        -1.461472309901088,
+        -0.9657567645177223
+      ],
+      "estimated_final_pose": [
+        2.0155540720097234,
+        -1.332796073576226,
+        -0.9571258965482627
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 4.1241111673412405,
+      "simulation_wall_seconds": 3.5199315689999366,
+      "local_planning_seconds": 0.004746720000184723,
+      "local_searches": 1,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 9,
+      "scenario": "narrow_out_and_back",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 9.53113877366767,
+        "coast": 0.10880870693835436,
+        "camera_hz": 10.60445906763342,
+        "latency": 0.02421315455703522,
+        "compute": 0.045,
+        "seed": 9,
+        "pivot_cm": 9.650958258679577,
+        "drive_yaw_bias_dps": -2.222181724507567,
+        "height_scale": 1.0055567461043078
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 0.15604085431572245,
+      "true_final_pose": [
+        0.15600728650103793,
+        0.0032364755774735854,
+        -3.426465616837513
+      ],
+      "estimated_final_pose": [
+        0.1534295428807137,
+        0.015516389345139103,
+        -3.424140898730741
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 8.084709226339768,
+      "simulation_wall_seconds": 6.314523961000077,
+      "local_planning_seconds": 0.003868168000053629,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 9,
+      "scenario": "narrow_out_and_back",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 9.53113877366767,
+        "coast": 0.10880870693835436,
+        "camera_hz": 10.60445906763342,
+        "latency": 0.02421315455703522,
+        "compute": 0.045,
+        "seed": 9,
+        "pivot_cm": 9.650958258679577,
+        "drive_yaw_bias_dps": -2.222181724507567,
+        "height_scale": 1.0055567461043078
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 0.15604085431572245,
+      "true_final_pose": [
+        0.15600728650103793,
+        0.0032364755774735854,
+        -3.426465616837513
+      ],
+      "estimated_final_pose": [
+        0.1534295428807137,
+        0.015516389345139103,
+        -3.424140898730741
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 8.084709226339768,
+      "simulation_wall_seconds": 6.388587658000006,
+      "local_planning_seconds": 0.00825868500010074,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 9,
+      "scenario": "turn_and_drive",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 9.53113877366767,
+        "coast": 0.10880870693835436,
+        "camera_hz": 10.60445906763342,
+        "latency": 0.02421315455703522,
+        "compute": 0.045,
+        "seed": 9,
+        "pivot_cm": 9.650958258679577,
+        "drive_yaw_bias_dps": -2.222181724507567,
+        "height_scale": 1.0055567461043078
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 3.0609853209521476,
+      "true_final_pose": [
+        33.05247177214363,
+        29.7718614119645,
+        86.71856005373652
+      ],
+      "estimated_final_pose": [
+        32.88624306681856,
+        29.67607766124236,
+        86.64748841326548
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 16.361882745389607,
+      "simulation_wall_seconds": 12.365045847999909,
+      "local_planning_seconds": 0.01921354700016309,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 9,
+      "scenario": "turn_and_drive",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 9.53113877366767,
+        "coast": 0.10880870693835436,
+        "camera_hz": 10.60445906763342,
+        "latency": 0.02421315455703522,
+        "compute": 0.045,
+        "seed": 9,
+        "pivot_cm": 9.650958258679577,
+        "drive_yaw_bias_dps": -2.222181724507567,
+        "height_scale": 1.0055567461043078
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 3.0609853209521476,
+      "true_final_pose": [
+        33.05247177214363,
+        29.7718614119645,
+        86.71856005373652
+      ],
+      "estimated_final_pose": [
+        32.88624306681856,
+        29.67607766124236,
+        86.64748841326548
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 16.361882745389607,
+      "simulation_wall_seconds": 12.34109903600006,
+      "local_planning_seconds": 0.06512838300000112,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 10,
+      "scenario": "offset_return",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 14.045289576433571,
+        "coast": 0.09904074242678884,
+        "camera_hz": 13.178968136333195,
+        "latency": 0.02672077767622594,
+        "compute": 0.045,
+        "seed": 10,
+        "pivot_cm": 9.378511218138547,
+        "drive_yaw_bias_dps": 1.0220491716415578,
+        "height_scale": 1.012753303114374
+      },
+      "outcome": "stopped",
+      "reason": "Local planning: no_checked_route",
+      "true_goal_error_cm": 20.989370504056996,
+      "true_final_pose": [
+        2.4597813589,
+        20.8447391402,
+        1.607047403
+      ],
+      "estimated_final_pose": null,
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 0.0,
+      "simulation_wall_seconds": 0.455306556999858,
+      "local_planning_seconds": 0.0038225429998419713,
+      "local_searches": 1,
+      "actions": [],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 10,
+      "scenario": "offset_return",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 14.045289576433571,
+        "coast": 0.09904074242678884,
+        "camera_hz": 13.178968136333195,
+        "latency": 0.02672077767622594,
+        "compute": 0.045,
+        "seed": 10,
+        "pivot_cm": 9.378511218138547,
+        "drive_yaw_bias_dps": 1.0220491716415578,
+        "height_scale": 1.012753303114374
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 2.1883432368116535,
+      "true_final_pose": [
+        1.7783576424870742,
+        -1.2752608429286618,
+        2.631425834389711
+      ],
+      "estimated_final_pose": [
+        1.780715380341189,
+        -1.0164196152662779,
+        2.639308017513372
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 3.3344951887816308,
+      "simulation_wall_seconds": 3.3892132860000856,
+      "local_planning_seconds": 0.004848805000165157,
+      "local_searches": 1,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 10,
+      "scenario": "narrow_out_and_back",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 14.045289576433571,
+        "coast": 0.09904074242678884,
+        "camera_hz": 13.178968136333195,
+        "latency": 0.02672077767622594,
+        "compute": 0.045,
+        "seed": 10,
+        "pivot_cm": 9.378511218138547,
+        "drive_yaw_bias_dps": 1.0220491716415578,
+        "height_scale": 1.012753303114374
+      },
+      "outcome": "stopped",
+      "reason": "Local planning: no_checked_route",
+      "true_goal_error_cm": 16.393952675921707,
+      "true_final_pose": [
+        0.07712769384788518,
+        16.393771245787292,
+        0.13872783928639312
+      ],
+      "estimated_final_pose": [
+        0.07552726231699039,
+        16.216000771761404,
+        0.13549235637523793
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 2.044561119274846,
+      "simulation_wall_seconds": 2.166231741000047,
+      "local_planning_seconds": 0.004379789000040546,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 10,
+      "scenario": "narrow_out_and_back",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 14.045289576433571,
+        "coast": 0.09904074242678884,
+        "camera_hz": 13.178968136333195,
+        "latency": 0.02672077767622594,
+        "compute": 0.045,
+        "seed": 10,
+        "pivot_cm": 9.378511218138547,
+        "drive_yaw_bias_dps": 1.0220491716415578,
+        "height_scale": 1.012753303114374
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 0.06804331723406343,
+      "true_final_pose": [
+        -0.0680316971276129,
+        -0.0012574601990281867,
+        1.4620564549971173
+      ],
+      "estimated_final_pose": [
+        -0.06770551345315018,
+        0.013200315435787147,
+        1.4599110231469297
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 6.673148074563898,
+      "simulation_wall_seconds": 6.418155095999964,
+      "local_planning_seconds": 0.008213686000090092,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 10,
+      "scenario": "turn_and_drive",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 14.045289576433571,
+        "coast": 0.09904074242678884,
+        "camera_hz": 13.178968136333195,
+        "latency": 0.02672077767622594,
+        "compute": 0.045,
+        "seed": 10,
+        "pivot_cm": 9.378511218138547,
+        "drive_yaw_bias_dps": 1.0220491716415578,
+        "height_scale": 1.012753303114374
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 2.4920063471663743,
+      "true_final_pose": [
+        29.412845264711507,
+        32.42184742524086,
+        59.61661728136454
+      ],
+      "estimated_final_pose": [
+        29.043490500704426,
+        32.09366894536836,
+        59.56774039045726
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 11.40062099975026,
+      "simulation_wall_seconds": 10.104538296999863,
+      "local_planning_seconds": 0.024639289000106146,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 10,
+      "scenario": "turn_and_drive",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 14.045289576433571,
+        "coast": 0.09904074242678884,
+        "camera_hz": 13.178968136333195,
+        "latency": 0.02672077767622594,
+        "compute": 0.045,
+        "seed": 10,
+        "pivot_cm": 9.378511218138547,
+        "drive_yaw_bias_dps": 1.0220491716415578,
+        "height_scale": 1.012753303114374
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 2.4920063471663743,
+      "true_final_pose": [
+        29.412845264711507,
+        32.42184742524086,
+        59.61661728136454
+      ],
+      "estimated_final_pose": [
+        29.043490500704426,
+        32.09366894536836,
+        59.56774039045726
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 11.40062099975026,
+      "simulation_wall_seconds": 10.221886477999988,
+      "local_planning_seconds": 0.08733119399994393,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 11,
+      "scenario": "offset_return",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 12.65925789011115,
+        "coast": 0.11020018773636302,
+        "camera_hz": 11.453702767505003,
+        "latency": 0.03475412413043454,
+        "compute": 0.045,
+        "seed": 11,
+        "pivot_cm": 8.679610965488848,
+        "drive_yaw_bias_dps": 1.5411272585032298,
+        "height_scale": 0.9902429198193177
+      },
+      "outcome": "stopped",
+      "reason": "Local planning: no_checked_route",
+      "true_goal_error_cm": 20.989370504056996,
+      "true_final_pose": [
+        2.4597813589,
+        20.8447391402,
+        1.607047403
+      ],
+      "estimated_final_pose": null,
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 0.0,
+      "simulation_wall_seconds": 0.3532627980000598,
+      "local_planning_seconds": 0.003817958999889015,
+      "local_searches": 1,
+      "actions": [],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 11,
+      "scenario": "offset_return",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 12.65925789011115,
+        "coast": 0.11020018773636302,
+        "camera_hz": 11.453702767505003,
+        "latency": 0.03475412413043454,
+        "compute": 0.045,
+        "seed": 11,
+        "pivot_cm": 8.679610965488848,
+        "drive_yaw_bias_dps": 1.5411272585032298,
+        "height_scale": 0.9902429198193177
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 1.777319162806342,
+      "true_final_pose": [
+        1.7764206326415863,
+        -0.0565078968278147,
+        3.202085563318925
+      ],
+      "estimated_final_pose": [
+        1.7658924560737412,
+        -0.271687215103805,
+        3.2122617120031123
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 3.4847665285596747,
+      "simulation_wall_seconds": 3.149993092999921,
+      "local_planning_seconds": 0.0047640640000281564,
+      "local_searches": 1,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 11,
+      "scenario": "narrow_out_and_back",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 12.65925789011115,
+        "coast": 0.11020018773636302,
+        "camera_hz": 11.453702767505003,
+        "latency": 0.03475412413043454,
+        "compute": 0.045,
+        "seed": 11,
+        "pivot_cm": 8.679610965488848,
+        "drive_yaw_bias_dps": 1.5411272585032298,
+        "height_scale": 0.9902429198193177
+      },
+      "outcome": "stopped",
+      "reason": "Local planning: no_checked_route",
+      "true_goal_error_cm": 15.982548364502913,
+      "true_final_pose": [
+        0.10922108803260071,
+        15.982175164150958,
+        0.19407905694661715
+      ],
+      "estimated_final_pose": [
+        0.11267656569487094,
+        16.154842388370238,
+        0.19732922514947404
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 2.175146373009966,
+      "simulation_wall_seconds": 2.0764649219997864,
+      "local_planning_seconds": 0.00418791200013402,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 11,
+      "scenario": "narrow_out_and_back",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 12.65925789011115,
+        "coast": 0.11020018773636302,
+        "camera_hz": 11.453702767505003,
+        "latency": 0.03475412413043454,
+        "compute": 0.045,
+        "seed": 11,
+        "pivot_cm": 8.679610965488848,
+        "drive_yaw_bias_dps": 1.5411272585032298,
+        "height_scale": 0.9902429198193177
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 1.1101589830758618,
+      "true_final_pose": [
+        -0.10033161341312413,
+        1.1056159075619123,
+        2.2379711390949857
+      ],
+      "estimated_final_pose": [
+        -0.09954213936715406,
+        1.141839914026228,
+        2.2454127466438933
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 7.064394953728879,
+      "simulation_wall_seconds": 5.992679608000117,
+      "local_planning_seconds": 0.008566086999962863,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 11,
+      "scenario": "turn_and_drive",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 12.65925789011115,
+        "coast": 0.11020018773636302,
+        "camera_hz": 11.453702767505003,
+        "latency": 0.03475412413043454,
+        "compute": 0.045,
+        "seed": 11,
+        "pivot_cm": 8.679610965488848,
+        "drive_yaw_bias_dps": 1.5411272585032298,
+        "height_scale": 0.9902429198193177
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 0.8609775890825744,
+      "true_final_pose": [
+        29.717788206686095,
+        29.186588103961473,
+        60.53160634080461
+      ],
+      "estimated_final_pose": [
+        30.0202708754548,
+        29.5282743595914,
+        60.496512975532085
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 14.172125303381819,
+      "simulation_wall_seconds": 11.258080123999889,
+      "local_planning_seconds": 0.028374333000101615,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -5.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 11,
+      "scenario": "turn_and_drive",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 12.65925789011115,
+        "coast": 0.11020018773636302,
+        "camera_hz": 11.453702767505003,
+        "latency": 0.03475412413043454,
+        "compute": 0.045,
+        "seed": 11,
+        "pivot_cm": 8.679610965488848,
+        "drive_yaw_bias_dps": 1.5411272585032298,
+        "height_scale": 0.9902429198193177
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 0.8609775890825744,
+      "true_final_pose": [
+        29.717788206686095,
+        29.186588103961473,
+        60.53160634080461
+      ],
+      "estimated_final_pose": [
+        30.0202708754548,
+        29.5282743595914,
+        60.496512975532085
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 14.172125303381819,
+      "simulation_wall_seconds": 13.760969178000096,
+      "local_planning_seconds": 0.08915611900010845,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -5.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 12,
+      "scenario": "offset_return",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 14.200379760373124,
+        "coast": 0.07229574998480524,
+        "camera_hz": 11.529118659576563,
+        "latency": 0.02173823530613677,
+        "compute": 0.045,
+        "seed": 12,
+        "pivot_cm": 10.027192258350226,
+        "drive_yaw_bias_dps": -3.752748329117349,
+        "height_scale": 0.9859293728088546
+      },
+      "outcome": "stopped",
+      "reason": "Local planning: no_checked_route",
+      "true_goal_error_cm": 20.989370504056996,
+      "true_final_pose": [
+        2.4597813589,
+        20.8447391402,
+        1.607047403
+      ],
+      "estimated_final_pose": null,
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 0.0,
+      "simulation_wall_seconds": 0.3742354720000094,
+      "local_planning_seconds": 0.0041321310000057565,
+      "local_searches": 1,
+      "actions": [],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 12,
+      "scenario": "offset_return",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 14.200379760373124,
+        "coast": 0.07229574998480524,
+        "camera_hz": 11.529118659576563,
+        "latency": 0.02173823530613677,
+        "compute": 0.045,
+        "seed": 12,
+        "pivot_cm": 10.027192258350226,
+        "drive_yaw_bias_dps": -3.752748329117349,
+        "height_scale": 0.9859293728088546
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 2.2425579355810203,
+      "true_final_pose": [
+        1.9691897304716337,
+        1.0730134667572737,
+        -2.3195643224966327
+      ],
+      "estimated_final_pose": [
+        1.960432548031495,
+        0.7794927056422942,
+        -2.316776263049519
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 2.9290559002033802,
+      "simulation_wall_seconds": 3.123671472999831,
+      "local_planning_seconds": 0.005346883999891361,
+      "local_searches": 1,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 12,
+      "scenario": "narrow_out_and_back",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 14.200379760373124,
+        "coast": 0.07229574998480524,
+        "camera_hz": 11.529118659576563,
+        "latency": 0.02173823530613677,
+        "compute": 0.045,
+        "seed": 12,
+        "pivot_cm": 10.027192258350226,
+        "drive_yaw_bias_dps": -3.752748329117349,
+        "height_scale": 0.9859293728088546
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 1.2286324706471439,
+      "true_final_pose": [
+        0.010061191176929777,
+        1.228591274737293,
+        -5.401693350618027
+      ],
+      "estimated_final_pose": [
+        0.008407607951492757,
+        1.258841341402034,
+        -5.404907711277161
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 5.964847362973188,
+      "simulation_wall_seconds": 5.776270653999973,
+      "local_planning_seconds": 0.0041619749999881606,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 12,
+      "scenario": "narrow_out_and_back",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 14.200379760373124,
+        "coast": 0.07229574998480524,
+        "camera_hz": 11.529118659576563,
+        "latency": 0.02173823530613677,
+        "compute": 0.045,
+        "seed": 12,
+        "pivot_cm": 10.027192258350226,
+        "drive_yaw_bias_dps": -3.752748329117349,
+        "height_scale": 0.9859293728088546
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 1.2286324706471439,
+      "true_final_pose": [
+        0.010061191176929777,
+        1.228591274737293,
+        -5.401693350618027
+      ],
+      "estimated_final_pose": [
+        0.008407607951492757,
+        1.258841341402034,
+        -5.404907711277161
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 5.964847362973188,
+      "simulation_wall_seconds": 5.757810377999931,
+      "local_planning_seconds": 0.008855570000150692,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": -10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 12,
+      "scenario": "turn_and_drive",
+      "measured_map_drive": false,
+      "parameters": {
+        "speed": 14.200379760373124,
+        "coast": 0.07229574998480524,
+        "camera_hz": 11.529118659576563,
+        "latency": 0.02173823530613677,
+        "compute": 0.045,
+        "seed": 12,
+        "pivot_cm": 10.027192258350226,
+        "drive_yaw_bias_dps": -3.752748329117349,
+        "height_scale": 0.9859293728088546
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 2.182339858031455,
+      "true_final_pose": [
+        31.789893393914426,
+        28.751445277781446,
+        85.5089419260236
+      ],
+      "estimated_final_pose": [
+        32.271046510616465,
+        29.24520767592067,
+        85.43758237542386
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 13.917301139512134,
+      "simulation_wall_seconds": 12.779860129000099,
+      "local_planning_seconds": 0.027317708000055063,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "seed": 12,
+      "scenario": "turn_and_drive",
+      "measured_map_drive": true,
+      "parameters": {
+        "speed": 14.200379760373124,
+        "coast": 0.07229574998480524,
+        "camera_hz": 11.529118659576563,
+        "latency": 0.02173823530613677,
+        "compute": 0.045,
+        "seed": 12,
+        "pivot_cm": 10.027192258350226,
+        "drive_yaw_bias_dps": -3.752748329117349,
+        "height_scale": 0.9859293728088546
+      },
+      "outcome": "target_reached_estimate",
+      "reason": null,
+      "true_goal_error_cm": 2.182339858031455,
+      "true_final_pose": [
+        31.789893393914426,
+        28.751445277781446,
+        85.5089419260236
+      ],
+      "estimated_final_pose": [
+        32.271046510616465,
+        29.24520767592067,
+        85.43758237542386
+      ],
+      "clearance_violations": [],
+      "intermediate_model_calls": 0,
+      "simulated_seconds": 13.917301139512134,
+      "simulation_wall_seconds": 12.358485838999968,
+      "local_planning_seconds": 0.07279219099996226,
+      "local_searches": 2,
+      "actions": [
+        {
+          "kind": "drive",
+          "value": 5.0,
+          "outcome": "overshot_goal",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 15.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        },
+        {
+          "kind": "drive",
+          "value": 10.0,
+          "outcome": "goal_reached",
+          "reason": null
+        },
+        {
+          "kind": "turn",
+          "value": 30.0,
+          "outcome": "turn_reached_estimate",
+          "reason": null
+        }
+      ],
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    }
+  ]
+}

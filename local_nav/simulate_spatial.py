@@ -17,7 +17,7 @@ from spatial_executor import execute_navigation
 
 
 def run_spatial_case(parameters, goal=(30,30), obstacles=None, cancel_between=False, goals=None, free=None,
-                     measured_map_drive=False, initial_pose=None):
+                     measured_map_drive=False, initial_pose=None, precise_turn_sweep=False):
     plant = Plant(**parameters)
     if initial_pose is not None:
         plant.x,plant.z=initial_pose[:2]
@@ -59,6 +59,7 @@ def run_spatial_case(parameters, goal=(30,30), obstacles=None, cancel_between=Fa
         cv2.imwrite(path,plant.render())
         plan = dict(goal_cm=list(goal),inspected_free_rectangle_cm=free or [-120,-120,120,160],
                     measured_map_drive=measured_map_drive,
+                    precise_turn_sweep=precise_turn_sweep,
                     obstacle_rectangles_cm=obstacles or [],image_path=path,
                     captured_monotonic=plant.time,**plant.token)
         if goals is not None:
@@ -82,7 +83,8 @@ def run_spatial_case(parameters, goal=(30,30), obstacles=None, cancel_between=Fa
                 true_final_pose=[plant.x,plant.z,math.degrees(plant.yaw)],
                 true_goal_error_cm=math.hypot(plant.x-final_goal[0],plant.z-final_goal[1]),
                 motor_commands=plant.commands,timeline_initializations=initializations,
-                final_motor_output=[plant.left,plant.right],watchdog_stops=plant.watchdog_stops)
+                final_motor_output=[plant.left,plant.right],watchdog_stops=plant.watchdog_stops,
+                clearance_violations=violations)
 
 
 if __name__ == '__main__':

@@ -29,7 +29,7 @@ def normalize(angle):
     return (angle+180.) % 360.-180.
 
 
-def sweep(pose, action):
+def sweep(pose, action, precise_turn=False):
     kind, value = action
     value = finite(value)
     if kind == 'drive':
@@ -45,7 +45,7 @@ def sweep(pose, action):
     lo, hi = sorted((0., value+math.copysign(5., value)))
     lo, hi = lo-2., hi+2.
     lo, hi = math.radians(lo), math.radians(hi)
-    heading = 0.
+    heading = math.radians(pose[2]) if precise_turn else 0.
     points = []
     for px in (-6., 6.):
         for pz in (-15., 0.):
@@ -60,7 +60,9 @@ def sweep(pose, action):
                     for a in angles:
                         x = px+math.cos(a)*dx+math.sin(a)*dz
                         z = pz-math.sin(a)*dx+math.cos(a)*dz
-                        points.append((x,z))
+                        points.append(transform(pose,x,z) if precise_turn else (x,z))
+    if precise_turn:
+        return bounds(points,7.)
     local = bounds(points, 7.)  # 5 cm clearance + 2 cm pose allowance
     # The executor checks this local rectangle. Transform that same rectangle,
     # rather than a tighter envelope that would not cover every accepted pose.
@@ -91,6 +93,9 @@ class SpatialPlanner:
         self.measured_map_drive=plan.get('measured_map_drive',False)
         if type(self.measured_map_drive) is not bool:
             raise ValueError('measured_map_drive must be boolean')
+        self.precise_turn_sweep=plan.get('precise_turn_sweep',False)
+        if type(self.precise_turn_sweep) is not bool:
+            raise ValueError('precise_turn_sweep must be boolean')
         if not 1 <= self.tolerance <= 5:
             raise ValueError('Goal tolerance must be 1 to 5 cm')
 
@@ -106,7 +111,7 @@ class SpatialPlanner:
             return nominal_bounds(pose,action[1])
         key = (round(normalize(pose[2]), 8), action)
         if key not in self._sweeps:
-            self._sweeps[key] = sweep((0., 0., key[0]), action)
+            self._sweeps[key] = sweep((0., 0., key[0]), action,self.precise_turn_sweep)
         box = self._sweeps[key]
         return [box[0]+pose[0], box[1]+pose[1], box[2]+pose[0], box[3]+pose[1]]
 

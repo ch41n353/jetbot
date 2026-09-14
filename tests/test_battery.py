@@ -6,10 +6,23 @@ import multiprocessing as mp
 import queue
 from unittest.mock import patch
 sys.path.insert(0,os.path.join(os.path.dirname(__file__),'..','local_nav'))
-from battery import PowerGuard,power_permitted,read_shared
+from battery import PowerGuard,PowerSensors,power_permitted,read_shared
 
 
 class BatteryTests(unittest.TestCase):
+    def test_combined_sample_preserves_oldest_sensor_age(self):
+        sensors=PowerSensors.__new__(PowerSensors)
+        from unittest.mock import Mock
+        sensors.supply=Mock()
+        sensors.pack=Mock()
+        sensors.supply.sample.return_value=dict(time=1.,voltage_v=5.04)
+        sensors.pack.sample.return_value=dict(pack_time=1.7,pack_voltage_v=12.2)
+        sample=sensors.sample()
+        self.assertEqual(sample['input_time'],1.)
+        self.assertEqual(sample['pack_time'],1.7)
+        self.assertEqual(sample['time'],1.)
+        self.assertFalse(PowerGuard(require_pack=True).update(sample,1.7)['motion_allowed'])
+
     def test_startup_and_low_voltage_latch(self):
         guard=PowerGuard()
         for index in range(3):
@@ -27,6 +40,18 @@ class BatteryTests(unittest.TestCase):
         self.assertTrue(status['warning'])
         self.assertTrue(status['motion_allowed'])
         self.assertIsNone(status['battery_percent'])
+
+    def test_low_pack_stops_even_while_regulated_supply_is_healthy(self):
+        guard=PowerGuard(require_pack=True)
+        for i in range(3):
+            state=guard.update(dict(time=i,voltage_v=5.04,pack_voltage_v=12.2),i)
+        self.assertTrue(state['motion_allowed'])
+        low=guard.update(dict(time=3,voltage_v=5.04,pack_voltage_v=10.7),3)
+        self.assertEqual(low['stop_reason'],'battery_pack_low')
+        self.assertFalse(low['motion_allowed'])
+        self.assertFalse(guard.update(dict(time=4,voltage_v=5.04,pack_voltage_v=12.2),4)['motion_allowed'])
+        missing=PowerGuard(require_pack=True).update(dict(time=1,voltage_v=5.04),1)
+        self.assertEqual(missing['stop_reason'],'pack_telemetry_unavailable')
 
     def test_bad_or_stale_reading_disables_motion(self):
         for sample in ({'time':0,'voltage_v':5.0},{'time':1,'voltage_v':float('nan')},

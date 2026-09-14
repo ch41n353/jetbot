@@ -4,12 +4,12 @@ description: Operate and iterate the local JetBot camera/IMU navigation tools fo
 metadata:
   baseline-date: "2026-09-13"
   timezone: America/Los_Angeles
-  revision: "8"
+  revision: "9"
 ---
 
 # JetBot navigation
 
-Baseline **2026-09-13**, current revision **8**, America/Los_Angeles.
+Baseline **2026-09-13**, current revision **9**, America/Los_Angeles.
 Workspace: `/home/jetbot/jetbot`. Use `/usr/bin/python3` for the local tools.
 
 Read [the dated algorithm and evidence](references/baseline-2026-09-13.md)
@@ -31,6 +31,8 @@ Read [revision 7](references/revision-2026-09-14-r7.md) for live return evidence
 persistent IMU state across segments, and supervised reverse repositioning.
 Read [revision 8](references/revision-2026-09-14-r8.md) for local spatial planning,
 measured turns, target queues, live results, and mandatory input-voltage monitoring.
+Read [revision9](references/revision-2026-09-14-r9.md) for the subsequently found
+INA219 battery-pack monitor, current power thresholds, and paired simulation results.
 
 ## Scope and control division
 
@@ -55,9 +57,11 @@ measured turns, target queues, live results, and mandatory input-voltage monitor
    Never use an old `latest.jpg` after a failed/stale snapshot request.
    Check `status.power`: the service now samples input voltage about five times
    per second and independently gates motors. Warning below4.9V; latched stop
-   below4.8V, above5.5V, missing telemetry or sample age>0.6s. A stopped power
-   guard needs a fresh service after resolving the supply problem. This is
-   regulated input voltage, **not battery charge percentage**. A reported empty
+   below4.8V, above5.25V, missing telemetry or sample age>0.6s. The pack monitor
+   additionally warns below11.4V and latches off below10.8V or above12.9V
+   for the inferred three-cell Waveshare-compatible profile; see revision9. A stopped power
+   guard needs a fresh service after resolving the supply problem. Both pack and regulated input voltages are monitored; neither is
+   **battery charge percentage**. A reported empty
    battery invalidates subsequent powered benchmarking until power is restored.
    Never infer state of charge from the 5V rail.
 3. Verify calibration and geometry against the actual setup. The robot is

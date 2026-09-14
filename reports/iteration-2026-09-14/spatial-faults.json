@@ -1,0 +1,4707 @@
+{
+  "complete": true,
+  "cases": [
+    {
+      "name": "camera_failure",
+      "run": {
+        "parameters": {
+          "speed": 12,
+          "coast": 0.08,
+          "seed": 7,
+          "pivot_cm": 7.5,
+          "frame_fault_after": 0.4
+        },
+        "goal_cm": [
+          0,
+          20
+        ],
+        "goals_cm": null,
+        "result": {
+          "outcome": "stopped",
+          "actions": [
+            {
+              "plan": {
+                "kind": "drive",
+                "value": 15.0,
+                "swept_bounds_cm": [
+                  -13.51983741265209,
+                  -22.200259385501443,
+                  13.51983741265209,
+                  26.206960288291388
+                ],
+                "predicted_start_pose": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "predicted_end_pose": [
+                  0.0,
+                  15.0,
+                  0.0
+                ]
+              },
+              "outcome": "stopped",
+              "reason": "Simulated camera/IMU failure",
+              "target_index": 0,
+              "result": {
+                "outcome": "stopped",
+                "samples": [
+                  {
+                    "time": 100.08333333333333,
+                    "elapsed": 0,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -2.621875218740459e-18,
+                    "position_sigma_cm": 0.03605551275463989,
+                    "yaw_sigma_degrees": 0.27153769332085054,
+                    "braking_lead_cm": 0.0
+                  },
+                  {
+                    "time": 100.16666666666666,
+                    "elapsed": 0.0833333333333286,
+                    "position_cm": [
+                      -0.00020942177821483017,
+                      0.018461402631969732
+                    ],
+                    "velocity_cm_s": [
+                      -0.0012565306692890524,
+                      0.11076841579182468
+                    ],
+                    "yaw_degrees": 0.00027090054102515005,
+                    "position_sigma_cm": 0.05099019513592785,
+                    "yaw_sigma_degrees": 0.38401228858985303,
+                    "braking_lead_cm": 0.016799876395093966
+                  },
+                  {
+                    "time": 100.24999999999999,
+                    "elapsed": 0.1666666666666572,
+                    "position_cm": [
+                      -0.0008100220019598963,
+                      0.5427301963846379
+                    ],
+                    "velocity_cm_s": [
+                      -0.004231866677115128,
+                      3.2009969704121004
+                    ],
+                    "yaw_degrees": 0.0008877915956931701,
+                    "position_sigma_cm": 0.06244997998398398,
+                    "yaw_sigma_degrees": 0.47031708100176933,
+                    "braking_lead_cm": 0.485484540512518
+                  },
+                  {
+                    "time": 100.33333333333331,
+                    "elapsed": 0.2499999999999858,
+                    "position_cm": [
+                      -0.0014302914802624927,
+                      1.3974146372659328
+                    ],
+                    "velocity_cm_s": [
+                      -0.005837550208373354,
+                      6.728605130494111
+                    ],
+                    "yaw_degrees": 0.0011353888692044436,
+                    "position_sigma_cm": 0.07211102550927978,
+                    "yaw_sigma_degrees": 0.5430753866417011,
+                    "braking_lead_cm": 1.0205051114583072
+                  },
+                  {
+                    "time": 100.41666666666664,
+                    "elapsed": 0.3333333333333144,
+                    "position_cm": [
+                      -0.0011893528926802245,
+                      2.3535791943114863
+                    ],
+                    "velocity_cm_s": [
+                      -0.0014731435786929851,
+                      9.101289907520702
+                    ],
+                    "yaw_degrees": 0.001590531301506994,
+                    "position_sigma_cm": 0.0806225774829855,
+                    "yaw_sigma_degrees": 0.6071767407189125,
+                    "braking_lead_cm": 1.3803623026406855
+                  },
+                  {
+                    "time": 100.49999999999997,
+                    "elapsed": 0.416666666666643,
+                    "position_cm": [
+                      -0.0010778667834650125,
+                      3.3398658316681766
+                    ],
+                    "velocity_cm_s": [
+                      -6.765513405518233e-05,
+                      10.468364777900828
+                    ],
+                    "yaw_degrees": 0.002998237933035661,
+                    "position_sigma_cm": 0.08831760866327847,
+                    "yaw_sigma_degrees": 0.6651287945684277,
+                    "braking_lead_cm": 1.5877019913150114
+                  }
+                ],
+                "passed_waypoints_cm": [],
+                "travel_direction": "forward",
+                "power_start": null,
+                "reason": "Simulated camera/IMU failure",
+                "power_end": null,
+                "powered_seconds": 0.416666666666643
+              }
+            }
+          ],
+          "local_planning_seconds": 0.006017540999891935,
+          "intermediate_model_calls": 0,
+          "requires_planner": true,
+          "reached_targets": [],
+          "local_searches": 1,
+          "reason": "Action failed or final pose unverified: Simulated camera/IMU failure",
+          "elapsed_seconds": 0.569999999999979
+        },
+        "true_final_pose": [
+          0.0003596093238974956,
+          5.119478590795198,
+          0.0021849478155657235
+        ],
+        "true_goal_error_cm": 14.880521413550042,
+        "motor_commands": [
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.15333333333334,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.16,
+              "right": 0.16,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.23666666666666,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.1600027700036484,
+              "right": 0.1599972299963516,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.32,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.1600115519741143,
+              "right": 0.15998844802588572,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.40333333333332,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.16002266094738782,
+              "right": 0.1599773390526122,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.48666666666665,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.1600154590554334,
+              "right": 0.1599845409445666,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.56999999999998,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.1600058585985624,
+              "right": 0.1599941414014376,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.56999999999998,
+            "action": "stop",
+            "fields": {}
+          },
+          {
+            "time": 100.56999999999998,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.56999999999998,
+            "action": "stop",
+            "fields": {}
+          }
+        ],
+        "timeline_initializations": [
+          100.0
+        ],
+        "final_motor_output": [
+          0.0,
+          0.0
+        ],
+        "watchdog_stops": 0,
+        "clearance_violations": []
+      }
+    },
+    {
+      "name": "camera_failure",
+      "run": {
+        "parameters": {
+          "speed": 12,
+          "coast": 0.08,
+          "seed": 7,
+          "pivot_cm": 7.5,
+          "frame_fault_after": 0.4
+        },
+        "goal_cm": [
+          30,
+          30
+        ],
+        "goals_cm": null,
+        "result": {
+          "outcome": "stopped",
+          "actions": [
+            {
+              "plan": {
+                "kind": "drive",
+                "value": 5.0,
+                "swept_bounds_cm": [
+                  -13.51983741265209,
+                  -22.200259385501443,
+                  13.51983741265209,
+                  16.206960288291388
+                ],
+                "predicted_start_pose": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "predicted_end_pose": [
+                  0.0,
+                  5.0,
+                  0.0
+                ]
+              },
+              "outcome": "stopped",
+              "reason": "Simulated camera/IMU failure",
+              "target_index": 0,
+              "result": {
+                "outcome": "stopped",
+                "samples": [
+                  {
+                    "time": 100.08333333333333,
+                    "elapsed": 0,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -2.621875218740459e-18,
+                    "position_sigma_cm": 0.03605551275463989,
+                    "yaw_sigma_degrees": 0.27153769332085054,
+                    "braking_lead_cm": 0.0
+                  },
+                  {
+                    "time": 100.16666666666666,
+                    "elapsed": 0.0833333333333286,
+                    "position_cm": [
+                      -0.00020942177821483017,
+                      0.018461402631969732
+                    ],
+                    "velocity_cm_s": [
+                      -0.0012565306692890524,
+                      0.11076841579182468
+                    ],
+                    "yaw_degrees": 0.00027090054102515005,
+                    "position_sigma_cm": 0.05099019513592785,
+                    "yaw_sigma_degrees": 0.38401228858985303,
+                    "braking_lead_cm": 0.016799876395093966
+                  },
+                  {
+                    "time": 100.24999999999999,
+                    "elapsed": 0.1666666666666572,
+                    "position_cm": [
+                      -0.0008100220019598963,
+                      0.5427301963846379
+                    ],
+                    "velocity_cm_s": [
+                      -0.004231866677115128,
+                      3.2009969704121004
+                    ],
+                    "yaw_degrees": 0.0008877915956931701,
+                    "position_sigma_cm": 0.06244997998398398,
+                    "yaw_sigma_degrees": 0.47031708100176933,
+                    "braking_lead_cm": 0.485484540512518
+                  },
+                  {
+                    "time": 100.33333333333331,
+                    "elapsed": 0.2499999999999858,
+                    "position_cm": [
+                      -0.0014302914802624927,
+                      1.3974146372659328
+                    ],
+                    "velocity_cm_s": [
+                      -0.005837550208373354,
+                      6.728605130494111
+                    ],
+                    "yaw_degrees": 0.0011353888692044436,
+                    "position_sigma_cm": 0.07211102550927978,
+                    "yaw_sigma_degrees": 0.5430753866417011,
+                    "braking_lead_cm": 1.0205051114583072
+                  },
+                  {
+                    "time": 100.41666666666664,
+                    "elapsed": 0.3333333333333144,
+                    "position_cm": [
+                      -0.0011893528926802245,
+                      2.3535791943114863
+                    ],
+                    "velocity_cm_s": [
+                      -0.0014731435786929851,
+                      9.101289907520702
+                    ],
+                    "yaw_degrees": 0.001590531301506994,
+                    "position_sigma_cm": 0.0806225774829855,
+                    "yaw_sigma_degrees": 0.6071767407189125,
+                    "braking_lead_cm": 1.3803623026406855
+                  },
+                  {
+                    "time": 100.49999999999997,
+                    "elapsed": 0.416666666666643,
+                    "position_cm": [
+                      -0.0010778667834650125,
+                      3.3398658316681766
+                    ],
+                    "velocity_cm_s": [
+                      -6.765513405518233e-05,
+                      10.468364777900828
+                    ],
+                    "yaw_degrees": 0.002998237933035661,
+                    "position_sigma_cm": 0.08831760866327847,
+                    "yaw_sigma_degrees": 0.6651287945684277,
+                    "braking_lead_cm": 1.5877019913150114
+                  }
+                ],
+                "passed_waypoints_cm": [],
+                "travel_direction": "forward",
+                "power_start": null,
+                "reason": "Simulated camera/IMU failure",
+                "power_end": null,
+                "powered_seconds": 0.416666666666643
+              }
+            }
+          ],
+          "local_planning_seconds": 0.06979595099983271,
+          "intermediate_model_calls": 0,
+          "requires_planner": true,
+          "reached_targets": [],
+          "local_searches": 1,
+          "reason": "Action failed or final pose unverified: Simulated camera/IMU failure",
+          "elapsed_seconds": 0.569999999999979
+        },
+        "true_final_pose": [
+          0.0003596093238974956,
+          5.119478590795198,
+          0.0021849478155657235
+        ],
+        "true_goal_error_cm": 38.97459132773279,
+        "motor_commands": [
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.15333333333334,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.16,
+              "right": 0.16,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.23666666666666,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.1600027700036484,
+              "right": 0.1599972299963516,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.32,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.1600115519741143,
+              "right": 0.15998844802588572,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.40333333333332,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.16002266094738782,
+              "right": 0.1599773390526122,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.48666666666665,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.1600154590554334,
+              "right": 0.1599845409445666,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.56999999999998,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.1600058585985624,
+              "right": 0.1599941414014376,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.56999999999998,
+            "action": "stop",
+            "fields": {}
+          },
+          {
+            "time": 100.56999999999998,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.56999999999998,
+            "action": "stop",
+            "fields": {}
+          }
+        ],
+        "timeline_initializations": [
+          100.0
+        ],
+        "final_motor_output": [
+          0.0,
+          0.0
+        ],
+        "watchdog_stops": 0,
+        "clearance_violations": []
+      }
+    },
+    {
+      "name": "camera_block",
+      "run": {
+        "parameters": {
+          "speed": 12,
+          "coast": 0.08,
+          "seed": 7,
+          "pivot_cm": 7.5,
+          "blocked_frame_after": 0.4
+        },
+        "goal_cm": [
+          0,
+          20
+        ],
+        "goals_cm": null,
+        "result": {
+          "outcome": "stopped",
+          "actions": [
+            {
+              "plan": {
+                "kind": "drive",
+                "value": 15.0,
+                "swept_bounds_cm": [
+                  -13.51983741265209,
+                  -22.200259385501443,
+                  13.51983741265209,
+                  26.206960288291388
+                ],
+                "predicted_start_pose": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "predicted_end_pose": [
+                  0.0,
+                  15.0,
+                  0.0
+                ]
+              },
+              "outcome": "stopped",
+              "reason": "Control update exceeded lease budget",
+              "target_index": 0,
+              "result": {
+                "outcome": "stopped",
+                "samples": [
+                  {
+                    "time": 100.08333333333333,
+                    "elapsed": 0,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -2.621875218740459e-18,
+                    "position_sigma_cm": 0.03605551275463989,
+                    "yaw_sigma_degrees": 0.27153769332085054,
+                    "braking_lead_cm": 0.0
+                  },
+                  {
+                    "time": 100.16666666666666,
+                    "elapsed": 0.0833333333333286,
+                    "position_cm": [
+                      -0.00020942177821483017,
+                      0.018461402631969732
+                    ],
+                    "velocity_cm_s": [
+                      -0.0012565306692890524,
+                      0.11076841579182468
+                    ],
+                    "yaw_degrees": 0.00027090054102515005,
+                    "position_sigma_cm": 0.05099019513592785,
+                    "yaw_sigma_degrees": 0.38401228858985303,
+                    "braking_lead_cm": 0.016799876395093966
+                  },
+                  {
+                    "time": 100.24999999999999,
+                    "elapsed": 0.1666666666666572,
+                    "position_cm": [
+                      -0.0008100220019598963,
+                      0.5427301963846379
+                    ],
+                    "velocity_cm_s": [
+                      -0.004231866677115128,
+                      3.2009969704121004
+                    ],
+                    "yaw_degrees": 0.0008877915956931701,
+                    "position_sigma_cm": 0.06244997998398398,
+                    "yaw_sigma_degrees": 0.47031708100176933,
+                    "braking_lead_cm": 0.485484540512518
+                  },
+                  {
+                    "time": 100.33333333333331,
+                    "elapsed": 0.2499999999999858,
+                    "position_cm": [
+                      -0.0014302914802624927,
+                      1.3974146372659328
+                    ],
+                    "velocity_cm_s": [
+                      -0.005837550208373354,
+                      6.728605130494111
+                    ],
+                    "yaw_degrees": 0.0011353888692044436,
+                    "position_sigma_cm": 0.07211102550927978,
+                    "yaw_sigma_degrees": 0.5430753866417011,
+                    "braking_lead_cm": 1.0205051114583072
+                  },
+                  {
+                    "time": 100.41666666666664,
+                    "elapsed": 0.3333333333333144,
+                    "position_cm": [
+                      -0.0011893528926802245,
+                      2.3535791943114863
+                    ],
+                    "velocity_cm_s": [
+                      -0.0014731435786929851,
+                      9.101289907520702
+                    ],
+                    "yaw_degrees": 0.001590531301506994,
+                    "position_sigma_cm": 0.0806225774829855,
+                    "yaw_sigma_degrees": 0.6071767407189125,
+                    "braking_lead_cm": 1.3803623026406855
+                  },
+                  {
+                    "time": 100.49999999999997,
+                    "elapsed": 0.416666666666643,
+                    "position_cm": [
+                      -0.0010778667834650125,
+                      3.3398658316681766
+                    ],
+                    "velocity_cm_s": [
+                      -6.765513405518233e-05,
+                      10.468364777900828
+                    ],
+                    "yaw_degrees": 0.002998237933035661,
+                    "position_sigma_cm": 0.08831760866327847,
+                    "yaw_sigma_degrees": 0.6651287945684277,
+                    "braking_lead_cm": 1.5877019913150114
+                  }
+                ],
+                "passed_waypoints_cm": [],
+                "travel_direction": "forward",
+                "power_start": null,
+                "reason": "Control update exceeded lease budget",
+                "power_end": null,
+                "powered_seconds": 0.791666666665833
+              }
+            }
+          ],
+          "local_planning_seconds": 0.004744823999772052,
+          "intermediate_model_calls": 0,
+          "requires_planner": true,
+          "reached_targets": [],
+          "local_searches": 1,
+          "reason": "Action failed or final pose unverified: Control update exceeded lease budget",
+          "elapsed_seconds": 0.944999999999169
+        },
+        "true_final_pose": [
+          0.0005448505732529072,
+          7.543784856780138,
+          0.002776667220865779
+        ],
+        "true_goal_error_cm": 12.456215155136087,
+        "motor_commands": [
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.15333333333334,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.16,
+              "right": 0.16,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.23666666666666,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.1600027700036484,
+              "right": 0.1599972299963516,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.32,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.1600115519741143,
+              "right": 0.15998844802588572,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.40333333333332,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.16002266094738782,
+              "right": 0.1599773390526122,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.48666666666665,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.1600154590554334,
+              "right": 0.1599845409445666,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.56999999999998,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.1600058585985624,
+              "right": 0.1599941414014376,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.94499999999917,
+            "action": "stop",
+            "fields": {}
+          },
+          {
+            "time": 100.94499999999917,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.94499999999917,
+            "action": "stop",
+            "fields": {}
+          }
+        ],
+        "timeline_initializations": [
+          100.0
+        ],
+        "final_motor_output": [
+          0.0,
+          0.0
+        ],
+        "watchdog_stops": 1,
+        "clearance_violations": []
+      }
+    },
+    {
+      "name": "camera_block",
+      "run": {
+        "parameters": {
+          "speed": 12,
+          "coast": 0.08,
+          "seed": 7,
+          "pivot_cm": 7.5,
+          "blocked_frame_after": 0.4
+        },
+        "goal_cm": [
+          30,
+          30
+        ],
+        "goals_cm": null,
+        "result": {
+          "outcome": "stopped",
+          "actions": [
+            {
+              "plan": {
+                "kind": "drive",
+                "value": 5.0,
+                "swept_bounds_cm": [
+                  -13.51983741265209,
+                  -22.200259385501443,
+                  13.51983741265209,
+                  16.206960288291388
+                ],
+                "predicted_start_pose": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "predicted_end_pose": [
+                  0.0,
+                  5.0,
+                  0.0
+                ]
+              },
+              "outcome": "stopped",
+              "reason": "Control update exceeded lease budget",
+              "target_index": 0,
+              "result": {
+                "outcome": "stopped",
+                "samples": [
+                  {
+                    "time": 100.08333333333333,
+                    "elapsed": 0,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -2.621875218740459e-18,
+                    "position_sigma_cm": 0.03605551275463989,
+                    "yaw_sigma_degrees": 0.27153769332085054,
+                    "braking_lead_cm": 0.0
+                  },
+                  {
+                    "time": 100.16666666666666,
+                    "elapsed": 0.0833333333333286,
+                    "position_cm": [
+                      -0.00020942177821483017,
+                      0.018461402631969732
+                    ],
+                    "velocity_cm_s": [
+                      -0.0012565306692890524,
+                      0.11076841579182468
+                    ],
+                    "yaw_degrees": 0.00027090054102515005,
+                    "position_sigma_cm": 0.05099019513592785,
+                    "yaw_sigma_degrees": 0.38401228858985303,
+                    "braking_lead_cm": 0.016799876395093966
+                  },
+                  {
+                    "time": 100.24999999999999,
+                    "elapsed": 0.1666666666666572,
+                    "position_cm": [
+                      -0.0008100220019598963,
+                      0.5427301963846379
+                    ],
+                    "velocity_cm_s": [
+                      -0.004231866677115128,
+                      3.2009969704121004
+                    ],
+                    "yaw_degrees": 0.0008877915956931701,
+                    "position_sigma_cm": 0.06244997998398398,
+                    "yaw_sigma_degrees": 0.47031708100176933,
+                    "braking_lead_cm": 0.485484540512518
+                  },
+                  {
+                    "time": 100.33333333333331,
+                    "elapsed": 0.2499999999999858,
+                    "position_cm": [
+                      -0.0014302914802624927,
+                      1.3974146372659328
+                    ],
+                    "velocity_cm_s": [
+                      -0.005837550208373354,
+                      6.728605130494111
+                    ],
+                    "yaw_degrees": 0.0011353888692044436,
+                    "position_sigma_cm": 0.07211102550927978,
+                    "yaw_sigma_degrees": 0.5430753866417011,
+                    "braking_lead_cm": 1.0205051114583072
+                  },
+                  {
+                    "time": 100.41666666666664,
+                    "elapsed": 0.3333333333333144,
+                    "position_cm": [
+                      -0.0011893528926802245,
+                      2.3535791943114863
+                    ],
+                    "velocity_cm_s": [
+                      -0.0014731435786929851,
+                      9.101289907520702
+                    ],
+                    "yaw_degrees": 0.001590531301506994,
+                    "position_sigma_cm": 0.0806225774829855,
+                    "yaw_sigma_degrees": 0.6071767407189125,
+                    "braking_lead_cm": 1.3803623026406855
+                  },
+                  {
+                    "time": 100.49999999999997,
+                    "elapsed": 0.416666666666643,
+                    "position_cm": [
+                      -0.0010778667834650125,
+                      3.3398658316681766
+                    ],
+                    "velocity_cm_s": [
+                      -6.765513405518233e-05,
+                      10.468364777900828
+                    ],
+                    "yaw_degrees": 0.002998237933035661,
+                    "position_sigma_cm": 0.08831760866327847,
+                    "yaw_sigma_degrees": 0.6651287945684277,
+                    "braking_lead_cm": 1.5877019913150114
+                  }
+                ],
+                "passed_waypoints_cm": [],
+                "travel_direction": "forward",
+                "power_start": null,
+                "reason": "Control update exceeded lease budget",
+                "power_end": null,
+                "powered_seconds": 0.791666666665833
+              }
+            }
+          ],
+          "local_planning_seconds": 0.06676499399964086,
+          "intermediate_model_calls": 0,
+          "requires_planner": true,
+          "reached_targets": [],
+          "local_searches": 1,
+          "reason": "Action failed or final pose unverified: Control update exceeded lease budget",
+          "elapsed_seconds": 0.944999999999169
+        },
+        "true_final_pose": [
+          0.0005448505732529072,
+          7.543784856780138,
+          0.002776667220865779
+        ],
+        "true_goal_error_cm": 37.47330927234802,
+        "motor_commands": [
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.15333333333334,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.16,
+              "right": 0.16,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.23666666666666,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.1600027700036484,
+              "right": 0.1599972299963516,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.32,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.1600115519741143,
+              "right": 0.15998844802588572,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.40333333333332,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.16002266094738782,
+              "right": 0.1599773390526122,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.48666666666665,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.1600154590554334,
+              "right": 0.1599845409445666,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.56999999999998,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.1600058585985624,
+              "right": 0.1599941414014376,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.94499999999917,
+            "action": "stop",
+            "fields": {}
+          },
+          {
+            "time": 100.94499999999917,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.94499999999917,
+            "action": "stop",
+            "fields": {}
+          }
+        ],
+        "timeline_initializations": [
+          100.0
+        ],
+        "final_motor_output": [
+          0.0,
+          0.0
+        ],
+        "watchdog_stops": 1,
+        "clearance_violations": []
+      }
+    },
+    {
+      "name": "stall",
+      "run": {
+        "parameters": {
+          "speed": 12,
+          "coast": 0.08,
+          "seed": 7,
+          "pivot_cm": 7.5,
+          "stall": true
+        },
+        "goal_cm": [
+          0,
+          20
+        ],
+        "goals_cm": null,
+        "result": {
+          "outcome": "stopped",
+          "actions": [
+            {
+              "plan": {
+                "kind": "drive",
+                "value": 15.0,
+                "swept_bounds_cm": [
+                  -13.51983741265209,
+                  -22.200259385501443,
+                  13.51983741265209,
+                  26.206960288291388
+                ],
+                "predicted_start_pose": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "predicted_end_pose": [
+                  0.0,
+                  15.0,
+                  0.0
+                ]
+              },
+              "outcome": "stopped",
+              "reason": "No forward progress after 400 ms",
+              "target_index": 0,
+              "result": {
+                "outcome": "stopped",
+                "samples": [
+                  {
+                    "time": 100.08333333333333,
+                    "elapsed": 0,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -2.621875218740459e-18,
+                    "position_sigma_cm": 0.03605551275463989,
+                    "yaw_sigma_degrees": 0.27153769332085054,
+                    "braking_lead_cm": 0.0
+                  },
+                  {
+                    "time": 100.16666666666666,
+                    "elapsed": 0.0833333333333286,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -5.243750437480918e-18,
+                    "position_sigma_cm": 0.05099019513592785,
+                    "yaw_sigma_degrees": 0.38401228858985303,
+                    "braking_lead_cm": 0.0
+                  },
+                  {
+                    "time": 100.24999999999999,
+                    "elapsed": 0.1666666666666572,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -7.865625656221377e-18,
+                    "position_sigma_cm": 0.06244997998398398,
+                    "yaw_sigma_degrees": 0.47031708100176933,
+                    "braking_lead_cm": 0.0
+                  },
+                  {
+                    "time": 100.33333333333331,
+                    "elapsed": 0.2499999999999858,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -1.0487500874961837e-17,
+                    "position_sigma_cm": 0.07211102550927978,
+                    "yaw_sigma_degrees": 0.5430753866417011,
+                    "braking_lead_cm": 0.0
+                  },
+                  {
+                    "time": 100.41666666666664,
+                    "elapsed": 0.3333333333333144,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -1.3109376093702297e-17,
+                    "position_sigma_cm": 0.0806225774829855,
+                    "yaw_sigma_degrees": 0.6071767407189125,
+                    "braking_lead_cm": 0.0
+                  },
+                  {
+                    "time": 100.49999999999997,
+                    "elapsed": 0.416666666666643,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -1.5731251312442755e-17,
+                    "position_sigma_cm": 0.08831760866327847,
+                    "yaw_sigma_degrees": 0.6651287945684277,
+                    "braking_lead_cm": 0.0
+                  }
+                ],
+                "passed_waypoints_cm": [],
+                "travel_direction": "forward",
+                "power_start": null,
+                "reason": "No forward progress after 400 ms",
+                "power_end": null,
+                "powered_seconds": 0.416666666666643
+              }
+            }
+          ],
+          "local_planning_seconds": 0.005611601000055089,
+          "intermediate_model_calls": 0,
+          "requires_planner": true,
+          "reached_targets": [],
+          "local_searches": 1,
+          "reason": "Action failed or final pose unverified: No forward progress after 400 ms",
+          "elapsed_seconds": 0.569999999999979
+        },
+        "true_final_pose": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "true_goal_error_cm": 20.0,
+        "motor_commands": [
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.15333333333334,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.16,
+              "right": 0.16,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.23666666666666,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.16,
+              "right": 0.16,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.32,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.16,
+              "right": 0.16,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.40333333333332,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.16,
+              "right": 0.16,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.48666666666665,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.16,
+              "right": 0.16,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.56999999999998,
+            "action": "stop",
+            "fields": {}
+          },
+          {
+            "time": 100.56999999999998,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.56999999999998,
+            "action": "stop",
+            "fields": {}
+          }
+        ],
+        "timeline_initializations": [
+          100.0
+        ],
+        "final_motor_output": [
+          0.0,
+          0.0
+        ],
+        "watchdog_stops": 0,
+        "clearance_violations": []
+      }
+    },
+    {
+      "name": "stall",
+      "run": {
+        "parameters": {
+          "speed": 12,
+          "coast": 0.08,
+          "seed": 7,
+          "pivot_cm": 7.5,
+          "stall": true
+        },
+        "goal_cm": [
+          30,
+          30
+        ],
+        "goals_cm": null,
+        "result": {
+          "outcome": "stopped",
+          "actions": [
+            {
+              "plan": {
+                "kind": "drive",
+                "value": 5.0,
+                "swept_bounds_cm": [
+                  -13.51983741265209,
+                  -22.200259385501443,
+                  13.51983741265209,
+                  16.206960288291388
+                ],
+                "predicted_start_pose": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "predicted_end_pose": [
+                  0.0,
+                  5.0,
+                  0.0
+                ]
+              },
+              "outcome": "stopped",
+              "reason": "No forward progress after 400 ms",
+              "target_index": 0,
+              "result": {
+                "outcome": "stopped",
+                "samples": [
+                  {
+                    "time": 100.08333333333333,
+                    "elapsed": 0,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -2.621875218740459e-18,
+                    "position_sigma_cm": 0.03605551275463989,
+                    "yaw_sigma_degrees": 0.27153769332085054,
+                    "braking_lead_cm": 0.0
+                  },
+                  {
+                    "time": 100.16666666666666,
+                    "elapsed": 0.0833333333333286,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -5.243750437480918e-18,
+                    "position_sigma_cm": 0.05099019513592785,
+                    "yaw_sigma_degrees": 0.38401228858985303,
+                    "braking_lead_cm": 0.0
+                  },
+                  {
+                    "time": 100.24999999999999,
+                    "elapsed": 0.1666666666666572,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -7.865625656221377e-18,
+                    "position_sigma_cm": 0.06244997998398398,
+                    "yaw_sigma_degrees": 0.47031708100176933,
+                    "braking_lead_cm": 0.0
+                  },
+                  {
+                    "time": 100.33333333333331,
+                    "elapsed": 0.2499999999999858,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -1.0487500874961837e-17,
+                    "position_sigma_cm": 0.07211102550927978,
+                    "yaw_sigma_degrees": 0.5430753866417011,
+                    "braking_lead_cm": 0.0
+                  },
+                  {
+                    "time": 100.41666666666664,
+                    "elapsed": 0.3333333333333144,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -1.3109376093702297e-17,
+                    "position_sigma_cm": 0.0806225774829855,
+                    "yaw_sigma_degrees": 0.6071767407189125,
+                    "braking_lead_cm": 0.0
+                  },
+                  {
+                    "time": 100.49999999999997,
+                    "elapsed": 0.416666666666643,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -1.5731251312442755e-17,
+                    "position_sigma_cm": 0.08831760866327847,
+                    "yaw_sigma_degrees": 0.6651287945684277,
+                    "braking_lead_cm": 0.0
+                  }
+                ],
+                "passed_waypoints_cm": [],
+                "travel_direction": "forward",
+                "power_start": null,
+                "reason": "No forward progress after 400 ms",
+                "power_end": null,
+                "powered_seconds": 0.416666666666643
+              }
+            }
+          ],
+          "local_planning_seconds": 0.06651134799994907,
+          "intermediate_model_calls": 0,
+          "requires_planner": true,
+          "reached_targets": [],
+          "local_searches": 1,
+          "reason": "Action failed or final pose unverified: No forward progress after 400 ms",
+          "elapsed_seconds": 0.569999999999979
+        },
+        "true_final_pose": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "true_goal_error_cm": 42.42640687119285,
+        "motor_commands": [
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.15333333333334,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.16,
+              "right": 0.16,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.23666666666666,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.16,
+              "right": 0.16,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.32,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.16,
+              "right": 0.16,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.40333333333332,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.16,
+              "right": 0.16,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.48666666666665,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.16,
+              "right": 0.16,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.56999999999998,
+            "action": "stop",
+            "fields": {}
+          },
+          {
+            "time": 100.56999999999998,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.56999999999998,
+            "action": "stop",
+            "fields": {}
+          }
+        ],
+        "timeline_initializations": [
+          100.0
+        ],
+        "final_motor_output": [
+          0.0,
+          0.0
+        ],
+        "watchdog_stops": 0,
+        "clearance_violations": []
+      }
+    },
+    {
+      "name": "cancel",
+      "run": {
+        "parameters": {
+          "speed": 12,
+          "coast": 0.08,
+          "seed": 7,
+          "pivot_cm": 7.5,
+          "cancel_after": 0.4
+        },
+        "goal_cm": [
+          0,
+          20
+        ],
+        "goals_cm": null,
+        "result": {
+          "outcome": "stopped",
+          "actions": [
+            {
+              "plan": {
+                "kind": "drive",
+                "value": 15.0,
+                "swept_bounds_cm": [
+                  -13.51983741265209,
+                  -22.200259385501443,
+                  13.51983741265209,
+                  26.206960288291388
+                ],
+                "predicted_start_pose": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "predicted_end_pose": [
+                  0.0,
+                  15.0,
+                  0.0
+                ]
+              },
+              "outcome": "stopped",
+              "reason": "Control cancelled or service restarted; replan",
+              "target_index": 0,
+              "result": {
+                "outcome": "stopped",
+                "samples": [
+                  {
+                    "time": 100.08333333333333,
+                    "elapsed": 0,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -2.621875218740459e-18,
+                    "position_sigma_cm": 0.03605551275463989,
+                    "yaw_sigma_degrees": 0.27153769332085054,
+                    "braking_lead_cm": 0.0
+                  },
+                  {
+                    "time": 100.16666666666666,
+                    "elapsed": 0.0833333333333286,
+                    "position_cm": [
+                      -0.00020942177821483017,
+                      0.018461402631969732
+                    ],
+                    "velocity_cm_s": [
+                      -0.0012565306692890524,
+                      0.11076841579182468
+                    ],
+                    "yaw_degrees": 0.00027090054102515005,
+                    "position_sigma_cm": 0.05099019513592785,
+                    "yaw_sigma_degrees": 0.38401228858985303,
+                    "braking_lead_cm": 0.016799876395093966
+                  },
+                  {
+                    "time": 100.24999999999999,
+                    "elapsed": 0.1666666666666572,
+                    "position_cm": [
+                      -0.0008100220019598963,
+                      0.5427301963846379
+                    ],
+                    "velocity_cm_s": [
+                      -0.004231866677115128,
+                      3.2009969704121004
+                    ],
+                    "yaw_degrees": 0.0008877915956931701,
+                    "position_sigma_cm": 0.06244997998398398,
+                    "yaw_sigma_degrees": 0.47031708100176933,
+                    "braking_lead_cm": 0.485484540512518
+                  },
+                  {
+                    "time": 100.33333333333331,
+                    "elapsed": 0.2499999999999858,
+                    "position_cm": [
+                      -0.0014302914802624927,
+                      1.3974146372659328
+                    ],
+                    "velocity_cm_s": [
+                      -0.005837550208373354,
+                      6.728605130494111
+                    ],
+                    "yaw_degrees": 0.0011353888692044436,
+                    "position_sigma_cm": 0.07211102550927978,
+                    "yaw_sigma_degrees": 0.5430753866417011,
+                    "braking_lead_cm": 1.0205051114583072
+                  },
+                  {
+                    "time": 100.41666666666664,
+                    "elapsed": 0.3333333333333144,
+                    "position_cm": [
+                      -0.0011893528926802245,
+                      2.3535791943114863
+                    ],
+                    "velocity_cm_s": [
+                      -0.0014731435786929851,
+                      9.101289907520702
+                    ],
+                    "yaw_degrees": 0.001590531301506994,
+                    "position_sigma_cm": 0.0806225774829855,
+                    "yaw_sigma_degrees": 0.6071767407189125,
+                    "braking_lead_cm": 1.3803623026406855
+                  },
+                  {
+                    "time": 100.49999999999997,
+                    "elapsed": 0.416666666666643,
+                    "position_cm": [
+                      -0.0010778667834650125,
+                      3.3398658316681766
+                    ],
+                    "velocity_cm_s": [
+                      -6.765513405518233e-05,
+                      10.468364777900828
+                    ],
+                    "yaw_degrees": 0.002998237933035661,
+                    "position_sigma_cm": 0.08831760866327847,
+                    "yaw_sigma_degrees": 0.6651287945684277,
+                    "braking_lead_cm": 1.5877019913150114
+                  }
+                ],
+                "passed_waypoints_cm": [],
+                "travel_direction": "forward",
+                "power_start": null,
+                "reason": "Control cancelled or service restarted; replan",
+                "power_end": null,
+                "powered_seconds": 0.416666666666643
+              }
+            }
+          ],
+          "local_planning_seconds": 0.0045031039999230416,
+          "intermediate_model_calls": 0,
+          "requires_planner": true,
+          "reached_targets": [],
+          "local_searches": 1,
+          "reason": "Action failed or final pose unverified: Control cancelled or service restarted; replan",
+          "elapsed_seconds": 0.569999999999979
+        },
+        "true_final_pose": [
+          0.0003370402496916337,
+          4.939466848700632,
+          0.0020690621598577993
+        ],
+        "true_goal_error_cm": 15.060533155070685,
+        "motor_commands": [
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.15333333333334,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.16,
+              "right": 0.16,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.23666666666666,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.1600027700036484,
+              "right": 0.1599972299963516,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.32,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.1600115519741143,
+              "right": 0.15998844802588572,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.40333333333332,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.16002266094738782,
+              "right": 0.1599773390526122,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.48666666666665,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.1600154590554334,
+              "right": 0.1599845409445666,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.56999999999998,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.1600058585985624,
+              "right": 0.1599941414014376,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.56999999999998,
+            "action": "stop",
+            "fields": {}
+          },
+          {
+            "time": 100.56999999999998,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.56999999999998,
+            "action": "stop",
+            "fields": {}
+          }
+        ],
+        "timeline_initializations": [
+          100.0
+        ],
+        "final_motor_output": [
+          0.0,
+          0.0
+        ],
+        "watchdog_stops": 0,
+        "clearance_violations": []
+      }
+    },
+    {
+      "name": "cancel",
+      "run": {
+        "parameters": {
+          "speed": 12,
+          "coast": 0.08,
+          "seed": 7,
+          "pivot_cm": 7.5,
+          "cancel_after": 0.4
+        },
+        "goal_cm": [
+          30,
+          30
+        ],
+        "goals_cm": null,
+        "result": {
+          "outcome": "stopped",
+          "actions": [
+            {
+              "plan": {
+                "kind": "drive",
+                "value": 5.0,
+                "swept_bounds_cm": [
+                  -13.51983741265209,
+                  -22.200259385501443,
+                  13.51983741265209,
+                  16.206960288291388
+                ],
+                "predicted_start_pose": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "predicted_end_pose": [
+                  0.0,
+                  5.0,
+                  0.0
+                ]
+              },
+              "outcome": "stopped",
+              "reason": "Control cancelled or service restarted; replan",
+              "target_index": 0,
+              "result": {
+                "outcome": "stopped",
+                "samples": [
+                  {
+                    "time": 100.08333333333333,
+                    "elapsed": 0,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -2.621875218740459e-18,
+                    "position_sigma_cm": 0.03605551275463989,
+                    "yaw_sigma_degrees": 0.27153769332085054,
+                    "braking_lead_cm": 0.0
+                  },
+                  {
+                    "time": 100.16666666666666,
+                    "elapsed": 0.0833333333333286,
+                    "position_cm": [
+                      -0.00020942177821483017,
+                      0.018461402631969732
+                    ],
+                    "velocity_cm_s": [
+                      -0.0012565306692890524,
+                      0.11076841579182468
+                    ],
+                    "yaw_degrees": 0.00027090054102515005,
+                    "position_sigma_cm": 0.05099019513592785,
+                    "yaw_sigma_degrees": 0.38401228858985303,
+                    "braking_lead_cm": 0.016799876395093966
+                  },
+                  {
+                    "time": 100.24999999999999,
+                    "elapsed": 0.1666666666666572,
+                    "position_cm": [
+                      -0.0008100220019598963,
+                      0.5427301963846379
+                    ],
+                    "velocity_cm_s": [
+                      -0.004231866677115128,
+                      3.2009969704121004
+                    ],
+                    "yaw_degrees": 0.0008877915956931701,
+                    "position_sigma_cm": 0.06244997998398398,
+                    "yaw_sigma_degrees": 0.47031708100176933,
+                    "braking_lead_cm": 0.485484540512518
+                  },
+                  {
+                    "time": 100.33333333333331,
+                    "elapsed": 0.2499999999999858,
+                    "position_cm": [
+                      -0.0014302914802624927,
+                      1.3974146372659328
+                    ],
+                    "velocity_cm_s": [
+                      -0.005837550208373354,
+                      6.728605130494111
+                    ],
+                    "yaw_degrees": 0.0011353888692044436,
+                    "position_sigma_cm": 0.07211102550927978,
+                    "yaw_sigma_degrees": 0.5430753866417011,
+                    "braking_lead_cm": 1.0205051114583072
+                  },
+                  {
+                    "time": 100.41666666666664,
+                    "elapsed": 0.3333333333333144,
+                    "position_cm": [
+                      -0.0011893528926802245,
+                      2.3535791943114863
+                    ],
+                    "velocity_cm_s": [
+                      -0.0014731435786929851,
+                      9.101289907520702
+                    ],
+                    "yaw_degrees": 0.001590531301506994,
+                    "position_sigma_cm": 0.0806225774829855,
+                    "yaw_sigma_degrees": 0.6071767407189125,
+                    "braking_lead_cm": 1.3803623026406855
+                  },
+                  {
+                    "time": 100.49999999999997,
+                    "elapsed": 0.416666666666643,
+                    "position_cm": [
+                      -0.0010778667834650125,
+                      3.3398658316681766
+                    ],
+                    "velocity_cm_s": [
+                      -6.765513405518233e-05,
+                      10.468364777900828
+                    ],
+                    "yaw_degrees": 0.002998237933035661,
+                    "position_sigma_cm": 0.08831760866327847,
+                    "yaw_sigma_degrees": 0.6651287945684277,
+                    "braking_lead_cm": 1.5877019913150114
+                  }
+                ],
+                "passed_waypoints_cm": [],
+                "travel_direction": "forward",
+                "power_start": null,
+                "reason": "Control cancelled or service restarted; replan",
+                "power_end": null,
+                "powered_seconds": 0.416666666666643
+              }
+            }
+          ],
+          "local_planning_seconds": 0.06883261399980256,
+          "intermediate_model_calls": 0,
+          "requires_planner": true,
+          "reached_targets": [],
+          "local_searches": 1,
+          "reason": "Action failed or final pose unverified: Control cancelled or service restarted; replan",
+          "elapsed_seconds": 0.569999999999979
+        },
+        "true_final_pose": [
+          0.0003370402496916337,
+          4.939466848700632,
+          0.0020690621598577993
+        ],
+        "true_goal_error_cm": 39.08976975534633,
+        "motor_commands": [
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.15333333333334,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.16,
+              "right": 0.16,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.23666666666666,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.1600027700036484,
+              "right": 0.1599972299963516,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.32,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.1600115519741143,
+              "right": 0.15998844802588572,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.40333333333332,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.16002266094738782,
+              "right": 0.1599773390526122,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.48666666666665,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.1600154590554334,
+              "right": 0.1599845409445666,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.56999999999998,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.1600058585985624,
+              "right": 0.1599941414014376,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.56999999999998,
+            "action": "stop",
+            "fields": {}
+          },
+          {
+            "time": 100.56999999999998,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.56999999999998,
+            "action": "stop",
+            "fields": {}
+          }
+        ],
+        "timeline_initializations": [
+          100.0
+        ],
+        "final_motor_output": [
+          0.0,
+          0.0
+        ],
+        "watchdog_stops": 0,
+        "clearance_violations": []
+      }
+    },
+    {
+      "name": "low_texture",
+      "run": {
+        "parameters": {
+          "speed": 12,
+          "coast": 0.08,
+          "seed": 7,
+          "pivot_cm": 7.5,
+          "low_texture": true
+        },
+        "goal_cm": [
+          0,
+          20
+        ],
+        "goals_cm": null,
+        "result": {
+          "outcome": "stopped",
+          "actions": [
+            {
+              "plan": {
+                "kind": "drive",
+                "value": 15.0,
+                "swept_bounds_cm": [
+                  -13.51983741265209,
+                  -22.200259385501443,
+                  13.51983741265209,
+                  26.206960288291388
+                ],
+                "predicted_start_pose": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "predicted_end_pose": [
+                  0.0,
+                  15.0,
+                  0.0
+                ]
+              },
+              "outcome": "stopped",
+              "reason": "Insufficient carpet texture",
+              "target_index": 0,
+              "result": {
+                "outcome": "stopped",
+                "samples": [],
+                "passed_waypoints_cm": [],
+                "travel_direction": "forward",
+                "power_start": null,
+                "reason": "Insufficient carpet texture",
+                "power_end": null,
+                "powered_seconds": null
+              }
+            }
+          ],
+          "local_planning_seconds": 0.0049638370001048315,
+          "intermediate_model_calls": 0,
+          "requires_planner": true,
+          "reached_targets": [],
+          "local_searches": 1,
+          "reason": "Action failed or final pose unverified: Insufficient carpet texture",
+          "elapsed_seconds": 0.07000000000000739
+        },
+        "true_final_pose": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "true_goal_error_cm": 20.0,
+        "motor_commands": [
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.07000000000001,
+            "action": "stop",
+            "fields": {}
+          },
+          {
+            "time": 100.07000000000001,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.07000000000001,
+            "action": "stop",
+            "fields": {}
+          }
+        ],
+        "timeline_initializations": [
+          100.0
+        ],
+        "final_motor_output": [
+          0.0,
+          0.0
+        ],
+        "watchdog_stops": 0,
+        "clearance_violations": []
+      }
+    },
+    {
+      "name": "low_texture",
+      "run": {
+        "parameters": {
+          "speed": 12,
+          "coast": 0.08,
+          "seed": 7,
+          "pivot_cm": 7.5,
+          "low_texture": true
+        },
+        "goal_cm": [
+          30,
+          30
+        ],
+        "goals_cm": null,
+        "result": {
+          "outcome": "stopped",
+          "actions": [
+            {
+              "plan": {
+                "kind": "drive",
+                "value": 5.0,
+                "swept_bounds_cm": [
+                  -13.51983741265209,
+                  -22.200259385501443,
+                  13.51983741265209,
+                  16.206960288291388
+                ],
+                "predicted_start_pose": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "predicted_end_pose": [
+                  0.0,
+                  5.0,
+                  0.0
+                ]
+              },
+              "outcome": "stopped",
+              "reason": "Insufficient carpet texture",
+              "target_index": 0,
+              "result": {
+                "outcome": "stopped",
+                "samples": [],
+                "passed_waypoints_cm": [],
+                "travel_direction": "forward",
+                "power_start": null,
+                "reason": "Insufficient carpet texture",
+                "power_end": null,
+                "powered_seconds": null
+              }
+            }
+          ],
+          "local_planning_seconds": 0.06882964600026753,
+          "intermediate_model_calls": 0,
+          "requires_planner": true,
+          "reached_targets": [],
+          "local_searches": 1,
+          "reason": "Action failed or final pose unverified: Insufficient carpet texture",
+          "elapsed_seconds": 0.07000000000000739
+        },
+        "true_final_pose": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "true_goal_error_cm": 42.42640687119285,
+        "motor_commands": [
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.07000000000001,
+            "action": "stop",
+            "fields": {}
+          },
+          {
+            "time": 100.07000000000001,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.07000000000001,
+            "action": "stop",
+            "fields": {}
+          }
+        ],
+        "timeline_initializations": [
+          100.0
+        ],
+        "final_motor_output": [
+          0.0,
+          0.0
+        ],
+        "watchdog_stops": 0,
+        "clearance_violations": []
+      }
+    },
+    {
+      "name": "slow_camera",
+      "run": {
+        "parameters": {
+          "speed": 12,
+          "coast": 0.08,
+          "seed": 7,
+          "pivot_cm": 7.5,
+          "camera_hz": 5
+        },
+        "goal_cm": [
+          0,
+          20
+        ],
+        "goals_cm": null,
+        "result": {
+          "outcome": "stopped",
+          "actions": [
+            {
+              "plan": {
+                "kind": "drive",
+                "value": 15.0,
+                "swept_bounds_cm": [
+                  -13.51983741265209,
+                  -22.200259385501443,
+                  13.51983741265209,
+                  26.206960288291388
+                ],
+                "predicted_start_pose": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "predicted_end_pose": [
+                  0.0,
+                  15.0,
+                  0.0
+                ]
+              },
+              "outcome": "stopped",
+              "reason": "Camera interval exceeded 180 ms",
+              "target_index": 0,
+              "result": {
+                "outcome": "stopped",
+                "samples": [],
+                "passed_waypoints_cm": [],
+                "travel_direction": "forward",
+                "power_start": null,
+                "reason": "Camera interval exceeded 180 ms",
+                "power_end": null,
+                "powered_seconds": null
+              }
+            }
+          ],
+          "local_planning_seconds": 0.005475767999996606,
+          "intermediate_model_calls": 0,
+          "requires_planner": true,
+          "reached_targets": [],
+          "local_searches": 1,
+          "reason": "Action failed or final pose unverified: Camera interval exceeded 180 ms",
+          "elapsed_seconds": 0.2249999999997101
+        },
+        "true_final_pose": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "true_goal_error_cm": 20.0,
+        "motor_commands": [
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.22499999999971,
+            "action": "stop",
+            "fields": {}
+          },
+          {
+            "time": 100.22499999999971,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.22499999999971,
+            "action": "stop",
+            "fields": {}
+          }
+        ],
+        "timeline_initializations": [
+          100.0
+        ],
+        "final_motor_output": [
+          0.0,
+          0.0
+        ],
+        "watchdog_stops": 0,
+        "clearance_violations": []
+      }
+    },
+    {
+      "name": "slow_camera",
+      "run": {
+        "parameters": {
+          "speed": 12,
+          "coast": 0.08,
+          "seed": 7,
+          "pivot_cm": 7.5,
+          "camera_hz": 5
+        },
+        "goal_cm": [
+          30,
+          30
+        ],
+        "goals_cm": null,
+        "result": {
+          "outcome": "stopped",
+          "actions": [
+            {
+              "plan": {
+                "kind": "drive",
+                "value": 5.0,
+                "swept_bounds_cm": [
+                  -13.51983741265209,
+                  -22.200259385501443,
+                  13.51983741265209,
+                  16.206960288291388
+                ],
+                "predicted_start_pose": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "predicted_end_pose": [
+                  0.0,
+                  5.0,
+                  0.0
+                ]
+              },
+              "outcome": "stopped",
+              "reason": "Camera interval exceeded 180 ms",
+              "target_index": 0,
+              "result": {
+                "outcome": "stopped",
+                "samples": [],
+                "passed_waypoints_cm": [],
+                "travel_direction": "forward",
+                "power_start": null,
+                "reason": "Camera interval exceeded 180 ms",
+                "power_end": null,
+                "powered_seconds": null
+              }
+            }
+          ],
+          "local_planning_seconds": 0.06673697599990192,
+          "intermediate_model_calls": 0,
+          "requires_planner": true,
+          "reached_targets": [],
+          "local_searches": 1,
+          "reason": "Action failed or final pose unverified: Camera interval exceeded 180 ms",
+          "elapsed_seconds": 0.2249999999997101
+        },
+        "true_final_pose": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "true_goal_error_cm": 42.42640687119285,
+        "motor_commands": [
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.22499999999971,
+            "action": "stop",
+            "fields": {}
+          },
+          {
+            "time": 100.22499999999971,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.22499999999971,
+            "action": "stop",
+            "fields": {}
+          }
+        ],
+        "timeline_initializations": [
+          100.0
+        ],
+        "final_motor_output": [
+          0.0,
+          0.0
+        ],
+        "watchdog_stops": 0,
+        "clearance_violations": []
+      }
+    },
+    {
+      "name": "turn_camera_failure",
+      "run": {
+        "parameters": {
+          "speed": 12,
+          "coast": 0.08,
+          "seed": 7,
+          "pivot_cm": 7.5,
+          "frame_fault_after": 0.4
+        },
+        "goal_cm": [
+          30,
+          0
+        ],
+        "goals_cm": null,
+        "result": {
+          "outcome": "stopped",
+          "actions": [
+            {
+              "plan": {
+                "kind": "turn",
+                "value": 30.0,
+                "swept_bounds_cm": [
+                  -22.027225347280726,
+                  -29.22178027782458,
+                  22.027225347280726,
+                  14.221780277824578
+                ],
+                "predicted_start_pose": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "predicted_end_pose": [
+                  3.7499999999999996,
+                  -1.0048094716167097,
+                  30.0
+                ]
+              },
+              "outcome": "stopped",
+              "reason": "Simulated camera/IMU failure",
+              "target_index": 0,
+              "result": {
+                "outcome": "stopped",
+                "samples": [
+                  {
+                    "time": 100.08333333333333,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -2.621875218740459e-18,
+                    "position_sigma_cm": 0.03605551275463989,
+                    "yaw_sigma_degrees": 0.27153769332085054
+                  },
+                  {
+                    "time": 100.2133333333332,
+                    "position_cm": [
+                      0.23529786451495668,
+                      -0.004275096799205759
+                    ],
+                    "velocity_cm_s": [
+                      0.9049917865969093,
+                      -0.016442679996961976
+                    ],
+                    "yaw_degrees": 1.8035282840714202,
+                    "position_sigma_cm": 0.05099019513592785,
+                    "yaw_sigma_degrees": 0.39554242165582865
+                  },
+                  {
+                    "time": 100.29666666666652,
+                    "position_cm": [
+                      0.489146744639149,
+                      -0.016433605355753646
+                    ],
+                    "velocity_cm_s": [
+                      1.9755891740436948,
+                      -0.08117239133777246
+                    ],
+                    "yaw_degrees": 3.748203184795674,
+                    "position_sigma_cm": 0.06244997998398398,
+                    "yaw_sigma_degrees": 0.47977757995071596
+                  },
+                  {
+                    "time": 100.37999999999985,
+                    "position_cm": [
+                      0.5370389523964152,
+                      -0.02057603762064561
+                    ],
+                    "velocity_cm_s": [
+                      1.2751478335654611,
+                      -0.06544078925823943
+                    ],
+                    "yaw_degrees": 4.11467253719728,
+                    "position_sigma_cm": 0.07211102550927978,
+                    "yaw_sigma_degrees": 0.5512887130328118
+                  },
+                  {
+                    "time": 100.50999999999972,
+                    "position_cm": [
+                      0.7820680516751017,
+                      -0.04274874418619483
+                    ],
+                    "velocity_cm_s": [
+                      1.5799935293940235,
+                      -0.11800003526593436
+                    ],
+                    "yaw_degrees": 5.995753531802865,
+                    "position_sigma_cm": 0.0806225774829855,
+                    "yaw_sigma_degrees": 0.6218040957992501
+                  }
+                ],
+                "settling_samples": [],
+                "power_start": null,
+                "reason": "Simulated camera/IMU failure",
+                "power_end": null,
+                "elapsed_seconds": 0.5799999999997283
+              }
+            }
+          ],
+          "local_planning_seconds": 0.08946561299990208,
+          "intermediate_model_calls": 0,
+          "requires_planner": true,
+          "reached_targets": [],
+          "local_searches": 1,
+          "reason": "Action failed or final pose unverified: Simulated camera/IMU failure",
+          "elapsed_seconds": 0.5799999999997283
+        },
+        "true_final_pose": [
+          1.0957557411138026,
+          -0.08047714769904207,
+          8.401027272204356
+        ],
+        "true_goal_error_cm": 28.904356293622204,
+        "motor_commands": [
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.15333333333334,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.14,
+              "right": -0.14,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.2133333333332,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.0,
+              "right": 0.0,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.44999999999986,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.14,
+              "right": -0.14,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.50999999999972,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.0,
+              "right": 0.0,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.57999999999973,
+            "action": "stop",
+            "fields": {}
+          },
+          {
+            "time": 100.57999999999973,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.57999999999973,
+            "action": "stop",
+            "fields": {}
+          }
+        ],
+        "timeline_initializations": [
+          100.0
+        ],
+        "final_motor_output": [
+          0.0,
+          0.0
+        ],
+        "watchdog_stops": 0,
+        "clearance_violations": []
+      }
+    },
+    {
+      "name": "turn_camera_block",
+      "run": {
+        "parameters": {
+          "speed": 12,
+          "coast": 0.08,
+          "seed": 7,
+          "pivot_cm": 7.5,
+          "blocked_frame_after": 0.4
+        },
+        "goal_cm": [
+          30,
+          0
+        ],
+        "goals_cm": null,
+        "result": {
+          "outcome": "stopped",
+          "actions": [
+            {
+              "plan": {
+                "kind": "turn",
+                "value": 30.0,
+                "swept_bounds_cm": [
+                  -22.027225347280726,
+                  -29.22178027782458,
+                  22.027225347280726,
+                  14.221780277824578
+                ],
+                "predicted_start_pose": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "predicted_end_pose": [
+                  3.7499999999999996,
+                  -1.0048094716167097,
+                  30.0
+                ]
+              },
+              "outcome": "stopped",
+              "reason": "Turn tracking gap exceeded 350 ms",
+              "target_index": 0,
+              "result": {
+                "outcome": "stopped",
+                "samples": [
+                  {
+                    "time": 100.08333333333333,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -2.621875218740459e-18,
+                    "position_sigma_cm": 0.03605551275463989,
+                    "yaw_sigma_degrees": 0.27153769332085054
+                  },
+                  {
+                    "time": 100.2133333333332,
+                    "position_cm": [
+                      0.23529786451495668,
+                      -0.004275096799205759
+                    ],
+                    "velocity_cm_s": [
+                      0.9049917865969093,
+                      -0.016442679996961976
+                    ],
+                    "yaw_degrees": 1.8035282840714202,
+                    "position_sigma_cm": 0.05099019513592785,
+                    "yaw_sigma_degrees": 0.39554242165582865
+                  },
+                  {
+                    "time": 100.29666666666652,
+                    "position_cm": [
+                      0.489146744639149,
+                      -0.016433605355753646
+                    ],
+                    "velocity_cm_s": [
+                      1.9755891740436948,
+                      -0.08117239133777246
+                    ],
+                    "yaw_degrees": 3.748203184795674,
+                    "position_sigma_cm": 0.06244997998398398,
+                    "yaw_sigma_degrees": 0.47977757995071596
+                  },
+                  {
+                    "time": 100.37999999999985,
+                    "position_cm": [
+                      0.5370389523964152,
+                      -0.02057603762064561
+                    ],
+                    "velocity_cm_s": [
+                      1.2751478335654611,
+                      -0.06544078925823943
+                    ],
+                    "yaw_degrees": 4.11467253719728,
+                    "position_sigma_cm": 0.07211102550927978,
+                    "yaw_sigma_degrees": 0.5512887130328118
+                  },
+                  {
+                    "time": 100.50999999999972,
+                    "position_cm": [
+                      0.7820680516751017,
+                      -0.04274874418619483
+                    ],
+                    "velocity_cm_s": [
+                      1.5799935293940235,
+                      -0.11800003526593436
+                    ],
+                    "yaw_degrees": 5.995753531802865,
+                    "position_sigma_cm": 0.0806225774829855,
+                    "yaw_sigma_degrees": 0.6218040957992501
+                  }
+                ],
+                "settling_samples": [],
+                "power_start": null,
+                "reason": "Turn tracking gap exceeded 350 ms",
+                "power_end": null,
+                "elapsed_seconds": 0.9549999999989183
+              }
+            }
+          ],
+          "local_planning_seconds": 0.08682236399999965,
+          "intermediate_model_calls": 0,
+          "requires_planner": true,
+          "reached_targets": [],
+          "local_searches": 1,
+          "reason": "Action failed or final pose unverified: Turn tracking gap exceeded 350 ms",
+          "elapsed_seconds": 0.9549999999989183
+        },
+        "true_final_pose": [
+          1.0957557499339825,
+          -0.08047714900165509,
+          8.401027340316457
+        ],
+        "true_goal_error_cm": 28.904356284805683,
+        "motor_commands": [
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.15333333333334,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.14,
+              "right": -0.14,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.2133333333332,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.0,
+              "right": 0.0,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.44999999999986,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.14,
+              "right": -0.14,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.50999999999972,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.0,
+              "right": 0.0,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.95499999999892,
+            "action": "stop",
+            "fields": {}
+          },
+          {
+            "time": 100.95499999999892,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.95499999999892,
+            "action": "stop",
+            "fields": {}
+          }
+        ],
+        "timeline_initializations": [
+          100.0
+        ],
+        "final_motor_output": [
+          0.0,
+          0.0
+        ],
+        "watchdog_stops": 0,
+        "clearance_violations": []
+      }
+    },
+    {
+      "name": "turn_stall",
+      "run": {
+        "parameters": {
+          "speed": 12,
+          "coast": 0.08,
+          "seed": 7,
+          "pivot_cm": 7.5,
+          "stall": true
+        },
+        "goal_cm": [
+          30,
+          0
+        ],
+        "goals_cm": null,
+        "result": {
+          "outcome": "stopped",
+          "actions": [
+            {
+              "plan": {
+                "kind": "turn",
+                "value": 30.0,
+                "swept_bounds_cm": [
+                  -22.027225347280726,
+                  -29.22178027782458,
+                  22.027225347280726,
+                  14.221780277824578
+                ],
+                "predicted_start_pose": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "predicted_end_pose": [
+                  3.7499999999999996,
+                  -1.0048094716167097,
+                  30.0
+                ]
+              },
+              "outcome": "stopped",
+              "reason": "Turn stopped making progress",
+              "target_index": 0,
+              "result": {
+                "outcome": "stopped",
+                "samples": [
+                  {
+                    "time": 100.08333333333333,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -2.621875218740459e-18,
+                    "position_sigma_cm": 0.03605551275463989,
+                    "yaw_sigma_degrees": 0.27153769332085054
+                  },
+                  {
+                    "time": 100.2133333333332,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -5.563369511764614e-18,
+                    "position_sigma_cm": 0.05099019513592785,
+                    "yaw_sigma_degrees": 0.39554242165582865
+                  },
+                  {
+                    "time": 100.29666666666652,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -8.185244730505074e-18,
+                    "position_sigma_cm": 0.06244997998398398,
+                    "yaw_sigma_degrees": 0.47977757995071596
+                  },
+                  {
+                    "time": 100.37999999999985,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -1.0807119949245533e-17,
+                    "position_sigma_cm": 0.07211102550927978,
+                    "yaw_sigma_degrees": 0.5512887130328118
+                  },
+                  {
+                    "time": 100.50999999999972,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -1.3748614242269689e-17,
+                    "position_sigma_cm": 0.0806225774829855,
+                    "yaw_sigma_degrees": 0.6218040957992501
+                  },
+                  {
+                    "time": 100.59333333333305,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -1.6370489461010148e-17,
+                    "position_sigma_cm": 0.08831760866327847,
+                    "yaw_sigma_degrees": 0.6785079604888444
+                  },
+                  {
+                    "time": 100.67666666666638,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -1.8992364679750604e-17,
+                    "position_sigma_cm": 0.09539392014169457,
+                    "yaw_sigma_degrees": 0.7308254041429729
+                  },
+                  {
+                    "time": 100.80666666666625,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -2.193385897277476e-17,
+                    "position_sigma_cm": 0.1019803902718557,
+                    "yaw_sigma_degrees": 0.7853832566181231
+                  },
+                  {
+                    "time": 100.88999999999957,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -2.4555734191515218e-17,
+                    "position_sigma_cm": 0.10816653826391967,
+                    "yaw_sigma_degrees": 0.8309991448070793
+                  }
+                ],
+                "settling_samples": [],
+                "power_start": null,
+                "reason": "Turn stopped making progress",
+                "power_end": null,
+                "elapsed_seconds": 0.9599999999995816
+              }
+            }
+          ],
+          "local_planning_seconds": 0.08484948600016651,
+          "intermediate_model_calls": 0,
+          "requires_planner": true,
+          "reached_targets": [],
+          "local_searches": 1,
+          "reason": "Action failed or final pose unverified: Turn stopped making progress",
+          "elapsed_seconds": 0.9599999999995816
+        },
+        "true_final_pose": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "true_goal_error_cm": 30.0,
+        "motor_commands": [
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.15333333333334,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.14,
+              "right": -0.14,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.2133333333332,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.0,
+              "right": 0.0,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.44999999999986,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.14,
+              "right": -0.14,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.50999999999972,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.0,
+              "right": 0.0,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.74666666666639,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.14,
+              "right": -0.14,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.80666666666625,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.0,
+              "right": 0.0,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.95999999999958,
+            "action": "stop",
+            "fields": {}
+          },
+          {
+            "time": 100.95999999999958,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.95999999999958,
+            "action": "stop",
+            "fields": {}
+          }
+        ],
+        "timeline_initializations": [
+          100.0
+        ],
+        "final_motor_output": [
+          0.0,
+          0.0
+        ],
+        "watchdog_stops": 0,
+        "clearance_violations": []
+      }
+    },
+    {
+      "name": "turn_cancel",
+      "run": {
+        "parameters": {
+          "speed": 12,
+          "coast": 0.08,
+          "seed": 7,
+          "pivot_cm": 7.5,
+          "cancel_after": 0.4
+        },
+        "goal_cm": [
+          30,
+          0
+        ],
+        "goals_cm": null,
+        "result": {
+          "outcome": "stopped",
+          "actions": [
+            {
+              "plan": {
+                "kind": "turn",
+                "value": 30.0,
+                "swept_bounds_cm": [
+                  -22.027225347280726,
+                  -29.22178027782458,
+                  22.027225347280726,
+                  14.221780277824578
+                ],
+                "predicted_start_pose": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "predicted_end_pose": [
+                  3.7499999999999996,
+                  -1.0048094716167097,
+                  30.0
+                ]
+              },
+              "outcome": "stopped",
+              "reason": "Control cancelled or service restarted; replan",
+              "target_index": 0,
+              "result": {
+                "outcome": "stopped",
+                "samples": [
+                  {
+                    "time": 100.08333333333333,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -2.621875218740459e-18,
+                    "position_sigma_cm": 0.03605551275463989,
+                    "yaw_sigma_degrees": 0.27153769332085054
+                  },
+                  {
+                    "time": 100.2133333333332,
+                    "position_cm": [
+                      0.23529786451495668,
+                      -0.004275096799205759
+                    ],
+                    "velocity_cm_s": [
+                      0.9049917865969093,
+                      -0.016442679996961976
+                    ],
+                    "yaw_degrees": 1.8035282840714202,
+                    "position_sigma_cm": 0.05099019513592785,
+                    "yaw_sigma_degrees": 0.39554242165582865
+                  },
+                  {
+                    "time": 100.29666666666652,
+                    "position_cm": [
+                      0.489146744639149,
+                      -0.016433605355753646
+                    ],
+                    "velocity_cm_s": [
+                      1.9755891740436948,
+                      -0.08117239133777246
+                    ],
+                    "yaw_degrees": 3.748203184795674,
+                    "position_sigma_cm": 0.06244997998398398,
+                    "yaw_sigma_degrees": 0.47977757995071596
+                  },
+                  {
+                    "time": 100.37999999999985,
+                    "position_cm": [
+                      0.5370389523964152,
+                      -0.02057603762064561
+                    ],
+                    "velocity_cm_s": [
+                      1.2751478335654611,
+                      -0.06544078925823943
+                    ],
+                    "yaw_degrees": 4.11467253719728,
+                    "position_sigma_cm": 0.07211102550927978,
+                    "yaw_sigma_degrees": 0.5512887130328118
+                  },
+                  {
+                    "time": 100.50999999999972,
+                    "position_cm": [
+                      0.7820680516751017,
+                      -0.04274874418619483
+                    ],
+                    "velocity_cm_s": [
+                      1.5799935293940235,
+                      -0.11800003526593436
+                    ],
+                    "yaw_degrees": 5.995753531802865,
+                    "position_sigma_cm": 0.0806225774829855,
+                    "yaw_sigma_degrees": 0.6218040957992501
+                  },
+                  {
+                    "time": 100.59333333333305,
+                    "position_cm": [
+                      1.035580921941022,
+                      -0.07349937634784093
+                    ],
+                    "velocity_cm_s": [
+                      2.3110739862926195,
+                      -0.2435038106028543
+                    ],
+                    "yaw_degrees": 7.943530634750273,
+                    "position_sigma_cm": 0.08831760866327847,
+                    "yaw_sigma_degrees": 0.6785079604888444
+                  },
+                  {
+                    "time": 100.67666666666638,
+                    "position_cm": [
+                      1.0835283964599287,
+                      -0.08106425812249125
+                    ],
+                    "velocity_cm_s": [
+                      1.4432218402597674,
+                      -0.16714119594933172
+                    ],
+                    "yaw_degrees": 8.30885695359319,
+                    "position_sigma_cm": 0.09539392014169457,
+                    "yaw_sigma_degrees": 0.7308254041429729
+                  }
+                ],
+                "settling_samples": [],
+                "power_start": null,
+                "reason": "Control cancelled or service restarted; replan",
+                "power_end": null,
+                "elapsed_seconds": 0.7466666666663855
+              }
+            }
+          ],
+          "local_planning_seconds": 0.09472804999995788,
+          "intermediate_model_calls": 0,
+          "requires_planner": true,
+          "reached_targets": [],
+          "local_searches": 1,
+          "reason": "Action failed or final pose unverified: Control cancelled or service restarted; replan",
+          "elapsed_seconds": 0.7466666666663855
+        },
+        "true_final_pose": [
+          1.095780612654835,
+          -0.08048082090693826,
+          8.401219337747166
+        ],
+        "true_goal_error_cm": 28.90433143240497,
+        "motor_commands": [
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.15333333333334,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.14,
+              "right": -0.14,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.2133333333332,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.0,
+              "right": 0.0,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.44999999999986,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.14,
+              "right": -0.14,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.50999999999972,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.0,
+              "right": 0.0,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.74666666666639,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.14,
+              "right": -0.14,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.74666666666639,
+            "action": "stop",
+            "fields": {}
+          },
+          {
+            "time": 100.74666666666639,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.74666666666639,
+            "action": "stop",
+            "fields": {}
+          }
+        ],
+        "timeline_initializations": [
+          100.0
+        ],
+        "final_motor_output": [
+          0.0,
+          0.0
+        ],
+        "watchdog_stops": 0,
+        "clearance_violations": []
+      }
+    },
+    {
+      "name": "turn_low_texture",
+      "run": {
+        "parameters": {
+          "speed": 12,
+          "coast": 0.08,
+          "seed": 7,
+          "pivot_cm": 7.5,
+          "low_texture": true
+        },
+        "goal_cm": [
+          30,
+          0
+        ],
+        "goals_cm": null,
+        "result": {
+          "outcome": "stopped",
+          "actions": [
+            {
+              "plan": {
+                "kind": "turn",
+                "value": 30.0,
+                "swept_bounds_cm": [
+                  -22.027225347280726,
+                  -29.22178027782458,
+                  22.027225347280726,
+                  14.221780277824578
+                ],
+                "predicted_start_pose": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "predicted_end_pose": [
+                  3.7499999999999996,
+                  -1.0048094716167097,
+                  30.0
+                ]
+              },
+              "outcome": "stopped",
+              "reason": "Insufficient carpet texture",
+              "target_index": 0,
+              "result": {
+                "outcome": "stopped",
+                "samples": [],
+                "settling_samples": [],
+                "power_start": null,
+                "reason": "Insufficient carpet texture",
+                "power_end": null,
+                "elapsed_seconds": 0.07000000000000739
+              }
+            }
+          ],
+          "local_planning_seconds": 0.08608006899976317,
+          "intermediate_model_calls": 0,
+          "requires_planner": true,
+          "reached_targets": [],
+          "local_searches": 1,
+          "reason": "Action failed or final pose unverified: Insufficient carpet texture",
+          "elapsed_seconds": 0.07000000000000739
+        },
+        "true_final_pose": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "true_goal_error_cm": 30.0,
+        "motor_commands": [
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.07000000000001,
+            "action": "stop",
+            "fields": {}
+          },
+          {
+            "time": 100.07000000000001,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.07000000000001,
+            "action": "stop",
+            "fields": {}
+          }
+        ],
+        "timeline_initializations": [
+          100.0
+        ],
+        "final_motor_output": [
+          0.0,
+          0.0
+        ],
+        "watchdog_stops": 0,
+        "clearance_violations": []
+      }
+    },
+    {
+      "name": "turn_slow_camera",
+      "run": {
+        "parameters": {
+          "speed": 12,
+          "coast": 0.08,
+          "seed": 7,
+          "pivot_cm": 7.5,
+          "camera_hz": 5
+        },
+        "goal_cm": [
+          30,
+          0
+        ],
+        "goals_cm": null,
+        "result": {
+          "outcome": "stopped",
+          "actions": [
+            {
+              "plan": {
+                "kind": "turn",
+                "value": 30.0,
+                "swept_bounds_cm": [
+                  -22.027225347280726,
+                  -29.22178027782458,
+                  22.027225347280726,
+                  14.221780277824578
+                ],
+                "predicted_start_pose": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "predicted_end_pose": [
+                  3.7499999999999996,
+                  -1.0048094716167097,
+                  30.0
+                ]
+              },
+              "outcome": "turn_reached_estimate",
+              "reason": null,
+              "target_index": 0,
+              "result": {
+                "outcome": "turn_reached_estimate",
+                "samples": [
+                  {
+                    "time": 100.1999999999997,
+                    "position_cm": [
+                      0.0,
+                      0.0
+                    ],
+                    "velocity_cm_s": [
+                      0.0,
+                      0.0
+                    ],
+                    "yaw_degrees": -3.40234040013111e-18,
+                    "position_sigma_cm": 0.03605551275463989,
+                    "yaw_sigma_degrees": 0.30932355733579386
+                  },
+                  {
+                    "time": 100.39999999999941,
+                    "position_cm": [
+                      0.4708971761785806,
+                      -0.015104678642388814
+                    ],
+                    "velocity_cm_s": [
+                      1.1772429404481914,
+                      -0.03776169660602784
+                    ],
+                    "yaw_degrees": 3.6108887523441644,
+                    "position_sigma_cm": 0.05099019513592785,
+                    "yaw_sigma_degrees": 0.43744956994577133
+                  },
+                  {
+                    "time": 100.59999999999911,
+                    "position_cm": [
+                      0.5458095330565038,
+                      -0.021256291411107107
+                    ],
+                    "velocity_cm_s": [
+                      0.7759023624191804,
+                      -0.03425988022483238
+                    ],
+                    "yaw_degrees": 4.188636363638578,
+                    "position_sigma_cm": 0.06244997998398398,
+                    "yaw_sigma_degrees": 0.5357641172835397
+                  },
+                  {
+                    "time": 100.79999999999882,
+                    "position_cm": [
+                      1.0167344248122407,
+                      -0.07160599622981897
+                    ],
+                    "velocity_cm_s": [
+                      1.5652634106006726,
+                      -0.1430042021593819
+                    ],
+                    "yaw_degrees": 7.80698473054675,
+                    "position_sigma_cm": 0.07211102550927978,
+                    "yaw_sigma_degrees": 0.6186471146715877
+                  },
+                  {
+                    "time": 100.99999999999852,
+                    "position_cm": [
+                      1.0912459942519503,
+                      -0.08272583161080063
+                    ],
+                    "velocity_cm_s": [
+                      0.9689106288998859,
+                      -0.09930168953218618
+                    ],
+                    "yaw_degrees": 8.38401503538797,
+                    "position_sigma_cm": 0.0806225774829855,
+                    "yaw_sigma_degrees": 0.6916685012448888
+                  },
+                  {
+                    "time": 101.19999999999823,
+                    "position_cm": [
+                      1.5572256376122928,
+                      -0.16645403249686352
+                    ],
+                    "velocity_cm_s": [
+                      1.6494044228525206,
+                      -0.2589713469815597
+                    ],
+                    "yaw_degrees": 12.002633803114321,
+                    "position_sigma_cm": 0.08831760866327847,
+                    "yaw_sigma_degrees": 0.7576848808952313
+                  },
+                  {
+                    "time": 101.39999999999793,
+                    "position_cm": [
+                      1.6305934641020907,
+                      -0.18249579611149055
+                    ],
+                    "velocity_cm_s": [
+                      1.0081217776510263,
+                      -0.16959008252740668
+                    ],
+                    "yaw_degrees": 12.580972902294238,
+                    "position_sigma_cm": 0.09539392014169457,
+                    "yaw_sigma_degrees": 0.8183932073643396
+                  },
+                  {
+                    "time": 101.59999999999764,
+                    "position_cm": [
+                      2.089667149345562,
+                      -0.2997172948323359
+                    ],
+                    "velocity_cm_s": [
+                      1.651745101935888,
+                      -0.37784878806624983
+                    ],
+                    "yaw_degrees": 16.199816540920313,
+                    "position_sigma_cm": 0.1019803902718557,
+                    "yaw_sigma_degrees": 0.8748991398915427
+                  },
+                  {
+                    "time": 101.79999999999734,
+                    "position_cm": [
+                      2.1616674915522176,
+                      -0.3202273331544393
+                    ],
+                    "velocity_cm_s": [
+                      1.0058734064848491,
+                      -0.24019948983845918
+                    ],
+                    "yaw_degrees": 16.7780988547581,
+                    "position_sigma_cm": 0.10816653826391967,
+                    "yaw_sigma_degrees": 0.9279706720073814
+                  },
+                  {
+                    "time": 101.99999999999704,
+                    "position_cm": [
+                      2.6108329168854207,
+                      -0.47067577573333774
+                    ],
+                    "velocity_cm_s": [
+                      1.6258502665770922,
+                      -0.49622085136703153
+                    ],
+                    "yaw_degrees": 20.396822518149595,
+                    "position_sigma_cm": 0.11401754250991379,
+                    "yaw_sigma_degrees": 0.9781669751267936
+                  },
+                  {
+                    "time": 102.19999999999675,
+                    "position_cm": [
+                      2.6807528552949584,
+                      -0.49711698552203426
+                    ],
+                    "velocity_cm_s": [
+                      0.9877249793126482,
+                      -0.31421345015535485
+                    ],
+                    "yaw_degrees": 20.975815621700555,
+                    "position_sigma_cm": 0.11958260743101397,
+                    "yaw_sigma_degrees": 1.0259101785008138
+                  },
+                  {
+                    "time": 102.39999999999645,
+                    "position_cm": [
+                      3.1171372583038384,
+                      -0.6797769062109896
+                    ],
+                    "velocity_cm_s": [
+                      1.5848234971801365,
+                      -0.6137565268007408
+                    ],
+                    "yaw_degrees": 24.595156287367825,
+                    "position_sigma_cm": 0.12489995996796795,
+                    "yaw_sigma_degrees": 1.0715282345670791
+                  },
+                  {
+                    "time": 102.59999999999616,
+                    "position_cm": [
+                      3.1847427576621627,
+                      -0.7109951928280422
+                    ],
+                    "velocity_cm_s": [
+                      0.9614254969861288,
+                      -0.3849239799431171
+                    ],
+                    "yaw_degrees": 25.174054250711972,
+                    "position_sigma_cm": 0.12999999999999998,
+                    "yaw_sigma_degrees": 1.1152819466831296
+                  },
+                  {
+                    "time": 102.79999999999586,
+                    "position_cm": [
+                      3.6060204839672907,
+                      -0.9259158937279073
+                    ],
+                    "velocity_cm_s": [
+                      1.5339070642574413,
+                      -0.7297637422220151
+                    ],
+                    "yaw_degrees": 28.793823212563492,
+                    "position_sigma_cm": 0.1349073756323204,
+                    "yaw_sigma_degrees": 1.1573827732086654
+                  },
+                  {
+                    "time": 102.99999999999557,
+                    "position_cm": [
+                      3.671777376478462,
+                      -0.9618388286631494
+                    ],
+                    "velocity_cm_s": [
+                      0.9313457634068911,
+                      -0.4546892084492455
+                    ],
+                    "yaw_degrees": 29.37151391021357,
+                    "position_sigma_cm": 0.13964240043768938,
+                    "yaw_sigma_degrees": 1.1980049861511641
+                  },
+                  {
+                    "time": 103.19999999999527,
+                    "position_cm": [
+                      3.6734433044885466,
+                      -0.9628510083305633
+                    ],
+                    "velocity_cm_s": [
+                      0.46983770172866407,
+                      -0.22987505339316122
+                    ],
+                    "yaw_degrees": 29.382447754557553,
+                    "position_sigma_cm": 0.14422205101855953,
+                    "yaw_sigma_degrees": 1.237294229343175
+                  },
+                  {
+                    "time": 103.39999999999498,
+                    "position_cm": [
+                      3.6734717510720447,
+                      -0.9628544223509126
+                    ],
+                    "velocity_cm_s": [
+                      0.2349899673230779,
+                      -0.11494606174745385
+                    ],
+                    "yaw_degrees": 29.382641175154916,
+                    "position_sigma_cm": 0.14866068747318503,
+                    "yaw_sigma_degrees": 1.2753736993872782
+                  }
+                ],
+                "settling_samples": [
+                  {
+                    "time": 102.99999999999557,
+                    "position_cm": [
+                      3.671777376478462,
+                      -0.9618388286631494
+                    ],
+                    "velocity_cm_s": [
+                      0.9313457634068911,
+                      -0.4546892084492455
+                    ],
+                    "yaw_degrees": 29.37151391021357,
+                    "position_sigma_cm": 0.13964240043768938,
+                    "yaw_sigma_degrees": 1.1980049861511641
+                  },
+                  {
+                    "time": 103.19999999999527,
+                    "position_cm": [
+                      3.6734433044885466,
+                      -0.9628510083305633
+                    ],
+                    "velocity_cm_s": [
+                      0.46983770172866407,
+                      -0.22987505339316122
+                    ],
+                    "yaw_degrees": 29.382447754557553,
+                    "position_sigma_cm": 0.14422205101855953,
+                    "yaw_sigma_degrees": 1.237294229343175
+                  },
+                  {
+                    "time": 103.39999999999498,
+                    "position_cm": [
+                      3.6734717510720447,
+                      -0.9628544223509126
+                    ],
+                    "velocity_cm_s": [
+                      0.2349899673230779,
+                      -0.11494606174745385
+                    ],
+                    "yaw_degrees": 29.382641175154916,
+                    "position_sigma_cm": 0.14866068747318503,
+                    "yaw_sigma_degrees": 1.2753736993872782
+                  }
+                ],
+                "power_start": null,
+                "final_position_cm": [
+                  3.6734717510720447,
+                  -0.9628544223509126
+                ],
+                "final_anchor": {
+                  "image_path": "/tmp/jetbot-spatial-sim-d5qg_74r/result.json.action-01.json.settled.jpg",
+                  "captured_monotonic": 103.39999999999498
+                },
+                "power_end": null,
+                "elapsed_seconds": 3.4699999999949824
+              }
+            },
+            {
+              "plan": {
+                "kind": "turn",
+                "value": 30.0,
+                "swept_bounds_cm": [
+                  -22.298324161205826,
+                  -29.084349963310924,
+                  22.285670952962192,
+                  14.088203625531445
+                ],
+                "predicted_start_pose": [
+                  3.6734717510720447,
+                  -0.9628544223509126,
+                  29.3826411751549
+                ],
+                "predicted_end_pose": [
+                  6.4480816257793006,
+                  -3.6783068924611215,
+                  59.3826411751549
+                ]
+              },
+              "outcome": "turn_reached_estimate",
+              "reason": null,
+              "target_index": 0,
+              "result": {
+                "outcome": "turn_reached_estimate",
+                "samples": [
+                  {
+                    "time": 103.79999999999438,
+                    "position_cm": [
+                      -1.011189944791568e-06,
+                      1.6164137277344236e-07
+                    ],
+                    "velocity_cm_s": [
+                      -2.5279748619826564e-06,
+                      4.0410343193420315e-07
+                    ],
+                    "yaw_degrees": 2.9464474668393507e-06,
+                    "position_sigma_cm": 0.03605551275463989,
+                    "yaw_sigma_degrees": 0.30932355733579386
+                  },
+                  {
+                    "time": 103.99999999999409,
+                    "position_cm": [
+                      0.4717418019091442,
+                      -0.014748861655754304
+                    ],
+                    "velocity_cm_s": [
+                      1.1793557687620346,
+                      -0.03687235619115622
+                    ],
+                    "yaw_degrees": 3.609097365985866,
+                    "position_sigma_cm": 0.05099019513592785,
+                    "yaw_sigma_degrees": 0.43744956994577133
+                  },
+                  {
+                    "time": 104.19999999999379,
+                    "position_cm": [
+                      0.5459906104700978,
+                      -0.02032840230714849
+                    ],
+                    "velocity_cm_s": [
+                      0.7752999057836756,
+                      -0.03238502972408419
+                    ],
+                    "yaw_degrees": 4.187884232169564,
+                    "position_sigma_cm": 0.06244997998398398,
+                    "yaw_sigma_degrees": 0.5357641172835397
+                  },
+                  {
+                    "time": 104.3999999999935,
+                    "position_cm": [
+                      1.0173393988548918,
+                      -0.06918215689120294
+                    ],
+                    "velocity_cm_s": [
+                      1.5660219238555644,
+                      -0.13832690132235873
+                    ],
+                    "yaw_degrees": 7.805129114583575,
+                    "position_sigma_cm": 0.07211102550927978,
+                    "yaw_sigma_degrees": 0.6186471146715877
+                  },
+                  {
+                    "time": 104.5999999999932,
+                    "position_cm": [
+                      1.0915150731915113,
+                      -0.0784413272336182
+                    ],
+                    "velocity_cm_s": [
+                      0.9684501477696049,
+                      -0.09231137651725171
+                    ],
+                    "yaw_degrees": 8.381313038244263,
+                    "position_sigma_cm": 0.0806225774829855,
+                    "yaw_sigma_degrees": 0.6916685012448888
+                  },
+                  {
+                    "time": 104.7999999999929,
+                    "position_cm": [
+                      1.5572562354565695,
+                      -0.1610725751010685
+                    ],
+                    "velocity_cm_s": [
+                      1.648577979549169,
+                      -0.25273380792755695
+                    ],
+                    "yaw_degrees": 12.000362983833428,
+                    "position_sigma_cm": 0.08831760866327847,
+                    "yaw_sigma_degrees": 0.7576848808952313
+                  },
+                  {
+                    "time": 104.99999999999261,
+                    "position_cm": [
+                      1.630013439404801,
+                      -0.17722607224845666
+                    ],
+                    "velocity_cm_s": [
+                      1.0061819996454318,
+                      -0.16675064683230853
+                    ],
+                    "yaw_degrees": 12.577592807273135,
+                    "position_sigma_cm": 0.09539392014169457,
+                    "yaw_sigma_degrees": 0.8183932073643396
+                  },
+                  {
+                    "time": 105.19999999999231,
+                    "position_cm": [
+                      2.0886765795497872,
+                      -0.29430630640511013
+                    ],
+                    "velocity_cm_s": [
+                      1.6497488501868771,
+                      -0.37607590880822056
+                    ],
+                    "yaw_degrees": 16.196485904543266,
+                    "position_sigma_cm": 0.1019803902718557,
+                    "yaw_sigma_degrees": 0.8748991398915427
+                  },
+                  {
+                    "time": 105.39999999999202,
+                    "position_cm": [
+                      2.1605922433784777,
+                      -0.3145001660357115
+                    ],
+                    "velocity_cm_s": [
+                      1.0046635846654302,
+                      -0.2385226034806883
+                    ],
+                    "yaw_degrees": 16.774307504111885,
+                    "position_sigma_cm": 0.10816653826391967,
+                    "yaw_sigma_degrees": 0.9279706720073814
+                  },
+                  {
+                    "time": 105.59999999999172,
+                    "position_cm": [
+                      2.6091170326239,
+                      -0.4650111884973285
+                    ],
+                    "velocity_cm_s": [
+                      1.6236437654479277,
+                      -0.4955388578949427
+                    ],
+                    "yaw_degrees": 20.394130388288595,
+                    "position_sigma_cm": 0.11401754250991379,
+                    "yaw_sigma_degrees": 0.9781669751267936
+                  },
+                  {
+                    "time": 105.79999999999143,
+                    "position_cm": [
+                      2.6789576094056726,
+                      -0.4917668313220715
+                    ],
+                    "velocity_cm_s": [
+                      0.9864233246786531,
+                      -0.3146585360094277
+                    ],
+                    "yaw_degrees": 20.972743771451288,
+                    "position_sigma_cm": 0.11958260743101397,
+                    "yaw_sigma_degrees": 1.0259101785008138
+                  },
+                  {
+                    "time": 105.99999999999113,
+                    "position_cm": [
+                      3.1156306430250185,
+                      -0.6745072272868695
+                    ],
+                    "velocity_cm_s": [
+                      1.584894246389305,
+                      -0.6141802579173842
+                    ],
+                    "yaw_degrees": 24.59229486745732,
+                    "position_sigma_cm": 0.12489995996796795,
+                    "yaw_sigma_degrees": 1.0715282345670791
+                  },
+                  {
+                    "time": 106.19999999999084,
+                    "position_cm": [
+                      3.1835209006112253,
+                      -0.7063271850697073
+                    ],
+                    "velocity_cm_s": [
+                      0.9621727671604199,
+                      -0.3866400234159041
+                    ],
+                    "yaw_degrees": 25.17004284976401,
+                    "position_sigma_cm": 0.12999999999999998,
+                    "yaw_sigma_degrees": 1.1152819466831296
+                  },
+                  {
+                    "time": 106.39999999999054,
+                    "position_cm": [
+                      3.605279901413082,
+                      -0.9207168571585462
+                    ],
+                    "velocity_cm_s": [
+                      1.5354838855864097,
+                      -0.7292941919308416
+                    ],
+                    "yaw_degrees": 28.789879024197795,
+                    "position_sigma_cm": 0.1349073756323204,
+                    "yaw_sigma_degrees": 1.1573827732086654
+                  },
+                  {
+                    "time": 106.59999999999025,
+                    "position_cm": [
+                      3.670333010508625,
+                      -0.9573526951679439
+                    ],
+                    "velocity_cm_s": [
+                      0.9303747155323033,
+                      -0.4562366909890501
+                    ],
+                    "yaw_degrees": 29.368098125240394,
+                    "position_sigma_cm": 0.13964240043768938,
+                    "yaw_sigma_degrees": 1.1980049861511641
+                  },
+                  {
+                    "time": 106.79999999998995,
+                    "position_cm": [
+                      3.6721106899580453,
+                      -0.9582330694321949
+                    ],
+                    "velocity_cm_s": [
+                      0.4696315563897091,
+                      -0.230319281155156
+                    ],
+                    "yaw_degrees": 29.379107213872917,
+                    "position_sigma_cm": 0.14422205101855953,
+                    "yaw_sigma_degrees": 1.237294229343175
+                  },
+                  {
+                    "time": 106.99999999998965,
+                    "position_cm": [
+                      3.6721222819294455,
+                      -0.9582251779193088
+                    ],
+                    "velocity_cm_s": [
+                      0.23484475812335445,
+                      -0.11513991179536275
+                    ],
+                    "yaw_degrees": 29.379337158242187,
+                    "position_sigma_cm": 0.14866068747318503,
+                    "yaw_sigma_degrees": 1.2753736993872782
+                  }
+                ],
+                "settling_samples": [
+                  {
+                    "time": 106.59999999999025,
+                    "position_cm": [
+                      3.670333010508625,
+                      -0.9573526951679439
+                    ],
+                    "velocity_cm_s": [
+                      0.9303747155323033,
+                      -0.4562366909890501
+                    ],
+                    "yaw_degrees": 29.368098125240394,
+                    "position_sigma_cm": 0.13964240043768938,
+                    "yaw_sigma_degrees": 1.1980049861511641
+                  },
+                  {
+                    "time": 106.79999999998995,
+                    "position_cm": [
+                      3.6721106899580453,
+                      -0.9582330694321949
+                    ],
+                    "velocity_cm_s": [
+                      0.4696315563897091,
+                      -0.230319281155156
+                    ],
+                    "yaw_degrees": 29.379107213872917,
+                    "position_sigma_cm": 0.14422205101855953,
+                    "yaw_sigma_degrees": 1.237294229343175
+                  },
+                  {
+                    "time": 106.99999999998965,
+                    "position_cm": [
+                      3.6721222819294455,
+                      -0.9582251779193088
+                    ],
+                    "velocity_cm_s": [
+                      0.23484475812335445,
+                      -0.11513991179536275
+                    ],
+                    "yaw_degrees": 29.379337158242187,
+                    "position_sigma_cm": 0.14866068747318503,
+                    "yaw_sigma_degrees": 1.2753736993872782
+                  }
+                ],
+                "power_start": null,
+                "final_position_cm": [
+                  3.6721222819294455,
+                  -0.9582251779193088
+                ],
+                "final_anchor": {
+                  "image_path": "/tmp/jetbot-spatial-sim-d5qg_74r/result.json.action-02.json.settled.jpg",
+                  "captured_monotonic": 106.99999999998965
+                },
+                "power_end": null,
+                "elapsed_seconds": 3.5999999999946795
+              }
+            },
+            {
+              "plan": {
+                "kind": "drive",
+                "value": 15.0,
+                "swept_bounds_cm": [
+                  -16.61652704075982,
+                  -23.83968550265347,
+                  32.862695974315386,
+                  18.390290704155753
+                ],
+                "predicted_start_pose": [
+                  6.403078010339732,
+                  -3.5995051793545536,
+                  58.76197833339708
+                ],
+                "predicted_end_pose": [
+                  19.228382621799483,
+                  4.179412587486105,
+                  58.76197833339708
+                ]
+              },
+              "outcome": "stopped",
+              "reason": "Camera interval exceeded 180 ms",
+              "target_index": 0,
+              "result": {
+                "outcome": "stopped",
+                "samples": [],
+                "passed_waypoints_cm": [],
+                "travel_direction": "forward",
+                "power_start": null,
+                "reason": "Camera interval exceeded 180 ms",
+                "power_end": null,
+                "powered_seconds": null
+              }
+            }
+          ],
+          "local_planning_seconds": 0.08589761999974144,
+          "intermediate_model_calls": 0,
+          "requires_planner": true,
+          "reached_targets": [],
+          "local_searches": 1,
+          "last_verified_pose": [
+            6.403078010339732,
+            -3.5995051793545536,
+            58.76197833339708
+          ],
+          "travel_cm": 7.592648789747942,
+          "position_variance_cm2": 0.04419999999999999,
+          "yaw_variance_deg2": 3.2531561461775826,
+          "goal_error_cm": 23.86987986820027,
+          "reason": "Action failed or final pose unverified: Camera interval exceeded 180 ms",
+          "elapsed_seconds": 7.424999999989069
+        },
+        "true_final_pose": [
+          6.415331464199693,
+          -3.6149617499374136,
+          58.80146756704276
+        ],
+        "true_goal_error_cm": 23.860103486721922,
+        "motor_commands": [
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.0,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 100.26999999999971,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.14,
+              "right": -0.14,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.32999999999957,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.0,
+              "right": 0.0,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.66999999999912,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.14,
+              "right": -0.14,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 100.72999999999898,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.0,
+              "right": 0.0,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 101.06999999999853,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.14,
+              "right": -0.14,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 101.12999999999839,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.0,
+              "right": 0.0,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 101.46999999999794,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.14,
+              "right": -0.14,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 101.5299999999978,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.0,
+              "right": 0.0,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 101.86999999999735,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.14,
+              "right": -0.14,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 101.92999999999721,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.0,
+              "right": 0.0,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 102.26999999999676,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.14,
+              "right": -0.14,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 102.32999999999662,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.0,
+              "right": 0.0,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 102.66999999999616,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.14,
+              "right": -0.14,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 102.72999999999602,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.0,
+              "right": 0.0,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 102.86999999999587,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.0,
+              "right": 0.0,
+              "session_id": "simulation",
+              "control_epoch": 0
+            }
+          },
+          {
+            "time": 103.46999999999498,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 103.46999999999498,
+            "action": "stop",
+            "fields": {}
+          },
+          {
+            "time": 103.46999999999498,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 103.46999999999498,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 103.46999999999498,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 103.86999999999439,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.14,
+              "right": -0.14,
+              "session_id": "simulation",
+              "control_epoch": 1
+            }
+          },
+          {
+            "time": 103.92999999999425,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.0,
+              "right": 0.0,
+              "session_id": "simulation",
+              "control_epoch": 1
+            }
+          },
+          {
+            "time": 104.2699999999938,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.14,
+              "right": -0.14,
+              "session_id": "simulation",
+              "control_epoch": 1
+            }
+          },
+          {
+            "time": 104.32999999999366,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.0,
+              "right": 0.0,
+              "session_id": "simulation",
+              "control_epoch": 1
+            }
+          },
+          {
+            "time": 104.66999999999321,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.14,
+              "right": -0.14,
+              "session_id": "simulation",
+              "control_epoch": 1
+            }
+          },
+          {
+            "time": 104.72999999999307,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.0,
+              "right": 0.0,
+              "session_id": "simulation",
+              "control_epoch": 1
+            }
+          },
+          {
+            "time": 105.06999999999262,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.14,
+              "right": -0.14,
+              "session_id": "simulation",
+              "control_epoch": 1
+            }
+          },
+          {
+            "time": 105.12999999999248,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.0,
+              "right": 0.0,
+              "session_id": "simulation",
+              "control_epoch": 1
+            }
+          },
+          {
+            "time": 105.46999999999203,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.14,
+              "right": -0.14,
+              "session_id": "simulation",
+              "control_epoch": 1
+            }
+          },
+          {
+            "time": 105.52999999999189,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.0,
+              "right": 0.0,
+              "session_id": "simulation",
+              "control_epoch": 1
+            }
+          },
+          {
+            "time": 105.86999999999144,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.14,
+              "right": -0.14,
+              "session_id": "simulation",
+              "control_epoch": 1
+            }
+          },
+          {
+            "time": 105.9299999999913,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.0,
+              "right": 0.0,
+              "session_id": "simulation",
+              "control_epoch": 1
+            }
+          },
+          {
+            "time": 106.26999999999084,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.14,
+              "right": -0.14,
+              "session_id": "simulation",
+              "control_epoch": 1
+            }
+          },
+          {
+            "time": 106.3299999999907,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.0,
+              "right": 0.0,
+              "session_id": "simulation",
+              "control_epoch": 1
+            }
+          },
+          {
+            "time": 106.46999999999055,
+            "action": "motors_hold",
+            "fields": {
+              "left": 0.0,
+              "right": 0.0,
+              "session_id": "simulation",
+              "control_epoch": 1
+            }
+          },
+          {
+            "time": 107.06999999998966,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 107.06999999998966,
+            "action": "stop",
+            "fields": {}
+          },
+          {
+            "time": 107.06999999998966,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 107.06999999998966,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 107.06999999998966,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 107.42499999998907,
+            "action": "stop",
+            "fields": {}
+          },
+          {
+            "time": 107.42499999998907,
+            "action": "status",
+            "fields": {}
+          },
+          {
+            "time": 107.42499999998907,
+            "action": "stop",
+            "fields": {}
+          }
+        ],
+        "timeline_initializations": [
+          100.0
+        ],
+        "final_motor_output": [
+          0.0,
+          0.0
+        ],
+        "watchdog_stops": 0,
+        "clearance_violations": []
+      }
+    }
+  ]
+}

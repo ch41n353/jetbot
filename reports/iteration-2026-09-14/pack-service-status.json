@@ -1,0 +1,75 @@
+{
+  "healthy": true,
+  "motion_enabled": false,
+  "power": {
+    "time": 1500.164063299,
+    "voltage_v": 5.0,
+    "source": "INA3221 POM_5V_IN",
+    "conversion_period_seconds": 0.053759999999999995,
+    "battery_percent": null,
+    "battery_state": "voltage_only_no_soc_estimate",
+    "pack_time": 1500.166593485,
+    "pack_voltage_v": 12.252,
+    "pack_source": "INA219-compatible bus1 address0x41",
+    "pack_conversion_period_seconds": 0.001064,
+    "pack_required": true,
+    "pack_profile": "Waveshare-compatible 3S inferred from hardware; board model unconfirmed",
+    "motion_allowed": true,
+    "stop_latched": false,
+    "stop_reason": null,
+    "warning": false,
+    "minimum_voltage_v": 4.984,
+    "minimum_pack_voltage_v": 12.236,
+    "warn_below_v": 4.9,
+    "stop_below_v": 4.8,
+    "pack_warn_below_v": 11.4,
+    "pack_stop_below_v": 10.8,
+    "stale_after_seconds": 0.6,
+    "stale": false,
+    "service_stop_latched": false
+  },
+  "camera": {
+    "time": 1500.256516491,
+    "sequence": 66
+  },
+  "imu": {
+    "acceleration": [
+      9.52,
+      -0.83,
+      -0.23
+    ],
+    "gyro": [
+      0.1875,
+      0.0,
+      -0.125
+    ],
+    "euler": [
+      359.9375,
+      84.8125,
+      174.9375
+    ],
+    "gyro_units": "deg/s",
+    "euler_units": "deg",
+    "calibration": [
+      0,
+      3,
+      0,
+      0
+    ],
+    "self_test": 15,
+    "system_status": 5,
+    "error": 0,
+    "time": 1500.285205308,
+    "sequence": 482
+  },
+  "camera_age": 0.03510081700005685,
+  "imu_age": 0.006411999999954787,
+  "motor": {
+    "output": [
+      0,
+      0
+    ]
+  },
+  "session_id": "ef0d3bd6684644f8940fc6e7b173813e",
+  "control_epoch": 0
+}

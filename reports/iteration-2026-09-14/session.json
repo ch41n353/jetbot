@@ -7,5 +7,5 @@
   "authorization": "User requested continuing robot navigation and iteration for three hours",
   "live_motion": "paused_after_empty_battery_and_reboot",
   "current_work": "Local planner simulation and power telemetry integration",
-  "power_monitor": "INA3221 input voltage; state of charge unknown"
+  "power_monitor": "INA3221 input plus INA219-compatible pack voltage; no SOC estimate"
 }
