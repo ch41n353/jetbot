@@ -36,10 +36,13 @@ def call(action, **fields):
 
 
 class FloorTracker:
-    def __init__(self,profile,intrinsics,max_features=250):
+    def __init__(self,profile,intrinsics,max_features=250,crop_flow=True):
         if type(max_features) is not int or max_features not in (80, 125, 250):
             raise ValueError("Feature budget must be 80, 125 or 250")
         self.max_features=max_features
+        if type(crop_flow) is not bool:
+            raise ValueError('crop_flow must be boolean')
+        self.crop_flow=crop_flow
         self.p,self.i=profile,intrinsics
 
     def ground(self,points,attitude=None):
@@ -61,20 +64,27 @@ class FloorTracker:
         return np.column_stack((rays.dot(right),rays.dot(forward)))*self.p['camera_height_cm']/denominator[:,None]
 
     def motion(self,before,after,before_attitude=None,after_attitude=None):
-        gray0=cv2.cvtColor(before,cv2.COLOR_BGR2GRAY)
-        gray1=cv2.cvtColor(after,cv2.COLOR_BGR2GRAY)
+        ox,oy=(40,168) if self.crop_flow else (0,0)
+        region=(slice(168,480),slice(40,600)) if self.crop_flow else (slice(None),slice(None))
+        offset=np.array([ox,oy],dtype=np.float32)
+        gray0=cv2.cvtColor(before[region],cv2.COLOR_BGR2GRAY)
+        gray1=cv2.cvtColor(after[region],cv2.COLOR_BGR2GRAY)
         # Remove global exposure offsets using the tracked floor region.
         # Geometric inlier and forward/backward checks still validate motion.
-        gray0=np.clip(gray0.astype(np.float32)-gray0[280:460,160:480].mean()+128,0,255).astype(np.uint8)
-        gray1=np.clip(gray1.astype(np.float32)-gray1[280:460,160:480].mean()+128,0,255).astype(np.uint8)
+        floor=(slice(280-oy,460-oy),slice(160-ox,480-ox))
+        gray0=np.clip(gray0.astype(np.float32)-gray0[floor].mean()+128,0,255).astype(np.uint8)
+        gray1=np.clip(gray1.astype(np.float32)-gray1[floor].mean()+128,0,255).astype(np.uint8)
         mask=np.zeros_like(gray0)
-        mask[280:460,160:480]=255
+        mask[floor]=255
         excluded=getattr(self,'excluded_box',None)
         if excluded is not None:
             x,y,r,b=np.round(excluded).astype(int)
-            mask[max(0,y-5):min(mask.shape[0],b+5),max(0,x-5):min(mask.shape[1],r+5)]=0
+            x,r=x-ox,r-ox
+            y,b=y-oy,b-oy
+            mask[max(0,y-5):max(0,min(mask.shape[0],b+5)),max(0,x-5):max(0,min(mask.shape[1],r+5))]=0
         p0=cv2.goodFeaturesToTrack(gray0,self.max_features,.005,7,mask=mask)
         if p0 is None or len(p0)<25:raise RuntimeError('Insufficient carpet texture')
+        p0=p0+offset
         guess=None
         flags=0
         if before_attitude is not None and after_attitude is not None:
@@ -92,10 +102,17 @@ class FloorTracker:
             guess,_=cv2.fisheye.projectPoints(rays.reshape(-1,1,3),np.zeros(3),np.zeros(3),np.asarray(self.i['K'],dtype=float),np.asarray(self.i['D'],dtype=float))
             guess=guess.astype(np.float32)
             flags=cv2.OPTFLOW_USE_INITIAL_FLOW
-        p1,ok1,_=cv2.calcOpticalFlowPyrLK(gray0,gray1,p0,guess,winSize=(21,21),maxLevel=3,flags=flags)
+        # Keep >90px support around accepted floor endpoints for the 21px
+        # window at pyramid level3. Align the crop origin to 2**3 so pyramid
+        # samples match the full image. The bottom border is unchanged.
+        local0=p0-offset
+        local_guess=None if guess is None else guess-offset
+        p1,ok1,_=cv2.calcOpticalFlowPyrLK(gray0,gray1,local0,local_guess,winSize=(21,21),maxLevel=3,flags=flags)
         if p1 is None:raise RuntimeError('Optical flow failed')
-        back,ok2,_=cv2.calcOpticalFlowPyrLK(gray1,gray0,p1,p0.copy(),winSize=(21,21),maxLevel=3,flags=cv2.OPTFLOW_USE_INITIAL_FLOW)
+        back,ok2,_=cv2.calcOpticalFlowPyrLK(gray1,gray0,p1,local0.copy(),winSize=(21,21),maxLevel=3,flags=cv2.OPTFLOW_USE_INITIAL_FLOW)
         if back is None:raise RuntimeError('Reverse optical flow failed')
+        p1=p1+offset
+        back=back+offset
         good=(ok1.ravel()>0)&(ok2.ravel()>0)&(np.linalg.norm(back-p0,axis=2).ravel()<.8)
         q=p1.reshape(-1,2)
         good &= (q[:,0]>140)&(q[:,0]<500)&(q[:,1]>270)&(q[:,1]<470)

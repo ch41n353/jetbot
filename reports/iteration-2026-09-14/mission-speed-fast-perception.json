@@ -1,0 +1,244 @@
+{
+  "controller_sha256": "4b25af1648d8d76131f94cf3e3b718f4ceef2344b16739842fbb734b4c96d078",
+  "controller_source": "\"\"\"Experimental local object mission with continuous tracking and motor renewal.\n\nOne remote-supplied target identity and inspected static map. No semantic object\nrecognition or general new-obstacle detector. Default CLI validates, never moves.\n\"\"\"\nimport argparse\nimport json\nimport math\nimport os\nimport time\nimport cv2\nimport numpy as np\nfrom target_tracker import TargetTracker,TargetLost\nfrom spatial_planner import SpatialPlanner,transform,bounds,normalize,sweep\nfrom route_geometry import finite,rectangle,swept_pose_bounds\n\n\ndef validate(plan):\n    rectangle(plan['inspected_free_rectangle_cm'])\n    for box in plan['obstacle_rectangles_cm']:rectangle(box)\n    standoff=finite(plan.get('standoff_cm',20))\n    if not 18<=standoff<=30:raise ValueError('Mission standoff must be18\u201330cm')\n    image=cv2.imread(plan['image_path'])\n    if image is None:raise ValueError('Missing target image')\n    TargetTracker(image,plan['target_box'])\n    return image,standoff\n\n\ndef drive_clear(planner,pose,left,right):\n    # Conservative short lookahead over nominal speed/yaw uncertainty, plus the\n    # existing four-cm coast, two-cm pose allowance and five-cm body clearance.\n    for speed in (8.,18.):\n        rate=70*(left-right)/.28\n        for yaw_rate in (rate-10,rate+10):\n            x,z,yaw=pose\n            for _ in range(6):\n                yaw+=yaw_rate*.05\n                x+=math.sin(math.radians(yaw))*speed*.05\n                z+=math.cos(math.radians(yaw))*speed*.05\n                if not planner.clear(swept_pose_bounds(x,z,yaw,1,10000)):\n                    return False\n    return True\n\n\ndef execute(plan,log):\n    from point_controller import call,frame,FloorTracker,ROOT\n    from state_estimator import AttitudeTimeline,PlanarState\n    from route_executor import load_json\n    result=dict(outcome='stopped',requires_planner=True,intermediate_model_calls=0,\n                events=[],samples=[],local_recoveries=0,local_searches=0)\n    started=time.monotonic()\n    def event(name,**fields):\n        value=json.loads(json.dumps(dict(event=name,elapsed_seconds=time.monotonic()-started,**fields)))\n        result['events'].append(value)\n        with open(log+'.events.jsonl','a') as out:out.write(json.dumps(value)+'\\n')\n    def publish(**fields):\n        fields['time']=time.monotonic()\n        with open(log+'.status.json.tmp','w') as out:json.dump(fields,out)\n        os.replace(log+'.status.json.tmp',log+'.status.json')\n    try:\n        anchor,standoff=validate(plan)\n        status=call('status')\n        result['power_start']=status.get('power')\n        token={k:plan[k] for k in ('session_id','control_epoch')}\n        if any(status[k]!=v for k,v in token.items()):raise RuntimeError('Stale mission generation')\n        if not status['healthy'] or not status['motion_enabled'] or status['motor']['output']!=[0,0]:\n            raise RuntimeError('Mission requires healthy sensors, power and stopped motors')\n        if not 0<=time.monotonic()-plan['captured_monotonic']<=120:raise RuntimeError('Mission image expired')\n        footprint=load_json(os.path.join(ROOT,'calibration/robot_footprint.json'))\n        if (footprint['width_cm'],footprint['length_cm'],footprint['camera_location'])!=(12,15,'front_center'):\n            raise RuntimeError('Footprint differs from mission geometry')\n        profile=load_json(os.path.join(ROOT,'calibration/floor_geometry.json'))\n        floor=FloorTracker(profile,load_json(profile['intrinsics_path']),max_features=125)\n        timeline=AttitudeTimeline(load_json(os.path.join(ROOT,'calibration/imu_mount.json')))\n        old,t0,a0=frame(timeline,settled=False)\n        rotation,translation,_=floor.motion(anchor,old)\n        if np.linalg.norm(translation)>.3 or abs(math.atan2(rotation[1,0],rotation[0,0]))>math.radians(1):\n            raise RuntimeError('Robot moved since mission preview')\n        target=TargetTracker(anchor,plan['target_box'])\n        observation=target.update(old)\n        target_world=floor.ground([observation['base_pixel']],a0)[0]\n        if not np.isfinite(target_world).all() or not 20<=np.linalg.norm(target_world)<=120:\n            raise RuntimeError('Target floor projection outside mission range')\n        if 'target_ground_cm' in plan:\n            expected=np.asarray(plan['target_ground_cm'],dtype=float)\n            if expected.shape!=(2,) or not np.isfinite(expected).all() or np.linalg.norm(expected-target_world)>max(5.,.1*np.linalg.norm(target_world)):\n                raise RuntimeError('Measured target projection disagrees with preview map')\n        # Identity is fixed; a moving target does not drag the inspected map.\n        target_radius=finite(plan.get('target_radius_cm',5.))\n        if not 5<=target_radius<=15:raise ValueError('Invalid target radius')\n        obstacles=list(plan['obstacle_rectangles_cm'])+[[target_world[0]-target_radius,target_world[1]-3,\n                                                       target_world[0]+target_radius,target_world[1]+3]]\n        goal=target_world*(1-standoff/np.linalg.norm(target_world))\n        planner=SpatialPlanner(dict(plan,goal_cm=goal.tolist(),obstacle_rectangles_cm=obstacles,\n                                    measured_map_drive=True,precise_turn_sweep=True,goal_heading_turns=True))\n        state=PlanarState()\n        up=timeline.up.copy()\n        path=[]\n        mode='planning'\n        last_command=None\n        recovery_started=None\n        recovery_good=0\n        arrival=[]\n        travel=0.\n        progress=[]\n        turn_start=None\n        turn_braking=False\n        turn_wait=None\n        searches=0\n        search_refresh=False\n        planning_quiet_since=None\n        planning_wait_started=None\n        clearance_rejections=0\n        clearance_wait=None\n        next_publish=0.\n        event('mission_started',target_label=plan.get('target_label','selected object'))\n        while time.monotonic()-started<180:\n            current,t1,a1=frame(timeline,settled=False)\n            if t1<=t0:continue\n            dt=t1-t0\n            after_search=search_refresh\n            search_refresh=False\n            if dt>(.6 if after_search else .18):raise RuntimeError('Mission camera gap exceeded180ms' if not after_search else 'Stopped search refresh exceeded600ms')\n            if last_command is not None and time.monotonic()-last_command>.18:\n                raise RuntimeError('Mission renewal deadline exceeded')\n            floor.excluded_box=target.box\n            r,t,q=floor.motion(old,current,a0,a1)\n            pose=state.update(r,t,dt,q)\n            if after_search and (np.linalg.norm(t)>.1 or abs(math.degrees(math.atan2(r[1,0],r[0,0])))>.5):\n                raise RuntimeError('Robot moved during stopped search')\n            x,z=pose['position_cm'];yaw=pose['yaw_degrees']\n            if abs(math.degrees(math.atan2(r[1,0],r[0,0]))/dt)>90:\n                raise RuntimeError('Mission rotation rate exceeded90deg/s')\n            travel+=float(np.linalg.norm(t))\n            if travel>120:raise RuntimeError('Mission travel limit120cm')\n            if timeline.up.dot(up)<math.cos(math.radians(5)):raise RuntimeError('Mission tilt guard')\n            body=swept_pose_bounds(x,z,yaw,1,10000)\n            if not planner.clear(body):raise RuntimeError('Mission chassis/braking space left inspected map')\n            result['last_measured_pose']=[x,z,yaw]\n            result['travel_cm']=travel\n            if time.monotonic()>=next_publish:\n                publish(state=mode,pose_cm_degrees=[x,z,yaw],travel_cm=travel,\n                        elapsed_seconds=time.monotonic()-started,remote_planner_required=False)\n                next_publish=time.monotonic()+.5\n            old,t0,a0=current,t1,a1\n            try:\n                observation=target.reacquire(current) if mode=='recovering' else target.update(current)\n                local_target=floor.ground([observation['base_pixel']],a1)[0]\n                observed_world=np.array(transform((x,z,yaw),*local_target))\n                if not np.isfinite(observed_world).all() or np.linalg.norm(observed_world-target_world)>max(5.,.1*np.linalg.norm(local_target)):\n                    raise TargetLost('Target moved or projection inconsistent with retained map')\n            except TargetLost as exc:\n                call('motors_hold',left=0.,right=0.,**token)\n                last_command=None\n                recovery_good=0\n                if mode!='recovering':\n                    mode='recovering';recovery_started=time.monotonic();recovery_good=0\n                    planning_quiet_since=None;planning_wait_started=None\n                    result['local_recoveries']+=1\n                    event('local_recovery',reason=str(exc))\n                if time.monotonic()-recovery_started>2 or result['local_recoveries']>2:\n                    raise RuntimeError('Target recovery exhausted: '+str(exc))\n                continue\n            if mode=='recovering':\n                if time.monotonic()-recovery_started>2:\n                    raise RuntimeError('Target recovery deadline exceeded')\n                recovery_good+=1\n                call('motors_hold',left=0.,right=0.,**token)\n                if recovery_good<3 or np.linalg.norm(pose['velocity_cm_s'])>.5:continue\n                mode='planning';path=[];progress=[]\n                turn_start=None;turn_wait=None\n                event('target_reacquired')\n            distance=float(np.linalg.norm(local_target))\n            result['samples'].append(dict(time=t1,mode=mode,target_range_cm=distance,\n                                          target_confidence=observation['confidence'],**pose))\n            if clearance_wait is not None:\n                call('motors_hold',left=0.,right=0.,**token);last_command=None\n                if np.linalg.norm(pose['velocity_cm_s'])>.5:\n                    if time.monotonic()-clearance_wait>1:raise RuntimeError('Clearance stop not verified')\n                    continue\n                clearance_wait=None\n            within_stopped_tolerance=(clearance_rejections>0 and distance<=standoff+3\n                                      and np.linalg.norm(pose['velocity_cm_s'])<=.5)\n            if distance<=standoff+1.5 or within_stopped_tolerance or mode=='settling':\n                call('motors_hold',left=0.,right=0.,**token);last_command=None\n                if mode!='settling':\n                    mode='settling';arrival=[];settle_started=time.monotonic()\n                    event('arrival_braking')\n                arrival.append((t1,x,z,yaw,distance))\n                arrival=[v for v in arrival if t1-v[0]<=.4]\n                if len(arrival)>=3 and t1-arrival[0][0]>=.18:\n                    stable=all(max(v[k] for v in arrival)-min(v[k] for v in arrival)<limit\n                               for k,limit in ((1,.1),(2,.1),(3,.5)))\n                    if stable:\n                        if not standoff-3<=distance<=standoff+3:raise RuntimeError('Final object standoff outside tolerance')\n                        result.update(outcome='object_reached_estimate',requires_planner=False,final_range_cm=distance)\n                        event('mission_complete',remote_vlm_needed=False)\n                        break\n                if time.monotonic()-settle_started>1:raise RuntimeError('Arrival settling not verified')\n                continue\n            final_approach=distance<standoff+12\n            if mode=='planning' and final_approach:\n                mode='following';path=[observed_world.tolist()];progress=[]\n            if mode=='planning':\n                # Search runs with motors zero. Its CPU latency cannot mask stale\n                # tracking or sustain a motor lease. No remote request is involved.\n                call('motors_hold',left=0.,right=0.,**token);last_command=None\n                if planning_wait_started is None:planning_wait_started=time.monotonic()\n                if time.monotonic()-planning_wait_started>1:raise RuntimeError('Planning stop not verified')\n                angular_rate=math.degrees(math.atan2(r[1,0],r[0,0]))/dt\n                if np.linalg.norm(pose['velocity_cm_s'])>.5 or abs(angular_rate)>2:\n                    planning_quiet_since=None\n                    continue\n                if planning_quiet_since is None:planning_quiet_since=t1\n                if t1-planning_quiet_since<.2:continue\n                route=planner.search((x,z,yaw),timeout_seconds=.4)\n                planning_quiet_since=None\n                planning_wait_started=None\n                search_refresh=True\n                searches+=1;result['local_searches']=searches\n                if searches>6 or route['outcome']!='route_found':raise RuntimeError('No local checked route: '+route['outcome'])\n                if any(a['kind']=='drive' and a['value']<0 for a in route['actions']):\n                    raise RuntimeError('Mission requires reverse recovery; remote review needed')\n                path=[a['predicted_end_pose'][:2] for a in route['actions'] if a['kind']=='drive']\n                if not path:path=[goal.tolist()]\n                mode='following';progress=[]\n                event('local_route',waypoints_cm=path)\n                # Refresh after search rather than renewing from a stale image.\n                continue\n            while len(path)>1 and math.hypot(path[0][0]-x,path[0][1]-z)<6:\n                path.pop(0)\n            # Close to the object, use its measured bearing rather than asking\n            # the coarse five-cm search lattice to correct a sub-cell endpoint.\n            waypoint=observed_world if final_approach else path[0]\n            bearing=normalize(math.degrees(math.atan2(waypoint[0]-x,waypoint[1]-z))-yaw)\n            if abs(bearing)>12 or turn_start is not None:\n                if turn_start is None:\n                    call('motors_hold',left=0.,right=0.,**token);last_command=None\n                    if turn_wait is None:turn_wait=time.monotonic()\n                    angular_rate=math.degrees(math.atan2(r[1,0],r[0,0]))/dt\n                    if time.monotonic()-turn_wait<.2 or np.linalg.norm(pose['velocity_cm_s'])>.5 or abs(angular_rate)>2:\n                        if time.monotonic()-turn_wait>1:raise RuntimeError('Drive-to-turn stop not verified')\n                        continue\n                    direction=1 if bearing>0 else -1\n                    if not planner.clear(sweep((x,z,yaw),('turn',direction*30),precise_turn=True)):\n                        mode='planning';call('motors_hold',left=0.,right=0.,**token);last_command=None;continue\n                    turn_start=yaw\n                    turn_direction=direction\n                    turn_begun=time.monotonic()\n                    turn_wait=None\n                    turn_braking=False\n                    progress=[]\n                # Brake using measured angular rate, never reverse to chase overshoot.\n                angular_rate=math.degrees(math.atan2(r[1,0],r[0,0]))/dt\n                angle=normalize(yaw-turn_start)\n                if turn_direction*angle < -3:raise RuntimeError('Mission turn moved in wrong direction')\n                if abs(angle)>35:raise RuntimeError('Mission turn exceeded heading limit')\n                if time.monotonic()-turn_begun>2:raise RuntimeError('Mission turn exceeded two-second limit')\n                if turn_braking or abs(bearing)<=max(2.,abs(angular_rate)*.12) or abs(normalize(yaw-turn_start))>=28:\n                    turn_braking=True\n                    call('motors_hold',left=0.,right=0.,**token);last_command=None\n                    if abs(angular_rate)<2:\n                        turn_start=None;progress=[]\n                    continue\n                left=.14*turn_direction;right=-left\n                metric=abs(normalize(yaw-turn_start));minimum=.5\n            else:\n                steer=float(np.clip(math.radians(bearing)*.3,-.025,.025))\n                left,right=.16+steer,.16-steer\n                if not drive_clear(planner,(x,z,yaw),left,right):\n                    clearance_rejections+=1\n                    if clearance_rejections>=3:raise RuntimeError('Forward clearance recovery exhausted')\n                    clearance_wait=time.monotonic()\n                    mode='planning';call('motors_hold',left=0.,right=0.,**token);last_command=None;continue\n                clearance_rejections=0\n                metric=travel;minimum=.3\n            progress.append((t1,metric))\n            previous=[v for v in progress if t1-v[0]>=.4]\n            if previous and metric-previous[-1][1]<minimum:raise RuntimeError('Mission motion stalled')\n            progress=progress[-50:]\n            if time.monotonic()-t1>.18:raise RuntimeError('Mission perception exceeded180ms')\n            call('motors_hold',left=left,right=right,**token)\n            last_command=time.monotonic()\n        else:raise RuntimeError('Mission deadline180seconds')\n    except Exception as exc:\n        result.update(outcome='stopped',requires_planner=True,reason=str(exc))\n        event('remote_planner_required',reason=str(exc))\n    finally:\n        try:call('stop')\n        except Exception as exc:\n            result.update(outcome='stopped',requires_planner=True,stop_error=str(exc))\n            event('remote_planner_required',reason='Final stop request failed',stop_error=str(exc))\n        try:result['power_end']=call('status').get('power')\n        except Exception as exc:result['power_end_error']=str(exc)\n        if 'current' in locals():\n            observation_path=log+'.last-observed.jpg'\n            if cv2.imwrite(observation_path,current):\n                result['last_observation']=dict(image_path=observation_path,time=t1,\n                    settled=result['outcome']=='object_reached_estimate')\n        result['elapsed_seconds']=time.monotonic()-started\n        with open(log,'w') as out:json.dump(result,out,indent=2)\n        publish(state=result['outcome'],remote_planner_required=result['requires_planner'],\n                reason=result.get('reason'),elapsed_seconds=result['elapsed_seconds'])\n    return result\n\n\ndef prepare(capture,request):\n    from point_controller import FloorTracker,ROOT\n    from route_executor import load_json\n    if request.get('image_path')!=capture['image_path']:raise ValueError('Mission must use latest capture')\n    if not 0<=time.monotonic()-capture['captured_monotonic']<=120:raise ValueError('Mission capture expired')\n    plan={k:capture[k] for k in ('image_path','captured_monotonic','session_id','control_epoch')}\n    for key in ('target_box','target_label','inspected_free_rectangle_cm','obstacle_rectangles_cm'):\n        plan[key]=request[key]\n    plan['standoff_cm']=request.get('standoff_cm',20)\n    plan['target_radius_cm']=request.get('target_radius_cm',5)\n    image,standoff=validate(plan)\n    profile=load_json(os.path.join(ROOT,'calibration/floor_geometry.json'))\n    tracker=FloorTracker(profile,load_json(profile['intrinsics_path']))\n    x,y,r,b=plan['target_box']\n    target=tracker.ground([[(x+r)/2,b]])[0]\n    distance=float(np.linalg.norm(target))\n    if not np.isfinite(target).all() or not standoff+5<=distance<=120:\n        raise ValueError('Target not in mission approach range')\n    plan['target_ground_cm']=target.tolist()\n    radius=finite(plan['target_radius_cm'])\n    if not 5<=radius<=15:raise ValueError('Invalid target radius')\n    obstacles=list(plan['obstacle_rectangles_cm'])+[[target[0]-radius,target[1]-3,target[0]+radius,target[1]+3]]\n    preview=dict(plan,goals_cm=[(target*(1-standoff/distance)).tolist()],\n                 obstacle_rectangles_cm=obstacles,measured_map_drive=True,precise_turn_sweep=True,\n                 coalesce_drives=True,goal_heading_turns=True)\n    return plan,preview\n\n\ndef main():\n    parser=argparse.ArgumentParser(description=__doc__)\n    parser.add_argument('plan');parser.add_argument('--execute',action='store_true');parser.add_argument('--log')\n    args=parser.parse_args()\n    with open(args.plan) as source:plan=json.load(source)\n    if not args.execute:\n        validate(plan);print('Mission input validated; motors not accessed');return\n    if not args.log:parser.error('--log required')\n    result=execute(plan,args.log)\n    print(json.dumps({k:v for k,v in result.items() if k!='samples'}))\n    raise SystemExit(0 if result['outcome']=='object_reached_estimate' else 1)\n\n\nif __name__=='__main__':main()\n",
+  "perception_compute_seconds": 0.025,
+  "timing_basis": "simulated commanded output; excludes real Python search/render wall time",
+  "cases": [
+    {
+      "name": "angled_seed1",
+      "parameters": {
+        "speed": 11,
+        "coast": 0.05,
+        "seed": 1,
+        "pivot_cm": 6
+      },
+      "target_cm": [
+        -17,
+        60
+      ],
+      "benchmark_wall_seconds": 13.031117363001613,
+      "outcome": "object_reached_estimate",
+      "reason": null,
+      "elapsed_seconds": 7.220000000000994,
+      "commanded_powered_seconds": 4.180000000000575,
+      "commanded_zero_seconds": 3.0400000000004184,
+      "drive_seconds": 3.895000000000536,
+      "turn_seconds": 0.2850000000000392,
+      "powered_to_zero_transitions": 3,
+      "longest_powered_interval_seconds": 2.375000000000327,
+      "recovery_seconds": 0.5700000000000784,
+      "local_recoveries": 1,
+      "local_searches": 2,
+      "events": [
+        {
+          "event": "mission_started",
+          "elapsed_seconds": 0.09500000000001307,
+          "target_label": "simulated object"
+        },
+        {
+          "event": "local_route",
+          "elapsed_seconds": 0.47500000000006537,
+          "waypoints_cm": [
+            [
+              -6.607438699756467e-18,
+              15.0
+            ],
+            [
+              -1.3214877399512933e-17,
+              30.0
+            ],
+            [
+              -11.249999999999998,
+              41.98557158514987
+            ]
+          ]
+        },
+        {
+          "event": "local_recovery",
+          "elapsed_seconds": 3.895000000000536,
+          "reason": "Target flow inconsistent"
+        },
+        {
+          "event": "target_reacquired",
+          "elapsed_seconds": 4.4650000000006145
+        },
+        {
+          "event": "local_route",
+          "elapsed_seconds": 4.750000000000654,
+          "waypoints_cm": [
+            [
+              -7.159112279157037,
+              39.65677671017351
+            ],
+            [
+              -14.16873535878566,
+              40.649460482558
+            ]
+          ]
+        },
+        {
+          "event": "arrival_braking",
+          "elapsed_seconds": 7.0300000000009675
+        },
+        {
+          "event": "mission_complete",
+          "elapsed_seconds": 7.220000000000994,
+          "remote_vlm_needed": false
+        }
+      ],
+      "intervals": [
+        {
+          "mode": "zero",
+          "start_seconds": 0.0,
+          "duration_seconds": 0.5700000000000784
+        },
+        {
+          "mode": "drive",
+          "start_seconds": 0.5700000000000784,
+          "duration_seconds": 2.375000000000327
+        },
+        {
+          "mode": "zero",
+          "start_seconds": 2.9450000000004053,
+          "duration_seconds": 0.6650000000000915
+        },
+        {
+          "mode": "turn",
+          "start_seconds": 3.610000000000497,
+          "duration_seconds": 0.2850000000000392
+        },
+        {
+          "mode": "zero",
+          "start_seconds": 3.895000000000536,
+          "duration_seconds": 0.9500000000001307
+        },
+        {
+          "mode": "drive",
+          "start_seconds": 4.845000000000667,
+          "duration_seconds": 1.5200000000002092
+        },
+        {
+          "mode": "zero",
+          "start_seconds": 6.365000000000876,
+          "duration_seconds": 0.8550000000001177
+        }
+      ],
+      "true_pose": [
+        -8.572681981321782,
+        40.69185711786805,
+        -24.460832922656735
+      ],
+      "true_target_range_cm": 21.067132470859946,
+      "standoff_error_cm": 1.0671324708599457,
+      "clearance_violation_count": 0,
+      "watchdog_stops": 0,
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "aligned_seed1",
+      "parameters": {
+        "speed": 11,
+        "coast": 0.05,
+        "seed": 1,
+        "pivot_cm": 6
+      },
+      "target_cm": [
+        0,
+        100
+      ],
+      "benchmark_wall_seconds": 14.376580079999258,
+      "outcome": "object_reached_estimate",
+      "reason": null,
+      "elapsed_seconds": 8.550000000001177,
+      "commanded_powered_seconds": 7.41000000000102,
+      "commanded_zero_seconds": 1.1400000000001569,
+      "drive_seconds": 7.41000000000102,
+      "turn_seconds": 0,
+      "powered_to_zero_transitions": 1,
+      "longest_powered_interval_seconds": 7.41000000000102,
+      "recovery_seconds": 0.0,
+      "local_recoveries": 0,
+      "local_searches": 1,
+      "events": [
+        {
+          "event": "mission_started",
+          "elapsed_seconds": 0.09500000000001307,
+          "target_label": "simulated object"
+        },
+        {
+          "event": "local_route",
+          "elapsed_seconds": 0.47500000000006537,
+          "waypoints_cm": [
+            [
+              -6.607438699756467e-18,
+              15.0
+            ],
+            [
+              -1.3214877399512933e-17,
+              30.0
+            ],
+            [
+              -1.98223160992694e-17,
+              45.0
+            ],
+            [
+              -2.6429754799025867e-17,
+              60.0
+            ],
+            [
+              -3.3037193498782336e-17,
+              75.0
+            ],
+            [
+              -3.5239673065367826e-17,
+              80.0
+            ]
+          ]
+        },
+        {
+          "event": "arrival_braking",
+          "elapsed_seconds": 7.980000000001098
+        },
+        {
+          "event": "mission_complete",
+          "elapsed_seconds": 8.550000000001177,
+          "remote_vlm_needed": false
+        }
+      ],
+      "intervals": [
+        {
+          "mode": "zero",
+          "start_seconds": 0.0,
+          "duration_seconds": 0.5700000000000784
+        },
+        {
+          "mode": "drive",
+          "start_seconds": 0.5700000000000784,
+          "duration_seconds": 7.41000000000102
+        },
+        {
+          "mode": "zero",
+          "start_seconds": 7.980000000001098,
+          "duration_seconds": 0.5700000000000784
+        }
+      ],
+      "true_pose": [
+        -0.01637751787292325,
+        81.28999757265383,
+        -0.07382277299385266
+      ],
+      "true_target_range_cm": 18.71000959525118,
+      "standoff_error_cm": -1.2899904047488207,
+      "clearance_violation_count": 0,
+      "watchdog_stops": 0,
+      "final_motor_output": [
+        0.0,
+        0.0
+      ]
+    }
+  ],
+  "complete": true
+}

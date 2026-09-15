@@ -4,12 +4,12 @@ description: Operate and iterate the local JetBot camera/IMU navigation tools fo
 metadata:
   baseline-date: "2026-09-13"
   timezone: America/Los_Angeles
-  revision: "11"
+  revision: "12"
 ---
 
 # JetBot navigation
 
-Baseline **2026-09-13**, current revision **11**, America/Los_Angeles.
+Baseline **2026-09-13**, current revision **12**, America/Los_Angeles.
 Workspace: `/home/jetbot/jetbot`. Use `/usr/bin/python3` for the local tools.
 
 Read [the dated algorithm and evidence](references/baseline-2026-09-13.md)
@@ -38,6 +38,8 @@ adjacent drives into up to30cm/four-second runs and its simulation-only evidence
 Read [revision11](references/revision-2026-09-14-r11.md) for the experimental
 object mission controller, local target recovery, continuous waypoint following,
 asynchronous observation, and the actual validation limits.
+Read [revision12](references/revision-2026-09-14-r12.md) for cropped tracking,
+measured processing latency and the remaining motion-time bottlenecks.
 
 ## Scope and control division
 
@@ -46,7 +48,7 @@ asynchronous observation, and the actual validation limits.
   evaluates results between actions. It does not steer on each model call.
 - Local processes acquire camera/IMU data, estimate motion, issue expiring motor
   leases, and stop on health, timing, tracking, tilt, or motion limits.
-- There is no implemented global SLAM map, object tracker or automatic obstacle
+- Revision11 implements a locally seeded object tracker. There is no global SLAM map or automatic obstacle
   segmentation. Revision 8 adds local static-map search and bounded replanning;
   revision 2 adds a conservative
   straight swept-rectangle checker for explicitly inspected static maps.

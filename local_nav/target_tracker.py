@@ -65,19 +65,32 @@ class TargetTracker:
 
     def update(self,image):
         gray=cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
-        mask=np.zeros_like(self.previous)
         x,y,r,b=np.round(self.box).astype(int)
+        # Both frames use the same padded ROI and coordinate origin. Padding
+        # retains three pyramid levels for ordinary boxes and room for motion;
+        # leaving this bounded region fails closed into stationary recovery.
+        left,top=max(0,x-96),max(0,y-96)
+        right,bottom=min(gray.shape[1],r+96),min(gray.shape[0],b+96)
+        previous=self.previous[top:bottom,left:right]
+        current=gray[top:bottom,left:right]
+        mask=np.zeros_like(previous)
         inset=max(1,int(min(r-x,b-y)*.1))
-        mask[max(0,y+inset):b-inset,max(0,x+inset):r-inset]=255
-        points=cv2.goodFeaturesToTrack(self.previous,60,.01,3,mask=mask)
+        mask[max(0,y+inset-top):b-inset-top,max(0,x+inset-left):r-inset-left]=255
+        points=cv2.goodFeaturesToTrack(previous,60,.01,3,mask=mask)
         if points is None or len(points)<8:raise TargetLost('Target features unavailable')
-        next_points,ok,_=cv2.calcOpticalFlowPyrLK(self.previous,gray,points,None,winSize=(21,21),maxLevel=3)
+        next_points,ok,_=cv2.calcOpticalFlowPyrLK(previous,current,points,None,winSize=(21,21),maxLevel=3)
         if next_points is None:raise TargetLost('Target flow unavailable')
-        back,back_ok,_=cv2.calcOpticalFlowPyrLK(gray,self.previous,next_points,points.copy(),winSize=(21,21),maxLevel=3,
+        back,back_ok,_=cv2.calcOpticalFlowPyrLK(current,previous,next_points,points.copy(),winSize=(21,21),maxLevel=3,
                                               flags=cv2.OPTFLOW_USE_INITIAL_FLOW)
         if back is None:raise TargetLost('Target reverse flow unavailable')
-        good=(ok.ravel()>0)&(back_ok.ravel()>0)&(np.linalg.norm(points-back,axis=2).ravel()<1.)
+        coordinates=next_points.reshape(-1,2)
+        inside=(coordinates[:,0]>=0)&(coordinates[:,0]<current.shape[1])&\
+               (coordinates[:,1]>=0)&(coordinates[:,1]<current.shape[0])
+        good=(ok.ravel()>0)&(back_ok.ravel()>0)&inside&(np.linalg.norm(points-back,axis=2).ravel()<1.)
         if good.sum()<8:raise TargetLost('Target flow inconsistent')
+        origin=np.array([left,top],dtype=np.float32)
+        points=points+origin
+        next_points=next_points+origin
         matrix,inliers=cv2.estimateAffinePartial2D(points[good],next_points[good],method=cv2.RANSAC,ransacReprojThreshold=2.)
         if matrix is None or inliers.mean()<.7:raise TargetLost('Target geometry inconsistent')
         scale=float(np.linalg.norm(matrix[:,0]))

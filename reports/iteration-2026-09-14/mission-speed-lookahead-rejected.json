@@ -1,0 +1,15 @@
+{
+  "experiment": "Waypoint handoff radius12cm instead of6cm",
+  "enabled": false,
+  "reverted": true,
+  "outcome": "stopped",
+  "reason": "Target recovery exhausted: Target flow inconsistent",
+  "elapsed_seconds": 8.8550000000007,
+  "true_target_range_cm": 28.428717195207017,
+  "local_recoveries": 3,
+  "clearance_violation_count": 0,
+  "final_motor_output": [
+    0.0,
+    0.0
+  ]
+}

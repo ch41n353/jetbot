@@ -37,6 +37,26 @@ class TargetTrackerTests(unittest.TestCase):
         np.testing.assert_array_equal(tracker.refine(gray,box),box)
         with self.assertRaises(TargetLost):tracker.update(image)
 
+    def test_roi_coordinates_remain_global_near_image_edges(self):
+        _,patch=self.scene()
+        for left,top in [(4,5),(200,175)]:
+            image=np.full((320,400,3),128,np.uint8)
+            image[top:top+96,left:left+64]=patch
+            tracker=TargetTracker(image,[left,top,left+64,top+96])
+            for step in range(1,6):
+                frame=np.full_like(image,128)
+                x,y=left+step*3,top+step*2
+                frame[y:y+96,x:x+64]=patch
+                tracker.update(frame)
+            np.testing.assert_allclose(tracker.box,[x,y,x+64,y+96],atol=1)
+
+    def test_target_leaving_bounded_flow_region_is_lost(self):
+        image,patch=self.scene()
+        tracker=TargetTracker(image,[120,100,184,196])
+        frame=np.full_like(image,128)
+        frame[100:196,310:374]=patch
+        with self.assertRaises(TargetLost):tracker.update(frame)
+
     def test_duplicate_identity_remains_ambiguous(self):
         image,patch=self.scene()
         tracker=TargetTracker(image,[120,100,184,196])
