@@ -1,0 +1,41 @@
+{
+  "outcome": "stopped",
+  "actions": [
+    {
+      "plan": {
+        "kind": "drive",
+        "value": 30.0,
+        "swept_bounds_cm": [
+          -13.51983741265209,
+          -22.200259385501443,
+          13.51983741265209,
+          41.206960288291384
+        ],
+        "predicted_start_pose": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "predicted_end_pose": [
+          0.0,
+          30.0,
+          0.0
+        ],
+        "primitive_count": 2
+      },
+      "result_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-173336-18c2de-route-01.json.action-01.json",
+      "outcome": "stopped",
+      "reason": "Stale observation for braking",
+      "target_index": 0
+    }
+  ],
+  "local_planning_seconds": 0.007414908999635372,
+  "intermediate_model_calls": 0,
+  "requires_planner": true,
+  "coalesce_drives": true,
+  "reached_targets": [],
+  "local_searches": 1,
+  "primitive_count": 2,
+  "reason": "Action failed or final pose unverified: Stale observation for braking",
+  "elapsed_seconds": 0.380052385999079
+}

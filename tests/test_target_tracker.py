@@ -1,0 +1,49 @@
+import os
+import sys
+import unittest
+import cv2
+import numpy as np
+sys.path.insert(0,os.path.join(os.path.dirname(__file__),'..','local_nav'))
+from target_tracker import TargetTracker,TargetLost
+
+
+class TargetTrackerTests(unittest.TestCase):
+    def scene(self):
+        patch=cv2.resize(np.random.RandomState(13).randint(0,255,(24,16,3)).astype(np.uint8),
+                         (64,96),interpolation=cv2.INTER_NEAREST)
+        image=np.full((320,400,3),128,np.uint8)
+        image[100:196,120:184]=patch
+        return image,patch
+
+    def test_original_registration_corrects_gradual_aspect_drift(self):
+        image,patch=self.scene()
+        tracker=TargetTracker(image,[120,100,184,196])
+        original=tracker.template.copy()
+        for step in range(1,21):
+            width,height=64+step*2,96+step
+            frame=np.full_like(image,128)
+            frame[100:100+height,120:120+width]=cv2.resize(patch,(width,height))
+            tracker.update(frame)
+        np.testing.assert_array_equal(tracker.template,original)
+        np.testing.assert_allclose(tracker.box,[120,100,224,216],atol=4)
+        self.assertGreater(tracker.confidence,.7)
+
+    def test_refinement_cannot_replace_identity(self):
+        image,_=self.scene()
+        tracker=TargetTracker(image,[120,100,184,196])
+        image[100:196,120:184]=np.random.RandomState(9).randint(0,255,(96,64,3)).astype(np.uint8)
+        gray=cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
+        box=tracker.box.copy()
+        np.testing.assert_array_equal(tracker.refine(gray,box),box)
+        with self.assertRaises(TargetLost):tracker.update(image)
+
+    def test_duplicate_identity_remains_ambiguous(self):
+        image,patch=self.scene()
+        tracker=TargetTracker(image,[120,100,184,196])
+        image[100:196,210:274]=patch
+        with self.assertRaises(TargetLost):tracker.reacquire(image)
+
+
+if __name__=='__main__':
+    cv2.setNumThreads(1)
+    unittest.main()

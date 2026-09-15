@@ -1,0 +1,23 @@
+{
+  "session_id": "fe086520762d485c9dfe8846dc2d1040",
+  "control_epoch": 0,
+  "captured_monotonic": 6690.162492044,
+  "image_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-163414-681e55-6690.162492.jpg",
+  "inspected_free_rectangle_cm": [
+    -20,
+    -24,
+    20,
+    65
+  ],
+  "obstacle_rectangles_cm": [],
+  "goals_cm": [
+    [
+      0,
+      30
+    ]
+  ],
+  "goal_tolerance_cm": 3.0,
+  "measured_map_drive": true,
+  "precise_turn_sweep": false,
+  "coalesce_drives": true
+}

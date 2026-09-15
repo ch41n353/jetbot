@@ -1,0 +1,732 @@
+{
+  "outcome": "overshot_goal",
+  "samples": [
+    {
+      "time": 6712.424720813,
+      "elapsed": 0,
+      "position_cm": [
+        -0.0013855391802845343,
+        -0.0016840117932700525
+      ],
+      "velocity_cm_s": [
+        -0.006841917887418405,
+        -0.008315802667256067
+      ],
+      "yaw_degrees": 0.003047475555509917,
+      "position_sigma_cm": 0.03605551275463989,
+      "yaw_sigma_degrees": 0.27788200331391616,
+      "braking_lead_cm": 0.0
+    },
+    {
+      "time": 6712.52447456,
+      "elapsed": 0.07838922099927004,
+      "position_cm": [
+        5.403856469792423e-05,
+        -0.0031094247132457302
+      ],
+      "velocity_cm_s": [
+        0.0037946985542434953,
+        -0.011302559869472845
+      ],
+      "yaw_degrees": -0.002050754882730216,
+      "position_sigma_cm": 0.05099019513592785,
+      "yaw_sigma_degrees": 0.39261521105612973,
+      "braking_lead_cm": 0.0
+    },
+    {
+      "time": 6712.592570844,
+      "elapsed": 0.1614201630000025,
+      "position_cm": [
+        -0.0005363849845990786,
+        -0.008216411697568038
+      ],
+      "velocity_cm_s": [
+        -0.002437861946002106,
+        -0.043149559461599284
+      ],
+      "yaw_degrees": 0.007555973137133319,
+      "position_sigma_cm": 0.06244997998398398,
+      "yaw_sigma_degrees": 0.4742167475571842,
+      "braking_lead_cm": 0.0
+    },
+    {
+      "time": 6712.690770562,
+      "elapsed": 0.2459871649998604,
+      "position_cm": [
+        -0.024346271674111276,
+        0.40623979201275157
+      ],
+      "velocity_cm_s": [
+        -0.12245088140275524,
+        2.0886970833287455
+      ],
+      "yaw_degrees": 0.11661158660202228,
+      "position_sigma_cm": 0.08359901633856126,
+      "yaw_sigma_degrees": 0.5490982937478636,
+      "braking_lead_cm": 0.37596547499917415
+    },
+    {
+      "time": 6712.758257933,
+      "elapsed": 0.3271861590001208,
+      "position_cm": [
+        -0.08379061279418873,
+        0.8832209854384686
+      ],
+      "velocity_cm_s": [
+        -0.5016362926791735,
+        4.578203738236736
+      ],
+      "yaw_degrees": -0.3312430185016151,
+      "position_sigma_cm": 0.10533732416590096,
+      "yaw_sigma_degrees": 0.6100190916199624,
+      "braking_lead_cm": 0.8240766728826124
+    },
+    {
+      "time": 6712.857789958,
+      "elapsed": 0.40446255299957556,
+      "position_cm": [
+        -0.16208061661515996,
+        1.6257043830877262
+      ],
+      "velocity_cm_s": [
+        -0.6441086667594939,
+        6.018973725203235
+      ],
+      "yaw_degrees": -0.5521271854758917,
+      "position_sigma_cm": 0.17306763471865302,
+      "yaw_sigma_degrees": 0.6700810989971201,
+      "braking_lead_cm": 1.0834152705365823
+    },
+    {
+      "time": 6712.926476614,
+      "elapsed": 0.4861239479996584,
+      "position_cm": [
+        -0.19597140118609185,
+        2.2395146342712158
+      ],
+      "velocity_cm_s": [
+        -0.5687600732144655,
+        7.47767826193084
+      ],
+      "yaw_degrees": -0.9894794743497264,
+      "position_sigma_cm": 0.19719124077648117,
+      "yaw_sigma_degrees": 0.7210133466248582,
+      "braking_lead_cm": 1.3459820871475512
+    },
+    {
+      "time": 6712.993078558,
+      "elapsed": 0.5662173549999352,
+      "position_cm": [
+        -0.23589078157547166,
+        2.9085071698769056
+      ],
+      "velocity_cm_s": [
+        -0.5840663369774198,
+        8.761159017079628
+      ],
+      "yaw_degrees": -1.5044093291268772,
+      "position_sigma_cm": 0.21912177903302937,
+      "yaw_sigma_degrees": 0.7683094059608236,
+      "braking_lead_cm": 1.577008623074333
+    },
+    {
+      "time": 6713.093554501,
+      "elapsed": 0.6426347289998375,
+      "position_cm": [
+        -0.26680292272385064,
+        4.060946777754959
+      ],
+      "velocity_cm_s": [
+        -0.4458617379227453,
+        10.115482677752915
+      ],
+      "yaw_degrees": -1.6917873223707045,
+      "position_sigma_cm": 0.22825267549454295,
+      "yaw_sigma_degrees": 0.8169255524521534,
+      "braking_lead_cm": 1.8207868819955246
+    },
+    {
+      "time": 6713.157938814,
+      "elapsed": 0.7239516399995409,
+      "position_cm": [
+        -0.310295672459754,
+        4.763593444200521
+      ],
+      "velocity_cm_s": [
+        -0.5606897710080803,
+        10.51440177139724
+      ],
+      "yaw_degrees": -1.52309044412922,
+      "position_sigma_cm": 0.23766679152351772,
+      "yaw_sigma_degrees": 0.8587007806387289,
+      "braking_lead_cm": 1.8925923188515033
+    },
+    {
+      "time": 6713.224969564,
+      "elapsed": 0.8061964270000317,
+      "position_cm": [
+        -0.2552059028798673,
+        5.559573739017274
+      ],
+      "velocity_cm_s": [
+        0.13058419987503928,
+        11.194627326636933
+      ],
+      "yaw_degrees": -0.895694835987523,
+      "position_sigma_cm": 0.24215847617801387,
+      "yaw_sigma_degrees": 0.8988275796523362,
+      "braking_lead_cm": 2.0
+    },
+    {
+      "time": 6713.327538814,
+      "elapsed": 0.8858155580001039,
+      "position_cm": [
+        -0.20701238157650664,
+        6.66024512140448
+      ],
+      "velocity_cm_s": [
+        0.30022372566098554,
+        10.962817371251287
+      ],
+      "yaw_degrees": -0.5465089379273114,
+      "position_sigma_cm": 0.2576991718030312,
+      "yaw_sigma_degrees": 0.9409376283932875,
+      "braking_lead_cm": 1.9733071268252316
+    },
+    {
+      "time": 6713.423359336,
+      "elapsed": 0.9630575769997449,
+      "position_cm": [
+        -0.14903938801056815,
+        7.733851317457464
+      ],
+      "velocity_cm_s": [
+        0.4526200956999593,
+        11.08358123509559
+      ],
+      "yaw_degrees": -0.3514930473648696,
+      "position_sigma_cm": 0.2763740282983479,
+      "yaw_sigma_degrees": 0.9805762392611796,
+      "braking_lead_cm": 1.942285678360836
+    },
+    {
+      "time": 6713.490583319,
+      "elapsed": 1.0420913879997897,
+      "position_cm": [
+        -0.09997071016124892,
+        8.532315411175855
+      ],
+      "velocity_cm_s": [
+        0.5912741251044279,
+        11.48062418627792
+      ],
+      "yaw_degrees": -0.2954295490790313,
+      "position_sigma_cm": 0.28111309435085075,
+      "yaw_sigma_degrees": 1.0159192851879364,
+      "braking_lead_cm": 1.983354386721335
+    },
+    {
+      "time": 6713.558463871,
+      "elapsed": 1.1235740829997667,
+      "position_cm": [
+        -0.11782665986763585,
+        9.27572695828451
+      ],
+      "velocity_cm_s": [
+        0.16411227982540386,
+        11.216192335739192
+      ],
+      "yaw_degrees": -0.5725400947863312,
+      "position_sigma_cm": 0.28408509235150164,
+      "yaw_sigma_degrees": 1.0501352962397559,
+      "braking_lead_cm": 2.0
+    },
+    {
+      "time": 6713.658925387,
+      "elapsed": 1.2011758449998524,
+      "position_cm": [
+        -0.008494031550869627,
+        10.226354975084194
+      ],
+      "velocity_cm_s": [
+        0.6262079339030039,
+        10.339400525250205
+      ],
+      "yaw_degrees": 0.15311269189003787,
+      "position_sigma_cm": 0.3181150892067481,
+      "yaw_sigma_degrees": 1.086208711503754,
+      "braking_lead_cm": 1.8610920945450369
+    },
+    {
+      "time": 6713.723980749,
+      "elapsed": 1.279448709999997,
+      "position_cm": [
+        0.11263473518029925,
+        11.101763397673869
+      ],
+      "velocity_cm_s": [
+        1.24407078511684,
+        11.897880659129854
+      ],
+      "yaw_degrees": 0.7038983133007076,
+      "position_sigma_cm": 0.32088016625726773,
+      "yaw_sigma_degrees": 1.1180259735979963,
+      "braking_lead_cm": 2.0
+    },
+    {
+      "time": 6713.791734946,
+      "elapsed": 1.3590157569997245,
+      "position_cm": [
+        0.1877509487993933,
+        11.86480180696742
+      ],
+      "velocity_cm_s": [
+        1.1763642529404017,
+        11.579871276061105
+      ],
+      "yaw_degrees": 0.9260037292810417,
+      "position_sigma_cm": 0.33444548259880025,
+      "yaw_sigma_degrees": 1.1491950344243511,
+      "braking_lead_cm": 2.0
+    },
+    {
+      "time": 6713.891074313,
+      "elapsed": 1.4377903459999288,
+      "position_cm": [
+        0.3446548666489817,
+        13.082956960609149
+      ],
+      "velocity_cm_s": [
+        1.377918977975273,
+        11.921216672095687
+      ],
+      "yaw_degrees": 1.5908597766520665,
+      "position_sigma_cm": 0.3592528455532969,
+      "yaw_sigma_degrees": 1.182157910132502,
+      "braking_lead_cm": 2.0
+    },
+    {
+      "time": 6713.958545694,
+      "elapsed": 1.518059484999867,
+      "position_cm": [
+        0.36384082200374585,
+        13.95539117247772
+      ],
+      "velocity_cm_s": [
+        0.8311379583646151,
+        12.425825135626326
+      ],
+      "yaw_degrees": 1.1272331066594707,
+      "position_sigma_cm": 0.36737186109771325,
+      "yaw_sigma_degrees": 1.2116552795157123,
+      "braking_lead_cm": 2.0
+    },
+    {
+      "time": 6714.024175855,
+      "elapsed": 1.5975336139999854,
+      "position_cm": [
+        0.36351013899568996,
+        14.861761692286555
+      ],
+      "velocity_cm_s": [
+        0.4130496877237864,
+        13.118049672480183
+      ],
+      "yaw_degrees": 0.8391143079492335,
+      "position_sigma_cm": 0.37370852440335894,
+      "yaw_sigma_degrees": 1.2403044536404968,
+      "braking_lead_cm": 2.0
+    },
+    {
+      "time": 6714.124753987,
+      "elapsed": 1.675131625999711,
+      "position_cm": [
+        0.40134609831351314,
+        16.062265428638863
+      ],
+      "velocity_cm_s": [
+        0.39461721824512186,
+        12.527040509628183
+      ],
+      "yaw_degrees": 0.3493662562220647,
+      "position_sigma_cm": 0.40664373506556234,
+      "yaw_sigma_degrees": 1.2710007541120691,
+      "braking_lead_cm": 2.0
+    },
+    {
+      "time": 6714.190793841,
+      "elapsed": 1.7559012920000896,
+      "position_cm": [
+        0.33136651253391597,
+        16.98379452799015
+      ],
+      "velocity_cm_s": [
+        -0.3325198318915577,
+        13.240588218551432
+      ],
+      "yaw_degrees": -0.571629761154219,
+      "position_sigma_cm": 0.40933581489735377,
+      "yaw_sigma_degrees": 1.2983723271415417,
+      "braking_lead_cm": 2.0
+    },
+    {
+      "time": 6714.293074753,
+      "elapsed": 1.8297647809995397,
+      "position_cm": [
+        0.29913678832198315,
+        18.21723811623945
+      ],
+      "velocity_cm_s": [
+        -0.32381484766209856,
+        12.649980216567931
+      ],
+      "yaw_degrees": -1.7215573928480277,
+      "position_sigma_cm": 0.43132172497520377,
+      "yaw_sigma_degrees": 1.3278507476260881,
+      "braking_lead_cm": 2.0
+    },
+    {
+      "time": 6714.358012875,
+      "elapsed": 1.9094128699998691,
+      "position_cm": [
+        0.24104020008370175,
+        19.089398479463142
+      ],
+      "velocity_cm_s": [
+        -0.6092300938509005,
+        13.040308755956875
+      ],
+      "yaw_degrees": -2.5575641238380036,
+      "position_sigma_cm": 0.4443556207227267,
+      "yaw_sigma_degrees": 1.3539930138193828,
+      "braking_lead_cm": 2.0
+    },
+    {
+      "time": 6714.431584694,
+      "elapsed": 1.9861457679999148,
+      "position_cm": [
+        0.19384587217064206,
+        19.95323942486869
+      ],
+      "velocity_cm_s": [
+        -0.625351495708484,
+        12.390886929846898
+      ],
+      "yaw_degrees": -2.9318009848257023,
+      "position_sigma_cm": 0.45463002911698425,
+      "yaw_sigma_degrees": 1.3802582595781383,
+      "braking_lead_cm": 2.0
+    },
+    {
+      "time": 6714.490645818,
+      "elapsed": 2.0658411499998692,
+      "position_cm": [
+        0.1761473998126253,
+        20.861022055672244
+      ],
+      "velocity_cm_s": [
+        -0.4625075759607133,
+        13.880554831893406
+      ],
+      "yaw_degrees": -2.778424750349464,
+      "position_sigma_cm": 0.45901595510763643,
+      "yaw_sigma_degrees": 1.4050106655321566,
+      "braking_lead_cm": 2.0
+    },
+    {
+      "time": 6714.590623109,
+      "elapsed": 2.155142479999995,
+      "position_cm": [
+        0.0958019997699694,
+        22.31682249290433
+      ],
+      "velocity_cm_s": [
+        -0.6330720370999926,
+        14.220932966178992
+      ],
+      "yaw_degrees": -2.807089552909632,
+      "position_sigma_cm": 0.46238723144323507,
+      "yaw_sigma_degrees": 1.4321405383292876,
+      "braking_lead_cm": 2.0
+    },
+    {
+      "time": 6714.659551695,
+      "elapsed": 2.2390761419992486,
+      "position_cm": [
+        0.1257352057067964,
+        23.19198189543697
+      ],
+      "velocity_cm_s": [
+        -0.09940400066057237,
+        13.458771687946491
+      ],
+      "yaw_degrees": -2.432954509550333,
+      "position_sigma_cm": 0.46884789746068517,
+      "yaw_sigma_degrees": 1.4566831901760566,
+      "braking_lead_cm": 2.0
+    },
+    {
+      "time": 6714.758788248,
+      "elapsed": 2.3218577580000783,
+      "position_cm": [
+        0.14243694604281568,
+        24.508926752398
+      ],
+      "velocity_cm_s": [
+        0.03444915078842212,
+        13.36476775289513
+      ],
+      "yaw_degrees": -1.4422652774403546,
+      "position_sigma_cm": 0.47533614672075053,
+      "yaw_sigma_degrees": 1.4828196491113514,
+      "braking_lead_cm": 2.0
+    },
+    {
+      "time": 6714.860830825,
+      "elapsed": 2.4002952599994387,
+      "position_cm": [
+        0.26244939772444903,
+        25.881703372227676
+      ],
+      "velocity_cm_s": [
+        0.6052754420503041,
+        13.408873250713105
+      ],
+      "yaw_degrees": 0.21452748302594746,
+      "position_sigma_cm": 0.4884243289614409,
+      "yaw_sigma_degrees": 1.5086831925487867,
+      "braking_lead_cm": 2.0
+    },
+    {
+      "time": 6714.924965083,
+      "elapsed": 2.4810909679999895,
+      "position_cm": [
+        0.3605171789865916,
+        26.830702734683598
+      ],
+      "velocity_cm_s": [
+        1.0671884020608289,
+        14.102973632415242
+      ],
+      "yaw_degrees": 1.2614252392224266,
+      "position_sigma_cm": 0.49504654862127084,
+      "yaw_sigma_degrees": 1.5316902613831112,
+      "braking_lead_cm": 2.0
+    },
+    {
+      "time": 6714.990408783,
+      "elapsed": 2.560053997000068,
+      "position_cm": [
+        0.38065538694829687,
+        27.703597790805727
+      ],
+      "velocity_cm_s": [
+        0.6874532276564832,
+        13.720540186648911
+      ],
+      "yaw_degrees": 1.8611931773453556,
+      "position_sigma_cm": 0.5046902860018362,
+      "yaw_sigma_degrees": 1.5544403275568117,
+      "braking_lead_cm": 2.0
+    },
+    {
+      "time": 6715.091329315,
+      "elapsed": 2.6319488689996433,
+      "position_cm": [
+        0.35123866320744407,
+        29.053343834385615
+      ],
+      "velocity_cm_s": [
+        0.19798459702564042,
+        13.547442747071575
+      ],
+      "yaw_degrees": 1.455213923804633,
+      "position_sigma_cm": 0.5161300648729233,
+      "yaw_sigma_degrees": 1.5790626093643778,
+      "braking_lead_cm": 2.0
+    }
+  ],
+  "passed_waypoints_cm": [
+    30.0
+  ],
+  "travel_direction": "forward",
+  "powered_limit_seconds": 4.0,
+  "power_start": {
+    "time": 6712.208464734,
+    "voltage_v": 5.024,
+    "source": "INA3221 POM_5V_IN",
+    "conversion_period_seconds": 0.053759999999999995,
+    "battery_percent": null,
+    "battery_state": "voltage_only_no_soc_estimate",
+    "input_time": 6712.208464734,
+    "pack_time": 6712.210434809,
+    "pack_voltage_v": 12.088000000000001,
+    "pack_source": "INA219-compatible bus1 address0x41",
+    "pack_conversion_period_seconds": 0.001064,
+    "pack_required": true,
+    "pack_profile": "Waveshare-compatible 3S inferred from hardware; board model unconfirmed",
+    "motion_allowed": true,
+    "stop_latched": false,
+    "stop_reason": null,
+    "warning": false,
+    "minimum_voltage_v": 5.016,
+    "minimum_pack_voltage_v": 11.98,
+    "warn_below_v": 4.9,
+    "stop_below_v": 4.8,
+    "stop_above_v": 5.25,
+    "pack_warn_below_v": 11.4,
+    "pack_stop_below_v": 10.8,
+    "pack_stop_above_v": 12.9,
+    "stale_after_seconds": 0.6,
+    "power_policy_revision": 2,
+    "stale": false,
+    "service_stop_latched": false
+  },
+  "brake_position_cm": [
+    0.35123866320744407,
+    29.053343834385615
+  ],
+  "brake_lead_cm": 2.0,
+  "settling_samples": [
+    {
+      "time": 6715.157520524,
+      "position_cm": [
+        0.24973662697816124,
+        29.955991973845155
+      ],
+      "velocity_cm_s": [
+        -0.6677412131031601,
+        13.592210966769983
+      ],
+      "yaw_degrees": 0.6773536137825792,
+      "position_sigma_cm": 0.5190619429248915,
+      "yaw_sigma_degrees": 1.6011859621302063
+    },
+    {
+      "time": 6715.223402095,
+      "position_cm": [
+        0.10313858266621245,
+        30.84542631458397
+      ],
+      "velocity_cm_s": [
+        -1.4464582550097558,
+        13.546356936363555
+      ],
+      "yaw_degrees": -0.5001430039677996,
+      "position_sigma_cm": 0.5222765443114189,
+      "yaw_sigma_degrees": 1.6229888830769186
+    },
+    {
+      "time": 6715.290622692,
+      "position_cm": [
+        -0.01436474347778996,
+        31.199688829413432
+      ],
+      "velocity_cm_s": [
+        -1.5972419404473026,
+        9.408252616863317
+      ],
+      "yaw_degrees": -2.2239643838542325,
+      "position_sigma_cm": 0.5496905756413873,
+      "yaw_sigma_degrees": 1.6445833750446148
+    },
+    {
+      "time": 6715.391062228,
+      "position_cm": [
+        -0.03390789730231565,
+        31.11430102205566
+      ],
+      "velocity_cm_s": [
+        -0.8959091228919447,
+        4.2790556103845105
+      ],
+      "yaw_degrees": -2.3011994324375737,
+      "position_sigma_cm": 0.5510704790477904,
+      "yaw_sigma_degrees": 1.6678475501849597
+    },
+    {
+      "time": 6715.458004905,
+      "position_cm": [
+        -0.044905048140347646,
+        31.10704239924216
+      ],
+      "velocity_cm_s": [
+        -0.5300931263410166,
+        2.0853125934709396
+      ],
+      "yaw_degrees": -2.3653423560901614,
+      "position_sigma_cm": 0.5522487418527643,
+      "yaw_sigma_degrees": 1.6888522742781384
+    },
+    {
+      "time": 6715.526979689,
+      "position_cm": [
+        -0.04965582707832261,
+        31.116349046785494
+      ],
+      "velocity_cm_s": [
+        -0.299485083035943,
+        1.1101204264047682
+      ],
+      "yaw_degrees": -2.3709471669469386,
+      "position_sigma_cm": 0.5534244960949607,
+      "yaw_sigma_degrees": 1.709716506186815
+    },
+    {
+      "time": 6715.624433721,
+      "position_cm": [
+        -0.05164894374073211,
+        31.123145334432724
+      ],
+      "velocity_cm_s": [
+        -0.1599684737934215,
+        0.5899294100315579
+      ],
+      "yaw_degrees": -2.3706373523373,
+      "position_sigma_cm": 0.5545977577289338,
+      "yaw_sigma_degrees": 1.731939217672108
+    }
+  ],
+  "final_anchor": {
+    "image_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-163414-681e55-route-01.json.action-01.json.settled.jpg",
+    "captured_monotonic": 6715.624433721
+  },
+  "final_position_cm": [
+    -0.05164894374073211,
+    31.123145334432724
+  ],
+  "final_error_cm": 1.1231453344327242,
+  "settled_window_seconds": 0.3338110289996621,
+  "power_end": {
+    "time": 6715.708956661,
+    "voltage_v": 5.016,
+    "source": "INA3221 POM_5V_IN",
+    "conversion_period_seconds": 0.053759999999999995,
+    "battery_percent": null,
+    "battery_state": "voltage_only_no_soc_estimate",
+    "input_time": 6715.708956661,
+    "pack_time": 6715.711225959,
+    "pack_voltage_v": 12.02,
+    "pack_source": "INA219-compatible bus1 address0x41",
+    "pack_conversion_period_seconds": 0.001064,
+    "pack_required": true,
+    "pack_profile": "Waveshare-compatible 3S inferred from hardware; board model unconfirmed",
+    "motion_allowed": true,
+    "stop_latched": false,
+    "stop_reason": null,
+    "warning": false,
+    "minimum_voltage_v": 5.008,
+    "minimum_pack_voltage_v": 11.896,
+    "warn_below_v": 4.9,
+    "stop_below_v": 4.8,
+    "stop_above_v": 5.25,
+    "pack_warn_below_v": 11.4,
+    "pack_stop_below_v": 10.8,
+    "pack_stop_above_v": 12.9,
+    "stale_after_seconds": 0.6,
+    "power_policy_revision": 2,
+    "stale": false,
+    "service_stop_latched": false
+  },
+  "powered_seconds": 2.6328727339996476
+}

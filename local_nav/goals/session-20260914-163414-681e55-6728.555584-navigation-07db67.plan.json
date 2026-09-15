@@ -1,0 +1,42 @@
+{
+  "session_id": "fe086520762d485c9dfe8846dc2d1040",
+  "control_epoch": 3,
+  "captured_monotonic": 6728.555583824,
+  "image_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-163414-681e55-6728.555584.jpg",
+  "inspected_free_rectangle_cm": [
+    -45,
+    -30,
+    35,
+    55
+  ],
+  "obstacle_rectangles_cm": [
+    [
+      -85,
+      60,
+      -55,
+      85
+    ],
+    [
+      -140,
+      60,
+      -65,
+      95
+    ],
+    [
+      -55,
+      55,
+      -30,
+      90
+    ]
+  ],
+  "goals_cm": [
+    [
+      -18.75,
+      25
+    ]
+  ],
+  "goal_tolerance_cm": 3.0,
+  "measured_map_drive": true,
+  "precise_turn_sweep": true,
+  "coalesce_drives": true
+}

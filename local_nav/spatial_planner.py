@@ -94,6 +94,9 @@ class SpatialPlanner:
         if type(self.measured_map_drive) is not bool:
             raise ValueError('measured_map_drive must be boolean')
         self.precise_turn_sweep=plan.get('precise_turn_sweep',False)
+        self.goal_heading_turns=plan.get('goal_heading_turns',False)
+        if type(self.goal_heading_turns) is not bool:
+            raise ValueError('goal_heading_turns must be boolean')
         if type(self.precise_turn_sweep) is not bool:
             raise ValueError('precise_turn_sweep must be boolean')
         if not 1 <= self.tolerance <= 5:
@@ -139,6 +142,11 @@ class SpatialPlanner:
                             predicted_final_pose=list(current),
                             requires_measured_replanning=True, model_calls=0)
             actions = [('drive', n) for n in (15., 10., 5., -10., -5.)]+[('turn', -30.), ('turn', 30.)]
+            if self.goal_heading_turns:
+                bearing=math.degrees(math.atan2(self.goal[0]-current[0],self.goal[1]-current[1]))
+                turn=normalize(bearing-current[2])
+                if 1.5<abs(turn)<30:
+                    actions.append(('turn',round(turn,1)))
             correction = normalize(round(current[2]/30.)*30.-current[2])
             if 1.5 < abs(correction) <= 5.:
                 actions.append(('turn',correction))

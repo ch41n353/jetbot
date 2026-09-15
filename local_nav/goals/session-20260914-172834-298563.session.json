@@ -1,0 +1,13 @@
+{
+  "elapsed_seconds": 22.90084365799885,
+  "events": [
+    {
+      "event": "captured",
+      "image_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-172834-298563-9948.666648.jpg",
+      "metadata_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-172834-298563-9948.666648.json",
+      "captured_monotonic": 9948.666648106,
+      "session_id": "5623d19aae7f43aab6972b4d83937a1c",
+      "control_epoch": 0
+    }
+  ]
+}

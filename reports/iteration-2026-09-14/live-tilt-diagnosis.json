@@ -1,0 +1,208 @@
+{
+  "pre_stationary": {
+    "acceleration_mean": [
+      9.49934065934066,
+      -1.0876923076923075,
+      0.12186813186813185
+    ],
+    "acceleration_std": [
+      0.00899355053433393,
+      0.012141738300600566,
+      0.016234009066039026
+    ],
+    "gyro_mean_deg_s": [
+      0.0020604395604395605,
+      -0.019917582417582416,
+      0.01098901098901099
+    ],
+    "gyro_max_norm_deg_s": 0.28641098093474
+  },
+  "post_stationary": {
+    "acceleration_mean": [
+      9.506593406593403,
+      -1.074175824175824,
+      -0.0424175824175824
+    ],
+    "acceleration_std": [
+      0.009632794286070622,
+      0.012497554403921446,
+      0.017054576862458162
+    ],
+    "gyro_mean_deg_s": [
+      0.010302197802197802,
+      -0.008928571428571428,
+      -0.016483516483516484
+    ],
+    "gyro_max_norm_deg_s": 0.23385358667337133
+  },
+  "post_stop_gravity_change_degrees": 0.9879680860271932,
+  "late_motion_samples": [
+    {
+      "time": 10411.050226353,
+      "gyro_deg_s": [
+        6.4375,
+        4.6875,
+        5.4375
+      ],
+      "gyro_perpendicular_to_initial_up_deg_s": 7.6026480667402145,
+      "acceleration_direction_change_degrees": 2.130264740471259
+    },
+    {
+      "time": 10411.072086635,
+      "gyro_deg_s": [
+        12.125,
+        3.0625,
+        11.1875
+      ],
+      "gyro_perpendicular_to_initial_up_deg_s": 11.890335017803107,
+      "acceleration_direction_change_degrees": 2.3613495605918255
+    },
+    {
+      "time": 10411.098211826,
+      "gyro_deg_s": [
+        20.0625,
+        3.6875,
+        16.4375
+      ],
+      "gyro_perpendicular_to_initial_up_deg_s": 17.24492736325688,
+      "acceleration_direction_change_degrees": 1.938211067389446
+    },
+    {
+      "time": 10411.120397633,
+      "gyro_deg_s": [
+        22.8125,
+        9.8125,
+        20.1875
+      ],
+      "gyro_perpendicular_to_initial_up_deg_s": 23.42711152679319,
+      "acceleration_direction_change_degrees": 0.4923069549251908
+    },
+    {
+      "time": 10411.142222446,
+      "gyro_deg_s": [
+        18.1875,
+        10.0625,
+        16.125
+      ],
+      "gyro_perpendicular_to_initial_up_deg_s": 19.966380780832846,
+      "acceleration_direction_change_degrees": 1.1643978796369396
+    },
+    {
+      "time": 10411.163942934,
+      "gyro_deg_s": [
+        13.0,
+        15.125,
+        13.875
+      ],
+      "gyro_perpendicular_to_initial_up_deg_s": 21.47051623611185,
+      "acceleration_direction_change_degrees": 2.8254289381083537
+    },
+    {
+      "time": 10411.190550892,
+      "gyro_deg_s": [
+        7.9375,
+        11.625,
+        12.125
+      ],
+      "gyro_perpendicular_to_initial_up_deg_s": 17.32151794060715,
+      "acceleration_direction_change_degrees": 5.218970304198648
+    },
+    {
+      "time": 10411.214997984,
+      "gyro_deg_s": [
+        12.5,
+        7.3125,
+        9.75
+      ],
+      "gyro_perpendicular_to_initial_up_deg_s": 12.948113604834704,
+      "acceleration_direction_change_degrees": 1.4681785165872194
+    },
+    {
+      "time": 10411.240534103,
+      "gyro_deg_s": [
+        12.5,
+        11.875,
+        15.625
+      ],
+      "gyro_perpendicular_to_initial_up_deg_s": 20.35875107704297,
+      "acceleration_direction_change_degrees": 4.862770539848415
+    },
+    {
+      "time": 10411.262488553,
+      "gyro_deg_s": [
+        9.5,
+        9.3125,
+        12.375
+      ],
+      "gyro_perpendicular_to_initial_up_deg_s": 16.039019990343547,
+      "acceleration_direction_change_degrees": 5.45880874614929
+    },
+    {
+      "time": 10411.286321729,
+      "gyro_deg_s": [
+        7.4375,
+        11.5,
+        12.8125
+      ],
+      "gyro_perpendicular_to_initial_up_deg_s": 17.684501621922564,
+      "acceleration_direction_change_degrees": 4.009643034174743
+    },
+    {
+      "time": 10411.311075284,
+      "gyro_deg_s": [
+        3.0,
+        14.9375,
+        10.25
+      ],
+      "gyro_perpendicular_to_initial_up_deg_s": 18.308420595003504,
+      "acceleration_direction_change_degrees": 7.322180366288155
+    },
+    {
+      "time": 10411.332963275,
+      "gyro_deg_s": [
+        -1.8125,
+        7.5625,
+        4.125
+      ],
+      "gyro_perpendicular_to_initial_up_deg_s": 8.407689718194108,
+      "acceleration_direction_change_degrees": 4.914758182279921
+    },
+    {
+      "time": 10411.356208369,
+      "gyro_deg_s": [
+        -4.625,
+        9.6875,
+        4.25
+      ],
+      "gyro_perpendicular_to_initial_up_deg_s": 10.072947812085928,
+      "acceleration_direction_change_degrees": 6.805010443658076
+    },
+    {
+      "time": 10411.37848147,
+      "gyro_deg_s": [
+        -5.6875,
+        9.9375,
+        -1.0625
+      ],
+      "gyro_perpendicular_to_initial_up_deg_s": 9.27746802737814,
+      "acceleration_direction_change_degrees": 6.244736571660171
+    }
+  ],
+  "guard": "dot(normalized current up in IMU frame, immutable route-start up in IMU frame) < cos(5 degrees)",
+  "interpretation": "Fixed mount matrix cancels from relative gravity angle. Sustained raw gyro and changing acceleration direction support transient IMU assembly rotation; onboard data cannot distinguish chassis rocking from sensor mount movement. Quiet before/after data show less than 1 degree permanent change. No new motor commands or hardware session used for diagnosis.",
+  "next_experiment": "Inspect rigid IMU/camera mounting; observe one bounded 5cm drive with external video to distinguish chassis rocking from mount flex. Keep five-degree guard; do not repeat 30cm run blindly.",
+  "references": {
+    "motion_log": "local_nav/goals/session-20260914-173336-18c2de-route-02.json.action-01.json",
+    "last_motion_image": "local_nav/goals/session-20260914-173336-18c2de-route-02.json.action-01.json.observations/10411.360826.jpg",
+    "pre_stationary": "local_nav/goals/session-20260914-173336-18c2de-10393.564335.json",
+    "post_stationary": "local_nav/goals/session-20260914-173336-18c2de-10427.755796.json",
+    "guard": "local_nav/route_executor.py:91",
+    "gravity_integration": "local_nav/state_estimator.py:106"
+  },
+  "limitations": [
+    "Accelerometer during powered motion includes linear acceleration and is not independent ground-truth tilt.",
+    "Camera shows changing room orientation qualitatively, but moving people and monocular geometry prevent exact independent roll measurement here.",
+    "Observed transient rotation is not proof of tipping, obstacle collision, mount looseness, or mechanical damage.",
+    "Guard uses latest integrated IMU up, which may slightly lead camera frame time; this is appropriate for immediate stopping but should be logged explicitly."
+  ]
+}

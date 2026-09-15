@@ -41,6 +41,7 @@ class SessionTests(unittest.TestCase):
             if action == 'shutdown':
                 created[0].returncode = 0
             return dict(healthy=True, motion_enabled=armed, session_id='owned',
+                        control_epoch=0,time=0.,jpeg_base64='SlBFRw==',
                         power=dict(motion_allowed=power_allowed,voltage_v=5.04 if power_allowed else 4.7))
 
         original_exists = os.path.exists
@@ -81,3 +82,12 @@ class SessionTests(unittest.TestCase):
         self.assertIn('shutdown', operations)
         self.assertTrue(any(e['event'] == 'route_finished' for e in emitted))
         self.assertTrue(any(e['event'] == 'session_closed' for e in emitted))
+
+    def test_observe_and_mission_status_do_not_interrupt_running_controller(self):
+        created,operations,emitted=self.run_session(True,
+            '{"command":"execute","plan":"/tmp/plan.json"}\n'
+            '{"command":"observe"}\n{"command":"mission_status"}\n{"command":"shutdown"}\n')
+        self.assertEqual(len(created),2)
+        self.assertNotIn('stop',operations)
+        self.assertTrue(any(e['event']=='observed' for e in emitted))
+        self.assertTrue(any(e['event']=='mission_status' for e in emitted))

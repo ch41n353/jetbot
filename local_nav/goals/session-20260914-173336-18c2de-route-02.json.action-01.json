@@ -1,0 +1,280 @@
+{
+  "outcome": "stopped",
+  "samples": [
+    {
+      "time": 10410.327606308,
+      "elapsed": 0,
+      "position_cm": [
+        -5.5355867209346185e-05,
+        -0.003352376580099077
+      ],
+      "velocity_cm_s": [
+        -0.0002725614771716309,
+        -0.016506447442180303
+      ],
+      "yaw_degrees": 0.0018001094571619938,
+      "position_sigma_cm": 0.03605551275463989,
+      "yaw_sigma_degrees": 0.27798415889067785,
+      "braking_lead_cm": 0.0
+    },
+    {
+      "time": 10410.426882512,
+      "elapsed": 0.078666200999578,
+      "position_cm": [
+        -0.0005667126029118035,
+        -0.005276655535023052
+      ],
+      "velocity_cm_s": [
+        -0.002711705236585044,
+        -0.017944765487304816
+      ],
+      "yaw_degrees": 0.002014360525098343,
+      "position_sigma_cm": 0.05099019513592785,
+      "yaw_sigma_degrees": 0.3925698197822352,
+      "braking_lead_cm": 0.0
+    },
+    {
+      "time": 10410.492858467,
+      "elapsed": 0.16067078699961712,
+      "position_cm": [
+        -0.0023925144691600946,
+        -0.01980313696635317
+      ],
+      "velocity_cm_s": [
+        -0.015192725962918345,
+        -0.11906159199689759
+      ],
+      "yaw_degrees": 0.02219191597264313,
+      "position_sigma_cm": 0.06244997998398398,
+      "yaw_sigma_degrees": 0.4737364132592977,
+      "braking_lead_cm": 0.0
+    },
+    {
+      "time": 10410.561994211,
+      "elapsed": 0.2390790150002431,
+      "position_cm": [
+        -0.016682786673332888,
+        0.26163475742094766
+      ],
+      "velocity_cm_s": [
+        -0.11094574043210487,
+        1.975869982963257
+      ],
+      "yaw_degrees": -0.21914823537019396,
+      "position_sigma_cm": 0.09311803647353802,
+      "yaw_sigma_degrees": 0.5434763397598772,
+      "braking_lead_cm": 0.35565659693338625
+    },
+    {
+      "time": 10410.661014212,
+      "elapsed": 0.31669603399859625,
+      "position_cm": [
+        0.052890781912443945,
+        0.8171766323347595
+      ],
+      "velocity_cm_s": [
+        0.2958378139037512,
+        3.793135301029476
+      ],
+      "yaw_degrees": 0.0431047990369246,
+      "position_sigma_cm": 0.11656145763220012,
+      "yaw_sigma_degrees": 0.610043280216899,
+      "braking_lead_cm": 0.6827643541853057
+    },
+    {
+      "time": 10410.726483129,
+      "elapsed": 0.3997886569995899,
+      "position_cm": [
+        0.13010699168053966,
+        1.2462513853203045
+      ],
+      "velocity_cm_s": [
+        0.737635472521453,
+        5.173502512549351
+      ],
+      "yaw_degrees": 0.4344466914819381,
+      "position_sigma_cm": 0.1269040754395572,
+      "yaw_sigma_degrees": 0.6651071159947165,
+      "braking_lead_cm": 0.931230452258883
+    },
+    {
+      "time": 10410.830766857,
+      "elapsed": 0.48173355399922,
+      "position_cm": [
+        0.28385742293111615,
+        2.039863042816658
+      ],
+      "velocity_cm_s": [
+        1.1059913787792797,
+        6.391811128583683
+      ],
+      "yaw_degrees": 0.9771261203706588,
+      "position_sigma_cm": 0.14196205523568148,
+      "yaw_sigma_degrees": 0.7212288223164657,
+      "braking_lead_cm": 1.1505260031450628
+    },
+    {
+      "time": 10410.893434168,
+      "elapsed": 0.5584333709994098,
+      "position_cm": [
+        0.41584810360408286,
+        2.681155613944893
+      ],
+      "velocity_cm_s": [
+        1.6061019944685366,
+        8.312549001632041
+      ],
+      "yaw_degrees": 1.2558964182125354,
+      "position_sigma_cm": 0.14682859478321228,
+      "yaw_sigma_degrees": 0.7680039033941524,
+      "braking_lead_cm": 1.4828278067771183
+    },
+    {
+      "time": 10410.961031137,
+      "elapsed": 0.635221365999314,
+      "position_cm": [
+        0.4533016680562859,
+        3.216730824595869
+      ],
+      "velocity_cm_s": [
+        1.0800868244779396,
+        8.117807233521496
+      ],
+      "yaw_degrees": 0.9120086433640759,
+      "position_sigma_cm": 0.1609011704019961,
+      "yaw_sigma_degrees": 0.8126906161379593,
+      "braking_lead_cm": 1.4612053020338693
+    },
+    {
+      "time": 10411.0603463,
+      "elapsed": 0.7081526359997952,
+      "position_cm": [
+        0.546584630415481,
+        4.128696588382179
+      ],
+      "velocity_cm_s": [
+        1.0096744310105654,
+        8.650175161961243
+      ],
+      "yaw_degrees": -0.21247299327834424,
+      "position_sigma_cm": 0.17178327390063655,
+      "yaw_sigma_degrees": 0.8586672520651689,
+      "braking_lead_cm": 1.5529172506667979
+    },
+    {
+      "time": 10411.127123257,
+      "elapsed": 0.7838013959990349,
+      "position_cm": [
+        0.5310879917998675,
+        4.799072958213867
+      ],
+      "velocity_cm_s": [
+        0.38880438537928486,
+        9.344606288914555
+      ],
+      "yaw_degrees": -1.3378427611297785,
+      "position_sigma_cm": 0.1798851892287365,
+      "yaw_sigma_degrees": 0.8987675990652004,
+      "braking_lead_cm": 1.6084256257091094
+    },
+    {
+      "time": 10411.195801024,
+      "elapsed": 0.8635099040002387,
+      "position_cm": [
+        0.6363344175697168,
+        5.421035071204899
+      ],
+      "velocity_cm_s": [
+        0.9606357961359745,
+        9.200421487272674
+      ],
+      "yaw_degrees": -2.2437919837746136,
+      "position_sigma_cm": 0.19352593834499437,
+      "yaw_sigma_degrees": 0.9373542587770216,
+      "braking_lead_cm": 1.6560758677090812
+    },
+    {
+      "time": 10411.292646201,
+      "elapsed": 0.9404399329996522,
+      "position_cm": [
+        0.7135080671224582,
+        6.321466153058646
+      ],
+      "velocity_cm_s": [
+        0.8787561680109347,
+        9.249028112464778
+      ],
+      "yaw_degrees": -3.172354856974667,
+      "position_sigma_cm": 0.21628191025506355,
+      "yaw_sigma_degrees": 0.9772399382050193,
+      "braking_lead_cm": 1.6487910237281937
+    }
+  ],
+  "passed_waypoints_cm": [],
+  "travel_direction": "forward",
+  "powered_limit_seconds": 4.0,
+  "power_start": {
+    "time": 10410.211628859,
+    "voltage_v": 5.032,
+    "source": "INA3221 POM_5V_IN",
+    "conversion_period_seconds": 0.053759999999999995,
+    "battery_percent": null,
+    "battery_state": "voltage_only_no_soc_estimate",
+    "input_time": 10410.211628859,
+    "pack_time": 10410.213555607,
+    "pack_voltage_v": 11.78,
+    "pack_source": "INA219-compatible bus1 address0x41",
+    "pack_conversion_period_seconds": 0.001064,
+    "pack_required": true,
+    "pack_profile": "Waveshare-compatible 3S inferred from hardware; board model unconfirmed",
+    "motion_allowed": true,
+    "stop_latched": false,
+    "stop_reason": null,
+    "warning": false,
+    "minimum_voltage_v": 4.984,
+    "minimum_pack_voltage_v": 11.612,
+    "warn_below_v": 4.9,
+    "stop_below_v": 4.8,
+    "stop_above_v": 5.25,
+    "pack_warn_below_v": 11.4,
+    "pack_stop_below_v": 10.8,
+    "pack_stop_above_v": 12.9,
+    "stale_after_seconds": 0.6,
+    "power_policy_revision": 2,
+    "stale": false,
+    "service_stop_latched": false
+  },
+  "reason": "Tilt guard",
+  "power_end": {
+    "time": 10411.44509056,
+    "voltage_v": 5.024,
+    "source": "INA3221 POM_5V_IN",
+    "conversion_period_seconds": 0.053759999999999995,
+    "battery_percent": null,
+    "battery_state": "voltage_only_no_soc_estimate",
+    "input_time": 10411.44509056,
+    "pack_time": 10411.447608932,
+    "pack_voltage_v": 11.676,
+    "pack_source": "INA219-compatible bus1 address0x41",
+    "pack_conversion_period_seconds": 0.001064,
+    "pack_required": true,
+    "pack_profile": "Waveshare-compatible 3S inferred from hardware; board model unconfirmed",
+    "motion_allowed": true,
+    "stop_latched": false,
+    "stop_reason": null,
+    "warning": false,
+    "minimum_voltage_v": 4.984,
+    "minimum_pack_voltage_v": 11.572000000000001,
+    "warn_below_v": 4.9,
+    "stop_below_v": 4.8,
+    "stop_above_v": 5.25,
+    "pack_warn_below_v": 11.4,
+    "pack_stop_below_v": 10.8,
+    "pack_stop_above_v": 12.9,
+    "stale_after_seconds": 0.6,
+    "power_policy_revision": 2,
+    "stale": false,
+    "service_stop_latched": false
+  },
+  "powered_seconds": 1.026471090999621
+}

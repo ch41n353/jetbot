@@ -1,0 +1,21 @@
+{
+  "elapsed_seconds": 37.89040396100063,
+  "events": [
+    {
+      "event": "captured",
+      "image_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-172740-136968-9894.717685.jpg",
+      "metadata_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-172740-136968-9894.717685.json",
+      "captured_monotonic": 9894.717684604,
+      "session_id": "6a63fd4830b74fa8b825a7ec11a541df",
+      "control_epoch": 0
+    },
+    {
+      "event": "captured",
+      "image_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-172740-136968-9917.580441.jpg",
+      "metadata_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-172740-136968-9917.580441.json",
+      "captured_monotonic": 9917.580441032,
+      "session_id": "6a63fd4830b74fa8b825a7ec11a541df",
+      "control_epoch": 0
+    }
+  ]
+}

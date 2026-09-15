@@ -18,7 +18,7 @@ import uuid
 from point_controller import ROOT, call
 
 
-def route_command(plan, log, predictive=False, feature_budget=250, batch=False, spatial=False):
+def route_command(plan, log, predictive=False, feature_budget=250, batch=False, spatial=False, mission=False):
     if type(predictive) is not bool or type(feature_budget) is not int or feature_budget not in (80, 125, 250):
         raise ValueError('Invalid route options')
     if not isinstance(plan, str) or not plan:
@@ -27,6 +27,11 @@ def route_command(plan, log, predictive=False, feature_budget=250, batch=False, 
         raise ValueError('batch must be boolean')
     if type(spatial) is not bool or (spatial and batch):
         raise ValueError('spatial must be boolean and cannot combine with batch')
+    if type(mission) is not bool or (mission and (spatial or batch)):
+        raise ValueError('mission must be boolean and cannot combine with spatial or batch')
+    if mission:
+        return [sys.executable,os.path.join(ROOT,'local_nav/object_mission.py'),
+                os.path.abspath(plan),'--execute','--log',log]
     if spatial:
         return [sys.executable, os.path.join(ROOT,'local_nav/spatial_executor.py'),
                 os.path.abspath(plan),'--execute','--log',log]
@@ -145,8 +150,13 @@ def main():
                     emit(**event)
                 elif command == 'status':
                     emit(event='status', status=call('status'))
-                elif command == 'capture':
-                    if worker is not None:
+                elif command == 'mission_status':
+                    if route_log and os.path.exists(route_log+'.status.json'):
+                        with open(route_log+'.status.json') as source:mission_status=json.load(source)
+                        emit(event='mission_status',status=mission_status)
+                    else:emit(event='mission_status',status={'state':'no_mission_status'})
+                elif command in ('capture','observe'):
+                    if worker is not None and command=='capture':
                         raise ValueError('Wait for route completion before creating a new plan')
                     observation = call('observation')
                     path = prefix + '-%.6f' % observation['time']
@@ -155,7 +165,7 @@ def main():
                     metadata = {k:v for k,v in observation.items() if k != 'jpeg_base64'}
                     with open(path+'.json', 'w') as out:
                         json.dump(metadata, out, indent=2)
-                    event = dict(event='captured', image_path=path+'.jpg', metadata_path=path+'.json',
+                    event = dict(event='captured' if command=='capture' else 'observed', image_path=path+'.jpg', metadata_path=path+'.json',
                                  captured_monotonic=observation['time'], session_id=observation['session_id'],
                                  control_epoch=observation['control_epoch'])
                     if 'preview_distance_cm' in request:
@@ -167,7 +177,7 @@ def main():
                         event['clearance_checked'] = False
                     events.append(event)
                     emit(**event)
-                    last_capture = event
+                    if command=='capture':last_capture = event
                 elif command == 'plan_approach':
                     if worker is not None or last_capture is None:
                         raise ValueError('Capture a stationary scene before planning an approach')
@@ -193,6 +203,18 @@ def main():
                     event = dict(event='approach_planned', **assessment)
                     events.append(event)
                     emit(**event)
+                elif command == 'plan_mission':
+                    if worker is not None or last_capture is None or not args.preview_directory:
+                        raise ValueError('Capture a stationary scene and configure previews before mission planning')
+                    from object_mission import prepare
+                    from spatial_preview import write_preview
+                    plan,preview_plan=prepare(last_capture,request)
+                    path=last_capture['image_path'][:-4]+'-mission-'+uuid.uuid4().hex[:6]+'.plan.json'
+                    with open(path,'w') as out:json.dump(plan,out,indent=2)
+                    preview=os.path.join(args.preview_directory,'object-mission-route.html')
+                    write_preview(preview_plan,preview)
+                    emit(event='mission_planned',plan_path=path,preview_path=preview,
+                         target_label=plan['target_label'],static_map_only=True)
                 elif command == 'plan_navigation':
                     if worker is not None or last_capture is None:
                         raise ValueError('Capture a stationary scene before planning navigation')
@@ -222,7 +244,7 @@ def main():
                     route_log = prefix + '-route-%02d.json' % run_count
                     argv = route_command(request['plan'], route_log, request.get('predictive_braking', False),
                                          request.get('feature_budget', 250), request.get('batch', False),
-                                         request.get('spatial', False))
+                                         request.get('spatial', False),request.get('mission',False))
                     worker_output = open(route_log+'.stdout.log', 'w')
                     with open(os.path.abspath(request['plan'])) as source:
                         plan_metadata = json.load(source)

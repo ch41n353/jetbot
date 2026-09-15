@@ -4,12 +4,12 @@ description: Operate and iterate the local JetBot camera/IMU navigation tools fo
 metadata:
   baseline-date: "2026-09-13"
   timezone: America/Los_Angeles
-  revision: "10"
+  revision: "11"
 ---
 
 # JetBot navigation
 
-Baseline **2026-09-13**, current revision **10**, America/Los_Angeles.
+Baseline **2026-09-13**, current revision **11**, America/Los_Angeles.
 Workspace: `/home/jetbot/jetbot`. Use `/usr/bin/python3` for the local tools.
 
 Read [the dated algorithm and evidence](references/baseline-2026-09-13.md)
@@ -35,6 +35,9 @@ Read [revision9](references/revision-2026-09-14-r9.md) for the subsequently foun
 INA219 battery-pack monitor, current power thresholds, and paired simulation results.
 Read [revision10](references/revision-2026-09-14-r10.md) for opt-in joining of
 adjacent drives into up to30cm/four-second runs and its simulation-only evidence.
+Read [revision11](references/revision-2026-09-14-r11.md) for the experimental
+object mission controller, local target recovery, continuous waypoint following,
+asynchronous observation, and the actual validation limits.
 
 ## Scope and control division
 
@@ -96,6 +99,15 @@ rays, but large off-axis and near-field projections are not independently
 validated. A preview explains a plan; it is not a collision sensor.
 
 Prefer a whole inspected route over model calls between small movements:
+
+- **Object mission (experimental, opt-in):** `plan_mission` seeds a selected
+  target box and inspected static map; `execute` with `mission:true` runs local
+  tracking, forward waypoint following and bounded recovery. No scheduled stop
+  at15/30cm or2/4seconds. Limits are180seconds/120cm plus unchanged uncertainty
+  guards; these ceilings do not establish minutes of reliable autonomy. This
+  mode also changes turn execution and has no powered hardware validation yet.
+  `observe` and `mission_status` can inspect without interrupting it. See revision11.
+  Keep simulation/test CPU load separate from live controller runs.
 
 - **Spatial target or target queue:** revision-8 `plan_navigation` and `execute`
   with `spatial: true`, up to four targets in one inspected static map. Local

@@ -69,6 +69,10 @@ class FloorTracker:
         gray1=np.clip(gray1.astype(np.float32)-gray1[280:460,160:480].mean()+128,0,255).astype(np.uint8)
         mask=np.zeros_like(gray0)
         mask[280:460,160:480]=255
+        excluded=getattr(self,'excluded_box',None)
+        if excluded is not None:
+            x,y,r,b=np.round(excluded).astype(int)
+            mask[max(0,y-5):min(mask.shape[0],b+5),max(0,x-5):min(mask.shape[1],r+5)]=0
         p0=cv2.goodFeaturesToTrack(gray0,self.max_features,.005,7,mask=mask)
         if p0 is None or len(p0)<25:raise RuntimeError('Insufficient carpet texture')
         guess=None
@@ -79,7 +83,10 @@ class FloorTracker:
                 forward=np.array([0.,0.,1.])-down*down[2];forward/=np.linalg.norm(forward)
                 return np.column_stack((np.cross(down,forward),down,forward))
             # Predict tilt-induced pixel motion from IMU, before LK refinement.
-            cam_rotation=basis(after_attitude)@basis(before_attitude).T
+            yaw=after_attitude['yaw']-before_attitude['yaw']
+            c,s=math.cos(yaw),math.sin(yaw)
+            yaw_rotation=np.array([[c,0.,-s],[0.,1.,0.],[s,0.,c]])
+            cam_rotation=basis(after_attitude)@yaw_rotation@basis(before_attitude).T
             xy=cv2.fisheye.undistortPoints(p0.astype(float),np.asarray(self.i['K'],dtype=float),np.asarray(self.i['D'],dtype=float)).reshape(-1,2)
             rays=np.column_stack((xy,np.ones(len(xy))))@cam_rotation.T
             guess,_=cv2.fisheye.projectPoints(rays.reshape(-1,1,3),np.zeros(3),np.zeros(3),np.asarray(self.i['K'],dtype=float),np.asarray(self.i['D'],dtype=float))
@@ -97,7 +104,7 @@ class FloorTracker:
         transform,inliers=cv2.estimateAffinePartial2D(a,b,method=cv2.RANSAC,ransacReprojThreshold=.35,maxIters=1000,confidence=.99)
         if transform is None or inliers is None:raise RuntimeError('Floor motion fit failed')
         select=inliers.ravel().astype(bool)
-        if select.sum()<20 or select.mean()<.65:raise RuntimeError('Floor motion is inconsistent')
+        if select.sum()<20 or select.mean()<.65:raise RuntimeError('Floor motion is inconsistent (%d/%d inliers)' % (select.sum(),len(select)))
         scale=float(np.linalg.norm(transform[:,0]))
         if not .97<scale<1.03:raise RuntimeError('Camera tilt/height or tracking changed (scale %.3f)' % scale)
         rotation=transform[:,:2]/scale

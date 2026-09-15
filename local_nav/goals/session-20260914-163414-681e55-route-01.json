@@ -1,0 +1,67 @@
+{
+  "outcome": "target_reached_estimate",
+  "actions": [
+    {
+      "plan": {
+        "kind": "drive",
+        "value": 30.0,
+        "swept_bounds_cm": [
+          -13.51983741265209,
+          -22.200259385501443,
+          13.51983741265209,
+          41.206960288291384
+        ],
+        "predicted_start_pose": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "predicted_end_pose": [
+          0.0,
+          30.0,
+          0.0
+        ],
+        "primitive_count": 2
+      },
+      "result_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-163414-681e55-route-01.json.action-01.json",
+      "outcome": "overshot_goal",
+      "reason": null,
+      "target_index": 0
+    }
+  ],
+  "local_planning_seconds": 0.00600517599923478,
+  "intermediate_model_calls": 0,
+  "requires_planner": false,
+  "coalesce_drives": true,
+  "reached_targets": [
+    {
+      "goal_cm": [
+        0,
+        30
+      ],
+      "measured_pose": [
+        -0.05164894374073211,
+        31.123145334432724,
+        -2.3706373523372974
+      ],
+      "elapsed_seconds": 3.4156853920003414
+    }
+  ],
+  "local_searches": 1,
+  "primitive_count": 2,
+  "last_verified_pose": [
+    -0.05164894374073211,
+    31.123145334432724,
+    -2.3706373523372974
+  ],
+  "travel_cm": 31.123188190184035,
+  "position_variance_cm2": 0.3075786728779612,
+  "yaw_variance_deg2": 2.9996134537106736,
+  "goal_error_cm": 1.1243322710157924,
+  "final_pose": [
+    -0.05164894374073211,
+    31.123145334432724,
+    -2.3706373523372974
+  ],
+  "elapsed_seconds": 3.4171022310001717
+}

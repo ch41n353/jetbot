@@ -1,0 +1,94 @@
+{
+  "outcome": "target_reached_estimate",
+  "actions": [
+    {
+      "plan": {
+        "kind": "turn",
+        "value": -30.0,
+        "swept_bounds_cm": [
+          -22.027225347280726,
+          -29.22178027782458,
+          22.027225347280726,
+          14.221780277824578
+        ],
+        "predicted_start_pose": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "predicted_end_pose": [
+          -3.7499999999999996,
+          -1.0048094716167097,
+          -30.0
+        ],
+        "primitive_count": 1
+      },
+      "result_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-163414-681e55-route-02.json.action-01.json",
+      "outcome": "turn_reached_estimate",
+      "reason": null,
+      "target_index": 0
+    },
+    {
+      "plan": {
+        "kind": "drive",
+        "value": 30.0,
+        "swept_bounds_cm": [
+          -32.995159114754074,
+          -24.102808205324816,
+          16.697831869400265,
+          38.33307183427499
+        ],
+        "predicted_start_pose": [
+          -3.458559910141264,
+          -1.0650461844942636,
+          -30.7227401487512
+        ],
+        "predicted_end_pose": [
+          -18.78508425601138,
+          24.724441043355974,
+          -30.7227401487512
+        ],
+        "primitive_count": 2
+      },
+      "result_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-163414-681e55-route-02.json.action-02.json",
+      "outcome": "goal_reached",
+      "reason": null,
+      "target_index": 0
+    }
+  ],
+  "local_planning_seconds": 0.051188374999583175,
+  "intermediate_model_calls": 0,
+  "requires_planner": false,
+  "coalesce_drives": true,
+  "reached_targets": [
+    {
+      "goal_cm": [
+        -18.75,
+        25
+      ],
+      "measured_pose": [
+        -18.60006396229088,
+        25.8799781158208,
+        -32.750426143526795
+      ],
+      "elapsed_seconds": 7.065015506000236
+    }
+  ],
+  "local_searches": 1,
+  "primitive_count": 3,
+  "last_verified_pose": [
+    -18.60006396229088,
+    25.8799781158208,
+    -32.750426143526795
+  ],
+  "travel_cm": 34.52675343565677,
+  "position_variance_cm2": 0.2788473509060702,
+  "yaw_variance_deg2": 5.6319230234535524,
+  "goal_error_cm": 0.8926602375637881,
+  "final_pose": [
+    -18.60006396229088,
+    25.8799781158208,
+    -32.750426143526795
+  ],
+  "elapsed_seconds": 7.069976087000214
+}
