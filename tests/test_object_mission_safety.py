@@ -77,7 +77,7 @@ class MissionHarness:
                             yaw_degrees=harness.yaw)
         class Target:
             box = [0, 0, 20, 20]
-            def __init__(self, *args): pass
+            def __init__(self, *args, **kwargs): pass
             def update(self, *args):
                 if harness.outcomes.get(harness.tick) == 'lost':
                     raise TargetLost('injected target loss')
@@ -117,6 +117,15 @@ class MissionHarness:
 
 
 class ObjectMissionSafetyTests(unittest.TestCase):
+    def test_projection_limit_accounts_for_target_footprint_but_is_capped(self):
+        # radius term: radius+4, capped at 20
+        self.assertEqual(object_mission.target_projection_limit([0,50],7),11.)
+        self.assertEqual(object_mission.target_projection_limit([0,50],20),20.)
+        # range term dominates further out, where projection error grows
+        self.assertAlmostEqual(object_mission.target_projection_limit([0,80],1),14.4)
+        # and it is still bounded, not open-ended
+        self.assertEqual(object_mission.target_projection_limit([0,10],1),6.)
+
     def test_recovery_requires_consecutive_observations(self):
         # Two good reads, a loss, then two good reads must not renew drive.
         harness = MissionHarness(outcomes={1: 'lost', 4: 'lost'}, cancel_at=7)
@@ -157,7 +166,8 @@ class ObjectMissionSafetyTests(unittest.TestCase):
         harness = MissionHarness(clear_drive=False)
         result = harness.run()
         self.assertIn('Forward clearance recovery exhausted', result['reason'])
-        self.assertLess(result['elapsed_seconds'], 1.)
+        # Bounded, not unbounded: the clearance retry ceiling is 10 attempts.
+        self.assertLess(result["elapsed_seconds"], 4.)
         self.assertEqual(harness.output, [0., 0.])
         self.assertFalse(any(action == 'motors_hold' and fields['left'] != 0
                              for _, action, fields in harness.commands))

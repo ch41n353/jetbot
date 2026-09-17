@@ -13,7 +13,7 @@ from route_geometry import contains
 from turn_controller import turn_command
 
 
-def execute_turn(plan, degrees, envelope, log, timeline, world_guard=None):
+def execute_turn(plan, degrees, envelope, log, timeline, world_guard=None, power=.14):
     import cv2
     import numpy as np
     from point_controller import ROOT, call, frame, FloorTracker
@@ -23,7 +23,7 @@ def execute_turn(plan, degrees, envelope, log, timeline, world_guard=None):
     started = time.monotonic()
     token = {k: plan[k] for k in ('session_id', 'control_epoch')}
     try:
-        turn_command(degrees, 0, .14)
+        turn_command(degrees, 0, power)
         status = call('status')
         result['power_start']=status.get('power')
         if any(status[k] != v for k,v in token.items()):
@@ -70,7 +70,7 @@ def execute_turn(plan, degrees, envelope, log, timeline, world_guard=None):
                 raise RuntimeError('Turn tilt guard')
             result['samples'].append(dict(time=t1,**pose))
             old,t0,a0 = current,t1,a1
-            command = turn_command(degrees,pose['yaw_degrees'],.14)
+            command = turn_command(degrees,pose['yaw_degrees'],power)
             now = time.monotonic()
             if command is None or reached_at is not None:
                 if reached_at is None:

@@ -8,6 +8,30 @@ import math
 import cv2
 import numpy as np
 
+# Whole-sensor guard against shock, handling and runaway rotation. This is the
+# three-axis gyro magnitude, not chassis yaw: a measured scan turn reaches about
+# 80 deg/s of yaw plus carpet vibration on the other two axes, so a limit near
+# the chassis-yaw ceiling rejects healthy turns. At the ~45 Hz sample rate this
+# is still about 4 degrees per sample, well inside small-angle integration and
+# far below gyro full scale. Chassis-yaw limits belong in the turn controllers.
+SENSOR_RATE_LIMIT_DEG_S=180.
+
+#: How far the visual-inertial pose estimate may drift before a controller
+#: stops trusting it. Raised from the original 2 cm / 4 degree test thresholds,
+#: which halted approaches that were otherwise going fine.
+POSITION_LIMIT_CM=8.
+YAW_LIMIT_DEGREES=15.
+
+#: Longest accepted step between consecutive IMU samples. The integration is
+#: small-angle over this step, so the bound is about how much rotation could
+#: hide inside it. At 80 ms it also fired on a stopped robot: the search does
+#: floor registration, preview drawing and map geometry between reads, and on
+#: this board that thinking time grew past 80 ms once the accumulated map got
+#: large, ending a 305-degree sweep that was otherwise going fine. Motion-time
+#: protection does not come from here -- the motor lease expires in ~200 ms and
+#: the controllers demand renewals every 180 ms, both untouched.
+IMU_GAP_LIMIT_S=.3
+
 
 def unit(v):
     v=np.asarray(v,dtype=float)
@@ -41,10 +65,12 @@ class AttitudeTimeline:
         self.startup_limit_degrees=4.
 
     def initialize_stationary(self, samples, frame_time):
-        """Initialize from a quiet gravity window, bounded to five degrees.
+        """Initialize from a quiet surface orientation, bounded to ten degrees.
 
         Single-sample feed initialization retains its original four-degree cap.
         This path requires 150 ms of low-noise, near-1g measurements first.
+        The calibrated sensor mounting stays fixed. Only the initial gravity
+        direction follows the carpet; runtime relative-tilt guards are unchanged.
         """
         if self.last is not None:
             raise RuntimeError('Stationary initialization requires a new timeline')
@@ -64,7 +90,7 @@ class AttitudeTimeline:
             raise RuntimeError('Robot is not quiet enough for stationary startup')
         first=dict(window[0],acceleration=mean.tolist())
         remaining=[s for s in samples if s['time']>first['time']]
-        self.startup_limit_degrees=5.
+        self.startup_limit_degrees=10.
         try:
             self.feed([first]+remaining)
         finally:
@@ -82,7 +108,10 @@ class AttitudeTimeline:
             if sample['gyro_units']=='deg/s':w=np.radians(w)
             elif sample['gyro_units']!='rad/s':raise ValueError('Unknown gyro units')
             w=w-self.bias
-            if not np.isfinite(w).all() or np.linalg.norm(w)>math.radians(90):raise RuntimeError('Excessive IMU rotation')
+            if not np.isfinite(w).all():raise RuntimeError('Non-finite IMU angular rate')
+            rate=float(np.linalg.norm(w))
+            if rate>math.radians(SENSOR_RATE_LIMIT_DEG_S):
+                raise RuntimeError('IMU angular-rate limit exceeded: %.2f deg/s across all axes (limit%g); sensor rate is not measured chassis yaw' % (math.degrees(rate),SENSOR_RATE_LIMIT_DEG_S))
             norm=float(np.linalg.norm(acceleration))
             if not 3<norm<20:
                 raise RuntimeError('Severe IMU acceleration (%.2f m/s^2)' % norm)
@@ -101,7 +130,8 @@ class AttitudeTimeline:
                 self.up=measured
             else:
                 dt=timestamp-self.last
-                if dt>.08:raise RuntimeError('Gap in IMU history exceeds 80 ms')
+                if dt>IMU_GAP_LIMIT_S:
+                    raise RuntimeError('Gap in IMU history exceeds %d ms'%(IMU_GAP_LIMIT_S*1000))
                 average=(self.gyro+w)/2
                 self.up=unit(cv2.Rodrigues(-average*dt)[0]@self.up)
                 self.yaw-=float(average.dot(self.up))*dt  # positive robot-right yaw
@@ -183,8 +213,15 @@ class PlanarState:
         self.yaw+=yaw
         self.position_variance+=max(.02,float(quality['residual_cm']))**2+.03**2
         self.yaw_variance+=quality.get('yaw_variance',math.radians(.8)**2)
-        if math.sqrt(self.position_variance)>2 or math.sqrt(self.yaw_variance)>math.radians(4):
-            raise RuntimeError('State uncertainty exceeded test limits')
+        # Drift bound, not a safety limit -- it says how far the pose estimate
+        # may have wandered, and the operator accepts the robot bumping into
+        # things. The old 2 cm / 4 degree pair was a test threshold that ended
+        # real approaches a few centimetres from the target; these let a run
+        # finish while still catching an estimate that has genuinely diverged.
+        if math.sqrt(self.position_variance)>POSITION_LIMIT_CM or \
+                math.sqrt(self.yaw_variance)>math.radians(YAW_LIMIT_DEGREES):
+            raise RuntimeError('State uncertainty exceeded %g cm / %g degrees'
+                               %(POSITION_LIMIT_CM,YAW_LIMIT_DEGREES))
         return dict(position_cm=self.position.tolist(),velocity_cm_s=self.velocity.tolist(),
             yaw_degrees=math.degrees(self.yaw),position_sigma_cm=math.sqrt(self.position_variance),
             yaw_sigma_degrees=math.degrees(math.sqrt(self.yaw_variance)))

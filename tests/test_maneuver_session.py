@@ -41,6 +41,7 @@ class SessionTests(unittest.TestCase):
             if action == 'shutdown':
                 created[0].returncode = 0
             return dict(healthy=True, motion_enabled=armed, session_id='owned',
+                        motor={'output':[0,0]},
                         control_epoch=0,time=0.,jpeg_base64='SlBFRw==',
                         power=dict(motion_allowed=power_allowed,voltage_v=5.04 if power_allowed else 4.7))
 
@@ -68,6 +69,16 @@ class SessionTests(unittest.TestCase):
         self.assertNotIn('--enable-motion', created[0].command)
         self.assertTrue(any(e.get('reason') == 'Session is disarmed' for e in emitted))
         self.assertIn('shutdown', operations)
+
+    def test_planning_rejection_preserves_stopped_control_generation(self):
+        _,operations,emitted=self.run_session(True,'{"command":"plan_mission"}\n{"command":"shutdown"}\n')
+        self.assertTrue(any(e['event']=='command_rejected' for e in emitted))
+        self.assertNotIn('stop',operations)
+
+    def test_planning_rejection_still_stops_active_worker(self):
+        _,operations,emitted=self.run_session(True,'{"command":"execute","plan":"/tmp/plan.json"}\n{"command":"plan_mission"}\n{"command":"shutdown"}\n')
+        self.assertTrue(any(e['event']=='command_rejected' for e in emitted))
+        self.assertIn('stop',operations)
 
     def test_power_fault_prevents_new_route_and_emits_event(self):
         created,operations,emitted=self.run_session(True,'{"command":"execute","plan":"/tmp/plan.json"}\n{"command":"shutdown"}\n',False)

@@ -8,6 +8,20 @@ from unittest.mock import patch
 from point_controller import settled_frame, record_observation
 
 class ObservationTests(unittest.TestCase):
+    def test_fault_observation_survives_estimator_rejection(self):
+        import base64
+        from types import SimpleNamespace
+        from point_controller import frame
+        image=np.zeros((480,640,3),dtype=np.uint8)
+        snap=dict(time=1.02,imu_samples=[dict(time=1.02,gyro=[100,0,0])],
+                  jpeg_base64=base64.b64encode(cv2.imencode('.jpg',image)[1]).decode())
+        def reject(samples):raise RuntimeError('rate fault')
+        timeline=SimpleNamespace(last=1.,keep_last_observation=True,feed=reject)
+        with patch('point_controller.call',return_value=snap):
+            with self.assertRaisesRegex(RuntimeError,'rate fault'):frame(timeline,settled=False)
+        self.assertEqual(timeline.last_sensor_observation['imu_samples'],snap['imu_samples'])
+        self.assertNotIn('jpeg_base64',timeline.last_sensor_observation)
+        self.assertEqual(timeline.last_observation_image.shape,(480,640,3))
     def test_duplicate_frame_preserves_startup_and_imu_history(self):
         image=np.zeros((480,640,3),dtype=np.uint8)
         first=dict(time=1.,imu_samples=[{'time':.8},{'time':.9}],attitude_initialization='stationary_5deg')

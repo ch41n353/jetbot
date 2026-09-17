@@ -7,15 +7,43 @@ class TargetLost(RuntimeError):
     pass
 
 
+MINIMUM_BOX_PX=16
+
+
+def _widen(low,high,limit):
+    """Grow a span to the minimum trackable size without leaving the frame."""
+    if limit<MINIMUM_BOX_PX:
+        return 0.,float(limit)
+    short=MINIMUM_BOX_PX-(high-low)
+    if short>0:
+        low-=short/2.;high+=short/2.
+        if low<0: high-=low;low=0.
+        if high>limit: low-=high-limit;high=float(limit)
+    return max(0.,low),min(float(limit),high)
+
+
 class TargetTracker:
-    def __init__(self,image,box):
+    def __init__(self,image,box,projective_contact=False):
+        if not isinstance(projective_contact,bool):raise ValueError("projective_contact must be boolean")
+        self.projective_contact=projective_contact
         values=np.asarray(box,dtype=float)
         if values.shape!=(4,) or not np.isfinite(values).all():
             raise ValueError('Target box must be finite [left,top,right,bottom]')
-        x,y,r,b=values
-        if not (0<=x<r<=image.shape[1] and 0<=y<b<=image.shape[0]) or min(r-x,b-y)<16:
-            raise ValueError('Target box is outside image or too small to track')
+        # A box that is small or clipped by the frame edge means the target is
+        # far away or off to one side, not that the mission should end. Clamp it
+        # into the frame and grow it to a trackable patch so the robot can drive
+        # closer and get a better look, which is the whole point of approaching.
+        height,width=image.shape[0],image.shape[1]
+        x,y,r,b=(min(max(v,0.),limit) for v,limit in
+                 zip(values,(width,height,width,height)))
+        if r<x: x,r=r,x
+        if b<y: y,b=b,y
+        x,r=_widen(x,r,width)
+        y,b=_widen(y,b,height)
+        values=np.array([x,y,r,b],dtype=float)
         self.box=values
+        self.contact=np.array([(x+r)/2,b],dtype=float)
+        self.recent_contact=np.array([.5,1.])
         self.template=cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)[int(y):int(b),int(x):int(r)].copy()
         if self.template.std()<10:
             raise ValueError('Target lacks distinctive texture')
@@ -63,6 +91,28 @@ class TargetTracker:
         if self.appearance(gray,refined)>.7:return refined
         return box
 
+    def project_contact(self,points,next_points,box):
+        """Track the contact separately from the appearance bounding rectangle."""
+        before=points.reshape(-1,2)
+        if np.any(np.ptp(before,axis=0)<(self.box[2:]-self.box[:2])*.25):
+            raise TargetLost('Contact feature support is too narrow')
+        matrix,inliers=cv2.findHomography(points,next_points,cv2.RANSAC,2.)
+        if matrix is None or inliers is None or inliers.mean()<.7 or not np.isfinite(matrix).all():
+            raise TargetLost('Contact projective geometry inconsistent')
+        point=np.r_[self.contact,1.]
+        denominator=float(matrix[2]@point)
+        if abs(denominator)<1e-6:raise TargetLost('Contact projection singular')
+        contact=(matrix@point)[:2]/denominator
+        jacobian=(matrix[:2,:2]-np.outer(contact,matrix[2,:2]))/denominator
+        scales=np.linalg.svd(jacobian,compute_uv=False)
+        if np.linalg.det(jacobian)<=0 or not (.85<scales.min() and scales.max()<1.18):
+            raise TargetLost('Contact scale changed too quickly')
+        size=box[2:]-box[:2]
+        if (not np.isfinite(contact).all() or abs(contact[0]-(box[0]+box[2])/2)>.35*size[0]
+                or abs(contact[1]-box[3])>.2*size[1]):
+            raise TargetLost('Contact left verified target boundary')
+        return contact
+
     def update(self,image):
         gray=cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
         x,y,r,b=np.round(self.box).astype(int)
@@ -106,10 +156,13 @@ class TargetTracker:
             refined_confidence=self.appearance(gray,refined)
             if refined_confidence>confidence:box,confidence=refined,refined_confidence
         if confidence<.55:raise TargetLost('Target appearance no longer matches')
+        contact=self.project_contact(points[good],next_points[good],box) if self.projective_contact else np.array([(box[0]+box[2])/2,box[3]])
+        self.contact=contact
         self.box,self.previous,self.confidence=box,gray,confidence
         if confidence>.7:
             u,v,rr,bb=np.round(box).astype(int)
             self.recent_template=gray[v:bb,u:rr].copy()
+            self.recent_contact=(self.contact-np.array([u,v]))/np.array([rr-u,bb-v])
         return self.observation()
 
     def reacquire(self,image):
@@ -137,10 +190,11 @@ class TargetTracker:
         if score<.8 or score-second<.08 or self.appearance(gray,box)<.55:
             raise TargetLost('Target reacquisition uncertain or ambiguous')
         self.box=np.array(box,dtype=float)
+        self.contact=self.box[:2]+(self.box[2:]-self.box[:2])*self.recent_contact
         self.previous=gray
         self.confidence=score
         return self.observation()
 
     def observation(self):
         x,y,r,b=self.box
-        return dict(box=self.box.tolist(),base_pixel=[float((x+r)/2),float(b)],confidence=self.confidence)
+        return dict(box=self.box.tolist(),base_pixel=self.contact.tolist() if self.projective_contact else [float((x+r)/2),float(b)],confidence=self.confidence)

@@ -117,6 +117,9 @@ def main():
     parser.add_argument('--enable-motion', action='store_true')
     parser.add_argument('--directory', default='/tmp/jetbot-local-nav')
     parser.add_argument('--power-log')
+    parser.add_argument('--no-parent-death-signal', dest='parent_death_signal',
+                        action='store_false',
+                        help='keep running if the supervisor exits (standalone use)')
     args = parser.parse_args()
     os.umask(0o077)
     os.makedirs(args.directory, mode=0o700, exist_ok=True)
@@ -128,6 +131,19 @@ def main():
     stop = ctx.Event()
     signal.signal(signal.SIGTERM, lambda *a: stop.set())
     signal.signal(signal.SIGINT, lambda *a: stop.set())
+    # Die with the supervisor that started us. A service that outlives its
+    # parent keeps the control socket and the hardware lock, so every later
+    # supervisor is refused with a message about a service the operator cannot
+    # see -- and the wedged one may not even answer a shutdown request. Ask the
+    # kernel to signal us instead of relying on that request arriving.
+    if args.parent_death_signal:
+        try:
+            import ctypes
+            ctypes.CDLL('libc.so.6', use_errno=True).prctl(1, signal.SIGTERM)  # PR_SET_PDEATHSIG
+            if os.getppid() == 1:
+                stop.set()  # parent already gone before prctl armed
+        except Exception:
+            pass
     cameraq, imuq, powerq = ctx.Queue(2), ctx.Queue(4), ctx.Queue(2)
     power_shared=ctx.Array('d',[0.,0.,0.])
     parent, child = ctx.Pipe()

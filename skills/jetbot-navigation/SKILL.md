@@ -4,13 +4,34 @@ description: Operate and iterate the local JetBot camera/IMU navigation tools fo
 metadata:
   baseline-date: "2026-09-13"
   timezone: America/Los_Angeles
-  revision: "12"
+  revision: "21"
 ---
 
 # JetBot navigation
 
-Baseline **2026-09-13**, current revision **12**, America/Los_Angeles.
+Baseline **2026-09-13**, current revision **21**, America/Los_Angeles.
 Workspace: `/home/jetbot/jetbot`. Use `/usr/bin/python3` for the local tools.
+
+Read [revision21](references/revision-2026-09-15-r21.md) for the autonomous
+Sol mission loop, generalized continuous turns, crash-safe checkpoints,
+motor-free evaluation, and the local browser dashboard. The new continuous
+turn path has motor-free validation and still requires a powered acceptance run.
+
+Read [revision20](references/revision-2026-09-15-r20.md) for the simulation-only
+iteration: graph fault recovery, mission-bound recognition replies, faster
+unchanged turn previews, and the1,000-room scheduling test's limits.
+
+Read [revision19](references/revision-2026-09-15-r19.md) for recognition after a
+motion-uncertainty stop and the persistent multi-room search graph. The graph
+is not yet connected to a live mapping/relocalization backend.
+
+Read [revision18](references/revision-2026-09-15-r18.md) for deterministic
+360-degree scans and perimeter observation stations with local A* and Sol
+recognition. The new search harness has motor-free validation only.
+
+Read [revision17](references/revision-2026-09-15-r17.md) for optional asynchronous
+Sol shadow perception during object missions. It records observations without
+changing the active route; it is not yet a Sol-controlled driving mode.
 
 Read [the dated algorithm and evidence](references/baseline-2026-09-13.md)
 before operating or changing these controllers. Read [operating commands](references/operation.md)
@@ -40,6 +61,15 @@ object mission controller, local target recovery, continuous waypoint following,
 asynchronous observation, and the actual validation limits.
 Read [revision12](references/revision-2026-09-14-r12.md) for cropped tracking,
 measured processing latency and the remaining motion-time bottlenecks.
+Read [revision13](references/revision-2026-09-14-r13.md) for IMU-consistent
+mission previews and the first powered mission failure.
+Read [revision14](references/revision-2026-09-14-r14.md) for quiet carpet-slope
+initialization and bounded tracking recovery.
+Read [revision15](references/revision-2026-09-14-r15.md) for separate contact-point
+tracking, scene-scoped floor alignment, damped straight steering, measured coast
+recovery, and the powered arrival versus completion-reporting distinction.
+Read [revision16](references/revision-2026-09-14-r16.md) for shallow direct
+approaches that stay within the local floor alignment's heading scope.
 
 ## Scope and control division
 

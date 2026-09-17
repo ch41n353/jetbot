@@ -13,7 +13,7 @@ tracker=FloorTracker(profile,i)
 previous=None
 for path in sorted(glob.glob(os.path.join(a.directory,'*.json'))):
     obs=json.load(open(path))
-    if timeline.last is None and obs.get('attitude_initialization')=='stationary_5deg':
+    if timeline.last is None and obs.get('attitude_initialization') in ('stationary_5deg','stationary_10deg'):
         timeline.initialize_stationary(obs['imu_samples'],obs['time'])
     else:
         timeline.feed(obs['imu_samples'])

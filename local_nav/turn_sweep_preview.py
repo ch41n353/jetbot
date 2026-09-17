@@ -1,26 +1,34 @@
 """Conservative illustration for an inspected turn; not an axle calibration."""
 import os, math, json, base64
+from functools import lru_cache
 import cv2
 import numpy as np
 from point_controller import ROOT
 
 
-def write_turn_preview(image_path, degrees, destination):
+@lru_cache(maxsize=24)
+def turn_hull(degrees):
     if not math.isfinite(degrees) or not 0 < abs(degrees) <= 180:
         raise ValueError('Turn preview requires 0–180 degrees')
-    points=[]
-    # Dense angular samples plus 0.1 cm numerical envelope allowance.
-    for px in [-6,6]:
-        for pz in [-15,0]:
-            pivot=np.array([px,pz])
-            for angle in np.linspace(0,-math.copysign(math.radians(abs(degrees)+5),degrees),200):
-                r=np.array([[math.cos(angle),-math.sin(angle)],[math.sin(angle),math.cos(angle)]])
-                for x in [-6,6]:
-                    for z in [-15,0]:
-                        q=pivot+r.dot(np.array([x,z])-pivot)
-                        for a in np.linspace(0,2*math.pi,48):
-                            points.append(q+7.1*np.array([math.cos(a),math.sin(a)]))
-    hull=cv2.convexHull(np.float32(points)).reshape(-1,2)
+    # Same pivots, corners, 200 angles, 48 clearance samples and 7.1cm
+    # allowance as the original loop. Vectorize only; do not shrink the sweep.
+    pivots=np.array([[x,z] for x in (-6,6) for z in (-15,0)])
+    delta=pivots[None,:,:]-pivots[:,None,:]
+    angle=np.linspace(0,-math.copysign(math.radians(abs(degrees)+5),degrees),200)
+    c,s=np.cos(angle),np.sin(angle)
+    x=delta[:,:,0,None]*c-delta[:,:,1,None]*s
+    z=delta[:,:,0,None]*s+delta[:,:,1,None]*c
+    points=pivots[:,None,None,:]+np.stack((x,z),axis=-1)
+    a=np.linspace(0,2*math.pi,48)
+    offsets=7.1*np.column_stack((np.cos(a),np.sin(a)))
+    expanded=(points[:,:,:,None,:]+offsets[None,None,None,:,:]).reshape(-1,2)
+    hull=cv2.convexHull(np.float32(expanded)).reshape(-1,2)
+    hull.setflags(write=False)
+    return hull
+
+
+def write_turn_preview(image_path, degrees, destination):
+    hull=turn_hull(degrees)
     _,visible=cv2.intersectConvexConvex(hull,np.float32([[-100,0],[100,0],[100,100],[-100,100]]))
     profile=json.load(open(os.path.join(ROOT,'calibration/floor_geometry.json')))
     intrinsics=json.load(open(profile['intrinsics_path']))

@@ -18,7 +18,7 @@ import uuid
 from point_controller import ROOT, call
 
 
-def route_command(plan, log, predictive=False, feature_budget=250, batch=False, spatial=False, mission=False):
+def route_command(plan, log, predictive=False, feature_budget=250, batch=False, spatial=False, mission=False, search=False):
     if type(predictive) is not bool or type(feature_budget) is not int or feature_budget not in (80, 125, 250):
         raise ValueError('Invalid route options')
     if not isinstance(plan, str) or not plan:
@@ -29,6 +29,11 @@ def route_command(plan, log, predictive=False, feature_budget=250, batch=False, 
         raise ValueError('spatial must be boolean and cannot combine with batch')
     if type(mission) is not bool or (mission and (spatial or batch)):
         raise ValueError('mission must be boolean and cannot combine with spatial or batch')
+    if type(search) is not bool or (search and (mission or spatial or batch)):
+        raise ValueError('search must be boolean and cannot combine with other modes')
+    if search:
+        return [sys.executable,os.path.join(ROOT,'local_nav/sol_search.py'),
+                os.path.abspath(plan),'--execute','--log',log]
     if mission:
         return [sys.executable,os.path.join(ROOT,'local_nav/object_mission.py'),
                 os.path.abspath(plan),'--execute','--log',log]
@@ -42,6 +47,28 @@ def route_command(plan, log, predictive=False, feature_budget=250, batch=False, 
     if predictive and not batch:
         command.append('--predictive-braking')
     return command
+
+
+def service_is_live(path,timeout=1.5):
+    """True when something is actually answering on the control socket.
+
+    A live service replies to `status`. A leftover socket file either refuses
+    the connection or accepts and never answers, and both mean no owner: the
+    caller may clear it. Any reply at all, even an error, counts as occupied --
+    never take the socket from a service that is still there.
+    """
+    import socket
+    try:
+        link=socket.socket(socket.AF_UNIX,socket.SOCK_STREAM)
+        link.settimeout(timeout)
+        try:
+            link.connect(path)
+            link.sendall(json.dumps({'action':'status'}).encode()+b'\n')
+            return bool(link.recv(1))
+        finally:
+            link.close()
+    except (OSError,socket.timeout):
+        return False
 
 
 def emit(**fields):
@@ -70,9 +97,17 @@ def main():
     next_power_check=0.
     last_power_state=None
     try:
-        # Do not replace, attach to or shut down an unrelated service.
+        # Do not replace, attach to or shut down an unrelated service. The
+        # socket file alone does not prove one is there: a service that was
+        # killed, crashed or lost its parent leaves the path behind, and that
+        # stale file then refuses every later supervisor with a message about a
+        # service that no longer exists. Ask the socket whether anyone answers,
+        # and only clear it when nobody does.
         if os.path.exists('/tmp/jetbot-local-nav/control.sock'):
-            raise RuntimeError('Existing service detected; stop that service first')
+            if service_is_live('/tmp/jetbot-local-nav/control.sock'):
+                raise RuntimeError('Existing service detected; stop that service first')
+            emit(event='stale_socket_cleared',path='/tmp/jetbot-local-nav/control.sock')
+            os.unlink('/tmp/jetbot-local-nav/control.sock')
         command = [sys.executable, os.path.join(ROOT, 'local_nav/service.py'),
                    '--power-log',prefix+'.power.jsonl']
         if args.enable_motion:
@@ -136,6 +171,7 @@ def main():
                 if b'\n' not in input_buffer:
                     continue
             line, input_buffer = input_buffer.split(b'\n', 1)
+            command=None
             try:
                 request = json.loads(line)
                 command = request['command']
@@ -244,7 +280,7 @@ def main():
                     route_log = prefix + '-route-%02d.json' % run_count
                     argv = route_command(request['plan'], route_log, request.get('predictive_braking', False),
                                          request.get('feature_budget', 250), request.get('batch', False),
-                                         request.get('spatial', False),request.get('mission',False))
+                                         request.get('spatial', False),request.get('mission',False),request.get('search',False))
                     worker_output = open(route_log+'.stdout.log', 'w')
                     with open(os.path.abspath(request['plan'])) as source:
                         plan_metadata = json.load(source)
@@ -258,7 +294,11 @@ def main():
                     raise ValueError('Unknown session command')
             except (ValueError, KeyError, TypeError, OSError, RuntimeError) as exc:
                 # Bad commands cannot silently leave an active motor command running.
-                call('stop')
+                planning_only=command in ('plan_approach','plan_navigation','plan_mission') and worker is None
+                status=call('status') if planning_only else {}
+                if not (planning_only and status.get('healthy') and
+                        status.get('motor',{}).get('output')==[0,0]):
+                    call('stop')
                 emit(event='command_rejected', reason=str(exc))
     finally:
         if service is not None and service.poll() is None:

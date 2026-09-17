@@ -46,7 +46,7 @@ class ObjectMissionTests(unittest.TestCase):
         self.assertEqual(run['result']['outcome'],'stopped')
         self.assertIn('recovery exhausted',run['result']['reason'])
         self.assertEqual(run['final_motor_output'],[0,0])
-        self.assertLess(run['result']['elapsed_seconds'],4)
+        self.assertLess(run["result"]["elapsed_seconds"],10)  # 6 recoveries, 6 s window
 
     def test_cancel_cannot_be_overwritten_by_local_recovery(self):
         run=run_case(dict(speed=12,coast=.05,seed=3,cancel_after=1.2),occlude=(1.,1.5))

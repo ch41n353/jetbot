@@ -28,3 +28,12 @@ local_nav/goals/*.stdout.log
 
 # Full-rate power traces stay local; selected short validation traces live in reports.
 local_nav/goals/*.power.jsonl
+
+# Dashboard and bench run artifacts: camera frames, event logs and previews
+# from individual sessions. Regenerated every run and large (tens of MB).
+/local_nav/goals/dashboard/
+
+# Agent session state, not project source (.claude alone is ~97 MB of
+# transcripts).
+/.claude/
+/.codex/

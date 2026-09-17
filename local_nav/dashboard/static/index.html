@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>JetBot Search Console</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23070b10'/%3E%3Cpath d='M18 19h28v24H18z' fill='%23d6ff3f'/%3E%3Ccircle cx='25' cy='31' r='4' fill='%23070b10'/%3E%3Ccircle cx='39' cy='31' r='4' fill='%23070b10'/%3E%3Cpath d='M24 48h16' stroke='%23d6ff3f' stroke-width='5'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="mark">JB</span><div><b>SEARCH CONSOLE</b><small>GPT-5.6 Sol · deterministic motion</small></div></div>
+    <div class="status-line"><span id="liveDot" class="dot"></span><span id="phase">IDLE</span><span id="clock">—</span></div>
+  </header>
+
+  <main>
+    <section class="command panel">
+      <div class="eyebrow">MISSION INPUT</div>
+      <form id="goalForm">
+        <label for="target">Object to find</label>
+        <div class="goal-row">
+          <input id="target" maxlength="160" autocomplete="off" placeholder="e.g. Advil bottle" value="Advil bottle">
+          <button id="start" class="primary" type="submit">START SEARCH <span>↗</span></button>
+        </div>
+      </form>
+      <div class="controls">
+        <button id="stop" class="danger" disabled>■ STOP</button>
+        <button id="reset" class="secondary">↺ RESET</button>
+        <span class="safety">35 CM INITIAL TURN ENVELOPE · LIVE GUARDS ACTIVE</span>
+      </div>
+      <p id="modeNotice" class="mode-notice"></p>
+      <p id="error" role="alert"></p>
+    </section>
+
+    <section class="workspace">
+      <div class="vision panel">
+        <div class="panel-head"><div><span class="eyebrow">01 / VISION</span><h2>Latest observation</h2></div><span id="imageState" class="tag">NO FRAME</span></div>
+        <div class="camera-wrap">
+          <div class="reticle"></div>
+          <img id="camera" alt="Latest robot camera observation">
+          <svg id="overlay" viewBox="0 0 640 480" preserveAspectRatio="none" aria-label="Recognizer geometry"></svg>
+          <div id="cameraEmpty" class="empty">Camera frame appears after capture</div>
+        </div>
+        <div class="legend">
+          <span class="key target">TARGET BOX</span>
+          <span class="key contact">FLOOR CONTACT</span>
+          <span class="key obstacle">OBSTACLE</span>
+          <span class="key route">PROPOSED ROUTE</span>
+          <span id="overlayState" class="overlay-state">NO RECOGNITION YET</span>
+        </div>
+      </div>
+
+      <div class="trajectory panel">
+        <div class="panel-head"><div><span class="eyebrow">02 / ROUTE</span><h2>Trajectory preview</h2></div><span id="previewState" class="tag">WAITING</span></div>
+        <div class="preview-wrap">
+          <iframe id="preview" title="Current trajectory preview" sandbox="allow-scripts"></iframe>
+          <div id="previewEmpty" class="empty">The next swept footprint appears before motion</div>
+        </div>
+        <div class="legend">
+          <a id="previewOpen" class="key link" href="/api/preview" target="_blank" rel="noopener">OPEN FULL SIZE ↗</a>
+          <span id="previewKind" class="overlay-state">SWEPT CORRIDOR, NOT A COLLISION SENSOR</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="lower">
+      <div class="timeline panel">
+        <div class="panel-head"><div><span class="eyebrow">03 / EXECUTION</span><h2>Decision timeline</h2></div><span id="eventCount" class="counter">0 EVENTS</span></div>
+        <div id="events" class="events"><div class="empty-line">No mission events yet.</div></div>
+      </div>
+
+      <aside>
+        <section class="telemetry panel">
+          <div class="panel-head"><div><span class="eyebrow">04 / MACHINE</span><h2>Telemetry</h2></div></div>
+          <div class="gauges">
+            <div class="gauge"><span>PACK</span><strong id="pack">—</strong><small>V</small></div>
+            <div class="gauge"><span>5V RAIL</span><strong id="rail">—</strong><small>V</small></div>
+            <div class="gauge"><span>CAMERA</span><strong id="cameraAge">—</strong><small>MS</small></div>
+            <div class="gauge"><span>IMU</span><strong id="imuAge">—</strong><small>MS</small></div>
+          </div>
+          <dl class="machine-list">
+            <div><dt>Motor output</dt><dd id="motors">0.00 / 0.00</dd></div>
+            <div><dt>Motion guard</dt><dd id="guard">DISARMED</dd></div>
+            <div><dt>Sensor health</dt><dd id="health">UNKNOWN</dd></div>
+          </dl>
+        </section>
+
+        <section class="result panel">
+          <div class="panel-head"><div><span class="eyebrow">05 / CHECKPOINT</span><h2>Final result</h2></div></div>
+          <div id="result" class="result-body"><span class="result-icon">◎</span><p>Waiting for a mission.</p></div>
+          <div id="checkpoint" class="checkpoint"></div>
+        </section>
+      </aside>
+    </section>
+  </main>
+  <script src="/app.js" defer></script>
+</body>
+</html>

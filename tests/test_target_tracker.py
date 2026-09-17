@@ -57,6 +57,30 @@ class TargetTrackerTests(unittest.TestCase):
         frame[100:196,310:374]=patch
         with self.assertRaises(TargetLost):tracker.update(frame)
 
+    def test_projective_contact_follows_known_bottom_point(self):
+        image,_=self.scene()
+        tracker=TargetTracker(image,[120,100,184,196],projective_contact=True)
+        original=tracker.template.copy()
+        source=np.float32([[120,100],[184,100],[184,196],[120,196]])
+        for step in range(1,11):
+            destination=np.float32([[120-.2*step,100-.1*step],[184+.5*step,100],
+                                    [184+.8*step,196+.8*step],[120-.5*step,196+.2*step]])
+            matrix=cv2.getPerspectiveTransform(source,destination)
+            frame=cv2.warpPerspective(image,matrix,(400,320),borderValue=(128,128,128))
+            observation=tracker.update(frame)
+            truth=matrix@np.array([152.,196.,1.]);truth=truth[:2]/truth[2]
+            np.testing.assert_allclose(observation['base_pixel'],truth,atol=1.5)
+        np.testing.assert_array_equal(tracker.template,original)
+
+    def test_projective_contact_recovery_keeps_identity_and_contact(self):
+        image,patch=self.scene()
+        tracker=TargetTracker(image,[120,100,184,196],projective_contact=True)
+        tracker.update(image)
+        recovered=tracker.reacquire(image)
+        np.testing.assert_allclose(recovered['base_pixel'],[152,196],atol=2)
+        image[100:196,210:274]=patch
+        with self.assertRaises(TargetLost):tracker.reacquire(image)
+
     def test_duplicate_identity_remains_ambiguous(self):
         image,patch=self.scene()
         tracker=TargetTracker(image,[120,100,184,196])

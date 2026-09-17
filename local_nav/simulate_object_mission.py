@@ -3,6 +3,7 @@ import json
 import math
 import os
 import tempfile
+from collections import deque
 from unittest.mock import patch
 import cv2
 import numpy as np
@@ -43,7 +44,8 @@ class ObjectPlant(Plant):
         return image
 
 
-def run_case(parameters=None,target=(0,80),occlude=None,perception_compute=.035,obstacles=None,free=None):
+def run_case(parameters=None,target=(0,80),occlude=None,perception_compute=.035,obstacles=None,free=None,
+             mission_options=None,camera_pitch_bias_degrees=0.):
     plant=ObjectPlant(target=target,occlude=occlude,**(parameters or {}))
     profile=load_json(os.path.join(ROOT,'calibration/floor_geometry.json'))
     tracker=FloorTracker(profile,load_json(profile['intrinsics_path']),max_features=125)
@@ -57,9 +59,17 @@ def run_case(parameters=None,target=(0,80),occlude=None,perception_compute=.035,
         try:return original_reacquire(self,image)
         finally:plant.advance(perception_compute)
     violations=[]
+    imu_history=deque([dict(time=plant.time-.2+i*.02,gyro=np.zeros(3),
+                           acceleration=np.array([0.,9.80665,0.]),yaw=0.) for i in range(11)],maxlen=600)
+    imu_previous=[plant.time,plant.velocity]
     free=free or [-70,-40,70,140]
     obstacles=obstacles or []
     def audit(x,z,yaw):
+        if plant.time-imu_previous[0]>=.019:
+            acceleration=(plant.velocity-imu_previous[1])/(100.*(plant.time-imu_previous[0]))
+            imu_history.append(dict(time=plant.time,gyro=np.array([0.,-plant.yaw_rate,0.]),
+                                    acceleration=np.array([0.,9.80665,acceleration]),yaw=yaw))
+            imu_previous[:]=[plant.time,plant.velocity]
         from spatial_planner import bounds,transform
         from route_geometry import contains,overlap
         body=bounds([transform((x,z,math.degrees(yaw)),u,v) for u in (-6,6) for v in (-15,0)],5)
@@ -70,18 +80,30 @@ def run_case(parameters=None,target=(0,80),occlude=None,perception_compute=.035,
         try:return original(*args)
         finally:plant.advance(plant.compute)
     class Timeline:
-        def __init__(self,mount):self.up=plant.initial_up.copy()
+        def __init__(self,mount):
+            self.up=plant.initial_up.copy()
+            self.states=imu_history
+            # Plant frames already express camera coordinates. This matrix lets
+            # the production mission apply its optional camera-frame alignment.
+            self.matrix=np.eye(3)
+    bias=cv2.Rodrigues(np.array([math.radians(camera_pitch_bias_degrees),0.,0.]))[0]
+    def read_frame(timeline,settled=False):
+        image,timestamp,attitude=plant.frame(timeline,settled=settled)
+        attitude=dict(attitude,down_camera=timeline.matrix@bias@attitude['down_camera'])
+        return image,timestamp,attitude
     with tempfile.TemporaryDirectory() as directory:
         path=os.path.join(directory,'anchor.jpg');cv2.imwrite(path,plant.render())
         plan=dict(image_path=path,captured_monotonic=plant.time,target_box=plant.target_box,
                   target_ground_cm=list(target),
                   target_label='simulated object',inspected_free_rectangle_cm=free,
                   obstacle_rectangles_cm=obstacles,standoff_cm=20,**plant.token)
-        with patch('point_controller.call',side_effect=plant.call),patch('point_controller.frame',side_effect=plant.frame), \
+        plan.update(mission_options or {})
+        with patch('point_controller.call',side_effect=plant.call),patch('point_controller.frame',side_effect=read_frame), \
                 patch('point_controller.FloorTracker',return_value=tracker),patch.object(tracker,'motion',side_effect=motion), \
                 patch('state_estimator.AttitudeTimeline',Timeline), \
                 patch.object(TargetTracker,'update',timed_update),patch.object(TargetTracker,'reacquire',timed_reacquire), \
-                patch('object_mission.time.monotonic',side_effect=lambda:plant.time):
+                patch('object_mission.time.monotonic',side_effect=lambda:plant.time), \
+                patch('object_mission.time.sleep',side_effect=plant.advance):
             result=execute(plan,os.path.join(directory,'mission.json'))
         plant.advance(1.)
     return dict(result=result,true_pose=[plant.x,plant.z,math.degrees(plant.yaw)],

@@ -19,6 +19,25 @@ def load_json(path):
         return json.load(source)
 
 
+def straight_steering(x_cm,yaw_radians,yaw_rate_radians_s,direction):
+    """Bound lateral correction and damp measured rotation before it overshoots.
+
+    Preserve the 0.3 duty/radian heading gain and +/-0.025 duty limit. The
+    previous lateral gain implies 3.82 degrees of desired yaw per centimetre;
+    cap that desired heading at 1.5 degrees inside the unchanged five-degree
+    guard. A 100-ms angular lookahead gives a 0.03 duty/(radian/second)
+    damping gain, opposing rotation already in progress near the setpoint.
+    These are conservative initial gains, not a calibrated motor model.
+    """
+    if direction not in (-1,1) or not all(math.isfinite(value) for value in
+                                        (x_cm,yaw_radians,yaw_rate_radians_s)):
+        raise ValueError('Invalid straight steering state')
+    limit=math.radians(1.5)
+    desired=max(-limit,min(limit,-(.02/.3)*direction*x_cm))
+    predicted_heading=yaw_radians+.1*yaw_rate_radians_s
+    return max(-.025,min(.025,.3*(desired-predicted_heading)))
+
+
 def execute(plan, route, log, predictive_braking=False, feature_budget=250, attitude_timeline=None):
     import cv2
     import numpy as np
@@ -149,7 +168,10 @@ def execute(plan, route, log, predictive_braking=False, feature_budget=250, atti
             # Vision gates every renewal. No background heartbeat can mask stale tracking.
             if last_command is not None and time.monotonic() - last_command > .18:
                 raise RuntimeError('Processing exceeded lease budget')
-            steer = float(np.clip(-.3 * state.yaw - .02 * direction * x, -.025, .025))
+            yaw_rate=math.atan2(r[1,0],r[0,0])/dt
+            steer=straight_steering(x,state.yaw,yaw_rate,direction)
+            result['samples'][-1]['steering_duty']=steer
+            result['samples'][-1]['yaw_rate_degrees_s']=math.degrees(yaw_rate)
             call('motors_hold', left=.16*direction + steer, right=.16*direction - steer, **token)
             last_command = time.monotonic()
             if started is None:

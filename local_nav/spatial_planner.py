@@ -1,15 +1,46 @@
 """Bounded SE(2) search in an explicitly inspected static map.
 
 No sensors, motor access or model calls. Coordinates reference the camera lens.
+Inspected free space is `inspected_free_rectangle_cm` and/or the union in
+`inspected_free_rectangles_cm`; one camera view at one heading certifies only a
+narrow fan, so views taken at different headings accumulate as a union (see
+free_space.py, which also merges the list producers should hand in).
 The nominal turn pivot is ONLY a search prediction: execution must measure its
-translation and replan after each primitive. Collision checks cover every fixed
-pivot inside the chassis, including heading overrun and position uncertainty.
+translation and replan after each primitive. Collision checks cover a measured
+pivot plus its uncertainty, including heading overrun and position uncertainty.
 """
 import heapq
+import json
 import math
+import os
 import time
 
 from route_geometry import rectangle, finite, contains, overlap
+
+#: Where the chassis actually rotates. This used to sweep every chassis corner
+#: because the pivot was unmeasured, which assumed the robot might spin about
+#: its front-left or rear-right corner and inflated the worst-case rotation
+#: radius from 10.5 cm to 19.2 cm -- enough to refuse turns in any clutter. A
+#: differential drive rotates about a point on its wheel axis, and that point
+#: was fitted from 28 recorded turns to 0.8 mm RMS. The uncertainty box is still
+#: swept, so this is a narrower assumption, not a dropped check.
+def _pivot():
+    path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                        'calibration/turn_pivot.json')
+    try:
+        with open(path) as source:
+            data = json.load(source)
+        x, z = float(data['pivot_x_cm']), float(data['pivot_z_cm'])
+        margin = abs(float(data.get('uncertainty_cm', 2.)))
+        if not (-6 <= x <= 6 and -15 <= z <= 0 and margin <= 6):
+            raise ValueError('pivot outside the chassis')
+        return (x-margin, x+margin), (z-margin, z+margin)
+    except (OSError, ValueError, KeyError, TypeError):
+        # Fail closed to the old every-corner assumption.
+        return (-6., 6.), (-15., 0.)
+
+
+PIVOT_X, PIVOT_Z = _pivot()
 
 
 def transform(pose, x, z):
@@ -47,8 +78,8 @@ def sweep(pose, action, precise_turn=False):
     lo, hi = math.radians(lo), math.radians(hi)
     heading = math.radians(pose[2]) if precise_turn else 0.
     points = []
-    for px in (-6., 6.):
-        for pz in (-15., 0.):
+    for px in PIVOT_X:
+        for pz in PIVOT_Z:
             for bx in (-6., 6.):
                 for bz in (-15., 0.):
                     dx, dz = bx-px, bz-pz
@@ -70,6 +101,101 @@ def sweep(pose, action, precise_turn=False):
                    for z in (local[1],local[3])])
 
 
+SLIVER_CM = 1e-9
+
+
+def uncovered(box, rects):
+    """Parts of box left after subtracting rects; [] means the union covers it.
+
+    Containment in a union is not containment in any single member, so an
+    envelope straddling adjacent inspected rectangles must be cut up rather
+    than tested against each rectangle alone. Remainders thinner than a
+    picometre are dropped: the rectangles are closed, so a covered
+    neighbourhood on both sides of such a seam also covers the seam itself.
+    """
+    pieces = [box]
+    for r in rects:
+        remaining = []
+        for p in pieces:
+            if r[0] >= p[2] or r[2] <= p[0] or r[1] >= p[3] or r[3] <= p[1]:
+                remaining.append(p)
+                continue
+            if r[0] > p[0]+SLIVER_CM:
+                remaining.append([p[0], p[1], r[0], p[3]])
+            if r[2] < p[2]-SLIVER_CM:
+                remaining.append([r[2], p[1], p[2], p[3]])
+            x0, x1 = max(p[0], r[0]), min(p[2], r[2])
+            if r[1] > p[1]+SLIVER_CM:
+                remaining.append([x0, p[1], x1, r[1]])
+            if r[3] < p[3]-SLIVER_CM:
+                remaining.append([x0, r[3], x1, p[3]])
+        pieces = remaining
+        if not pieces:
+            break
+    return pieces
+
+
+class RectangleIndex:
+    """Uniform bucket grid: clear() runs inside the A* loop over every rectangle.
+
+    Buckets hold the largest rectangles first, so a query that one rectangle
+    already covers usually answers on its first candidate.
+    """
+
+    def __init__(self, rects, cell=15.):
+        self.rects, self.cell, self.bins, self.large = rects, cell, {}, []
+        order = sorted(range(len(rects)),
+                       key=lambda i: (rects[i][2]-rects[i][0])*(rects[i][3]-rects[i][1]),
+                       reverse=True)
+        for i in order:
+            span = self._cells(rects[i])
+            if span is None:
+                self.large.append((i, rects[i]))
+                continue
+            cx0, cz0, cx1, cz1 = span
+            for cx in range(cx0, cx1+1):
+                for cz in range(cz0, cz1+1):
+                    self.bins.setdefault((cx, cz), []).append((i, rects[i]))
+
+    def _cells(self, box):
+        c = self.cell
+        cx0, cz0 = int(math.floor(box[0]/c)), int(math.floor(box[1]/c))
+        cx1, cz1 = int(math.floor(box[2]/c)), int(math.floor(box[3]/c))
+        if (cx1-cx0+1)*(cz1-cz0+1) > 256:
+            return None
+        return cx0, cz0, cx1, cz1
+
+    def query(self, box):
+        span = self._cells(box)
+        if span is None:
+            return list(self.rects)
+        cx0, cz0, cx1, cz1 = span
+        found, out = set(), []
+        for entry in self.large:
+            found.add(entry[0])
+            out.append(entry[1])
+        for cx in range(cx0, cx1+1):
+            for cz in range(cz0, cz1+1):
+                for i, r in self.bins.get((cx, cz), ()):
+                    if i not in found:
+                        found.add(i)
+                        out.append(r)
+        return out
+
+
+def inspected_free(plan):
+    rects = []
+    if 'inspected_free_rectangle_cm' in plan:
+        rects.append(rectangle(plan['inspected_free_rectangle_cm']))
+    extra = plan.get('inspected_free_rectangles_cm', [])
+    if not isinstance(extra, (list, tuple)):
+        raise ValueError('inspected_free_rectangles_cm must be a list of rectangles')
+    rects.extend(rectangle(r) for r in extra)
+    if not rects:
+        raise ValueError('Plan must inspect at least one free rectangle')
+    return rects
+
+
 def predict(pose, action):
     kind, value = action
     if kind == 'drive':
@@ -83,7 +209,10 @@ def predict(pose, action):
 
 class SpatialPlanner:
     def __init__(self, plan):
-        self.free = rectangle(plan['inspected_free_rectangle_cm'])
+        self.free = inspected_free(plan)
+        self.single_free = self.free[0] if len(self.free) == 1 else None
+        self.free_index = None if self.single_free else RectangleIndex(self.free)
+        self.recent_free = None
         self.obstacles = [rectangle(r) for r in plan['obstacle_rectangles_cm']]
         self.goal = tuple(finite(v) for v in plan['goal_cm'])
         if len(self.goal) != 2:
@@ -103,7 +232,26 @@ class SpatialPlanner:
             raise ValueError('Goal tolerance must be 1 to 5 cm')
 
     def clear(self, envelope):
-        return contains(self.free, envelope) and not any(overlap(envelope, r) for r in self.obstacles)
+        if any(overlap(envelope, r) for r in self.obstacles):
+            return False
+        if self.single_free is not None:
+            return contains(self.single_free, envelope)
+        x0, z0, x1, z1 = envelope
+        # Neighbouring A* nodes usually reuse the same inspected rectangle.
+        r = self.recent_free
+        if r is not None and r[0] <= x0 and r[1] <= z0 and r[2] >= x1 and r[3] >= z1:
+            return True
+        candidates = self.free_index.query(envelope)
+        for r in candidates:
+            if r[0] <= x0 and r[1] <= z0 and r[2] >= x1 and r[3] >= z1:
+                self.recent_free = r
+                return True
+        overlapping = [r for r in candidates
+                       if r[0] < x1 and r[2] > x0 and r[1] < z1 and r[3] > z0]
+        # Subtract the largest overlaps first: fewer leftover pieces to split.
+        overlapping.sort(key=lambda r: (min(r[2], x1)-max(r[0], x0))*(min(r[3], z1)-max(r[1], z0)),
+                         reverse=True)
+        return not uncovered(envelope, overlapping)
 
     def arrived(self, pose):
         return math.hypot(pose[0]-self.goal[0], pose[1]-self.goal[1]) <= self.tolerance

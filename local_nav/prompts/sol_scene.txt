@@ -1,0 +1,40 @@
+Return JSON for the attached 640-column by 480-row photograph.
+All visual coordinates are ORIGINAL image pixels, measured directly on the image
+plane. Top-left=(0,0), bottom-right=(640,480), center=(320,240).
+Quarter-height rows are 120,240,360; quarter-width columns are 160,320,480.
+Estimate horizontal and vertical fractions independently; multiply horizontal
+fractions by 640 and vertical fractions by 480. Do not use a square canvas,
+1000-unit coordinates, perspective-corrected coordinates, or floor distances.
+Bound each object tightly by its visible top, bottom, left and right edges.
+For a bottle include the cap and body. The floor-contact point lies on the
+bottle's bottom rim, not at the image bottom or the label's bottom.
+Check that boxes match the object's apparent size and that the contact sits on
+the observed bottom edge. Null target_box and contact_pixel if target is absent.
+List up to 8 nearby floor obstacles, prioritizing LEGO, bins and boxes. Exclude
+the target. Each obstacle gets its own tight box. approach_side is the image
+third containing the target center: left, center, right; otherwise not_visible.
+The requested Advil bottle, if present, is a white plastic medicine
+bottle with a dark blue cap and a green label with yellow Advil lettering. The
+label may be tiny, partly hidden or facing away. Match the whole object using
+visible evidence; do not substitute a carton. Coca-Cola means a Coke beverage
+can, not a medicine bottle or a red LEGO. Locate only what the image supports.
+Also answer each INDEPENDENT SYNTHETIC spatial check supplied below. These maps
+are NOT estimated from the photograph. Robot width=12cm, length=15cm; camera is
+front-center. Coordinates x right and z forward, rectangles [xmin,zmin,xmax,zmax].
+The proposed swept rectangles ALREADY include the whole chassis, 5cm clearance,
+position uncertainty and braking. Execute only if EVERY swept rectangle is
+contained in inspected free space and intersects NO retained obstacle. Touching
+counts as collision. Obstacles persist even when offscreen. The provided swept
+rectangles include all turn/rear extents; do not add margins again.
+This is an offline planning benchmark, not a command to motors.
+route_pixels proposes how to walk to the target: successive points where the
+path TOUCHES THE FLOOR in this image. The first point is just ahead of the robot
+near the bottom centre of the frame, the last point is the target's floor
+contact, and intermediate points step around the obstacle footprints you listed.
+Every point must lie on floor you can actually see; never place one on an
+object, on a wall, above the floor line, or on floor you are guessing at. Do not
+estimate distances in centimetres or any other unit: give pixels only. The local
+controller projects these pixels, checks clearance and spacing, and may reject
+the route. Return an empty array when no continuous visible floor path exists.
+route_pixels is a PROPOSAL, not motion: it does not choose motion, create free
+space, or mean the robot has arrived.

@@ -35,14 +35,44 @@ def call(action, **fields):
         return result
 
 
+#: Where a tracked point is allowed to land, as (x0,y0,x1,y1). The default sits
+#: barely 20px outside the source box, which suits forward driving but discards
+#: nearly every point once the chassis rotates. Rotation-heavy callers widen it.
+DRIVE_FLOW_WINDOW=(140,270,500,470)
+TURN_FLOW_WINDOW=(30,250,610,478)
+
+#: Accepted apparent-floor-scale range for one motion fit. Outside it the camera
+#: height or tilt has genuinely changed; inside it is tracking noise.
+SCALE_LIMITS=(.94,1.06)
+
+#: Feature counts a floor fit needs. A similarity fit needs only a couple of
+#: correspondences, so these are quality floors, not mathematical ones. They
+#: were set for richly textured carpet; on plainer floor -- the doorway area the
+#: robot scanned on 2026-09-16 -- they ended sweeps that were tracking fine.
+#: Every fit is still checked for inlier fraction, residual and scale.
+MIN_SOURCE_FEATURES=15
+MIN_TRACKED_FEATURES=10
+MIN_INLIERS=8
+#: Fraction of tracked points the fit must agree with. On plain carpet with few
+#: features a good fit routinely lands near half; 0.65 rejected a 12-of-27 fit
+#: mid-approach. The absolute count above, the residual and the scale bound all
+#: still apply, so a genuinely bad fit is still refused.
+MIN_INLIER_FRACTION=.5
+
+
 class FloorTracker:
-    def __init__(self,profile,intrinsics,max_features=250,crop_flow=True):
+    def __init__(self,profile,intrinsics,max_features=250,crop_flow=True,
+                 flow_window=DRIVE_FLOW_WINDOW):
         if type(max_features) is not int or max_features not in (80, 125, 250):
             raise ValueError("Feature budget must be 80, 125 or 250")
         self.max_features=max_features
         if type(crop_flow) is not bool:
             raise ValueError('crop_flow must be boolean')
         self.crop_flow=crop_flow
+        window=tuple(float(v) for v in flow_window)
+        if len(window)!=4 or window[0]>=window[2] or window[1]>=window[3]:
+            raise ValueError('flow_window must be (x0,y0,x1,y1) with x0<x1 and y0<y1')
+        self.flow_window=window
         self.p,self.i=profile,intrinsics
 
     def ground(self,points,attitude=None):
@@ -83,7 +113,9 @@ class FloorTracker:
             y,b=y-oy,b-oy
             mask[max(0,y-5):max(0,min(mask.shape[0],b+5)),max(0,x-5):max(0,min(mask.shape[1],r+5))]=0
         p0=cv2.goodFeaturesToTrack(gray0,self.max_features,.005,7,mask=mask)
-        if p0 is None or len(p0)<25:raise RuntimeError('Insufficient carpet texture')
+        if p0 is None or len(p0)<MIN_SOURCE_FEATURES:
+            raise RuntimeError('Insufficient carpet texture (%d features)'
+                               %(0 if p0 is None else len(p0)))
         p0=p0+offset
         guess=None
         flags=0
@@ -115,15 +147,24 @@ class FloorTracker:
         back=back+offset
         good=(ok1.ravel()>0)&(ok2.ravel()>0)&(np.linalg.norm(back-p0,axis=2).ravel()<.8)
         q=p1.reshape(-1,2)
-        good &= (q[:,0]>140)&(q[:,0]<500)&(q[:,1]>270)&(q[:,1]<470)
+        wx0,wy0,wx1,wy1=self.flow_window
+        good &= (q[:,0]>wx0)&(q[:,0]<wx1)&(q[:,1]>wy0)&(q[:,1]<wy1)
         a,b=self.ground(p0[good],before_attitude),self.ground(p1[good],after_attitude)
-        if len(a)<20:raise RuntimeError('Lost carpet tracking')
+        if len(a)<MIN_TRACKED_FEATURES:
+            raise RuntimeError('Lost carpet tracking (%d of %d survived)'%(len(a),len(p0)))
         transform,inliers=cv2.estimateAffinePartial2D(a,b,method=cv2.RANSAC,ransacReprojThreshold=.35,maxIters=1000,confidence=.99)
         if transform is None or inliers is None:raise RuntimeError('Floor motion fit failed')
         select=inliers.ravel().astype(bool)
-        if select.sum()<20 or select.mean()<.65:raise RuntimeError('Floor motion is inconsistent (%d/%d inliers)' % (select.sum(),len(select)))
+        if select.sum()<MIN_INLIERS or select.mean()<MIN_INLIER_FRACTION:
+            raise RuntimeError('Floor motion is inconsistent (%d/%d inliers)'%(select.sum(),len(select)))
         scale=float(np.linalg.norm(transform[:,0]))
-        if not .97<scale<1.03:raise RuntimeError('Camera tilt/height or tracking changed (scale %.3f)' % scale)
+        # Catches the camera being knocked or the robot lifted, which change the
+        # apparent floor scale a great deal. At +/-3% it also caught ordinary
+        # carpet-tracking noise across a scan turn -- a 0.968 fit ended a sweep
+        # 18 turns in -- so the band is the one that separates a moved camera
+        # from a normal fit, not the tightest the tracker usually achieves.
+        if not SCALE_LIMITS[0]<scale<SCALE_LIMITS[1]:
+            raise RuntimeError('Camera tilt/height or tracking changed (scale %.3f)' % scale)
         rotation=transform[:,:2]/scale
         yaw_variance=math.radians(.8)**2
         if before_attitude is not None and after_attitude is not None:
@@ -156,9 +197,12 @@ def frame(timeline=None, settled=True):
     image=cv2.imdecode(np.frombuffer(base64.b64decode(snap['jpeg_base64']),dtype=np.uint8),cv2.IMREAD_COLOR) if timeline else cv2.imread(snap['path'])
     if image is None or image.shape[:2]!=(480,640):raise RuntimeError('Invalid camera frame')
     if timeline:
+        if getattr(timeline,'keep_last_observation',False):
+            timeline.last_sensor_observation={k:v for k,v in snap.items() if k!='jpeg_base64'}
+            timeline.last_observation_image=image
         initialize = timeline.last is None
         if initialize:
-            snap['attitude_initialization']='stationary_5deg'
+            snap['attitude_initialization']='stationary_10deg'
         if hasattr(timeline, 'record_directory'):
             record_observation(timeline.record_directory,snap,image)
         if initialize:

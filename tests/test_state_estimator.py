@@ -2,7 +2,7 @@ import os,sys,unittest,math
 import numpy as np
 sys.path.insert(0,os.path.join(os.path.dirname(os.path.dirname(__file__)),'local_nav'))
 from calibrate_imu_mount import solve
-from state_estimator import AttitudeTimeline,PlanarState,fuse_yaw,rotation2
+from state_estimator import AttitudeTimeline,PlanarState,fuse_yaw,rotation2,IMU_GAP_LIMIT_S
 
 
 def mount():
@@ -14,6 +14,18 @@ def sample(t,gyro=(0,0,0),acc=(0,0,9.8)):
     return dict(time=t,gyro=gyro,gyro_units='deg/s',acceleration=acc,error=0,system_status=5)
 
 class EstimatorTests(unittest.TestCase):
+    def test_rate_limit_reports_sensor_rate_without_claiming_turn_angle(self):
+        timeline=AttitudeTimeline(mount());timeline.feed([sample(1.)])
+        with self.assertRaisesRegex(RuntimeError,'200.00 deg/s across all axes'):
+            timeline.feed([sample(1.02,(200,0,0))])
+        self.assertEqual(timeline.last,1.)
+        self.assertEqual(timeline.yaw,0.)
+    def test_scan_turn_rates_are_not_rejected_as_sensor_faults(self):
+        # A measured 0.14-power scan turn: ~80 deg/s chassis yaw plus carpet
+        # vibration on the other axes. This must survive the sensor guard.
+        timeline=AttitudeTimeline(mount());timeline.feed([sample(1.)])
+        timeline.feed([sample(1.02,(30,25,80))])
+        self.assertEqual(timeline.last,1.02)
     def test_quiet_start_averages_and_bounds_tilt(self):
         def samples(degrees):
             a=math.radians(degrees)
@@ -23,8 +35,11 @@ class EstimatorTests(unittest.TestCase):
         f=AttitudeTimeline(mount());f.initialize_stationary(samples(4.2),1.2)
         self.assertAlmostEqual(math.degrees(math.acos(f.up[2])),4.2,places=2)
         self.assertEqual(f.startup_limit_degrees,4)
+        f=AttitudeTimeline(mount());f.initialize_stationary(samples(5.15),1.2)
+        self.assertAlmostEqual(math.degrees(math.acos(f.up[2])),5.15,places=2)
+        np.testing.assert_allclose(f.reference_up,[0,0,1])
         with self.assertRaises(RuntimeError):
-            AttitudeTimeline(mount()).initialize_stationary(samples(6),1.2)
+            AttitudeTimeline(mount()).initialize_stationary(samples(10.1),1.2)
 
     def test_stationary_start_rejects_motion_and_short_history(self):
         for readings in ([sample(1+i*.02,gyro=(0,0,3)) for i in range(11)],
@@ -51,9 +66,13 @@ class EstimatorTests(unittest.TestCase):
         self.assertAlmostEqual(math.degrees(math.atan2(down[2],down[1])),12.25,places=4)
     def test_gap_and_old_frame_fail(self):
         f=AttitudeTimeline(mount());f.feed([sample(1)])
-        with self.assertRaises(RuntimeError):f.feed([sample(1.2)])
+        # A stopped robot may think for longer than one sample interval, so the
+        # bound is IMU_GAP_LIMIT_S; a step past it is still a sensor fault.
+        f.feed([sample(1+IMU_GAP_LIMIT_S*.9)])
+        with self.assertRaises(RuntimeError):f.feed([sample(1+IMU_GAP_LIMIT_S*2.5)])
+        # Asking outside the history it actually holds still fails, either side.
         with self.assertRaises(RuntimeError):f.at(.9)
-        with self.assertRaises(RuntimeError):f.at(1.1)
+        with self.assertRaises(RuntimeError):f.at(1+IMU_GAP_LIMIT_S*2)
     def test_translation_and_uncertainty(self):
         state=PlanarState()
         result=state.update(np.eye(2),np.array([0,-2]),.2,dict(residual_cm=.1,yaw_variance=.001))

@@ -1,0 +1,12 @@
+{
+  "pivot_x_cm": 1.12,
+  "pivot_z_cm": -7.28,
+  "uncertainty_cm": 2.0,
+  "residual_rms_cm": 0.08,
+  "turns_fitted": 28,
+  "fitted_on": "2026-09-16",
+  "method": "Least squares over measured scan turns. For a rotation of theta about a body-frame pivot p, the lens displacement is x=(1-cos)px - sin*pz, z=sin*px + (1-cos)pz. Solved for p from the recorded pre/post-turn poses in local_nav/goals/dashboard/*.events.jsonl.",
+  "source": "Measured from robot motion, not a datasheet or an assumed axle position.",
+  "notes": "Replaces the previous all-chassis-corner pivot assumption in spatial_planner.sweep, which inflated the worst-case rotation radius from 10.5 cm to 19.2 cm. uncertainty_cm is still swept around the fitted point; it is not a claim that the pivot is exact. Refit if wheels, tyres, mass distribution or carpet change. This is fitted from 10-degree scan turns on carpet at one location.",
+  "user_confirmation": "User stated independently on 2026-09-16 that the wheels are 7 cm behind the camera; the 7.28 cm fit agrees to 3 mm."
+}
