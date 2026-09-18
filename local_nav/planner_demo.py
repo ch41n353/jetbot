@@ -31,6 +31,7 @@ import cv2
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import explore
 import fetch
 
 PAGE = """<!doctype html><html><head><meta charset="utf-8">
@@ -93,8 +94,10 @@ pre{background:#05070a;border:1px solid #1e2830;padding:10px;max-height:560px;
       <button id="left">&#8630; LEFT</button><button id="right">RIGHT &#8631;</button>
     </div>
     <div class="group">
-      <input id="target" type="text" placeholder="name an object"
-        value="the Advil bottle"><button id="ask">ASK GPT</button>
+      <input id="target" type="text" style="min-width:300px"
+        placeholder="tell it what to do"
+        value="reach the can of nuts"
+        ><button id="ask">ASK GPT</button>
       <button id="go" class="go">GPT DRIVE</button>
       <span>drive</span><input id="every" type="number" min="1" max="60"
         placeholder="once" style="width:62px" title="seconds of driving between
@@ -102,6 +105,7 @@ pre{background:#05070a;border:1px solid #1e2830;padding:10px;max-height:560px;
     </div>
     <div class="group">
       <button id="flowgo" class="go">FLOW</button>
+      <button id="find" class="go">FIND IT</button>
       <span>look every</span><input id="flowevery" type="number" min="1" max="30"
         value="1" style="width:56px" title="how often a look is issued; several
         run at once and the wheels never stop"><span>s</span>
@@ -124,8 +128,13 @@ pre{background:#05070a;border:1px solid #1e2830;padding:10px;max-height:560px;
     VIEW switches between this plan view and the raw camera image. Draw on the
     camera image, run it, and the purple markers are those same floor points
     redrawn in the new photograph &mdash; they should land on the same carpet.<br>
-    ASK GPT names an object and fills in the waypoints instead of you drawing
-    them. Its route is widened to the clearance the wheels need before it is
+    The box takes an instruction in plain words, not just a name &mdash; "reach
+    the can of nuts", "go to the pink bin by the desk". The model reads the goal
+    out of it and the log says what it understood, so a misread shows up before
+    the wheels turn. Obstacles are always avoided: clearance is enforced here
+    rather than by the model, and an instruction to ignore something on the
+    floor does not change that.<br>
+    ASK GPT fills in the waypoints instead of you drawing them. Its route is widened to the clearance the wheels need before it is
     shown &mdash; the model has no scale, so the margins are ours.<br>
     GPT DRIVE with a number in the box drives for that many seconds, stops, asks again
     from where it now stands &mdash; handing the model its own unreached
@@ -213,7 +222,7 @@ async function post(path,body){
 }
 // 'live' is deliberately absent: the stream is the one thing that should keep
 // running while the robot is busy.
-function buttons(){['grab','left','right','run','clear','ask','view','go','flowgo'].forEach(
+function buttons(){['grab','left','right','run','clear','ask','view','go','flowgo','find'].forEach(
   id=>document.getElementById(id).disabled=busy);}
 function show(d){
   if(d.log) document.getElementById('log').textContent=d.log;
@@ -322,6 +331,7 @@ function watch(){
         clearInterval(watching); watching=null;
         document.getElementById('go').textContent='GPT DRIVE';
         document.getElementById('flowgo').textContent='FLOW';
+        document.getElementById('find').textContent='FIND IT';
         busy=false; buttons();
       }
     }catch(err){ /* the bench restarted; the next tick will pick it up */ }
@@ -330,6 +340,16 @@ function watch(){
 // A field each. One box serving both buttons meant the same number was the
 // drive slice for one and the issue interval for the other, which nobody
 // should have to remember.
+document.getElementById('find').onclick=async()=>{
+  // For something that is not in the picture at all. It turns on the spot
+  // looking for it, and hands over to the reach controller once it has a
+  // direction. The drive box is its handover slice, not a sweep interval.
+  document.getElementById('find').textContent='LOOKING...';
+  busy=true; buttons();
+  await post('/api/search',{target:document.getElementById('target').value,
+                            seconds:document.getElementById('every').value.trim()});
+  watch();
+};
 document.getElementById('flowgo').onclick=async()=>{
   // Flowing keeps several looks in the air so the wheels never stop. The
   // number box is reused as the issue interval rather than the drive slice.
@@ -631,6 +651,98 @@ class Bench(object):
     def running(self):
         return self.flight is not None and self.flight.is_alive()
 
+    def hunt(self, target, seconds=MISSION_SECONDS):
+        """Start a search on its own thread; the page polls /api/progress."""
+        if self.running():
+            self.say('a mission is already running; press STOP first')
+            return self.state(mission=True)
+        self.abort.clear()
+        self.flight = threading.Thread(target=self.search, args=(target, seconds),
+                                       daemon=True)
+        self.flight.start()
+        time.sleep(.4)                # let the first line reach the log
+        return self.state(mission=True)
+
+    def search(self, target, seconds=MISSION_SECONDS):
+        """Find something that is not in the picture, then drive to it.
+
+        mission() is the controller that arrives, and it gives up immediately
+        when the target has never been in frame -- there is nothing to carry
+        forward and guessing a direction is worse than saying so. So the two are
+        stacked rather than merged: explore turns on the spot until a look comes
+        back sure, points the robot at what it found, and hands the wheels over
+        mid-run. Everything below the handover is the code that already works.
+
+        The search log is lost at the handover, because mission() clears it to
+        write its own. The journal is in the run's events either way.
+        """
+        target = (target or '').strip()
+        if not target:
+            self.say('name something to look for first')
+            return
+        if not os.environ.get('OPENAI_API_KEY'):
+            self.say('OPENAI_API_KEY is not set, so the model cannot be asked')
+            return
+
+        self.lines = []
+        self.say('searching for %s: turning on the spot and looking' % target)
+
+        def watch(image):
+            # Show each photograph as it is taken. A sweep is a minute of
+            # turning, and the panel is the only way to see what it is seeing.
+            self.frame = image
+            if self.view_mode != 'camera':
+                self.view = self.warp.apply(image)
+            self.frame_token += 1
+
+        def record(event, **fields):
+            if self.abort.is_set():
+                raise fetch.Stop('stopped by the operator')
+            if event == 'look':
+                self.say('  %+04.0f  %s%s%s'
+                         % (fields.get('heading', 0.), fields.get('scene', ''),
+                            '' if fields.get('confidence') != 'sure' else '  <- SEEN',
+                            '' if fields.get('confidence') != 'unsure'
+                            else '  <- might be it'))
+                self.last_note = str(fields.get('scene', ''))[:120]
+            elif event == 'sweep':
+                self.say('looking round %.0f degrees in %.0f degree steps'
+                         % (fields.get('arc', 0.), fields.get('step', 0.)))
+            elif event == 'plan':
+                if fields.get('rejected'):
+                    self.say('  refused that plan: %s'
+                             % '; '.join(fields['rejected'])[:120])
+            elif event == 'planned':
+                self.say('plan (%d step(s)): %s' % (fields.get('steps', 0),
+                                                    fields.get('note', '')))
+            elif event == 'hop':
+                self.say('driving %.0f cm along %+.0f to look from somewhere else'
+                         % (fields.get('distance_cm', 0.), fields.get('heading', 0.)))
+            elif event in ('hop_blocked', 'replanning'):
+                self.say('  %s' % fields.get('why', event))
+            elif event == 'found':
+                self.say('')
+                self.say('FOUND: %s is %+.0f degrees away; handing over to the '
+                         'reach controller' % (target, fields.get('heading', 0.)))
+            elif event == 'gave_up':
+                self.say('')
+                self.say('gave up after %d look(s) from %d place(s): %s'
+                         % (fields.get('looks_used', 0), fields.get('stations', 0),
+                            fields.get('why', '')))
+                self.say('that is a budget running out, not a proof it is absent')
+
+        hunt = explore.Search(self.robot, target, self.odometer, record,
+                              watch=watch)
+        try:
+            result = hunt.run(handoff=lambda: self.mission(target, seconds))
+        except fetch.Stop as exc:
+            self.robot.halt()
+            self.say('STOPPED: %s' % exc)
+            return
+        if result.get('outcome') == 'not_found':
+            self.say('')
+            self.say(hunt.journal.render())
+
     def launch_flow(self, target, every=FLOW_INTERVAL_S):
         """Start a flowing run on its own thread; the page polls /api/progress."""
         if self.running():
@@ -850,6 +962,9 @@ class Bench(object):
                                                       MISSION_STANDOFF_CM) or points
                         points = fetch.cap_path(points, MISSION_COMMIT_CM) or points
                     route = points
+                    if answer.get('goal'):
+                        self.last_note = ('%s | %s' % (str(answer['goal'])[:40],
+                                                       self.last_note))[:120]
                     self.say('look %d %s | rebased %.0f cm | %d in flight%s'
                              % (newest['seq'] + 1,
                                 ('target %.0f cm' % math.hypot(*goal)) if goal
@@ -1034,6 +1149,8 @@ class Bench(object):
                 sighting = 'sees it, but too far off to place on the floor'
             else:
                 sighting = 'cannot see it'
+            if answer.get('goal'):
+                self.say('  it read the goal as: %s' % str(answer['goal'])[:60])
             self.say('look %d: %s%s' % (
                 cycle + 1, sighting,
                 ' (%d waypoint(s) remembered)' % len(prior['route_pixels'])
@@ -1906,7 +2023,8 @@ class Handler(BaseHTTPRequestHandler):
         path = urlparse(self.path).path
         if path == '/api/halt':          # never queues behind a running leg
             return self._send(json.dumps(bench.halt()).encode())
-        if bench.running() and path != '/api/mission':
+        if bench.running() and path not in ('/api/mission', '/api/search',
+                                            '/api/flow'):
             # A mission owns the robot for minutes and runs on its own thread,
             # so the request lock is free the whole time. Without this, a page
             # reload takes a picture mid-mission: the camera moves under the
@@ -1923,6 +2041,13 @@ class Handler(BaseHTTPRequestHandler):
                 out = bench.turn(float(body.get('degrees', 0.)))
             elif path == '/api/run':
                 out = bench.run(body.get('points') or [])
+            elif path == '/api/search':
+                # Same shape as a mission: it owns the robot for minutes and
+                # reports through the same log, so the page treats it the same.
+                every = body.get('seconds')
+                out = bench.hunt(body.get('target') or '',
+                                 MISSION_SECONDS if every in (None, '')
+                                 else float(every))
             elif path == '/api/flow':
                 every = body.get('every')
                 out = bench.launch_flow(body.get('target') or '',

@@ -440,6 +440,58 @@ class MemoryTests(unittest.TestCase):
                          json.loads(sent['body']['input'][0]['content'][0]['text']))
 
 
+class InstructionTests(unittest.TestCase):
+    """The prompt takes plain words, not a noun phrase.
+
+    Clearance is not part of what the instruction can change. It is enforced
+    here, by refusing legs that pass close to anything the model listed, so an
+    instruction to push through something would not produce a robot that pushes
+    through it -- it would produce one that stops in front of it with a route it
+    cannot drive. The prompt says to route around regardless and explain in the
+    note, which is the honest version of that.
+    """
+
+    def test_the_answer_says_what_it_understood(self):
+        self.assertIn('goal', fetch.SCHEMA['properties'])
+        self.assertEqual(set(fetch.SCHEMA['required']),
+                         set(fetch.SCHEMA['properties']))
+        self.assertFalse(fetch.SCHEMA['additionalProperties'])
+
+    def test_nothing_in_the_answer_can_switch_clearance_off(self):
+        for name in fetch.SCHEMA['properties']:
+            self.assertNotIn(name, ('avoid_obstacles', 'ignore_obstacles',
+                                    'clearance_cm', 'push_through'))
+
+    def test_the_prompt_says_clearance_is_not_negotiable(self):
+        self.assertIn('Obstacles are always avoided', fetch.PROMPT)
+
+    def test_the_instruction_reaches_the_model_as_an_instruction(self):
+        sent = {}
+
+        class Reply(object):
+            def __enter__(self): return self
+            def __exit__(self, *a): return False
+            def read(self): return b'{}'
+
+        def capture(request, timeout=None):
+            sent['body'] = json.loads(request.data.decode())
+            return Reply()
+
+        answer = dict(goal='x', visible=False, contact_pixel=None,
+                      route_pixels=[], obstacles=[], turn_degrees=None, note='')
+        reply = dict(status='completed', output=[dict(type='message', content=[
+            dict(type='output_text', text=json.dumps(answer))])])
+        with patch.dict(os.environ, {'OPENAI_API_KEY': 'test'}), \
+                patch('json.load', return_value=reply), \
+                patch('urllib.request.urlopen', side_effect=capture), \
+                patch('cv2.imencode', return_value=(True, np.zeros(4, np.uint8))):
+            fetch.recognize(np.zeros((480, 640, 3), np.uint8),
+                            'go to the pink bin by the desk')
+        text = json.loads(sent['body']['input'][0]['content'][0]['text'])
+        self.assertEqual(text['instruction'], 'go to the pink bin by the desk')
+        self.assertNotIn('object', text)
+
+
 class TurnRequestTests(unittest.TestCase):
     """The model may ask for one motion: a rotation.
 

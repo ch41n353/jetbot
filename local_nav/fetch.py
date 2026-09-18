@@ -117,9 +117,12 @@ POINT = {'type': 'object', 'additionalProperties': False,
 
 SCHEMA = {
     'type': 'object', 'additionalProperties': False,
-    'required': ['visible', 'contact_pixel', 'route_pixels', 'obstacles',
-                 'turn_degrees', 'note'],
+    'required': ['goal', 'visible', 'contact_pixel', 'route_pixels',
+                 'obstacles', 'turn_degrees', 'note'],
     'properties': {
+        # What the instruction asked for, read back in the model's own words, so
+        # a misread shows up in the log rather than in the wheels.
+        'goal': {'type': 'string'},
         'visible': {'type': 'boolean'},
         'contact_pixel': {'anyOf': [POINT, {'type': 'null'}]},
         # The trajectory, as floor contact points. Pixels, not centimetres: the
@@ -137,7 +140,20 @@ SCHEMA = {
     },
 }
 
-PROMPT = """You are the eyes of a small floor robot that must drive to one object.
+PROMPT = """You are the eyes of a small floor robot. You are given an instruction in plain
+words and one photograph, and you answer about that photograph.
+
+First read the instruction.
+
+goal - what the robot is being sent to, in your own words and few of them. If
+the instruction names a thing, that is the goal. Everything else you report is
+about reaching it.
+
+Obstacles are always avoided, whatever the instruction says about them. The
+robot refuses to drive within a body's width of anything you list, so a route
+that ignores something on the floor is not driven, it just stops in front of
+it. If an instruction asks you to push through or ignore what is in the way,
+route around it anyway and say so in the note.
 
 The robot is 12 cm wide and it cannot squeeze through gaps. It sees the floor
 from just above it, so the bottom of the image is the carpet right in front of
@@ -729,11 +745,17 @@ def recall(lens, memory, pose, width=640, height=480):
                    % (travelled, pose[2]))
 
 
-def recognize(image, target, prior=None, timeout=20.):
-    """Ask the model whether the target is visible and where it meets the floor.
+def recognize(image, instruction, prior=None, timeout=20.):
+    """Read a plain-words instruction against one photograph.
 
-    Perception only. The model never chooses a motion: it answers a question
-    about pixels, and every centimetre comes from the local calibration.
+    `instruction` is plain words rather than a noun phrase -- "reach the can of
+    nuts without hitting anything", "go to the pink bin by the desk" -- and the
+    model reads the goal out of it and reports what it understood, so a misread
+    shows in the log instead of in the wheels.
+
+    Obstacle clearance is not negotiable and is enforced here, not by the model.
+    Otherwise perception only: it answers a question about pixels, and every
+    centimetre comes from the local calibration.
 
     `prior` is what recall() built from the previous answer, so the model sees
     its own last route and obstacle list drawn in the photograph in front of it
@@ -746,8 +768,8 @@ def recognize(image, target, prior=None, timeout=20.):
                 max_output_tokens=600, instructions=PROMPT,
                 input=[dict(role='user', content=[
                     dict(type='input_text', text=json.dumps(
-                        dict(object=target, last_time=prior) if prior
-                        else dict(object=target))),
+                        dict(instruction=instruction, last_time=prior) if prior
+                        else dict(instruction=instruction))),
                     dict(type='input_image', detail='high',
                          image_url='data:image/jpeg;base64,'
                                    + base64.b64encode(encoded).decode('ascii'))])],
