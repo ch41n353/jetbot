@@ -381,25 +381,32 @@ class MemoryTests(unittest.TestCase):
     def test_rebase_of_no_motion_changes_nothing(self):
         self.assertEqual(fetch.rebase([(5., 20.)], [0., 0., 0.]), [(5., 20.)])
 
-    def test_recall_redraws_the_last_answer_in_the_new_picture(self):
+    def test_recall_redraws_the_last_plan_in_the_new_picture(self):
         machine = self.lens()
-        memory = dict(route=[(0., 40.), (0., 80.)],
-                      obstacles=[('cable', (0., 60.))])
+        memory = dict(route=[(0., 40.), (0., 80.)], goal=(0., 90.))
         prior = fetch.recall(machine, memory, [0., 20., 0.])
         self.assertEqual(len(prior['route_pixels']), 2)
-        self.assertEqual(prior['obstacles'][0]['label'], 'cable')
         # Everything is 20 cm nearer than it was, so it sits lower in the frame.
         was = machine.pixel(0., 40.)
         self.assertGreater(prior['route_pixels'][0]['y'], was[1])
 
-    def test_what_has_left_the_picture_is_named_not_dropped(self):
-        # An obstacle the robot has driven past is the whole reason for doing
-        # this: it is still on the floor, and the next photograph cannot say so.
+    def test_obstacles_are_not_sent_at_all(self):
+        # The model is looking at the floor and can see them; a fresh detection
+        # beats a position carried through motion it did not measure. The
+        # executor keeps its own obstacle memory, which is a separate question.
         machine = self.lens()
-        memory = dict(route=[], obstacles=[('cable', (0., 20.))])
-        prior = fetch.recall(machine, memory, [0., 60., 0.])
-        self.assertEqual(prior['obstacles'], [])
-        self.assertEqual(prior['out_of_frame'], ['cable'])
+        prior = fetch.recall(machine, dict(route=[(0., 40.)],
+                                           obstacles=[('cable', (0., 20.))],
+                                           goal=(0., 60.)), [0., 10., 0.])
+        self.assertNotIn('obstacles', prior)
+        self.assertNotIn('out_of_frame', prior)
+
+    def test_only_the_part_not_yet_driven_is_sent_back(self):
+        machine = self.lens()
+        prior = fetch.recall(machine, dict(route=[(0., 20.), (0., 60.)],
+                                           goal=(0., 80.)), [0., 40., 0.])
+        # the 20 cm waypoint is 20 cm behind now; only the far one survives
+        self.assertEqual(len(prior['route_pixels']), 1)
 
     def test_nothing_remembered_sends_no_prior(self):
         self.assertIsNone(fetch.recall(self.lens(),
@@ -438,6 +445,98 @@ class MemoryTests(unittest.TestCase):
             fetch.recognize(np.zeros((480, 640, 3), np.uint8), 'bottle')
         self.assertNotIn('last_time',
                          json.loads(sent['body']['input'][0]['content'][0]['text']))
+
+
+class MultiStepTests(unittest.TestCase):
+    """An instruction can name more than one place.
+
+    "reach the pink box then the can of nuts" is two steps, and arriving at the
+    first is not the end of the run. The loop used to stop at the first thing it
+    got within the standoff of, because arriving was the only ending it knew.
+    """
+
+    def test_the_answer_can_say_the_instruction_is_not_finished(self):
+        self.assertIn('all_done', fetch.SCHEMA['properties'])
+        self.assertEqual(fetch.SCHEMA['properties']['all_done'],
+                         {'type': 'boolean'})
+        self.assertEqual(set(fetch.SCHEMA['required']),
+                         set(fetch.SCHEMA['properties']))
+
+    def test_what_has_been_reached_is_carried_to_the_next_look(self):
+        prior = fetch.recall(robot(), dict(route=[], obstacles=[],
+                                           done=['pink box']), [0., 0., 0.])
+        self.assertEqual(prior['already_reached'], ['pink box'])
+
+    def test_progress_alone_is_worth_sending(self):
+        # After arriving, the route is spent and the goal is cleared; the list
+        # of what is already done is the only thing left worth saying, and it is
+        # what stops the robot going back to it.
+        self.assertIsNotNone(fetch.recall(robot(), dict(done=['pink box']),
+                                          [0., 0., 0.]))
+
+    def test_nothing_remembered_still_sends_nothing(self):
+        self.assertIsNone(fetch.recall(robot(), dict(route=[], obstacles=[],
+                                                     done=[]), [0., 0., 0.]))
+
+    def test_the_prompt_explains_when_to_call_it_finished(self):
+        self.assertIn('all_done - false while any step', fetch.PROMPT)
+        self.assertIn('already_reached', fetch.PROMPT)
+
+
+class TargetMemoryTests(unittest.TestCase):
+    """What the robot is chasing must survive leaving the frame.
+
+    A contact pixel stops existing the moment the target is out of shot, and
+    turning is exactly what puts it out of shot. Before this, a rotation erased
+    the goal: the next look started from nothing and the robot forgot what it
+    was for. A bearing does not stop existing, so that is what is carried.
+    """
+
+    def lens(self):
+        return robot()
+
+    def test_the_goal_survives_any_amount_of_turning(self):
+        machine = self.lens()
+        memory = dict(route=[], obstacles=[], goal=(0., 80.))
+        for turn, expected in ((30., -30.), (95., -95.), (160., -160.)):
+            prior = fetch.recall(machine, memory, [0., 0., turn])
+            self.assertIsNotNone(prior, 'turning %g erased the goal' % turn)
+            self.assertAlmostEqual(prior['target_was']['bearing_degrees'],
+                                   expected, delta=.5)
+
+    def test_out_of_view_is_reported_rather_than_dropped(self):
+        machine = self.lens()
+        prior = fetch.recall(machine, dict(route=[], obstacles=[],
+                                           goal=(0., 80.)), [0., 0., 120.])
+        target = prior['target_was']
+        self.assertFalse(target['still_in_view'])
+        self.assertIsNone(target['contact_pixel'])
+        self.assertIn('behind', target['where'])
+
+    def test_a_goal_in_view_still_gets_its_pixel(self):
+        machine = self.lens()
+        prior = fetch.recall(machine, dict(route=[], obstacles=[],
+                                           goal=(0., 60.)), [0., 0., 0.])
+        target = prior['target_was']
+        self.assertTrue(target['still_in_view'])
+        self.assertIsNotNone(target['contact_pixel'])
+
+    def test_a_remembered_goal_alone_is_worth_sending(self):
+        # Route and obstacles can both be empty after a turn; the goal is still
+        # the whole reason the robot is driving.
+        machine = self.lens()
+        self.assertIsNotNone(fetch.recall(machine, dict(goal=(0., 50.)),
+                                          [0., 0., 90.]))
+        self.assertIsNone(fetch.recall(machine, dict(route=[], obstacles=[]),
+                                       [0., 0., 90.]))
+
+    def test_the_side_words_match_the_sign(self):
+        self.assertIn('left', fetch.where_words(-70.))
+        self.assertIn('right', fetch.where_words(70.))
+        self.assertEqual(fetch.where_words(3.), 'straight ahead')
+
+    def test_the_prompt_tells_the_model_to_turn_back_to_it(self):
+        self.assertIn('target_was is the important one', fetch.PROMPT)
 
 
 class InstructionTests(unittest.TestCase):
@@ -531,6 +630,35 @@ class TurnRequestTests(unittest.TestCase):
 class ApproachShapeTests(unittest.TestCase):
     """Two things the operator saw go wrong on the robot."""
 
+    def test_the_side_of_the_approach_survives_the_standoff_trim(self):
+        # "reach the can of nuts from the left side": the model returned an
+        # eight point curve arriving from the left, and cutting the path where
+        # it entered the standoff ring kept two points aimed straight ahead.
+        # Which side the robot arrives on lives in the last segment, which is
+        # exactly what that cut removed, so the instruction never reached the
+        # wheels.
+        goal = (14.4, 25.3)
+        route = [(-0.6, 7.6), (-0.2, 9.9), (0.4, 12.6), (1.6, 15.9),
+                 (3.8, 19.7), (7.0, 23.2), (10.6, 25.1), goal]
+        cut = fetch.stop_short(route, goal, 20.)
+        self.assertTrue(cut)
+        end = cut[-1]
+        self.assertAlmostEqual(
+            math.hypot(end[0] - goal[0], end[1] - goal[1]), 20., delta=.6)
+        self.assertLess(end[0], goal[0] - 10., 'did not stop on the left: %s' % (end,))
+
+    def test_the_mirrored_approach_stops_on_the_other_side(self):
+        goal = (-14.4, 25.3)
+        route = [(0.6, 7.6), (0.2, 9.9), (-0.4, 12.6), (-1.6, 15.9),
+                 (-3.8, 19.7), (-7.0, 23.2), (-10.6, 25.1), goal]
+        end = fetch.stop_short(route, goal, 20.)[-1]
+        self.assertGreater(end[0], goal[0] + 10., 'did not stop on the right')
+
+    def test_a_straight_approach_still_stops_straight_short(self):
+        end = fetch.stop_short([(0., 10.), (0., 25.), (0., 40.)], (0., 40.), 20.)[-1]
+        self.assertAlmostEqual(end[0], 0., delta=1.)
+        self.assertAlmostEqual(end[1], 20., delta=1.)
+
     def test_a_route_stops_short_of_the_target_it_is_sent_to(self):
         # The model is asked to end on the object's contact point, which is the
         # right answer to the question asked and the wrong thing to drive. A
@@ -568,6 +696,168 @@ class ApproachShapeTests(unittest.TestCase):
         widened, _ = fetch.avoid(route, [('far', (90., 90.))], (0., 60.))
         turn = abs(math.degrees(math.atan2(widened[0][0], widened[0][1])))
         self.assertLess(turn, 15., widened)
+
+
+class ContinuedRouteTests(unittest.TestCase):
+    """A route carried on without a sighting is still held to full clearance.
+
+    When the goal drops out of frame the model carries on along the route it
+    gave before, so that route now reaches the avoidance code with goal=None --
+    a combination it never saw while an unseen goal made the executor throw the
+    answer away. Continuing a plan must not mean replaying it blind: obstacles
+    are listed fresh from the current photograph every look, and the remembered
+    route has to bend around whatever has appeared since.
+    """
+
+    def test_clearance_does_not_depend_on_seeing_the_goal(self):
+        route = [(0., 20.), (0., 40.), (0., 60.), (0., 80.)]
+        obstacles = [('box', (0., 45.))]
+        # 15 cm written out, not OBSTACLE_RADIUS_CM + CORRIDOR_HALF_CM. Deriving
+        # it from the constants under test makes the assertion shrink with them,
+        # so halving the corridor passes -- which is exactly what it did. The
+        # robot is 12 cm across and needs 15; that is a fact about the hardware,
+        # so it belongs in the test as a number.
+        need = 15.
+        self.assertGreaterEqual(fetch.OBSTACLE_RADIUS_CM + fetch.CORRIDOR_HALF_CM,
+                                need, 'the configured corridor is under 15 cm')
+        for goal in ((0., 80.), None):
+            widened, nudged = fetch.avoid(route, obstacles, goal)
+            self.assertTrue(widened, goal)
+            closest = min(math.hypot(p[0], p[1] - 45.) for p in widened)
+            self.assertGreaterEqual(closest, need - .01,
+                                    'an unseen goal bought a narrower corridor'
+                                    if goal is None else 'clearance lost')
+            self.assertTrue(nudged, 'a route driven at a box was not bent')
+
+    def test_a_new_obstacle_bends_a_remembered_route(self):
+        # The point of re-planning rather than replaying: nothing was in the
+        # way when this route was drawn, and something is now.
+        route = [(0., 20.), (0., 40.), (0., 60.)]
+        clear, _ = fetch.avoid(route, [], None)
+        bent, nudged = fetch.avoid(route, [('cable', (2., 40.))], None)
+        self.assertTrue(nudged, 'the new obstacle changed nothing')
+        self.assertNotEqual([tuple(p) for p in clear], [tuple(p) for p in bent])
+
+
+class DrawnRouteTests(unittest.TestCase):
+    """A route drawn by hand is a plan, and reaches the model as one.
+
+    It was displayed and driveable but never sent: the prior came only from the
+    model's own previous answer, so drawing the way you wanted a thing
+    approached and then pressing ASK GPT threw that away silently.
+    """
+
+    def lens(self):
+        import evaluate_gpt_routes as helper
+        lens = helper.Lens()
+        lens.pixel = fetch.Robot.pixel.__get__(lens)
+        return lens
+
+    def drawn(self, route):
+        return fetch.recall(self.lens(),
+                            dict(route=route, obstacles=[], goal=None, done=[]),
+                            [0., 0., 0.])
+
+    def test_a_route_with_no_goal_still_makes_a_prior(self):
+        # Clicks carry no target: the operator drew a path, not a thing to
+        # reach. recall() has to survive goal=None or the whole fallback is
+        # dead on arrival.
+        prior = self.drawn([(0., 30.), (10., 55.), (18., 80.)])
+        self.assertIsNotNone(prior)
+        self.assertEqual(len(prior['route_pixels']), 3)
+        self.assertIsNone(prior['target_was'])
+
+    def test_an_empty_canvas_sends_nothing(self):
+        self.assertIsNone(self.drawn([]))
+
+    def test_the_drawn_route_is_the_one_drawn_on_the_picture(self):
+        # annotate() is what puts it in front of the model, and it must cope
+        # with a prior that has no target to mark.
+        prior = self.drawn([(0., 30.), (10., 55.)])
+        blank = np.zeros((480, 640, 3), np.uint8)
+        self.assertTrue((fetch.annotate(blank, prior) != blank).any())
+
+
+class AnnotationTests(unittest.TestCase):
+    """The leftover route is drawn into the photograph the model is sent.
+
+    It used to be sent only as coordinates while the prompt said "those points
+    are drawn in this picture for you" -- so the model was told to look for
+    marks that were not there, and the case that depends on them most is the
+    one where the target has just left the frame and the leftover route is all
+    there is to steer by.
+    """
+
+    def frame(self):
+        return np.zeros((480, 640, 3), np.uint8)
+
+    def prior(self, **over):
+        out = dict(route_pixels=[dict(x=300., y=450.), dict(x=340., y=300.)],
+                   target_was=dict(bearing_degrees=-40.,
+                                   where='off to your left',
+                                   contact_pixel=None))
+        out.update(over)
+        return out
+
+    def test_it_draws_the_leftover_route(self):
+        blank = self.frame()
+        self.assertTrue((fetch.annotate(blank, self.prior()) != blank).any())
+
+    def test_it_never_draws_on_the_caller_s_frame(self):
+        # The same array is what the calibration and the odometry read; ink in
+        # it would corrupt both.
+        blank = self.frame()
+        fetch.annotate(blank, self.prior())
+        self.assertFalse(blank.any(), 'annotate drew on the original')
+
+    def test_no_prior_means_no_ink_and_no_copy(self):
+        blank = self.frame()
+        self.assertIs(fetch.annotate(blank, None), blank)
+
+    def test_an_out_of_frame_target_is_drawn_as_a_bearing(self):
+        # A star cannot be placed for a goal that is not in the picture, so it
+        # becomes an arrow to the edge -- left for a negative bearing, right
+        # for a positive one. Comparing the two whole images is not enough:
+        # the caption text differs anyway, so that passes even when the arrow
+        # always points the same way. Look at the arrow's own row instead, and
+        # above the caption's.
+        def edges(image):
+            band = image[36:45]
+            return bool(band[:, 10:100].any()), bool(band[:, 540:630].any())
+
+        left_ink, right_ink = edges(fetch.annotate(self.frame(), self.prior()))
+        self.assertTrue(left_ink, 'a left bearing drew nothing to the left')
+        self.assertFalse(right_ink, 'a left bearing drew to the right as well')
+
+        left_ink, right_ink = edges(fetch.annotate(self.frame(), self.prior(
+            target_was=dict(bearing_degrees=40., where='off to your right',
+                            contact_pixel=None))))
+        self.assertTrue(right_ink, 'a right bearing drew nothing to the right')
+        self.assertFalse(left_ink, 'a right bearing drew to the left as well')
+
+    def test_the_request_carries_the_annotated_frame(self):
+        # The whole change is which buffer gets encoded; if recognize() goes
+        # back to encoding the raw frame the prompt is lying again.
+        with open(os.path.join(ROOT, 'local_nav/fetch.py')) as handle:
+            source = handle.read()
+        self.assertIn("cv2.imencode('.jpg', annotate(image, prior))", source)
+
+    def test_the_prompt_only_claims_what_is_actually_drawn(self):
+        # Every mark the prompt tells the model to look for has to be one
+        # annotate() makes.
+        prompt = fetch.PROMPT
+        self.assertIn('drawn in this picture', prompt)
+        for mark, drawn in (('crosses', 'MARKER_CROSS'),
+                            ('star', 'MARKER_STAR'),
+                            ('arrow', 'arrowedLine')):
+            if mark in prompt:
+                with open(os.path.join(ROOT, 'local_nav/fetch.py')) as handle:
+                    body = handle.read()
+                start = body.index('def annotate(')
+                end = body.index('def recognize(', start)
+                self.assertIn(drawn, body[start:end],
+                              'the prompt promises %r but annotate() does not '
+                              'draw it' % mark)
 
 
 if __name__ == '__main__':

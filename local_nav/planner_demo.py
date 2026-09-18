@@ -61,8 +61,14 @@ main{display:flex;gap:18px;align-items:flex-start}
 /* The left column is exactly as wide as the picture it holds, so the controls
    wrap under it in whole groups instead of stretching the column and pushing
    the log off the screen. */
-.pane{flex:0 0 auto;width:480px}
-.pane.camera{width:640px}
+.pane{flex:0 0 auto;width:1130px;max-width:100%}
+.views{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start}
+.viewbox{flex:0 0 auto}
+.vlabel{font:10px monospace;letter-spacing:.08em;color:#7d8a93;padding:0 0 4px 2px}
+.stage.alt{width:640px;height:480px}
+.stage.alt img,.stage.alt canvas{width:640px;height:480px}
+.stage.alt.floorview{width:480px;height:480px}
+.stage.alt.floorview img,.stage.alt.floorview canvas{width:480px;height:480px}
 .side{flex:1;min-width:300px;display:flex;flex-direction:column;gap:10px}
 #log{flex:1;min-height:420px;overflow:auto;white-space:pre-wrap}
 button{background:#141b22;color:#c8d2d8;border:1px solid #2b3742;padding:7px 12px;
@@ -83,7 +89,12 @@ pre{background:#05070a;border:1px solid #1e2830;padding:10px;max-height:560px;
 <span id="mode" class="hint"></span><span id="power" class="hint"></span></header>
 <main>
 <div id="pane" class="pane">
-  <div class="stage"><img id="shot"><canvas id="pad" width="480" height="480"></canvas></div>
+  <div class="views">
+    <div class="viewbox"><div class="vlabel" id="mainlabel">FLOOR &mdash; click to draw</div>
+      <div class="stage"><img id="shot"><canvas id="pad" width="480" height="480"></canvas></div></div>
+    <div class="viewbox"><div class="vlabel" id="altlabel">CAMERA</div>
+      <div class="stage alt"><img id="altshot"><canvas id="altpad" width="640" height="480"></canvas></div></div>
+  </div>
   <div class="controls">
     <div class="group">
       <button id="grab">TAKE PICTURE</button>
@@ -92,6 +103,8 @@ pre{background:#05070a;border:1px solid #1e2830;padding:10px;max-height:560px;
     <div class="group">
       <span>turn</span><input id="deg" type="number" value="30" min="1" max="180">
       <button id="left">&#8630; LEFT</button><button id="right">RIGHT &#8631;</button>
+      <button id="check" title="mark the carpet, turn, and redraw the same floor
+        points -- the crosses should stay put">CHECK REPROJ</button>
     </div>
     <div class="group">
       <input id="target" type="text" style="min-width:300px"
@@ -112,6 +125,9 @@ pre{background:#05070a;border:1px solid #1e2830;padding:10px;max-height:560px;
     </div>
     <div class="group">
       <button id="run" class="go">RUN TRAJECTORY</button>
+      <span>for</span><input id="runfor" type="number" min="1" max="60"
+        placeholder="all" style="width:54px" title="drive only this many seconds
+        of the trajectory, then redraw what is left"><span>s</span>
       <button id="clear">CLEAR</button><button id="stop">STOP</button>
     </div>
   </div>
@@ -145,6 +161,9 @@ pre{background:#05070a;border:1px solid #1e2830;padding:10px;max-height:560px;
     GPT DRIVE's <em>drive N s</em> is how long to drive between looks; leave it
     empty for a single look and drive. FLOW's <em>look every N s</em> is how
     often a look is issued &mdash; smaller is more responsive and costs more.<br>
+    RUN TRAJECTORY with a number in <em>for N s</em> drives only that much of
+    the path and then redraws what is left from where it stopped &mdash; the
+    leftover waypoints should sit on the same carpet they were drawn on.<br>
     FLOW never stops the wheels: it keeps several looks in flight, so a fresh
     trajectory lands about once a second and takes over the moment it does. Each one is reprojected by the distance
     driven while it was being thought about, and an answer that arrives out of
@@ -182,26 +201,36 @@ pre{background:#05070a;border:1px solid #1e2830;padding:10px;max-height:560px;
 </main>
 <script>
 const pad=document.getElementById('pad'), ctx=pad.getContext('2d');
+const apad=document.getElementById('altpad'), actx=apad.getContext('2d');
+let altPoints=[], altHazards=[];
 let points=[], busy=false, hazards=[], reprojected=false, mode='floor';
-function draw(){
-  ctx.clearRect(0,0,pad.width,pad.height);
-  if(points.length){
+// Both views are painted by this one function. Two copies of the drawing code
+// would drift apart, and the whole point of showing the plan view beside the
+// photograph is that they are the same floor points -- so any difference on
+// screen has to come from the projection, never from the painting.
+function paint(c,pts,haz){
+  c.clearRect(0,0,c.canvas.width,c.canvas.height);
+  if(pts && pts.length){
     const tint = reprojected ? '#9d7bff' : '#43d4ff';
-    ctx.strokeStyle=tint; ctx.lineWidth=2.5; ctx.setLineDash([9,5]);
-    ctx.beginPath(); ctx.moveTo(pad.width/2,pad.height-1);
-    points.forEach(p=>ctx.lineTo(p[0],p[1])); ctx.stroke(); ctx.setLineDash([]);
-    points.forEach((p,i)=>{ctx.beginPath();ctx.arc(p[0],p[1],5,0,7);
-      if(p[2]){ctx.strokeStyle=tint;ctx.lineWidth=2;ctx.stroke();}
-      else {ctx.fillStyle=tint;ctx.fill();}
-      ctx.fillStyle=p[2]?tint:'#0a0d10';ctx.font='10px monospace';
-      ctx.fillText(i+1,p[0]-2,p[1]+3);});
+    c.strokeStyle=tint; c.lineWidth=2.5; c.setLineDash([9,5]);
+    c.beginPath(); c.moveTo(c.canvas.width/2,c.canvas.height-1);
+    pts.forEach(p=>c.lineTo(p[0],p[1])); c.stroke(); c.setLineDash([]);
+    pts.forEach((p,i)=>{c.beginPath();c.arc(p[0],p[1],5,0,7);
+      if(p[2]){c.strokeStyle=tint;c.lineWidth=2;c.stroke();}
+      else {c.fillStyle=tint;c.fill();}
+      c.fillStyle=p[2]?tint:'#0a0d10';c.font='10px monospace';
+      c.fillText(i+1,p[0]-2,p[1]+3);});
   }
-  hazards.forEach(h=>{
-    ctx.strokeStyle='#ffa53d'; ctx.lineWidth=1.5;
-    ctx.beginPath(); ctx.arc(h[0],h[1],h[2],0,7); ctx.stroke();
-    ctx.fillStyle='#ffa53d'; ctx.beginPath(); ctx.arc(h[0],h[1],3,0,7); ctx.fill();
-    ctx.font='10px monospace'; ctx.fillText(h[3],h[0]+7,h[1]-5);
+  (haz||[]).forEach(h=>{
+    c.strokeStyle='#ffa53d'; c.lineWidth=1.5;
+    c.beginPath(); c.arc(h[0],h[1],h[2],0,7); c.stroke();
+    c.fillStyle='#ffa53d'; c.beginPath(); c.arc(h[0],h[1],3,0,7); c.fill();
+    c.font='10px monospace'; c.fillText(h[3],h[0]+7,h[1]-5);
   });
+}
+function draw(){
+  paint(ctx,points,hazards);
+  paint(actx,altPoints,altHazards);
   document.getElementById('n').textContent=points.length;
 }
 pad.addEventListener('click',e=>{
@@ -222,14 +251,16 @@ async function post(path,body){
 }
 // 'live' is deliberately absent: the stream is the one thing that should keep
 // running while the robot is busy.
-function buttons(){['grab','left','right','run','clear','ask','view','go','flowgo','find'].forEach(
+function buttons(){['grab','left','right','run','clear','ask','view','go','flowgo','find','check'].forEach(
   id=>document.getElementById(id).disabled=busy);}
 function show(d){
   if(d.log) document.getElementById('log').textContent=d.log;
-  if(d.frame) document.getElementById('shot').src='/api/frame?t='+Date.now();
+  if(d.frame) refreshShots();
   if(d.heading!==undefined) document.getElementById('hdg').textContent=d.heading.toFixed(1);
   if(d.speed!==undefined) document.getElementById('spd').textContent=d.speed.toFixed(1);
   if(d.length!==undefined) document.getElementById('len').textContent=d.length.toFixed(0);
+  if(d.alt_hazards) altHazards=d.alt_hazards;
+  if(d.alt_points) altPoints=d.alt_points;
   if(d.hazards){ hazards=d.hazards; draw(); }
   if(d.points){ points=d.points; reprojected=!!d.reprojected; draw(); }
   if(d.strip!==undefined){ strip=d.strip; si=0; showStrip(); }
@@ -286,6 +317,14 @@ function showStrip(){
 }
 document.getElementById('prev').onclick=()=>{si--;showStrip();};
 document.getElementById('next').onclick=()=>{si++;showStrip();};
+// Both pictures come from the same capture, so they are refreshed together.
+// Letting one lag leaves markers drawn over floor the robot has left.
+function refreshShots(){
+  const t=Date.now();
+  document.getElementById('shot').src='/api/frame?t='+t;
+  document.getElementById('altshot').src=
+    '/api/frame?view='+(mode==='camera'?'floor':'camera')+'&t='+t;
+}
 function applyView(){
   document.getElementById('view').textContent =
     'VIEW: '+(mode==='floor'?'FLOOR':'CAMERA');
@@ -293,11 +332,24 @@ function applyView(){
   // view is 480 square, the camera image is 640x480. Getting this wrong puts
   // every click and every drawn marker in the wrong place.
   document.querySelector('.stage').classList.toggle('camera', mode==='camera');
-  document.getElementById('pane').classList.toggle('camera', mode==='camera');
   document.getElementById('floorhint').hidden = mode==='camera';
   document.getElementById('camhint').hidden = mode!=='camera';
   pad.width = mode==='camera' ? 640 : 480;
   pad.height = 480;
+  // The second view is always the other one, and its canvas has to match its
+  // own picture for exactly the reason the first one does: a backing store
+  // that disagrees with the image under it puts every marker in the wrong
+  // place. VIEW no longer chooses what you can see -- both are on screen -- it
+  // chooses which picture your clicks land on.
+  const altIsFloor = mode==='camera';
+  document.querySelector('.stage.alt').classList.toggle('floorview', altIsFloor);
+  apad.width = altIsFloor ? 480 : 640;
+  apad.height = 480;
+  document.getElementById('mainlabel').innerHTML =
+    (mode==='camera'?'CAMERA':'FLOOR')+' &mdash; click to draw';
+  document.getElementById('altlabel').textContent = altIsFloor ? 'FLOOR' : 'CAMERA';
+  document.getElementById('altshot').src =
+    '/api/frame?view='+(altIsFloor?'floor':'camera')+'&t='+Date.now();
   draw();
 }
 document.getElementById('view').onclick=async()=>{
@@ -317,11 +369,13 @@ function watch(){
       // into the stream: this panel is where you look to see its answer.
       if(d.points){ points=d.points; reprojected=false; }
       if(d.hazards) hazards=d.hazards;
+      if(d.alt_points) altPoints=d.alt_points;
+      if(d.alt_hazards) altHazards=d.alt_hazards;
       if(d.points||d.hazards) draw();
       if(d.note!==undefined) document.getElementById('note').textContent=d.note;
       if(d.frame_token!==undefined && d.frame_token!==seenFrame){
         seenFrame=d.frame_token;
-        document.getElementById('shot').src='/api/frame?t='+Date.now();
+        refreshShots();
       }
       if(d.power) document.getElementById('power').textContent=d.power;
       if(d.heading!==undefined)
@@ -340,6 +394,15 @@ function watch(){
 // A field each. One box serving both buttons meant the same number was the
 // drive slice for one and the issue interval for the other, which nobody
 // should have to remember.
+document.getElementById('check').onclick=async()=>{
+  // Marks floor points, turns by the degrees box, and redraws the same points.
+  // Two frames in the stepper: the crosses should stay on the same carpet.
+  document.getElementById('check').textContent='CHECKING...';
+  busy=true; buttons();
+  await post('/api/check',{degrees:+document.getElementById('deg').value});
+  document.getElementById('check').textContent='CHECK REPROJ';
+  busy=false; buttons();
+};
 document.getElementById('find').onclick=async()=>{
   // For something that is not in the picture at all. It turns on the spot
   // looking for it, and hands over to the reach controller once it has a
@@ -382,7 +445,8 @@ document.getElementById('run').onclick=async()=>{
   // The run ends with a fresh picture from wherever the robot now is, and the
   // server sends the same floor points reprojected into it. Those replace the
   // drawn ones: same carpet, new viewpoint. Clicking again starts over.
-  await post('/api/run',{points});
+  await post('/api/run',{points,
+    seconds:document.getElementById('runfor').value.trim()||null});
   hazards=[]; draw();
 };
 document.getElementById('clear').onclick=()=>{points=[];hazards=[];draw();project();};
@@ -604,27 +668,81 @@ class Bench(object):
         except Exception as exc:
             return 'service: %s' % exc
 
+    def on_view(self, spot, mode=None):
+        """Floor position as a canvas pixel, or None when it is off the view."""
+        mode = mode or self.view_mode
+        place = self.to_pixel(spot[0], spot[1], mode)
+        if not place:
+            return None
+        wide = 640 if mode == 'camera' else BEV_PIXELS
+        tall = 480 if mode == 'camera' else BEV_PIXELS
+        if 0 <= place[0] < wide and 0 <= place[1] < tall:
+            return [int(place[0]), int(place[1])]
+        return None
+
+    def drawable(self, mode=None):
+        """The armed route and obstacles as pixels of the view on show.
+
+        One place, because there are two callers -- the reply to a command and
+        the progress poll -- and when only one of them sent the obstacles the
+        page redrew a turned route over obstacle circles still at their old
+        screen positions. The robot had them right; the picture did not.
+        """
+        mode = mode or self.view_mode
+        points = [p for p in (self.on_view(s, mode) for s in self.live_route) if p]
+        if len(points) != len(self.live_route):
+            points = None            # part of it is off view; do not half-draw
+        hazards = []
+        for label, spot in self.live_obstacles:
+            place = self.on_view(spot, mode)
+            if place:
+                hazards.append([place[0], place[1],
+                                (fetch.OBSTACLE_RADIUS_CM + fetch.CORRIDOR_HALF_CM)
+                                * BEV_SCALE, label[:16]])
+        return points, hazards
+
+    def both_views(self):
+        """The armed route and obstacles drawn for each of the two views.
+
+        A helper rather than two copies because there are two callers -- the
+        reply to a command and the progress poll -- and the poll is the one
+        that runs while the robot drives. Last time a field was added to the
+        reply and missed on the poll, the page redrew a turned route over
+        obstacle circles still at their old screen positions.
+        """
+        points, hazards = self.drawable()
+        other = 'floor' if self.view_mode == 'camera' else 'camera'
+        alt_points, alt_hazards = self.drawable(other)
+        return (points, hazards, other, alt_points, alt_hazards)
+
     def state(self, **extra):
         out = dict(log=self.log(), heading=self.heading, speed=self.robot.speed,
                    power=self.power(), view_mode=self.view_mode,
                    strip=len(self.strip), note=self.last_note,
                    mode='MOTION ENABLED' if self.enable_motion else 'PREVIEW ONLY')
-        # Hand back whatever route is armed, so a reloaded page draws the same
-        # thing the live stream is drawing. Without this the canvas comes back
-        # empty while the stream still shows the marks, which reads as stray
-        # graphics nobody put there.
-        if self.live_route and 'points' not in extra:
-            shown = []
-            for spot in self.live_route:
-                place = self.to_pixel(spot[0], spot[1])
-                if place and 0 <= place[0] < (640 if self.view_mode == 'camera'
-                                              else BEV_PIXELS) \
-                        and 0 <= place[1] < (480 if self.view_mode == 'camera'
-                                             else BEV_PIXELS):
-                    shown.append([int(place[0]), int(place[1])])
-            if len(shown) == len(self.live_route):
-                out['points'] = shown
+        # Hand back whatever is armed, so a reloaded page draws the same thing
+        # the live stream is drawing, and so a turn moves the obstacle circles
+        # as well as the route.
+        points, hazards, other, alt_points, alt_hazards = self.both_views()
+        if points and 'points' not in extra:
+            out['points'] = points
+        if 'hazards' not in extra:
+            out['hazards'] = hazards
         out.update(extra)
+        # The other view, drawn from the same floor points. Sent alongside
+        # rather than instead, because both are on screen: the plan view says
+        # where things are in centimetres, the photograph says what they are,
+        # and a route that looks right in one and wrong in the other is the
+        # projection telling you something.
+        out['alt_mode'] = other
+        out['alt_points'] = alt_points
+        out['alt_hazards'] = alt_hazards
+        # A caller that clears the drawing clears both of them, or the second
+        # view keeps showing a route the first has already dropped.
+        if 'points' in extra and not extra['points']:
+            out['alt_points'] = []
+        if 'hazards' in extra and not extra['hazards']:
+            out['alt_hazards'] = []
         return out
 
     def capture(self):
@@ -867,7 +985,9 @@ class Bench(object):
         route, obstacles, goal = [], [], None
         memory = None
         pending, issued, applied = [], 0, -1
-        stale, trouble = 0, 0
+        stale, trouble, spun = 0, 0, 0.
+        done = []                    # steps of the instruction already reached
+        self.strip = []
         last_issue = 0.
         started_at = time.monotonic()
         self.lines = []
@@ -928,6 +1048,7 @@ class Bench(object):
                     break
                 prior = (fetch.recall(self.robot, memory, [0., 0., 0.])
                          if memory else None)
+                self.show_request(image, prior, 'look %d: what was sent' % (issued + 1))
                 job = self.ask_later(image, target, prior)
                 job.update(seq=issued, shot=list(world))
                 pending.append(job)
@@ -949,10 +1070,27 @@ class Bench(object):
                     self.last_note = str(answer.get('note', ''))[:120]
                     self.live_obstacles = list(obstacles)
                     if goal is not None and math.hypot(*goal) <= MISSION_STANDOFF_CM:
-                        self.say('')
-                        self.say('REACHED: %s is %.0f cm away'
-                                 % (target, math.hypot(*goal)))
-                        break
+                        here = str(answer.get('goal') or target)[:40]
+                        if answer.get('all_done', True):
+                            self.say('')
+                            self.say('REACHED: %s is %.0f cm away -- that was '
+                                     'the last step' % (here, math.hypot(*goal)))
+                            break
+                        # One step of the instruction, not the end of the run.
+                        if here not in done:
+                            done.append(here)
+                            self.say('reached %s (%d step(s) done); looking for '
+                                     'what comes next' % (here, len(done)))
+                        goal, route = None, []
+                        memory = dict(route=[], obstacles=list(obstacles),
+                                      goal=None, done=list(done))
+                        continue
+                    # The plan as the model drew it, kept apart from the
+                    # trimmed thing the wheels get. Handing back the stub loses
+                    # the shape it chose: ask for an approach from the left and
+                    # the stub is a couple of points aimed straight ahead, so
+                    # the next look has none of the curve to continue.
+                    planned = list(points)
                     if goal is not None:
                         points = fetch.stop_short(points, goal, MISSION_STANDOFF_CM)
                     if points:
@@ -962,6 +1100,48 @@ class Bench(object):
                                                       MISSION_STANDOFF_CM) or points
                         points = fetch.cap_path(points, MISSION_COMMIT_CM) or points
                     route = points
+                    memory = dict(route=list(planned), obstacles=list(obstacles),
+                                  goal=goal, done=list(done))
+                    # A turn the model asked for. Flowing has no way to drive
+                    # out of being boxed in -- at 10 cm an obstacle blocks every
+                    # heading until it is nearly behind -- so without this the
+                    # wheels keep grinding at a route the executor refuses.
+                    asked = answer.get('turn_degrees')
+                    if (not route and isinstance(asked, (int, float))
+                            and math.isfinite(asked)
+                            and abs(asked) >= MISSION_TURN_MIN_DEG):
+                        asked = max(-MISSION_TURN_MAX_DEG,
+                                    min(MISSION_TURN_MAX_DEG, float(asked)))
+                        step = math.copysign(
+                            min(abs(asked), MISSION_TURN_STEP_DEG), asked)
+                        spun += abs(step)
+                        if spun > MISSION_TURN_BUDGET_DEG:
+                            self.say('  %.0f deg of turning without driving; '
+                                     'stopping' % spun)
+                            break
+                        self.say('  no route; turning %+.0f of the %+.0f it asked'
+                                 % (step, asked))
+                        try:
+                            turned = self.robot.turn(step)
+                        except fetch.Stop as exc:
+                            self.robot.halt()
+                            if fatal(exc):
+                                self.say('STOPPED: %s' % exc)
+                                break
+                            self.say('  could not turn: %s' % exc)
+                            turned = 0.
+                        if turned:
+                            spot = fetch.pivot_shift(turned)
+                            moved_by = [spot[0], spot[1], turned]
+                            world = self.compose(world, moved_by)
+                            # Everything held in the old frame follows the turn.
+                            obstacles = list(zip(
+                                [o[0] for o in obstacles],
+                                fetch.rebase([o[1] for o in obstacles], moved_by)))
+                            if goal is not None:
+                                goal = fetch.rebase([goal], moved_by)[0]
+                            memory = dict(route=[], obstacles=list(obstacles),
+                                          goal=goal, done=list(done))
                     if answer.get('goal'):
                         self.last_note = ('%s | %s' % (str(answer['goal'])[:40],
                                                        self.last_note))[:120]
@@ -1023,10 +1203,25 @@ class Bench(object):
                     break
                 pose = list(self.live_pose)
             world = self.compose(world, pose)
+            if math.hypot(pose[0], pose[1]) > 1.:
+                spun = 0.
             # The part of the route still ahead belongs to the old frame too.
             route = [p for p in fetch.rebase(route, pose) if p[1] > 0.]
             obstacles = list(zip([o[0] for o in obstacles],
                                  fetch.rebase([o[1] for o in obstacles], pose)))
+            # The goal moves with the robot too. Rebasing the route and the
+            # obstacles but not the goal left the memory pointing at where the
+            # target used to be, which is worse than having none.
+            if goal is not None:
+                goal = fetch.rebase([goal], pose)[0]
+            if memory:
+                # The remembered plan sits in the old frame like everything
+                # else, so it is rebased rather than replaced by what is left
+                # of the trimmed route.
+                memory = dict(
+                    route=[p for p in fetch.rebase(memory.get('route') or [], pose)
+                           if p[1] > 0.],
+                    obstacles=list(obstacles), goal=goal, done=list(done))
 
         try:
             self.robot.hold(0., 0.)
@@ -1061,8 +1256,10 @@ class Bench(object):
             return
 
         memory, pose, reached, trouble = None, [0., 0., 0.], False, 0
+        self.strip = []
         closest, idle = None, 0       # nearest the target has come, and how many
                                       # looks since that last improved
+        done, repeats = [], 0         # steps of the instruction already reached
         spins = 0.                    # degrees turned since anything was driven
         once = seconds is None
         self.lines = []
@@ -1085,6 +1282,8 @@ class Bench(object):
                 break
 
             prior = fetch.recall(self.robot, memory, pose) if memory else None
+            self.show_request(self.frame, prior, 'look %d: what was sent'
+                              % (cycle + 1))
             try:
                 answer = fetch.recognize(self.frame, target, prior)
             except fetch.Stop as exc:
@@ -1118,6 +1317,12 @@ class Bench(object):
                 except (fetch.Stop, TypeError, ValueError):
                     continue
             obstacles = fetch.project_obstacles(self.robot, answer)
+            # The plan as the model drew it, before any trimming. This is what
+            # goes back to it next look: handing back the truncated stub the
+            # wheels were given loses the shape it chose -- ask for an approach
+            # from the left and the stub is a couple of points aimed straight
+            # ahead, so the next look has nothing of the curve to continue.
+            planned = list(route)
             if memory:
                 # Carry what was on the floor last time into this frame. The
                 # things the robot is about to touch are the first to leave the
@@ -1207,16 +1412,41 @@ class Bench(object):
                     break
                 shift = fetch.pivot_shift(turned)
                 pose = [shift[0], shift[1], turned]
-                memory = dict(route=list(route), obstacles=list(obstacles))
+                memory = dict(route=list(route), obstacles=list(obstacles),
+                              goal=goal, done=list(done))
                 self.live_route = []
                 continue
             spins = 0.
 
             if goal is not None and math.hypot(*goal) <= MISSION_STANDOFF_CM:
-                self.say('')
-                self.say('REACHED: %s is %.0f cm away' % (target, math.hypot(*goal)))
-                reached = True
-                break
+                here = str(answer.get('goal') or target)[:40]
+                if answer.get('all_done', True):
+                    self.say('')
+                    self.say('REACHED: %s is %.0f cm away -- that was the last '
+                             'step' % (here, math.hypot(*goal)))
+                    reached = True
+                    break
+                # More of the instruction to go. Arriving is not the end of the
+                # run, it is the end of one step: note it, so the next look is
+                # told not to come back here, and carry on.
+                if here not in done:
+                    done.append(here)
+                    repeats = 0
+                    self.say('')
+                    self.say('reached %s (%d step(s) done); looking for what '
+                             'comes next' % (here, len(done)))
+                    closest, idle = None, 0     # the next step earns its own
+                    memory = dict(route=[], obstacles=list(obstacles),
+                                  goal=None, done=list(done))
+                    pose = [0., 0., 0.]   # memory is in the frame we stand in
+                    continue
+                repeats += 1
+                if repeats >= 3:
+                    self.say('')
+                    self.say('it keeps arriving at %s without saying the '
+                             'instruction is finished; stopping' % here)
+                    break
+                continue
             if not route:
                 self.say('nothing to drive and nothing remembered; stopping')
                 break
@@ -1298,11 +1528,13 @@ class Bench(object):
                     self.say('three cycles in a row went wrong; stopping')
                     break
                 pose = list(self.live_pose)
-                memory = dict(route=list(widened), obstacles=list(obstacles))
+                memory = dict(route=list(planned), obstacles=list(obstacles),
+                              goal=goal, done=list(done))
                 continue
             self.say('  %.1f s of motion, now %.0f cm from where the look started'
                      % (time.monotonic() - started, math.hypot(pose[0], pose[1])))
-            memory = dict(route=list(widened), obstacles=list(obstacles))
+            memory = dict(route=list(planned), obstacles=list(obstacles),
+                          goal=goal, done=list(done))
             # Turning does not count as progress. While blocked, follow still
             # rotates to face each waypoint, so requiring zero rotation here
             # meant the escape never fired and the give-up counter reset every
@@ -1375,13 +1607,35 @@ class Bench(object):
         if self.memory and self.memory.get('target') == target:
             prior = fetch.recall(self.robot, self.memory, self.since)
             if prior:
-                self.say('reminding it of %d waypoint(s) and %d obstacle(s) '
-                         'from last time; it %s'
-                         % (len(prior['route_pixels']), len(prior['obstacles']),
-                            prior['since_then']))
-                if prior['out_of_frame']:
-                    self.say('  now out of shot: %s'
-                             % ', '.join(prior['out_of_frame'][:4]))
+                # Obstacles are no longer sent: the model is looking at the
+                # floor and lists them afresh. Only the unexecuted plan and
+                # where the goal was go back to it.
+                target_was = prior.get('target_was')
+                self.say('reminding it of %d waypoint(s) it had not driven yet;'
+                         ' it %s'
+                         % (len(prior.get('route_pixels') or []),
+                            prior.get('since_then', '')))
+                if target_was:
+                    self.say('  the goal was %s' % target_was['where'])
+        if prior is None and self.live_route:
+            # A route drawn by hand is a plan too. It is on the carpet in front
+            # of the robot in this very frame, it is the operator saying which
+            # way they want this done, and until now the model never saw it --
+            # it was drawn, displayed, and driveable, but absent from the
+            # request. Fed in the same way as the model's own leftover route,
+            # it is something to refine rather than something to replace.
+            #
+            # live_route is already in the current frame: it is rebased by
+            # every turn and every run, so nothing has happened since that the
+            # model needs telling about.
+            prior = fetch.recall(self.robot,
+                                 dict(route=list(self.live_route), obstacles=[],
+                                      goal=None, done=[]),
+                                 [0., 0., 0.])
+            if prior:
+                self.say('handing it the %d waypoint(s) already drawn, to '
+                         'refine rather than replace'
+                         % len(prior.get('route_pixels') or []))
         try:
             answer = fetch.recognize(self.frame, target, prior)
         except fetch.Stop as exc:
@@ -1392,12 +1646,25 @@ class Bench(object):
         self.say('asked for: %s' % target)
         self.say('model says: %s' % (answer.get('note') or '(nothing)'))
         if not answer.get('visible'):
-            self.say('it cannot see it from here -- turn and take another picture')
-            return self.state(points=[], hazards=[], length=0.)
+            # Losing sight of the goal is not a dead end. The prompt tells the
+            # model that with a last_time it must NOT return an empty route --
+            # carry on along the one it already gave, because following it is
+            # what brings the object back into view. It does exactly that, and
+            # this used to throw the answer away, so the log read "continuing
+            # prior route" with nothing drawn and nothing to drive.
+            #
+            # The driving loops never did this: for them `visible` gates the
+            # goal, not the plan. Now this agrees with them.
+            if answer.get('route_pixels'):
+                self.say('it cannot see the goal from here, so it is carrying '
+                         'on along the route it already had')
+            else:
+                self.say('it cannot see the goal and has no route left -- '
+                         'turn and take another picture')
 
         goal = None
         contact = answer.get('contact_pixel')
-        if isinstance(contact, dict):
+        if answer.get('visible') and isinstance(contact, dict):
             try:
                 goal = self.robot.ground(float(contact['x']), float(contact['y']))
             except (fetch.Stop, KeyError, TypeError, ValueError):
@@ -1527,9 +1794,15 @@ class Bench(object):
         self.pose_heading = self.imu_heading() if spots else None
         return spots, total
 
-    def to_pixel(self, right, forward):
-        """Floor position to canvas pixel, in whichever view is on show."""
-        if self.view_mode == 'camera':
+    def to_pixel(self, right, forward, mode=None):
+        """Floor position to canvas pixel, in `mode`'s view.
+
+        The view is an argument rather than only self.view_mode because both
+        views are on screen at once now: the same floor point has to be placed
+        in the plan view and in the photograph, and the two projections are
+        nothing like each other.
+        """
+        if (mode or self.view_mode) == 'camera':
             place = self.robot.pixel(right, forward)
             return list(place) if place else None
         return list(floor_to_bev(right, forward))
@@ -1569,13 +1842,145 @@ class Bench(object):
             turned = self.robot.turn(degrees)
             self.heading += turned
             shift = fetch.pivot_shift(turned)
-            self.advance([shift[0], shift[1], turned])
-            self.say('turn: asked %+.0f deg, measured %+.1f deg (error %+.1f)'
-                     % (degrees, turned, turned - degrees))
+            moved = [shift[0], shift[1], turned]
+            self.advance(moved)
+            # Everything held in floor coordinates was measured in the frame the
+            # robot occupied before this turn, so it all moves. Without this the
+            # drawn trajectory and the obstacle circles stay where they were on
+            # screen while the picture rotates underneath them, which is the
+            # opposite of reprojection.
+            self.live_route = [spot for spot in fetch.rebase(self.live_route, moved)]
+            self.live_obstacles = list(zip(
+                [label for label, _ in self.live_obstacles],
+                fetch.rebase([spot for _, spot in self.live_obstacles], moved)))
+            self.live_pose = [0., 0., 0.]     # the route is in this frame now
+            self.pose_heading = self.imu_heading()
+            if self.memory:
+                self.memory = dict(
+                    self.memory,
+                    route=fetch.rebase(self.memory.get('route') or [], moved),
+                    goal=(fetch.rebase([self.memory['goal']], moved)[0]
+                          if self.memory.get('goal') is not None else None))
+                self.since = [0., 0., 0.]     # memory is in this frame now too
+            self.say('turn: asked %+.0f deg, measured %+.1f deg (error %+.1f); '
+                     'moved %d waypoint(s) and %d obstacle(s) into the new frame'
+                     % (degrees, turned, turned - degrees,
+                        len(self.live_route), len(self.live_obstacles)))
         except fetch.Stop as exc:
             self.robot.halt()
             self.say('turn STOPPED: %s' % exc)
         return self.capture_after()
+
+    STRIP_MAX = 40             # a flowing run makes a look a second; keep the
+                               # recent ones rather than the whole session
+
+    def show_request(self, image, prior, label):
+        """Keep the picture being sent, with the prior drawn on it.
+
+        The drawing is fetch.annotate -- the very function that marks up the
+        frame going to the model -- so this filmstrip is what was sent, not a
+        second rendering of it that could drift. Only the caption and the
+        already-reached line are added here; the model does not get those.
+
+        This is the one place reprojection is visible in context: every pixel
+        drawn here was computed by moving something the model said earlier into
+        the frame of the photograph it is about to be asked about. If a waypoint
+        sits on the carpet it was put on, the reprojection is right; if it has
+        slid, the amount it slid is the error, and it is visible rather than
+        inferred.
+        """
+        shot = fetch.annotate(image, prior)
+        if shot is image:
+            shot = image.copy()
+        cv2.putText(shot, label, (8, 20), cv2.FONT_HERSHEY_PLAIN, 1.0,
+                    (240, 240, 240), 1)
+        if prior:
+            if prior.get('already_reached'):
+                cv2.putText(shot, 'done: ' + ', '.join(
+                    prior['already_reached'])[:46], (8, shot.shape[0] - 10),
+                    cv2.FONT_HERSHEY_PLAIN, .9, (170, 230, 170), 1)
+        else:
+            cv2.putText(shot, 'nothing remembered -- asked cold', (8, 42),
+                        cv2.FONT_HERSHEY_PLAIN, 1., (170, 170, 170), 1)
+        ok, encoded = cv2.imencode('.jpg', shot)
+        if ok:
+            self.strip.append(encoded.tobytes())
+            del self.strip[:-self.STRIP_MAX]
+
+    CHECK_POINTS = [(-25., 45.), (0., 45.), (25., 45.),
+                    (-15., 75.), (15., 75.), (0., 110.)]
+
+    def mark_floor(self, spots, colour, caption):
+        """Photograph with a cross at each floor position, and keep it."""
+        try:
+            image, _ = self.robot.frame()
+        except Exception:
+            return 0
+        drawn = 0
+        for index, spot in enumerate(spots):
+            if spot is None or spot[1] <= 0.:
+                continue
+            place = self.robot.pixel(spot[0], spot[1])
+            if not place or not (0 <= place[0] < image.shape[1]
+                                 and 0 <= place[1] < image.shape[0]):
+                continue
+            drawn += 1
+            at = (int(place[0]), int(place[1]))
+            cv2.drawMarker(image, at, colour, cv2.MARKER_CROSS, 24, 2)
+            cv2.putText(image, str(index + 1), (at[0] + 9, at[1] - 9),
+                        cv2.FONT_HERSHEY_PLAIN, 1.2, colour, 2)
+        cv2.putText(image, caption, (8, 22), cv2.FONT_HERSHEY_PLAIN, 1.1, colour, 2)
+        ok, encoded = cv2.imencode('.jpg', image)
+        if ok:
+            self.strip.append(encoded.tobytes())
+        self.frame = image
+        if self.view_mode != 'camera':
+            self.view = self.warp.apply(image)
+        self.frame_token += 1
+        return drawn
+
+    def check_reprojection(self, degrees):
+        """Turn a known amount and redraw the same floor points afterwards.
+
+        This is the only way to see whether reprojection works, as opposed to
+        believing the arithmetic. Points are marked on the carpet, the robot
+        turns, and the marks are drawn again from where it now believes it
+        stands. If the geometry is right they land on the same carpet -- the
+        picture moves underneath and the crosses stay put.
+
+        A turn rather than a drive, because a turn is measured by the IMU to
+        about 0.7 degrees while distance comes from carpet optical flow that
+        lands anywhere from one sample in eight to five in five. Testing both at
+        once would not say which was wrong.
+        """
+        self.lines = []
+        self.strip = []
+        spots = list(self.CHECK_POINTS)
+        before = self.mark_floor(spots, (60, 240, 60),
+                                 'BEFORE: marks on fixed floor points')
+        self.say('marked %d point(s) on the carpet' % before)
+        self.say('turning %+.0f deg, then drawing the same floor points again'
+                 % degrees)
+        try:
+            turned = self.robot.turn(degrees)
+        except fetch.Stop as exc:
+            self.robot.halt()
+            self.say('STOPPED: %s' % exc)
+            return self.state(strip=len(self.strip))
+        shift = fetch.pivot_shift(turned)
+        pose = [shift[0], shift[1], turned]
+        self.say('asked %+.0f, measured %+.1f deg; the lens also slid '
+                 '(%+.1f, %+.1f) cm about the pivot'
+                 % (degrees, turned, shift[0], shift[1]))
+        moved = fetch.rebase(spots, pose)
+        after = self.mark_floor(moved, (60, 200, 255),
+                                'AFTER: the same floor points, reprojected')
+        self.say('%d of %d still in frame and redrawn' % (after, len(spots)))
+        self.say('')
+        self.say('step the two frames below. A cross that sits on the same bit '
+                 'of carpet in both is reprojection working; one that has slid '
+                 'is the error, and you can see how big it is.')
+        return self.state(strip=len(self.strip))
 
     def snapshot(self, route, pose, reached):
         """Photograph from here, with the whole route redrawn in this frame.
@@ -1752,16 +2157,19 @@ class Bench(object):
             self.say('could not refresh the picture: %s' % exc)
         return self.state(frame=True)
 
-    def run(self, points):
+    def run(self, points, seconds=None):
         """Drive the drawn path, reporting asked-for against measured per leg."""
         route, planned = self.project(points)
         if len(route) < 1:
             self.say('nothing to drive: put at least one usable point on the carpet')
             return self.state(length=0.)
-        self.say('running %d waypoints, %.0f cm of path' % (len(route), planned))
+        self.say('running %d waypoints, %.0f cm of path%s'
+                 % (len(route), planned,
+                    ', stopping after %.0f s' % seconds if seconds else ''))
         self.say('asked      measured   drift   vision')
         travelled = [0.]
         moved = []          # the same floor points, seen from where it ends up
+        pose = [0., 0., 0.]  # how far it got; a Stop leaves follow without one
         self.strip = []
         self.live_route = list(route)
         self.live_pose = [0., 0., 0.]
@@ -1817,7 +2225,14 @@ class Bench(object):
             elif event in ('shortened', 'leg_blocked'):
                 self.say('%s: %s' % (event, json.dumps(fields)))
         try:
-            pose = fetch.follow(self.robot, self.odometer, route, record)
+            # A bounded run stops part way on purpose. That is the only way to
+            # see the reprojection do its job: what is left of the trajectory
+            # has to be redrawn from where the robot stopped, and if the
+            # arithmetic is wrong the leftover waypoints land on the wrong
+            # carpet where anyone can see it.
+            pose = fetch.follow(self.robot, self.odometer, route, record,
+                                deadline=(time.monotonic() + seconds)
+                                if seconds else None)
             self.heading += pose[2]
             self.advance(pose)
             moved = fetch.rebase(route, pose)
@@ -1832,6 +2247,10 @@ class Bench(object):
                      'odometry. Compare it against the picture.')
         except fetch.Stop as exc:
             self.robot.halt()
+            # A cut-short run still moved. live_pose is what the drive reported
+            # as it went, so the picture can still be put right.
+            pose = list(self.live_pose)
+            moved = fetch.rebase(route, pose)
             self.say('')
             self.say('STOPPED: %s' % exc)
         # The whole point of re-photographing here: the route was drawn on a
@@ -1839,6 +2258,17 @@ class Bench(object):
         # the new frame is what lets the next look build on this one, and
         # drawing it on the new photograph is how you can see whether the
         # arithmetic is right -- the markers should land on the same carpet.
+        # Everything the bench holds in floor coordinates was measured before
+        # this drive, so it all moves -- not just the waypoints. Leaving the
+        # obstacles behind drew their circles at pre-drive screen positions,
+        # which after 30 cm of travel is very visibly wrong.
+        self.live_route = list(moved)
+        self.live_obstacles = list(zip(
+            [label for label, _ in self.live_obstacles],
+            fetch.rebase([spot for _, spot in self.live_obstacles], pose)))
+        self.live_pose = [0., 0., 0.]     # what is held is in this frame now
+        self.pose_heading = self.imu_heading()
+
         state = self.capture_after()
         shown, lost, behind = [], 0, 0
         wide = self.frame.shape[1] if self.view_mode == 'camera' else BEV_PIXELS
@@ -1942,38 +2372,14 @@ class Handler(BaseHTTPRequestHandler):
             # Deliberately outside the lock: a mission holds the robot for
             # minutes, and this is the only way to watch it do so.
             bench = self.server.bench
-            def on_view(spot):
-                """Waypoint as a pixel, pulled to the border if it is off-frame.
-
-                At this camera height the near field is narrow, so a route that
-                swings around anything leaves the picture almost at once -- five
-                of six waypoints in one measured answer. Dropping them showed
-                the model's route as a single dot, which read as the overlay not
-                working at all. An edge marker at least says which way it went.
-                """
-                place = bench.to_pixel(spot[0], spot[1])
-                if not place:
-                    return None
-                wide = 640 if bench.view_mode == 'camera' else BEV_PIXELS
-                tall = 480 if bench.view_mode == 'camera' else BEV_PIXELS
-                inside = 0 <= place[0] < wide and 0 <= place[1] < tall
-                x = max(3, min(wide - 4, int(place[0])))
-                y = max(3, min(tall - 4, int(place[1])))
-                return [x, y] if inside else [x, y, 1]
-
-            route = [p for p in (on_view(s) for s in bench.live_route) if p]
-            hazards = []
-            for label, spot in bench.live_obstacles:
-                place = on_view(spot)
-                if place:
-                    hazards.append([place[0], place[1],
-                                    (fetch.OBSTACLE_RADIUS_CM
-                                     + fetch.CORRIDOR_HALF_CM) * BEV_SCALE,
-                                    label[:16]])
+            route, hazards, other, alt, alt_hazards = bench.both_views()
+            route = route or []
             return self._send(json.dumps(dict(
                 log=bench.log(), running=bench.running(),
                 power=bench.power(), heading=bench.heading,
                 strip=len(bench.strip), points=route, hazards=hazards,
+                view_mode=bench.view_mode, alt_mode=other,
+                alt_points=alt or [], alt_hazards=alt_hazards,
                 note=bench.last_note, frame_token=bench.frame_token)).encode())
         if path == '/api/stream.mjpg':
             return self._stream()
@@ -2001,7 +2407,12 @@ class Handler(BaseHTTPRequestHandler):
             try:
                 if held and fresh:
                     bench.refresh()
-                image = bench.frame if bench.view_mode == 'camera' else bench.view
+                # Either view can be asked for by name, since both are on
+                # screen; no name means whichever is the interactive one.
+                query = urlparse(self.path).query or ''
+                wanted = 'camera' if 'view=camera' in query else (
+                    'floor' if 'view=floor' in query else bench.view_mode)
+                image = bench.frame if wanted == 'camera' else bench.view
             finally:
                 if held:
                     bench.lock.release()
@@ -2040,7 +2451,12 @@ class Handler(BaseHTTPRequestHandler):
             elif path == '/api/turn':
                 out = bench.turn(float(body.get('degrees', 0.)))
             elif path == '/api/run':
-                out = bench.run(body.get('points') or [])
+                every = body.get('seconds')
+                out = bench.run(body.get('points') or [],
+                                None if every in (None, '') else float(every))
+            elif path == '/api/check':
+                out = bench.check_reprojection(
+                    float(body.get('degrees') or 30.))
             elif path == '/api/search':
                 # Same shape as a mission: it owns the robot for minutes and
                 # reports through the same log, so the page treats it the same.

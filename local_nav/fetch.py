@@ -110,19 +110,22 @@ REPAIR_PASSES = 3          # nudging one waypoint clear can push it into the
 REPAIR_MARGIN_CM = 2.5     # a vertex placed exactly on the clearance circle
                            # still lets the two segments either side cut across
                            # it as a chord, so the push goes a little beyond
-
 POINT = {'type': 'object', 'additionalProperties': False,
          'required': ['x', 'y'],
          'properties': {'x': {'type': 'number'}, 'y': {'type': 'number'}}}
 
 SCHEMA = {
     'type': 'object', 'additionalProperties': False,
-    'required': ['goal', 'visible', 'contact_pixel', 'route_pixels',
+    'required': ['goal', 'all_done', 'visible', 'contact_pixel', 'route_pixels',
                  'obstacles', 'turn_degrees', 'note'],
     'properties': {
         # What the instruction asked for, read back in the model's own words, so
         # a misread shows up in the log rather than in the wheels.
         'goal': {'type': 'string'},
+        # An instruction can have several steps. Without this the robot arrives
+        # at the first one and stops, because arriving is all the loop knew how
+        # to recognise.
+        'all_done': {'type': 'boolean'},
         'visible': {'type': 'boolean'},
         'contact_pixel': {'anyOf': [POINT, {'type': 'null'}]},
         # The trajectory, as floor contact points. Pixels, not centimetres: the
@@ -145,9 +148,26 @@ words and one photograph, and you answer about that photograph.
 
 First read the instruction.
 
-goal - what the robot is being sent to, in your own words and few of them. If
-the instruction names a thing, that is the goal. Everything else you report is
-about reaching it.
+goal - what the robot is being sent to NOW, in your own words and few of them.
+
+An instruction can have more than one step: "reach the pink box then the can of
+nuts" is two. Report the step being worked on, which is the first one not yet
+reached. When the robot has already arrived somewhere, last_time tells you so in
+already_reached -- move on to the next step rather than going back to it.
+
+Anything in already_reached is finished with. The robot is standing next to it,
+so it will fill the picture and it will be in the way, and neither of those
+makes it the goal again. It is an obstacle now: list it under obstacles, and
+keep goal on the step still to come. Naming it as the goal again strands the
+robot beside it, driving nowhere.
+
+Everything else you report is about reaching the goal you named.
+
+all_done - false while any step of the instruction is still to come. True only
+when there is nothing left to reach, including the step the robot is arriving at
+right now. For a one-step instruction that means true as it arrives; for "the
+pink box then the can of nuts" it stays false at the pink box and becomes true
+at the can.
 
 Obstacles are always avoided, whatever the instruction says about them. The
 robot refuses to drive within a body's width of anything you list, so a route
@@ -267,19 +287,46 @@ What route_pixels should be then depends on whether you have been here before:
   * With a last_time, DO NOT return an empty route. The object was in sight a
     moment ago and the robot has only moved a little since; it is most likely
     just outside the frame or behind something. Carry on along the route you
-    gave before -- those points are drawn in this picture for you -- correcting
-    it for anything this picture shows that the last one did not. Keep going
-    until the object comes back into view or the route runs out.
+    gave before -- it is drawn in this picture for you as numbered crosses
+    joined by a line -- correcting it for anything this picture shows that the
+    last one did not. Keep going until the object comes back into view or the
+    route runs out.
 
-last_time - sometimes given to you. It is the route you returned for the
-PREVIOUS photograph and the obstacles you named then, redrawn as pixels of the
-photograph you are looking at now. The robot has driven part of it since;
-out_of_frame lists things you reported that have gone out of shot.
+    This is the case the drawing exists for. Losing sight of the object is not
+    losing the plan: the crosses are still on the carpet in front of you, and
+    following them is what brings the object back into view. Staying on them
+    matters most exactly when you cannot see what you are heading for.
 
-Treat it as your own notes, not as an order. Keep what this picture still
-supports and change what it does not. Its real use is what you can no longer
-see: an obstacle that has left the frame is still on the floor beside the
-robot, so do not route back over it just because it is out of shot.
+last_time - sometimes given to you. It is a route that has not been driven
+yet, carried into the photograph you are looking at now. Usually it is the one
+you returned for the PREVIOUS photograph. Sometimes it was drawn by the person
+operating the robot, which is them showing you the way they want this done --
+follow the line they drew unless this picture shows it running into something,
+and then bend it round rather than throwing it away. You get it twice: drawn in the picture as
+numbered crosses joined by a line, and as the same pixels in last_time. The
+drawing and the numbers are the same points; trust either.
+
+Where the goal was is marked too -- a star if it is still in this picture, and
+an arrow to the edge with the bearing written beside it if it is not.
+
+Treat it as your own notes, not as an order: keep what this picture still
+supports and change what it does not. But it is the only record of what you
+decided last time, so continuing it is usually right. If you chose to come at
+something from one side, that choice is in the shape of those points and
+nowhere else -- start again from scratch and it is gone.
+
+Obstacles are not in it. You are looking at the floor and can see them for
+yourself, which is better than a remembered position; list them afresh every
+time.
+
+target_was is the important one. It is where the goal was the last time you
+could see it, carried through every turn since, and it is given as a direction
+rather than a pixel because a direction survives leaving the frame. When
+still_in_view is false the goal is simply not in this photograph -- that is not
+a reason to give up or to start hunting something else. Use `where` and
+`bearing_degrees`: if it says the goal is off to your left or behind you, ask
+for a turn of about that many degrees, and you will see it again. Negative is
+left, positive is right, the same convention as turn_degrees.
 
 Keep note under 15 words: what you saw, or what your route steers around."""
 
@@ -701,48 +748,123 @@ class Robot:
         return seconds
 
 
-def recall(lens, memory, pose, width=640, height=480):
-    """The previous answer, redrawn as pixels of the photograph taken now.
+def where_words(bearing):
+    """A bearing said in words, because that is what survives leaving frame."""
+    side = 'left' if bearing < 0 else 'right'
+    size = abs(bearing)
+    if size < 12.:
+        return 'straight ahead'
+    if size < 50.:
+        return 'ahead and a little to your ' + side
+    if size < 100.:
+        return 'off to your ' + side
+    if size < 150.:
+        return 'behind you, to the ' + side
+    return 'directly behind you'
 
-    Each look currently starts from nothing, which throws away the one thing a
-    single photograph cannot supply: what is beside and behind the robot. An
-    obstacle that leaves the frame stops existing, and the route is re-derived
-    from scratch every time even where nothing has changed.
+
+def recall(lens, memory, pose, width=640, height=480):
+    """The part of the last plan not yet driven, redrawn in the frame taken now.
+
+    Only the plan, and where the goal was. Obstacles are deliberately not sent:
+    the model is looking at a photograph of the floor and can see them again,
+    and a re-detection from here is better than a remembered position carried
+    through motion it did not measure. The route is the one thing it cannot
+    recover, because it is the model's own earlier intent -- ask for an approach
+    from an object's left and that choice lives in the shape of the route and
+    nowhere else.
+
+    The executor keeps its own obstacle memory regardless. That is what stops
+    the robot driving into something it has already passed, and it is a
+    different question from what is worth putting in a prompt.
 
     `memory` is the previous answer in floor coordinates of the frame it was
-    planned in -- {'route': [...], 'obstacles': [(label, spot), ...]} -- and
-    `pose` is where the robot ended up in that same frame. Points behind the
-    camera or outside the image are dropped rather than clamped: a pixel on the
-    edge of the frame would be a claim about floor that is not in the picture.
+    planned in -- {'route': [...], 'goal': (x, z), 'done': [...]} -- and `pose`
+    is where the robot ended up in that same frame. Waypoints already driven
+    past fall behind the camera and have no pixel, so what survives is what is
+    still to come.
 
     Returns None when nothing survives, so the caller sends no prior at all
     rather than an empty one.
     """
-    def seen(spots):
-        out = []
-        for spot in rebase(spots, pose):
-            place = lens.pixel(spot[0], spot[1])
-            if place and 0. <= place[0] <= width and 0. <= place[1] <= height:
-                out.append(dict(x=round(place[0], 1), y=round(place[1], 1)))
-            else:
-                out.append(None)
-        return out
+    # Where the goal was, carried across any amount of turning. A pixel stops
+    # existing the moment the target leaves the frame, and a bearing does not.
+    target = None
+    if memory.get('goal') is not None:
+        spot = rebase([memory['goal']], pose)[0]
+        bearing = math.degrees(math.atan2(spot[0], spot[1]))
+        place = lens.pixel(spot[0], spot[1]) if spot[1] > 0 else None
+        inside = bool(place and 0. <= place[0] <= width and 0. <= place[1] <= height)
+        target = dict(
+            bearing_degrees=round(bearing, 1),
+            where=where_words(bearing),
+            contact_pixel=(dict(x=round(place[0], 1), y=round(place[1], 1))
+                           if inside else None),
+            still_in_view=inside)
 
-    route = [point for point in seen(memory.get('route') or []) if point]
-    labels = [label for label, _ in memory.get('obstacles') or []]
-    spots = seen([spot for _, spot in memory.get('obstacles') or []])
-    obstacles = [dict(label=label, contact_pixel=point)
-                 for label, point in zip(labels, spots) if point]
-    gone = [label for label, point in zip(labels, spots) if not point]
-    if not route and not obstacles and not gone:
+    route = []
+    for spot in rebase(memory.get('route') or [], pose):
+        if spot[1] <= 0.:
+            continue                    # behind the robot: already driven past
+        place = lens.pixel(spot[0], spot[1])
+        if place and 0. <= place[0] <= width and 0. <= place[1] <= height:
+            route.append(dict(x=round(place[0], 1), y=round(place[1], 1)))
+
+    if not route and target is None and not memory.get('done'):
         return None
 
     travelled = math.hypot(pose[0], pose[1])
     return dict(
-        route_pixels=route, obstacles=obstacles,
-        out_of_frame=gone,
+        route_pixels=route, target_was=target,
+        already_reached=list(memory.get('done') or []),
         since_then='drove %.0f cm and turned %+.0f degrees'
                    % (travelled, pose[2]))
+
+
+def annotate(image, prior):
+    """Draw the unexecuted part of the last route into the picture being sent.
+
+    The model is far better at reading marks in a photograph than at holding a
+    list of coordinates in its head and projecting them onto what it sees, and
+    the leftover route is the one thing it cannot recover any other way: if it
+    chose to come at something from the left, that choice lives in the shape of
+    those points and nowhere else. When the target has just gone out of frame
+    this is the only thing left to steer by.
+
+    Returns a new image; the caller's frame is never drawn on, because that
+    same frame is what the calibration and the odometry read.
+    """
+    if not prior:
+        return image
+    shot = image.copy()
+    previous = None
+    for index, point in enumerate(prior.get('route_pixels') or []):
+        at = (int(point['x']), int(point['y']))
+        if previous:
+            cv2.line(shot, previous, at, (255, 210, 90), 2)
+        # Hollow crosses rather than filled discs: this ink lands on carpet the
+        # model is also reading for obstacles, so it has to mark a spot without
+        # hiding what is under it.
+        cv2.drawMarker(shot, at, (255, 210, 90), cv2.MARKER_CROSS, 18, 2)
+        cv2.putText(shot, str(index + 1), (at[0] + 7, at[1] - 7),
+                    cv2.FONT_HERSHEY_PLAIN, 1., (255, 210, 90), 1)
+        previous = at
+    target = prior.get('target_was')
+    if target:
+        spot = target.get('contact_pixel')
+        if spot:
+            cv2.drawMarker(shot, (int(spot['x']), int(spot['y'])),
+                           (60, 220, 220), cv2.MARKER_STAR, 20, 2)
+        else:
+            # Out of frame. Say which way and how far round, because that is
+            # exactly what the model is being told in words as well.
+            edge = 6 if target['bearing_degrees'] < 0 else shot.shape[1] - 6
+            cv2.arrowedLine(shot, (int(shot.shape[1] / 2), 40),
+                            (edge, 40), (60, 220, 220), 2, tipLength=.3)
+            cv2.putText(shot, 'target %+.0f deg: %s'
+                        % (target['bearing_degrees'], target['where']),
+                        (8, 62), cv2.FONT_HERSHEY_PLAIN, 1., (60, 220, 220), 1)
+    return shot
 
 
 def recognize(image, instruction, prior=None, timeout=20.):
@@ -761,7 +883,7 @@ def recognize(image, instruction, prior=None, timeout=20.):
     its own last route and obstacle list drawn in the photograph in front of it
     rather than starting from nothing each look.
     """
-    ok, encoded = cv2.imencode('.jpg', image)
+    ok, encoded = cv2.imencode('.jpg', annotate(image, prior))
     if not ok:
         raise Stop('could not encode the camera frame')
     body = dict(model=MODEL, reasoning=dict(effort='none'), store=False,
@@ -1154,40 +1276,58 @@ def cap_path(route, limit):
 
 
 def stop_short(route, goal, standoff):
-    """Cut a route back so it ends `standoff` cm from the target, not on it.
+    """End the route `standoff` cm from the target, on the side it approached.
 
     The model is asked to end its route at the object's contact pixel, which is
-    the right answer to the question it was asked -- but driving the whole of it
-    means arriving with the wheels where the object is. A recurrent planner
-    makes that worse, not better: it checks the range at look time and then
-    drives a fixed slice of time blind, so a target measured at 25 cm and a
-    slice worth 30 cm of travel is a collision, not an arrival.
+    the right answer to the question it was asked and the wrong thing to drive:
+    arriving there puts the wheels where the object is.
+
+    Cutting the path where it first crosses the standoff ring is the obvious
+    trim and it is wrong, because which side the robot arrives on is carried by
+    the LAST segment -- exactly the part that cut discards. Asked to reach a can
+    from its left, the model returned an eight point curve coming in from the
+    left and the trim kept two points of it, aimed straight ahead; the robot
+    then drove at the can and called it arrival. "From the left" never survived
+    to the wheels.
+
+    So the stopping point is placed on the ring along the approach the route
+    ends on, and the points still outside the ring are kept. Where the route
+    says nothing about a side, that reduces to stopping short along the way it
+    was already going.
     """
     if goal is None or not route:
         return list(route)
+
+    # The direction the route arrives from, taken from its final segment.
+    tail = route[-1]
+    before = route[-2] if len(route) > 1 else (0., 0.)
+    dx, dz = tail[0] - before[0], tail[1] - before[1]
+    span = math.hypot(dx, dz)
+    if span < 1e-6:
+        dx, dz = tail[0] - goal[0], tail[1] - goal[1]
+        span = math.hypot(dx, dz)
+        if span < 1e-6:
+            return []                  # already on it, nothing to drive
+        dx, dz = -dx, -dz              # point at the goal, not away from it
+    stop = (goal[0] - dx / span * standoff, goal[1] - dz / span * standoff)
+
+    if stop[1] <= 0.:
+        return []      # the standoff point is behind the robot: it is there
+
     kept = []
     previous = (0., 0.)
     for spot in route:
-        span = math.hypot(spot[0] - previous[0], spot[1] - previous[1])
-        far = math.hypot(spot[0] - goal[0], spot[1] - goal[1])
-        if far >= standoff:
+        if math.hypot(spot[0] - goal[0], spot[1] - goal[1]) <= standoff:
+            break      # inside the ring; the stopping point replaces the rest
+        if math.hypot(spot[0] - previous[0], spot[1] - previous[1]) >= ROUTE_MIN_LEG_CM:
             kept.append(spot)
             previous = spot
-            continue
-        # This leg crosses the standoff ring. Walk along it to the crossing and
-        # stop there rather than dropping the leg, which would leave the robot
-        # further out than it needs to be.
-        if span > 1e-6:
-            steps = max(1, int(span / .5))
-            for i in range(1, steps + 1):
-                t = float(i) / steps
-                at = (previous[0] + (spot[0] - previous[0]) * t,
-                      previous[1] + (spot[1] - previous[1]) * t)
-                if math.hypot(at[0] - goal[0], at[1] - goal[1]) <= standoff:
-                    if math.hypot(at[0] - previous[0], at[1] - previous[1]) >= ROUTE_MIN_LEG_CM:
-                        kept.append(at)
-                    break
-        break
+    if math.hypot(stop[0] - previous[0], stop[1] - previous[1]) >= ROUTE_MIN_LEG_CM:
+        kept.append(stop)
+    elif kept:
+        kept[-1] = stop
+    else:
+        kept = [stop]
     return kept
 
 

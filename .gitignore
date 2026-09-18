@@ -37,3 +37,6 @@ local_nav/goals/*.power.jsonl
 # transcripts).
 /.claude/
 /.codex/
+
+# Bench console output is local, like the other session logs above.
+/logs/
