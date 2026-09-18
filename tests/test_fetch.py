@@ -267,7 +267,7 @@ class FollowTests(unittest.TestCase):
         # sails back, so the loop needs a guard that is not about turning.
         events = []
         with patch.object(fetch, 'drive_leg',
-                          side_effect=lambda robot, odo, cm, rec: cm * 3.):
+                          side_effect=lambda robot, odo, cm, rec, stop=None: cm * 3.):
             fetch.follow(self.Dry(), None, [(0., 30.)],
                          lambda k, **f: events.append((k, f)))
         self.assertTrue(any(k == 'no_progress' for k, _ in events))

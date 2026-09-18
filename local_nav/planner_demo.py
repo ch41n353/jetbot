@@ -96,8 +96,15 @@ pre{background:#05070a;border:1px solid #1e2830;padding:10px;max-height:560px;
       <input id="target" type="text" placeholder="name an object"
         value="the Advil bottle"><button id="ask">ASK GPT</button>
       <button id="go" class="go">GPT DRIVE</button>
-      <span>every</span><input id="every" type="number" min="1" max="60"
-        placeholder="s" style="width:56px"><span>s</span>
+      <span>drive</span><input id="every" type="number" min="1" max="60"
+        placeholder="once" style="width:62px" title="seconds of driving between
+        looks; leave empty for a single look and drive"><span>s</span>
+    </div>
+    <div class="group">
+      <button id="flowgo" class="go">FLOW</button>
+      <span>look every</span><input id="flowevery" type="number" min="1" max="30"
+        value="1" style="width:56px" title="how often a look is issued; several
+        run at once and the wheels never stop"><span>s</span>
     </div>
     <div class="group">
       <button id="run" class="go">RUN TRAJECTORY</button>
@@ -126,6 +133,14 @@ pre{background:#05070a;border:1px solid #1e2830;padding:10px;max-height:560px;
     If the object leaves the frame it keeps following the remembered route
     rather than giving up, and it keeps avoiding obstacles that have gone out of
     shot. Leave the box empty for a single look and drive. STOP ends it.<br>
+    GPT DRIVE's <em>drive N s</em> is how long to drive between looks; leave it
+    empty for a single look and drive. FLOW's <em>look every N s</em> is how
+    often a look is issued &mdash; smaller is more responsive and costs more.<br>
+    FLOW never stops the wheels: it keeps several looks in flight, so a fresh
+    trajectory lands about once a second and takes over the moment it does. Each one is reprojected by the distance
+    driven while it was being thought about, and an answer that arrives out of
+    order, describing an older picture than the plan already in use, is thrown
+    away.<br>
     Dark areas are floor the camera cannot see. Near the top the picture is
     built from very few camera pixels, so it looks smeared &mdash; that blur is
     a fair picture of how little the robot really knows out there.
@@ -198,7 +213,7 @@ async function post(path,body){
 }
 // 'live' is deliberately absent: the stream is the one thing that should keep
 // running while the robot is busy.
-function buttons(){['grab','left','right','run','clear','ask','view','go'].forEach(
+function buttons(){['grab','left','right','run','clear','ask','view','go','flowgo'].forEach(
   id=>document.getElementById(id).disabled=busy);}
 function show(d){
   if(d.log) document.getElementById('log').textContent=d.log;
@@ -306,11 +321,25 @@ function watch(){
       if(!d.running){
         clearInterval(watching); watching=null;
         document.getElementById('go').textContent='GPT DRIVE';
+        document.getElementById('flowgo').textContent='FLOW';
         busy=false; buttons();
       }
     }catch(err){ /* the bench restarted; the next tick will pick it up */ }
   }, 700);
 }
+// A field each. One box serving both buttons meant the same number was the
+// drive slice for one and the issue interval for the other, which nobody
+// should have to remember.
+document.getElementById('flowgo').onclick=async()=>{
+  // Flowing keeps several looks in the air so the wheels never stop. The
+  // number box is reused as the issue interval rather than the drive slice.
+  const every=document.getElementById('flowevery').value.trim();
+  document.getElementById('flowgo').textContent='FLOWING...';
+  busy=true; buttons();
+  await post('/api/flow',{target:document.getElementById('target').value,
+                          every:every===''?null:+every});
+  watch();
+};
 document.getElementById('go').onclick=async()=>{
   // Blank means one look, drive what it planned, stop. A number means keep
   // looking again after that many seconds of motion, until it arrives.
@@ -368,6 +397,14 @@ MISSION_SECONDS = 4.       # wheels turn for about this long between looks. Long
 MISSION_CYCLES = 25        # bound on a run, so a mission that is getting nowhere
                            # ends by itself rather than driving until the battery
 MISSION_STANDOFF_CM = 20.
+MISSION_COMMIT_CM = 30.
+FLOW_INTERVAL_S = 1.        # how often a look is issued when flowing. At ~3 s a
+                            # call that keeps about three in the air at once.
+FLOW_MAX_IN_FLIGHT = 4      # a slow call must not let requests pile up
+FLOW_SECONDS = 120.         # a flowing run costs a call a second; bound it     # furthest the robot drives on one measurement. Range
+                            # from a single pixel is poor at distance (34 px of
+                            # contact error measured as 80 cm here), so a wrong
+                            # reading must cost one short leg, not a crash.
 MISSION_TURN_MIN_DEG = 5.   # smaller than this is not worth a look
 MISSION_TURN_MAX_DEG = 120. # the model is told to stay inside this; enforce it
 MISSION_TURN_STEP_DEG = 30. # how much of a requested turn to do before looking
@@ -594,6 +631,18 @@ class Bench(object):
     def running(self):
         return self.flight is not None and self.flight.is_alive()
 
+    def launch_flow(self, target, every=FLOW_INTERVAL_S):
+        """Start a flowing run on its own thread; the page polls /api/progress."""
+        if self.running():
+            self.say('something is already running; press STOP first')
+            return self.state(mission=True)
+        self.abort.clear()
+        self.flight = threading.Thread(target=self.flow, args=(target, every))
+        self.flight.daemon = True
+        self.flight.start()
+        time.sleep(.4)
+        return self.state(mission=True)
+
     def launch(self, target, seconds=MISSION_SECONDS):
         """Start a mission on its own thread; the page polls /api/progress.
 
@@ -609,6 +658,270 @@ class Bench(object):
         self.flight.start()
         time.sleep(.4)                # let the first line reach the log
         return self.state(mission=True)
+
+    def compose(self, first, second):
+        """`second`, given in the frame `first` ends in, expressed from the start."""
+        heading = math.radians(first[2])
+        return [first[0] + math.cos(heading) * second[0] + math.sin(heading) * second[1],
+                first[1] + math.cos(heading) * second[1] - math.sin(heading) * second[0],
+                first[2] + second[2]]
+
+    def since_pose(self, earlier, now):
+        """The motion from `earlier` to `now`, in the frame `earlier` ends in.
+
+        This is what a trajectory has to be rebased by. A route comes back in
+        the frame of the picture it was planned from, and by the time it arrives
+        the robot has driven for the length of the call -- roughly 3 s, about
+        25 cm. Rebasing needs that displacement expressed in the older frame,
+        not the difference of two world positions.
+        """
+        heading = math.radians(earlier[2])
+        dx, dz = now[0] - earlier[0], now[1] - earlier[1]
+        return [math.cos(heading) * dx - math.sin(heading) * dz,
+                math.cos(heading) * dz + math.sin(heading) * dx,
+                now[2] - earlier[2]]
+
+    def ask_later(self, image, target, prior):
+        """Start a recognizer call on its own thread and hand back a handle.
+
+        The point of the whole exercise: the wheels keep turning while this is
+        in flight. Measured, a call takes 3.15 s against a 4 s drive, so serial
+        looking leaves the robot standing still 44 per cent of the time.
+        """
+        holder = {}
+
+        def work():
+            try:
+                holder['answer'] = fetch.recognize(image, target, prior)
+            except Exception as exc:
+                holder['error'] = exc
+
+        worker = threading.Thread(target=work)
+        worker.daemon = True
+        worker.start()
+        return dict(thread=worker, holder=holder, issued=time.monotonic())
+
+    @staticmethod
+    def freshest(pending, applied):
+        """Pick the newest finished look; report what to keep and what to drop.
+
+        Latency is not constant -- 2.18 to 4.56 s measured on this robot -- so
+        with several calls in the air the answers do not come back in the order
+        they were asked. Applying whichever finished last would sometimes steer
+        the robot with an older picture than the one it already used, which is
+        worse than not asking at all.
+
+        Returns (chosen, still_pending, dropped). `chosen` is None when nothing
+        has finished, or when everything that has is older than what is already
+        applied.
+        """
+        finished = [job for job in pending if not job['thread'].is_alive()]
+        if not finished:
+            return None, list(pending), 0
+        newest = max(finished, key=lambda job: job['seq'])
+        keep = [job for job in pending if job['seq'] > newest['seq']]
+        dropped = len(finished) - 1
+        if newest['seq'] <= applied:
+            return None, keep, dropped + 1
+        return newest, keep, dropped
+
+    def flow(self, target, every=FLOW_INTERVAL_S, span=FLOW_SECONDS):
+        """Drive without ever standing still, keeping several looks in flight.
+
+        Serial looking stops the wheels for the length of a call: measured,
+        3.15 s against a 4 s drive, so the robot idles 44 per cent of the time.
+        Issuing one call and waiting for it fixes the idling but only refreshes
+        the plan every 4 s. Issuing one every `every` seconds instead keeps
+        about latency/every of them in the air at once, so a fresh answer lands
+        every second and the robot corrects course that often.
+
+        Two things this forces. Latency is not constant -- 2.18 to 4.56 s
+        measured -- so answers come back out of order, and an older one must be
+        dropped rather than applied. And every answer describes the frame of the
+        picture it was planned from, so it is rebased by the motion since that
+        shot before any of it is driven; likewise the surviving route is rebased
+        after each slice of driving. Serial needs neither, because a stopped
+        robot is still where its picture was taken.
+        """
+        target = (target or '').strip()
+        if not target:
+            self.say('name something to drive to first')
+            return
+        if not os.environ.get('OPENAI_API_KEY'):
+            self.say('OPENAI_API_KEY is not set, so the model cannot be asked')
+            return
+
+        world = [0., 0., 0.]     # where the robot is, from where it began
+        route, obstacles, goal = [], [], None
+        memory = None
+        pending, issued, applied = [], 0, -1
+        stale, trouble = 0, 0
+        last_issue = 0.
+        started_at = time.monotonic()
+        self.lines = []
+        self.say('flowing to %s: a look every %.1f s, wheels never stop'
+                 % (target, every))
+
+        def build(answer, shot_pose):
+            """An answer, moved from the frame it was planned in into this one."""
+            drift = self.since_pose(shot_pose, world)
+            spot = None
+            contact = answer.get('contact_pixel')
+            if answer.get('visible') and isinstance(contact, dict):
+                try:
+                    spot = self.robot.ground(float(contact['x']), float(contact['y']))
+                    near = fetch.nearest_range(self.robot, contact['x'], contact['y'])
+                    if near is not None and near < math.hypot(*spot):
+                        scale = near / max(1e-6, math.hypot(*spot))
+                        spot = (spot[0] * scale, spot[1] * scale)
+                    spot = fetch.rebase([spot], drift)[0]
+                except (fetch.Stop, KeyError, TypeError, ValueError):
+                    spot = None
+            points = []
+            for point in answer.get('route_pixels') or []:
+                if not isinstance(point, dict) or 'x' not in point:
+                    continue
+                try:
+                    points.append(self.robot.ground(float(point['x']),
+                                                    float(point['y'])))
+                except (fetch.Stop, TypeError, ValueError):
+                    continue
+            found = fetch.project_obstacles(self.robot, answer)
+            points = [p for p in fetch.rebase(points, drift) if p[1] > 0.]
+            found = list(zip([o[0] for o in found],
+                             fetch.rebase([o[1] for o in found], drift)))
+            return points, found, spot, math.hypot(drift[0], drift[1])
+
+        while time.monotonic() - started_at < span:
+            if self.abort.is_set():
+                self.say('stopped by the operator')
+                break
+            now = time.monotonic()
+
+            if now - last_issue >= every and len(pending) < FLOW_MAX_IN_FLIGHT:
+                try:
+                    image, _ = self.robot.frame()
+                    self.frame = image
+                    if self.view_mode != 'camera':
+                        # /api/frame serves the warp in floor view, so setting
+                        # only self.frame leaves that panel on a stale picture
+                        # for the whole run.
+                        self.view = self.warp.apply(image)
+                    # The page only reloads the still picture when this changes.
+                    # Without it the left panel freezes on whatever was there
+                    # when the run began, which looks exactly like a hung feed.
+                    self.frame_token += 1
+                except Exception as exc:
+                    self.say('lost the camera: %s' % exc)
+                    break
+                prior = (fetch.recall(self.robot, memory, [0., 0., 0.])
+                         if memory else None)
+                job = self.ask_later(image, target, prior)
+                job.update(seq=issued, shot=list(world))
+                pending.append(job)
+                issued += 1
+                last_issue = now
+
+            newest, pending, dropped = self.freshest(pending, applied)
+            stale += dropped
+            if newest is not None:
+                if 'answer' in newest['holder']:
+                    applied = newest['seq']
+                    answer = newest['holder']['answer']
+                    points, found, spot, moved = build(answer, newest['shot'])
+                    if memory:
+                        found = fetch.merge_obstacles(
+                            memory['obstacles'],
+                            self.since_pose(newest['shot'], world), found)
+                    goal, obstacles = spot, found
+                    self.last_note = str(answer.get('note', ''))[:120]
+                    self.live_obstacles = list(obstacles)
+                    if goal is not None and math.hypot(*goal) <= MISSION_STANDOFF_CM:
+                        self.say('')
+                        self.say('REACHED: %s is %.0f cm away'
+                                 % (target, math.hypot(*goal)))
+                        break
+                    if goal is not None:
+                        points = fetch.stop_short(points, goal, MISSION_STANDOFF_CM)
+                    if points:
+                        points, _ = fetch.avoid(points, obstacles, goal)
+                        if goal is not None:
+                            points = fetch.stop_short(points, goal,
+                                                      MISSION_STANDOFF_CM) or points
+                        points = fetch.cap_path(points, MISSION_COMMIT_CM) or points
+                    route = points
+                    self.say('look %d %s | rebased %.0f cm | %d in flight%s'
+                             % (newest['seq'] + 1,
+                                ('target %.0f cm' % math.hypot(*goal)) if goal
+                                else ('seen, unplaceable' if answer.get('visible')
+                                      else 'not seen'),
+                                moved, len(pending),
+                                ', %d stale dropped' % stale if stale else ''))
+                elif 'error' in newest['holder']:
+                    self.say('  a look failed: %s'
+                             % str(newest['holder']['error'])[:60])
+
+            if not route:
+                time.sleep(.1)
+                continue
+
+            self.live_route = list(route)
+            self.live_pose = [0., 0., 0.]
+            self.pose_heading = self.imu_heading()
+
+            def record(event, **fields):
+                if event == 'pose':
+                    self.live_pose = [fields.get('x', 0.), fields.get('z', 0.),
+                                      fields.get('heading', 0.)]
+                    self.pose_heading = self.imu_heading()
+                elif event == 'leg_blocked':
+                    self.say('  blocked by "%s"' % fields.get('blocked_by'))
+
+            def fresher():
+                """True once a look lands that this drive should give way to.
+
+                Only for one that will actually be used. An answer older than
+                the plan being driven is discarded rather than applied, so
+                stopping the wheels for it would cost motion and buy nothing.
+                """
+                for job in pending:
+                    if (job['seq'] > applied and not job['thread'].is_alive()
+                            and 'answer' in job['holder']):
+                        return True
+                return False
+
+            slice_end = time.monotonic() + every
+            try:
+                pose = fetch.follow(self.robot, self.odometer, route, record,
+                                    obstacles, deadline=slice_end,
+                                    interrupt=fresher)
+                trouble = 0
+            except fetch.Stop as exc:
+                self.robot.halt()
+                if fatal(exc):
+                    self.say('STOPPED: %s' % exc)
+                    break
+                trouble += 1
+                self.say('  cut short: %s' % exc)
+                if trouble >= 3:
+                    self.say('three slices in a row went wrong; stopping')
+                    break
+                pose = list(self.live_pose)
+            world = self.compose(world, pose)
+            # The part of the route still ahead belongs to the old frame too.
+            route = [p for p in fetch.rebase(route, pose) if p[1] > 0.]
+            obstacles = list(zip([o[0] for o in obstacles],
+                                 fetch.rebase([o[1] for o in obstacles], pose)))
+
+        try:
+            self.robot.hold(0., 0.)
+        except Exception:
+            pass
+        self.live_route = []
+        elapsed = time.monotonic() - started_at
+        self.say('')
+        self.say('ended after %.0f s: %d looks issued, %d applied, %d stale dropped'
+                 % (elapsed, issued, applied + 1, stale))
 
     def mission(self, target, seconds=MISSION_SECONDS):
         """Drive to a named object, asking the model again every few seconds.
@@ -669,6 +982,14 @@ class Bench(object):
             if answer.get('visible') and isinstance(contact, dict):
                 try:
                     goal = self.robot.ground(float(contact['x']), float(contact['y']))
+                    # Plan against the near edge of the range bracket, not its
+                    # middle. A contact pixel carries a spread, not a number,
+                    # and the spread is 21 per cent of the range at a metre.
+                    near = fetch.nearest_range(self.robot, contact['x'],
+                                               contact['y'])
+                    if near is not None and near < math.hypot(*goal):
+                        scale = near / max(1e-6, math.hypot(*goal))
+                        goal = (goal[0] * scale, goal[1] * scale)
                 except (fetch.Stop, KeyError, TypeError, ValueError):
                     goal = None
 
@@ -801,6 +1122,18 @@ class Bench(object):
 
             widened, nudged = fetch.avoid(route, obstacles, goal)
             widened = fetch.stop_short(widened, goal, MISSION_STANDOFF_CM) or widened
+            # Commit only a bounded distance before looking again, however far
+            # the target is believed to be. A range read from a contact pixel
+            # near the horizon can be wrong by a factor of three, and a standoff
+            # subtracted from a wrong range is wrong by the same amount -- that
+            # is how "stop 20 cm short of a bin 73 cm away" became a collision
+            # with a bin about 25 cm away. This cap is the thing that survives a
+            # bad measurement, because it does not depend on it.
+            capped = fetch.cap_path(widened, MISSION_COMMIT_CM)
+            if capped and len(capped) < len(widened):
+                self.say('  committing %.0f cm of it before looking again'
+                         % MISSION_COMMIT_CM)
+            widened = capped or widened
             if nudged:
                 self.say('  widened %d waypoint(s) to the clearance the wheels need'
                          % nudged)
@@ -1590,6 +1923,11 @@ class Handler(BaseHTTPRequestHandler):
                 out = bench.turn(float(body.get('degrees', 0.)))
             elif path == '/api/run':
                 out = bench.run(body.get('points') or [])
+            elif path == '/api/flow':
+                every = body.get('every')
+                out = bench.launch_flow(body.get('target') or '',
+                                        FLOW_INTERVAL_S if every in (None, '')
+                                        else float(every))
             elif path == '/api/mission':
                 every = body.get('seconds')
                 out = bench.launch(body.get('target') or '',

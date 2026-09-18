@@ -1072,6 +1072,65 @@ def merge_obstacles(remembered, pose, fresh, keep_cm=60.):
     return kept
 
 
+CONTACT_PIXEL_SLOP = 12.   # how wrong the recognizer's contact point tends to
+                           # be, vertically, in pixels. Measured from a live
+                           # sighting whose range was out by 51 cm: about 17 px.
+
+
+def nearest_range(lens, x, y, slop=CONTACT_PIXEL_SLOP):
+    """The closest the target could plausibly be, given a contact pixel.
+
+    A pixel does not carry one range, it carries a bracket, and near the horizon
+    that bracket is enormous: three pixels is 4 per cent of the range at 9 cm and
+    21 per cent at 1 m, and the recognizer is wrong by rather more than three.
+    Taking the middle of the bracket and subtracting a standoff from it is how
+    the robot drove into a bin: it believed 73 cm, the bin was about 25, and
+    "stop 20 cm short" became a 53 cm commitment.
+
+    So the approach is planned against the near edge instead. Being too cautious
+    costs another look, which is cheap; being too bold costs a collision.
+    """
+    try:
+        return lens.ground(float(x), float(y) + slop)[1]
+    except Stop:
+        return None
+
+
+def cap_path(route, limit):
+    """Cut a route back to `limit` cm of travel, whatever it was aiming at.
+
+    Range from a single contact pixel is only as good as the pixel, and near
+    the horizon it is very poor: 34 pixels of error measured as 80 cm of range
+    on this camera. So a standoff computed from a long-range sighting can be
+    wrong by more than the standoff itself -- "stop 20 cm short of a thing
+    73 cm away" drove 53 cm into a bin that was really about 25 cm away.
+
+    No standoff survives an error like that, because the error scales with the
+    quantity it is subtracted from. A flat cap on how far the robot commits
+    before looking again does survive it: a wildly wrong range then costs one
+    short leg and a fresh measurement, instead of a collision.
+    """
+    if limit <= 0.:
+        return list(route)
+    kept = []
+    previous = (0., 0.)
+    travelled = 0.
+    for spot in route:
+        span = math.hypot(spot[0] - previous[0], spot[1] - previous[1])
+        if travelled + span <= limit:
+            kept.append(spot)
+            travelled += span
+            previous = spot
+            continue
+        room = limit - travelled
+        if room >= ROUTE_MIN_LEG_CM and span > 1e-6:
+            t = room / span
+            kept.append((previous[0] + (spot[0] - previous[0]) * t,
+                         previous[1] + (spot[1] - previous[1]) * t))
+        break
+    return kept
+
+
 def stop_short(route, goal, standoff):
     """Cut a route back so it ends `standoff` cm from the target, not on it.
 
@@ -1322,7 +1381,7 @@ class Odometer:
             return None
 
 
-def drive_leg(robot, odometer, centimetres, record):
+def drive_leg(robot, odometer, centimetres, record, interrupt=None):
     """Drive one straight leg: regulated approach, then measured bursts.
 
     Same shape as a turn, for the same reason. Speed is servoed down as the
@@ -1367,6 +1426,12 @@ def drive_leg(robot, odometer, centimetres, record):
     try:
         while travelled[0] < centimetres - FINE_DRIVE_CM:
             now = time.monotonic()
+            if interrupt is not None and interrupt():
+                # A fresher plan has landed. Finishing this leg first would
+                # spend up to a second and a half driving the old one, which is
+                # most of what the pipeline was built to avoid.
+                record('handed_over', moved_cm=round(travelled[0], 1))
+                break
             if now - started > limit:
                 raise Stop('leg exceeded its %.1f s bound' % limit)
             status = robot.check()
@@ -1474,7 +1539,7 @@ def aim_turn(pose, target):
 
 
 def follow(robot, odometer, route, record, obstacles=(), complete=True,
-           deadline=None):
+           deadline=None, interrupt=None):
     """Execute the trajectory: reach each waypoint in turn, then the next.
 
     Turns and drives are both chunked -- at most TURN_MAX_PER_LEG_DEG and
@@ -1496,6 +1561,8 @@ def follow(robot, odometer, route, record, obstacles=(), complete=True,
     """
     pose = [0., 0., 0.]          # where we think we are, in the start frame
     for index, (x, z) in enumerate(route):
+        if interrupt is not None and interrupt():
+            return pose
         if deadline is not None and time.monotonic() >= deadline:
             # A recurrent planner wants the wheels back on a fixed cadence so it
             # can look again. Stopping between chunks rather than mid-leg keeps
@@ -1510,6 +1577,8 @@ def follow(robot, odometer, route, record, obstacles=(), complete=True,
         closest = None       # best range to this waypoint so far
         orbit = pivot_radius() + ROUTE_MIN_LEG_CM
         for chunk in range(WAYPOINT_MAX_LEGS if complete else 1):
+            if interrupt is not None and interrupt():
+                return pose
             if deadline is not None and time.monotonic() >= deadline:
                 record('out_of_time', waypoint=index, of=len(route))
                 return pose
@@ -1592,7 +1661,7 @@ def follow(robot, odometer, route, record, obstacles=(), complete=True,
                        z=round(start[1] + math.cos(along) * fields['moved_cm'], 1),
                        heading=round(start[2], 1))
 
-            moved = drive_leg(robot, odometer, room, relay)
+            moved = drive_leg(robot, odometer, room, relay, interrupt)
             heading = math.radians(pose[2])
             pose[0] += math.sin(heading) * moved
             pose[1] += math.cos(heading) * moved

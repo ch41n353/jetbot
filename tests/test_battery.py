@@ -7,6 +7,9 @@ import queue
 from unittest.mock import patch
 sys.path.insert(0,os.path.join(os.path.dirname(__file__),'..','local_nav'))
 from battery import PowerGuard,PowerSensors,power_permitted,read_shared
+import battery
+import shutil
+import tempfile
 
 
 class BatteryTests(unittest.TestCase):
@@ -100,6 +103,58 @@ class BatteryTests(unittest.TestCase):
             process.join(2)
             if process.is_alive():process.terminate();process.join()
             parent.close()
+
+
+class PowerLogRotationTests(unittest.TestCase):
+    """The power log is written by the process that guards motion.
+
+    It appends five records a second, every field of every sample, which came
+    to 287 MB before anyone looked -- roughly 345 MB a day. Rotation bounds
+    that. What matters as much as bounding it: rotation is housekeeping and the
+    power monitor is not, so a failure to roll must never take the worker down.
+    Losing that process loses the guard and latches motion off.
+    """
+
+    def setUp(self):
+        self.room = tempfile.mkdtemp()
+        self.path = os.path.join(self.room, 'power.jsonl')
+
+    def tearDown(self):
+        shutil.rmtree(self.room, ignore_errors=True)
+
+    def test_rolling_keeps_a_bounded_window_newest_first(self):
+        for cycle in range(6):
+            with open(self.path, 'w') as handle:
+                handle.write('cycle %d' % cycle)
+            self.assertTrue(battery._roll(self.path))
+        kept = sorted(os.listdir(self.room))
+        self.assertEqual(kept, ['power.jsonl.%d' % n
+                                for n in range(1, battery.LOG_KEEP + 1)])
+        with open(self.path + '.1') as handle:
+            self.assertEqual(handle.read(), 'cycle 5')
+        with open(self.path + '.%d' % battery.LOG_KEEP) as handle:
+            self.assertEqual(handle.read(), 'cycle %d' % (6 - battery.LOG_KEEP))
+
+    def test_a_roll_that_fails_is_reported_not_raised(self):
+        # The worker keeps writing to the handle it has; it must not die. A
+        # missing path is not a failure -- there is simply nothing to move --
+        # so the failure has to be provoked at the rename itself.
+        with open(self.path, 'w') as handle:
+            handle.write('live')
+        def refuse(*args):
+            raise OSError('read-only file system')
+        with patch('battery.os.rename', refuse):
+            self.assertIs(battery._roll(self.path), False)
+        # and the log it was writing is still there to append to
+        self.assertTrue(os.path.exists(self.path))
+
+    def test_a_missing_log_is_nothing_to_roll(self):
+        self.assertTrue(battery._roll(self.path))
+
+    def test_the_window_is_bounded_and_small(self):
+        # Four files of 16 MB is about 64 MB, against 345 MB a day unbounded.
+        self.assertLessEqual(battery.LOG_MAX_BYTES * (battery.LOG_KEEP + 1),
+                             128 * 1024 * 1024)
 
 
 if __name__=='__main__':unittest.main()

@@ -4,6 +4,7 @@ INA3221 POM_5V_IN is a regulated supply. A USB power bank may hold it near 5 V
 until abrupt shutdown. Actual battery state requires a separate fuel gauge.
 """
 import math
+import os
 import time
 
 
@@ -172,6 +173,37 @@ def read_shared(shared,previous):
     finally:lock.release()
 
 
+LOG_MAX_BYTES = 16 * 1024 * 1024   # roll at 16 MB, about an hour of samples
+LOG_KEEP = 3                       # this file plus three older ones: ~64 MB total
+
+
+def _roll(path, keep=LOG_KEEP):
+    """Shuffle power.jsonl -> .1 -> .2 -> ... and drop the oldest.
+
+    The worker appends a record five times a second, every field of every
+    sample including the static thresholds and the profile string. That is
+    roughly 345 MB a day, and it had reached 287 MB before anyone looked. The
+    recent history is what anyone actually reads back, so keep a bounded window
+    of it rather than everything since boot.
+    """
+    try:
+        oldest = '%s.%d' % (path, keep)
+        if os.path.exists(oldest):
+            os.unlink(oldest)
+        for index in range(keep - 1, 0, -1):
+            older = '%s.%d' % (path, index)
+            if os.path.exists(older):
+                os.rename(older, '%s.%d' % (path, index + 1))
+        if os.path.exists(path):
+            os.rename(path, path + '.1')
+        return True
+    except OSError:
+        # Rotation is housekeeping. The power monitor is not: if it dies the
+        # service loses its guard and motion latches off, so a failure here
+        # must leave the worker writing to the handle it already has.
+        return False
+
+
 def worker(shared,q,stop,log_path):
     import json
     import queue
@@ -179,7 +211,12 @@ def worker(shared,q,stop,log_path):
     guard=PowerGuard(require_pack=True)
     try:
         sensor=PowerSensors()
-        with open(log_path,'a',buffering=1) as log:
+        log = open(log_path,'a',buffering=1)
+        try:
+            written = os.path.getsize(log_path)
+        except OSError:
+            written = 0
+        try:
             while not stop.is_set():
                 try:
                     sample=sensor.sample()
@@ -188,10 +225,23 @@ def worker(shared,q,stop,log_path):
                 status=guard.update(sample,time.monotonic())
                 with shared.get_lock():
                     shared[:]=[status['time'],status.get('voltage_v',0.),float(status['motion_allowed'])]
-                log.write(json.dumps(status)+'\n')
+                line=json.dumps(status)+'\n'
+                log.write(line)
+                written+=len(line)
+                if written>=LOG_MAX_BYTES:
+                    log.close()
+                    if _roll(log_path):
+                        written=0
+                    log=open(log_path,'a',buffering=1)
+                    if written:
+                        try:written=os.path.getsize(log_path)
+                        except OSError:written=0
                 try:q.put_nowait(status)
                 except queue.Full:pass
                 stop.wait(.2)
+        finally:
+            try:log.close()
+            except Exception:pass
     except Exception as exc:
         with shared.get_lock():shared[:]=[time.monotonic(),0.,0.]
         try:q.put_nowait(dict(time=time.monotonic(),fault=str(exc),motion_allowed=False,stop_latched=True,battery_percent=None))
