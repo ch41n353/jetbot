@@ -232,6 +232,20 @@ direction the last one was heading, nudged a little to the side - never a sharp
 elbow. Spreading a big change of direction across four gentle points is always
 better than one hard corner, even when the long way round looks slower.
 
+When the instruction says HOW to get there -- between two things, round one
+side, along a wall -- that is part of the job and not a decoration. Put the
+route where it says, and say in the note if you could not.
+
+To pass between two things, aim at the MIDPOINT of their two contact pixels
+and carry on to the object from there. That is a pixel you can find; the gap
+in centimetres is not something one photograph can tell you.
+
+Never decide a gap is too narrow to use. You cannot measure it -- you have no
+scale from a single image -- and the robot can: it checks every leg against
+the width it actually needs and refuses one that does not fit. A gap you route
+through and the robot rejects costs one look. A gap you refuse on its behalf
+costs the instruction, and it is usually wider than it appears in the picture.
+
 Do not drive straight at something and turn aside at the last moment, and do
 not clip past it. The robot refuses any leg that passes close to something you
 have listed, so a route that just grazes an obstacle is not driven at all - it
@@ -292,28 +306,38 @@ What route_pixels should be then depends on whether you have been here before:
     last one did not. Keep going until the object comes back into view or the
     route runs out.
 
-    This is the case the drawing exists for. Losing sight of the object is not
-    losing the plan: the crosses are still on the carpet in front of you, and
-    following them is what brings the object back into view. Staying on them
-    matters most exactly when you cannot see what you are heading for.
+    This is the case the drawing exists for, and it is a reference, not a
+    rail. Losing sight of the object does not mean losing the thread: the
+    crosses show the direction that was being taken, and heading that way is
+    what brings the object back into view. Use them for the direction and for
+    which side of things to pass. Where this picture offers a better line to
+    what the instruction asks for, take the better line.
 
 last_time - sometimes given to you. It is a route that has not been driven
 yet, carried into the photograph you are looking at now. Usually it is the one
-you returned for the PREVIOUS photograph. Sometimes it was drawn by the person
-operating the robot, which is them showing you the way they want this done --
-follow the line they drew unless this picture shows it running into something,
-and then bend it round rather than throwing it away. You get it twice: drawn in the picture as
-numbered crosses joined by a line, and as the same pixels in last_time. The
-drawing and the numbers are the same points; trust either.
+you returned for the PREVIOUS photograph; sometimes the person operating the
+robot drew it. You get it twice: drawn in the picture as numbered crosses
+joined by a line, and as the same pixels in last_time. The drawing and the
+numbers are the same points; trust either.
 
 Where the goal was is marked too -- a star if it is still in this picture, and
 an arrow to the edge with the bearing written beside it if it is not.
 
-Treat it as your own notes, not as an order: keep what this picture still
-supports and change what it does not. But it is the only record of what you
-decided last time, so continuing it is usually right. If you chose to come at
-something from one side, that choice is in the shape of those points and
-nowhere else -- start again from scratch and it is gone.
+It is a REFERENCE, never an order. THE INSTRUCTION ALWAYS WINS. Read the
+instruction first and work out from this picture what it asks for; only then
+look at the old line, and use it for what it is good at -- the direction that
+was being taken, which side of something was being passed, an approach chosen
+for a reason you can no longer see. Where the old line serves the instruction,
+continue it. Where it does not, leave it and say so in the note.
+
+Two things in particular do not justify keeping it. If the instruction has
+changed, that line was drawn for a different request and is no longer evidence
+of what is wanted. If following it would not do what is being asked now, it is
+simply the wrong line -- obstacle or no obstacle.
+
+What it is genuinely good for: if you chose to come at something from one
+side, that choice is in the shape of those points and nowhere else, and
+starting from scratch loses it.
 
 Obstacles are not in it. You are looking at the floor and can see them for
 yourself, which is better than a remembered position; list them afresh every
@@ -886,8 +910,17 @@ def recognize(image, instruction, prior=None, timeout=20.):
     ok, encoded = cv2.imencode('.jpg', annotate(image, prior))
     if not ok:
         raise Stop('could not encode the camera frame')
-    body = dict(model=MODEL, reasoning=dict(effort='none'), store=False,
-                max_output_tokens=600, instructions=PROMPT,
+    # Effort is settable so it can be measured rather than argued about.
+    # 'none' is the default because a FLOW look is issued every second and the
+    # wheels wait on it; whether that is the right trade for a one-shot ASK is
+    # a different question, and the answer should come from a comparison.
+    effort = os.environ.get('JETBOT_REASONING_EFFORT', 'none')
+    body = dict(model=MODEL, reasoning=dict(effort=effort), store=False,
+                # Reasoning tokens come out of this budget, so a cap tuned
+                # for no reasoning truncates the answer the moment there is
+                # any. The route is a few hundred tokens either way.
+                max_output_tokens=600 if effort == 'none' else 4000,
+                instructions=PROMPT,
                 input=[dict(role='user', content=[
                     dict(type='input_text', text=json.dumps(
                         dict(instruction=instruction, last_time=prior) if prior
@@ -903,6 +936,11 @@ def recognize(image, instruction, prior=None, timeout=20.):
     request = urllib.request.Request(
         'https://api.openai.com/v1/responses', data=json.dumps(body).encode(),
         headers={'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key})
+    # Thinking takes wall-clock time: measured on this robot, 4.5 s at 'none'
+    # and 11.4 s at 'low'. A timeout tuned for no reasoning simply cancels the
+    # call, which reads as a model failure and is not one.
+    if effort != 'none':
+        timeout = max(timeout, 90.)
     with urllib.request.urlopen(request, timeout=timeout) as reply:
         raw = json.load(reply)
     if raw.get('status') != 'completed':

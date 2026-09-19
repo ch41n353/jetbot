@@ -13,6 +13,12 @@ import time
 from route_geometry import StraightRoute, ProgressGuard
 from braking import braking_distance, SettlingCheck
 
+# A camera that stops producing frames must not stall the caller. The interval
+# guard below can only fire once a new frame actually arrives, so bound the wait
+# itself. Powered motion is already held to the tighter .18 lease budget; this
+# only governs the pre-powered phase, where a half second means a dead feed.
+FRAME_STALL_LIMIT_SECONDS = .5
+
 
 def load_json(path):
     with open(path) as source:
@@ -88,14 +94,21 @@ def execute(plan, route, log, predictive_braking=False, feature_budget=250, atti
         if getattr(timeline, 'route_reference_up', None) is None:
             timeline.route_reference_up = timeline.up.copy()
         initial_up = timeline.route_reference_up
+        stale_since = None
         while True:
             current, t1, a1 = frame(timeline, settled=False)
             now = time.monotonic()
             if last_command is not None and now - last_command > .18:
                 raise RuntimeError('Control update exceeded lease budget')
             if t1 <= t0:
+                if stale_since is None:
+                    stale_since = now
+                elif now - stale_since > FRAME_STALL_LIMIT_SECONDS:
+                    raise RuntimeError('No new camera frame within %g ms'
+                                       % (FRAME_STALL_LIMIT_SECONDS*1e3))
                 time.sleep(.005)
                 continue
+            stale_since = None
             dt = t1 - t0
             if not 0 < dt <= .18:
                 raise RuntimeError('Camera interval exceeded 180 ms')

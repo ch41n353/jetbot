@@ -209,7 +209,15 @@ class SearchTests(unittest.TestCase):
                 if command=='stop':actions.append('stop');epoch[0]+=1;return {}
                 status=dict(session_id='test',control_epoch=epoch[0],healthy=True,
                             motion_enabled=True,motor={'output':[0,0]})
-                if command=='observation':status.update(time=time.monotonic(),jpeg_base64=encoded)
+                if command=='observation':
+                    # The capture metadata is this dict, and capture_attitude
+                    # reads imu_samples back out of it to fix camera gravity.
+                    # Without them the floor projection raises, range falls back
+                    # to infinity and the approach diverts into a relocation.
+                    now=time.monotonic()
+                    status.update(time=now,jpeg_base64=encoded,
+                        imu_samples=[dict(time=now-.2+.025*i,acceleration=[0.,0.,-9.80665],
+                                          gyro=[0.,0.,0.],gyro_units='rad/s') for i in range(9)])
                 return status
             def turn(*args,**kwargs):
                 actions.append('turn');epoch[0]+=1
@@ -226,9 +234,17 @@ class SearchTests(unittest.TestCase):
                 if cancel:epoch[0]+=1
                 return dict(answer=dict(target_visible=len(calls)>1 and found,
                     target_box=dict(x0=300,y0=200,x1=340,y1=240),contact_pixel=dict(x=320,y=240)))
+            # A frozen timestamp models a camera that never delivers another
+            # frame, and route_executor waits for one newer than the last. Step
+            # the stub clock on every call, under the 180 ms interval guard and
+            # behind the wall clock, which braking treats as the frame's age.
+            clock=[time.monotonic()-.02]
+            def stub_frame(*args,**kwargs):
+                clock[0]=min(time.monotonic(),clock[0]+.01)
+                return (image,clock[0],{})
             with patch.dict(os.environ,{'OPENAI_API_KEY':'test-only'}), \
                  patch('point_controller.call',side_effect=call), \
-                 patch('point_controller.frame',return_value=(image,time.monotonic(),{})), \
+                 patch('point_controller.frame',side_effect=stub_frame), \
                  patch('point_controller.FloorTracker') as tracker, \
                  patch('state_estimator.AttitudeTimeline'), \
                  patch('async_scene.request_scene',side_effect=recognize), \
@@ -259,6 +275,12 @@ class SearchTests(unittest.TestCase):
                     return (rot,-rot.dot(shift),
                             dict(residual_cm=.05,yaw_variance=np.radians(.2)**2))
                 tracker.return_value.motion.side_effect=measured_motion
+                # The floor tracker is a mock, so its projection needs stubbing
+                # too. Without this floor.ground returns a mock, the hypot over
+                # it raises, range falls back to infinity and the run diverts
+                # into a relocation drive instead of reporting arrival.
+                tracker.return_value.ground.side_effect=(
+                    lambda points,attitude=None:np.array([[0.,20.]]*len(points)))
                 result=execute(plan,os.path.join(directory,'result.json'))
                 with open(result['checkpoint_path']) as source:
                     result['_test_checkpoint']=json.load(source)

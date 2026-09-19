@@ -625,6 +625,7 @@ class Bench(object):
         # said in, plus where the robot has moved since. Carried into the next
         # ask so each look is not blind to what has left the picture.
         self.memory = None
+        self.live_drawn = False
         self.since = [0., 0., 0.]
         # 'floor' is the metric bird's-eye; 'camera' is the raw photograph.
         # Drawing on the photograph is the only way to see whether a route
@@ -639,7 +640,7 @@ class Bench(object):
         # `pose_heading` is the IMU reading when the pose was last recorded, so
         # the stream can carry the heading forward from its own observation and
         # turn smoothly instead of in steps.
-        self.live_route = []
+        self._live_route = []
         self.live_pose = [0., 0., 0.]
         self.pose_heading = None
         # A mission drives for minutes, so it runs on its own thread and the
@@ -667,6 +668,21 @@ class Bench(object):
                 'armed' if supply.get('motion_allowed') else 'BLOCKED')
         except Exception as exc:
             return 'service: %s' % exc
+
+    # live_route is armed from a dozen places -- every loop, every turn, every
+    # clear -- and only one of them is the operator drawing. Tracking that with
+    # a flag each site had to remember to set is how this file produced the same
+    # class of bug three times, so the flag rides on the assignment: arming a
+    # route clears it and project() alone sets it again afterwards. A rebase is
+    # the one case that must carry it across, and does so explicitly.
+    @property
+    def live_route(self):
+        return self._live_route
+
+    @live_route.setter
+    def live_route(self, spots):
+        self._live_route = spots
+        self.live_drawn = False
 
     def on_view(self, spot, mode=None):
         """Floor position as a canvas pixel, or None when it is off the view."""
@@ -745,10 +761,27 @@ class Bench(object):
             out['alt_hazards'] = []
         return out
 
-    def capture(self):
-        image, _ = self.robot.frame()
+    def restage(self, image):
+        """Adopt `image` as the still picture behind both views.
+
+        One method because seven places take a fresh photograph, and each has
+        to do the same three things: keep the frame, rebuild the bird's-eye
+        warp, and bump the token the page watches. Sites doing two of the three
+        are why the top-down sat frozen for a whole run while the camera pane
+        moved beside it -- two of them rebuilt the warp and never bumped the
+        token, so the page was never told to reload the picture.
+
+        The warp used to be skipped whenever the camera was the selected view,
+        on the grounds that it was not on screen. Both views are on screen now,
+        so it always is.
+        """
         self.frame = image
         self.view = self.warp.apply(image)
+        self.frame_token += 1
+
+    def capture(self):
+        image, _ = self.robot.frame()
+        self.restage(image)
         self.heading = 0.
         self.lines = []
         self.live_route = []
@@ -808,10 +841,7 @@ class Bench(object):
         def watch(image):
             # Show each photograph as it is taken. A sweep is a minute of
             # turning, and the panel is the only way to see what it is seeing.
-            self.frame = image
-            if self.view_mode != 'camera':
-                self.view = self.warp.apply(image)
-            self.frame_token += 1
+            self.restage(image)
 
         def record(event, **fields):
             if self.abort.is_set():
@@ -1033,16 +1063,7 @@ class Bench(object):
             if now - last_issue >= every and len(pending) < FLOW_MAX_IN_FLIGHT:
                 try:
                     image, _ = self.robot.frame()
-                    self.frame = image
-                    if self.view_mode != 'camera':
-                        # /api/frame serves the warp in floor view, so setting
-                        # only self.frame leaves that panel on a stale picture
-                        # for the whole run.
-                        self.view = self.warp.apply(image)
-                    # The page only reloads the still picture when this changes.
-                    # Without it the left panel freezes on whatever was there
-                    # when the run began, which looks exactly like a hung feed.
-                    self.frame_token += 1
+                    self.restage(image)
                 except Exception as exc:
                     self.say('lost the camera: %s' % exc)
                     break
@@ -1274,9 +1295,7 @@ class Bench(object):
                 break
             try:
                 image, _ = self.robot.frame()
-                self.frame = image
-                if self.view_mode != 'camera':
-                    self.view = self.warp.apply(image)
+                self.restage(image)
             except Exception as exc:
                 self.say('cycle %d: no picture (%s)' % (cycle + 1, exc))
                 break
@@ -1617,7 +1636,7 @@ class Bench(object):
                             prior.get('since_then', '')))
                 if target_was:
                     self.say('  the goal was %s' % target_was['where'])
-        if prior is None and self.live_route:
+        if prior is None and self.live_route and self.live_drawn:
             # A route drawn by hand is a plan too. It is on the carpet in front
             # of the robot in this very frame, it is the operator saying which
             # way they want this done, and until now the model never saw it --
@@ -1737,7 +1756,12 @@ class Bench(object):
         self.live_route = list(widened)
         self.live_pose = [0., 0., 0.]
         self.pose_heading = self.imu_heading()
-        self.memory = dict(target=target, route=list(widened),
+        # The model's own route, not `widened`. The widened one has been
+        # pushed out for clearance and had its corners cut, so handing it back
+        # returns twice the points it gave and a shape it did not choose. The
+        # instruction is stored with it so that changing the instruction
+        # retires the plan instead of silently inheriting it.
+        self.memory = dict(target=target, route=list(route),
                            obstacles=list(obstacles))
         self.since = [0., 0., 0.]     # the memory is now in this frame
         self.live_obstacles = list(obstacles)
@@ -1790,6 +1814,16 @@ class Bench(object):
         # Arm the live overlay with what has just been drawn, so the stream
         # shows the route on the carpet before anything is driven.
         self.live_route = list(spots)
+        self.live_drawn = bool(spots)
+        if not spots:
+            # CLEAR comes through here with an empty list. It used to empty the
+            # canvas and leave the remembered plan untouched, so the view went
+            # blank and the model still received the whole previous route --
+            # an operator staring at an empty screen with every reason to think
+            # they were asking cold.
+            self.memory = None
+            self.live_obstacles = []
+            self.say('cleared: the model will be asked with no prior route')
         self.live_pose = [0., 0., 0.]
         self.pose_heading = self.imu_heading() if spots else None
         return spots, total
@@ -1849,7 +1883,9 @@ class Bench(object):
             # drawn trajectory and the obstacle circles stay where they were on
             # screen while the picture rotates underneath them, which is the
             # opposite of reprojection.
+            was_drawn = self.live_drawn
             self.live_route = [spot for spot in fetch.rebase(self.live_route, moved)]
+            self.live_drawn = was_drawn
             self.live_obstacles = list(zip(
                 [label for label, _ in self.live_obstacles],
                 fetch.rebase([spot for _, spot in self.live_obstacles], moved)))
@@ -1933,10 +1969,7 @@ class Bench(object):
         ok, encoded = cv2.imencode('.jpg', image)
         if ok:
             self.strip.append(encoded.tobytes())
-        self.frame = image
-        if self.view_mode != 'camera':
-            self.view = self.warp.apply(image)
-        self.frame_token += 1
+        self.restage(image)
         return drawn
 
     def check_reprojection(self, degrees):
@@ -2143,16 +2176,12 @@ class Bench(object):
             image, _ = self.robot.frame()
         except Exception:
             return
-        self.frame = image
-        if self.view_mode != 'camera':
-            self.view = self.warp.apply(image)   # the warp is not free; skip it
-                                                 # when it is not on screen
+        self.restage(image)
 
     def capture_after(self):
         try:
             image, _ = self.robot.frame()
-            self.frame = image
-            self.view = self.warp.apply(image)
+            self.restage(image)
         except Exception as exc:
             self.say('could not refresh the picture: %s' % exc)
         return self.state(frame=True)
@@ -2262,7 +2291,9 @@ class Bench(object):
         # this drive, so it all moves -- not just the waypoints. Leaving the
         # obstacles behind drew their circles at pre-drive screen positions,
         # which after 30 cm of travel is very visibly wrong.
+        was_drawn = self.live_drawn
         self.live_route = list(moved)
+        self.live_drawn = was_drawn
         self.live_obstacles = list(zip(
             [label for label, _ in self.live_obstacles],
             fetch.rebase([spot for _, spot in self.live_obstacles], pose)))

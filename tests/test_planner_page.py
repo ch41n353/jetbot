@@ -352,7 +352,8 @@ class DrawnPriorTests(unittest.TestCase):
 
     def test_a_drawn_route_is_offered_when_there_is_no_remembered_one(self):
         text = self.source()
-        self.assertIn('if prior is None and self.live_route:', text,
+        self.assertIn('if prior is None and self.live_route and self.live_drawn:',
+                      text,
                       'a hand-drawn route is never sent to the model')
 
     def test_the_remembered_plan_still_wins(self):
@@ -362,10 +363,99 @@ class DrawnPriorTests(unittest.TestCase):
         # recoverable at all.
         text = self.source()
         remembered = text.index("prior = fetch.recall(self.robot, self.memory")
-        drawn = text.index('if prior is None and self.live_route:')
+        drawn = text.index('if prior is None and self.live_route and self.live_drawn:')
         self.assertLess(remembered, drawn,
                         'the drawn route is consulted before the remembered '
                         'plan; it would mask target_was')
+
+
+class ClearAndProvenanceTests(unittest.TestCase):
+    """CLEAR must clear what is sent, and a leftover must not pose as a drawing.
+
+    Two faults that reached the operator together. CLEAR emptied the canvas and
+    left self.memory untouched, so a blank screen still sent the model the
+    whole previous route -- and the fallback that feeds a hand-drawn route
+    could not tell a drawing from the route ASK GPT had just armed, so a
+    changed instruction silently inherited the shape planned for the old one.
+    """
+
+    def source(self):
+        with open(os.path.join(ROOT, 'local_nav/planner_demo.py')) as handle:
+            return handle.read()
+
+    def test_clearing_the_canvas_clears_the_prior(self):
+        text = self.source()
+        block = text[text.index('def project(self, points):'):]
+        block = block[:block.index('\n    def ')]
+        self.assertIn('self.memory = None', block,
+                      'CLEAR empties the drawing but still sends the '
+                      'remembered route to the model')
+
+    def test_arming_a_route_drops_its_provenance(self):
+        # The flag rides on the assignment so the dozen sites that arm a route
+        # cannot forget it; only the setter may touch _live_route.
+        text = self.source()
+        self.assertIn('def live_route(self, spots):', text)
+        self.assertIn('self.live_drawn = False', text)
+        writes = text.count('self._live_route = ')
+        self.assertEqual(writes, 2,
+                         'something assigns _live_route directly and bypasses '
+                         'the provenance reset')
+
+    def test_a_rebase_keeps_whoever_drew_it(self):
+        # Moving a route into a new frame does not change who drew it, and the
+        # setter would otherwise quietly reclassify it as the model's.
+        text = self.source()
+        self.assertEqual(text.count('was_drawn = self.live_drawn'), 2,
+                         'a rebase loses the drawn flag')
+        self.assertEqual(text.count('self.live_drawn = was_drawn'), 2)
+
+    def test_the_model_s_own_plan_is_remembered_not_the_widened_one(self):
+        # Storing `widened` hands back a shape the model did not choose, at
+        # roughly twice the points, and it reads as its own intent.
+        text = self.source()
+        self.assertIn('self.memory = dict(target=target, route=list(route),',
+                      text,
+                      'ASK GPT remembers the widened route again')
+
+
+class RestageTests(unittest.TestCase):
+    """Taking a new photograph always does all three things.
+
+    Keeping the frame, rebuilding the bird's-eye warp and bumping the token the
+    page watches are one action, and seven places did it by hand. Two rebuilt
+    the warp without bumping the token, so the top-down picture sat frozen for
+    an entire run while the camera pane moved beside it -- which looks exactly
+    like a hung feed and is not one.
+
+    The warp was also skipped whenever the camera was the selected view, on the
+    grounds that the plan view was not on screen. Both views are on screen now.
+    """
+
+    def source(self):
+        with open(os.path.join(ROOT, 'local_nav/planner_demo.py')) as handle:
+            return handle.read()
+
+    def test_only_restage_rebuilds_the_view(self):
+        text = self.source()
+        self.assertIn('def restage(self, image):', text)
+        self.assertEqual(text.count('self.view = self.warp.apply('), 1,
+                         'a site rebuilds the warp by hand and will forget '
+                         'either the frame or the token')
+
+    def test_restage_does_all_three(self):
+        text = self.source()
+        body = text[text.index('def restage(self, image):'):]
+        body = body[:body.index('\n    def ')]
+        for part in ('self.frame = image', 'self.warp.apply(image)',
+                     'self.frame_token += 1'):
+            self.assertIn(part, body, 'restage() omits %s' % part)
+
+    def test_the_warp_is_no_longer_skipped_for_the_unselected_view(self):
+        # Both pictures are always visible, so "not on screen" is never true.
+        self.assertNotIn("if self.view_mode != 'camera':", self.source(),
+                         'the plan view is still rebuilt only when selected, '
+                         'so it freezes whenever the camera view is')
 
 
 class PriorKeyTests(unittest.TestCase):
