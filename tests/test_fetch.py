@@ -418,7 +418,7 @@ class MemoryTests(unittest.TestCase):
         class Reply(object):
             def __enter__(self): return self
             def __exit__(self, *a): return False
-            def read(self): return b'{}'
+            def read(self): return json.dumps(reply).encode()
 
         def capture(request, timeout=None):
             sent['body'] = json.loads(request.data.decode())
@@ -478,9 +478,6 @@ class MultiStepTests(unittest.TestCase):
         self.assertIsNone(fetch.recall(robot(), dict(route=[], obstacles=[],
                                                      done=[]), [0., 0., 0.]))
 
-    def test_the_prompt_explains_when_to_call_it_finished(self):
-        self.assertIn('all_done - false while any step', fetch.PROMPT)
-        self.assertIn('already_reached', fetch.PROMPT)
 
 
 class TargetMemoryTests(unittest.TestCase):
@@ -535,8 +532,6 @@ class TargetMemoryTests(unittest.TestCase):
         self.assertIn('right', fetch.where_words(70.))
         self.assertEqual(fetch.where_words(3.), 'straight ahead')
 
-    def test_the_prompt_tells_the_model_to_turn_back_to_it(self):
-        self.assertIn('target_was is the important one', fetch.PROMPT)
 
 
 class InstructionTests(unittest.TestCase):
@@ -570,7 +565,7 @@ class InstructionTests(unittest.TestCase):
         class Reply(object):
             def __enter__(self): return self
             def __exit__(self, *a): return False
-            def read(self): return b'{}'
+            def read(self): return json.dumps(reply).encode()
 
         def capture(request, timeout=None):
             sent['body'] = json.loads(request.data.decode())
@@ -621,10 +616,6 @@ class TurnRequestTests(unittest.TestCase):
             self.assertNotIn(name, ('drive', 'drive_cm', 'speed', 'action',
                                     'forward_cm'))
 
-    def test_the_prompt_says_how_to_tell_that_driving_is_hopeless(self):
-        # The model cannot judge centimetres, so the rule has to be in pixels;
-        # phrasing it as a distance measured as no change at all.
-        self.assertIn('BOTTOM THIRD', fetch.PROMPT)
 
 
 class ApproachShapeTests(unittest.TestCase):

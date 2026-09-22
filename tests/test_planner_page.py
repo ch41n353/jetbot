@@ -336,11 +336,6 @@ class UnseenGoalTests(unittest.TestCase):
                              'view; the model was told to keep planning '
                              'without a sighting')
 
-    def test_the_prompt_still_demands_a_route_without_a_sighting(self):
-        # If this instruction ever goes, the executor change above becomes
-        # pointless rather than wrong -- but silently.
-        import fetch
-        self.assertIn('DO NOT return an empty route', fetch.PROMPT)
 
 
 class DrawnPriorTests(unittest.TestCase):

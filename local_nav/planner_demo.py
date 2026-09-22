@@ -33,6 +33,7 @@ import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import explore
 import fetch
+import inspection_sequence
 
 PAGE = """<!doctype html><html><head><meta charset="utf-8">
 <title>Local planner bench</title><style>
@@ -761,6 +762,42 @@ class Bench(object):
             out['alt_hazards'] = []
         return out
 
+    def publish_snapshot(self, phase, route=None):
+        """Publish one immutable image/geometry pair at a planner boundary."""
+        previous = getattr(self, 'planner_snapshot', None)
+        if phase == 'stopped' and previous and route is None:
+            result = dict(previous)
+            result.update(phase=phase, status_time=time.time(), note=self.log().split('\n')[-1],
+                          retained_plan=True)
+        else:
+            if self.frame is None:
+                return
+            route = list(route or [])
+            camera = self.frame.copy()
+            floor = self.warp.apply(camera)
+            images = {}
+            for mode, image in [('camera', camera), ('floor', floor)]:
+                last = None
+                for index, spot in enumerate(route):
+                    pixel = self.to_pixel(spot[0], spot[1], mode)
+                    if pixel is None:
+                        last = None; continue
+                    here = tuple(int(v) for v in pixel)
+                    if last is not None:
+                        cv2.line(image, last, here, (255, 210, 90), 3)
+                    cv2.circle(image, here, 5, (255, 210, 90), -1)
+                    cv2.putText(image, str(index+1), (here[0]+7,here[1]-7),
+                                cv2.FONT_HERSHEY_PLAIN, 1, (255,210,90), 2)
+                    last = here
+                ok, encoded = cv2.imencode('.jpg', image)
+                if not ok: return
+                images[mode] = 'data:image/jpeg;base64,'+base64.b64encode(encoded).decode('ascii')
+            result = dict(phase=phase, image_time=getattr(self,"staged_at",time.time()), status_time=time.time(),
+                          note=getattr(self,'last_note',''), route_cm=route,
+                          images=images, retained_plan=False)
+        result['id'] = (previous or {}).get('id', 0)+1
+        self.planner_snapshot = result
+
     def restage(self, image):
         """Adopt `image` as the still picture behind both views.
 
@@ -776,8 +813,10 @@ class Bench(object):
         so it always is.
         """
         self.frame = image
+        self.staged_at = time.time()
         self.view = self.warp.apply(image)
         self.frame_token += 1
+        self.publish_snapshot("replanning" if self.running() else "stopped", [])
 
     def capture(self):
         image, _ = self.robot.frame()
@@ -1082,11 +1121,11 @@ class Bench(object):
                 if 'answer' in newest['holder']:
                     applied = newest['seq']
                     answer = newest['holder']['answer']
+                    from gpt_audit import plan_event
+                    plan_event(answer, 'applied', mode='flow', sequence=newest['seq'])
                     points, found, spot, moved = build(answer, newest['shot'])
-                    if memory:
-                        found = fetch.merge_obstacles(
-                            memory['obstacles'],
-                            self.since_pose(newest['shot'], world), found)
+                    # Each accepted observation replaces the obstacle set.
+                    # build() already compensates for motion since its image.
                     goal, obstacles = spot, found
                     self.last_note = str(answer.get('note', ''))[:120]
                     self.live_obstacles = list(obstacles)
@@ -1117,8 +1156,8 @@ class Bench(object):
                     if points:
                         points, _ = fetch.avoid(points, obstacles, goal)
                         if goal is not None:
-                            points = fetch.stop_short(points, goal,
-                                                      MISSION_STANDOFF_CM) or points
+                            points = fetch.clip_standoff(points, goal,
+                                                        MISSION_STANDOFF_CM)
                         points = fetch.cap_path(points, MISSION_COMMIT_CM) or points
                     route = points
                     memory = dict(route=list(planned), obstacles=list(obstacles),
@@ -1174,6 +1213,11 @@ class Bench(object):
                                 moved, len(pending),
                                 ', %d stale dropped' % stale if stale else ''))
                 elif 'error' in newest['holder']:
+                    if isinstance(newest['holder']['error'], fetch.PlannerHold):
+                        self.robot.halt()
+                        self.say('PLANNER HOLD: %s' % newest['holder']['error'].answer.get(
+                            'note', 'no supported route'))
+                        break
                     self.say('  a look failed: %s'
                              % str(newest['holder']['error'])[:60])
 
@@ -1184,6 +1228,7 @@ class Bench(object):
             self.live_route = list(route)
             self.live_pose = [0., 0., 0.]
             self.pose_heading = self.imu_heading()
+            self.publish_snapshot("executing", route)
 
             def record(event, **fields):
                 if event == 'pose':
@@ -1202,7 +1247,8 @@ class Bench(object):
                 """
                 for job in pending:
                     if (job['seq'] > applied and not job['thread'].is_alive()
-                            and 'answer' in job['holder']):
+                            and ('answer' in job['holder'] or isinstance(
+                                job['holder'].get('error'), fetch.PlannerHold))):
                         return True
                 return False
 
@@ -1305,6 +1351,9 @@ class Bench(object):
                               % (cycle + 1))
             try:
                 answer = fetch.recognize(self.frame, target, prior)
+            except fetch.PlannerHold as exc:
+                self.say('PLANNER HOLD: %s' % exc.answer.get('note', 'no supported route'))
+                break
             except fetch.Stop as exc:
                 self.say('cycle %d: the model could not be asked: %s'
                          % (cycle + 1, exc))
@@ -1487,7 +1536,10 @@ class Bench(object):
                              % (before - len(route), MISSION_STANDOFF_CM))
 
             widened, nudged = fetch.avoid(route, obstacles, goal)
-            widened = fetch.stop_short(widened, goal, MISSION_STANDOFF_CM) or widened
+            widened = fetch.clip_standoff(widened, goal, MISSION_STANDOFF_CM)
+            if not widened:
+                self.say('no safe route remains after standoff check; stopping')
+                break
             # Commit only a bounded distance before looking again, however far
             # the target is believed to be. A range read from a contact pixel
             # near the horizon can be wrong by a factor of three, and a standoff
@@ -1504,10 +1556,14 @@ class Bench(object):
                 self.say('  widened %d waypoint(s) to the clearance the wheels need'
                          % nudged)
             self.live_route = list(widened)
+            from gpt_audit import plan_event
+            plan_event(answer, 'controller_route', mode='mission', cycle=cycle+1,
+                       points_cm=widened, obstacles_cm=obstacles, goal_cm=goal)
             self.live_pose = [0., 0., 0.]
             self.pose_heading = self.imu_heading()
             self.frame_token += 1
 
+            self.publish_snapshot("executing", widened)
             legs = [0]
 
             def record(event, **fields):
@@ -1559,6 +1615,9 @@ class Bench(object):
             # meant the escape never fired and the give-up counter reset every
             # cycle -- nine looks in a row against one cable, going nowhere.
             if legs[0] == 0:
+                if goal is not None and math.hypot(*goal) <= MISSION_STANDOFF_CM + 15.:
+                    self.say('near target with no forward progress; stopping without recovery turn')
+                    break
                 # Nothing moved. Usually that means the robot has closed inside
                 # the keep-back distance of something, where every heading whose
                 # corridor still holds it is refused -- at 10 cm that is a cone
@@ -1599,6 +1658,7 @@ class Bench(object):
         self.live_route = []
         self.say('')
         self.say('mission %s' % ('complete' if reached else 'ended'))
+        self.publish_snapshot('stopped')
 
     def ask(self, target):
         """Let the model place the waypoints instead of the operator.
@@ -1657,6 +1717,11 @@ class Bench(object):
                          % len(prior.get('route_pixels') or []))
         try:
             answer = fetch.recognize(self.frame, target, prior)
+        except fetch.PlannerHold as exc:
+            self.live_route = []
+            self.memory = None
+            self.say('PLANNER HOLD: %s' % exc.answer.get('note', 'no supported route'))
+            return self.state(points=[])
         except fetch.Stop as exc:
             self.say('the model could not be asked: %s' % exc)
             return self.state()
@@ -1956,7 +2021,7 @@ class Bench(object):
         for index, spot in enumerate(spots):
             if spot is None or spot[1] <= 0.:
                 continue
-            place = self.robot.pixel(spot[0], spot[1])
+            place = self.to_pixel(spot[0], spot[1], view)
             if not place or not (0 <= place[0] < image.shape[1]
                                  and 0 <= place[1] < image.shape[0]):
                 continue
@@ -2032,7 +2097,7 @@ class Bench(object):
         for index, spot in enumerate(fetch.rebase(route, pose)):
             if spot[1] <= 0.:
                 continue
-            place = self.robot.pixel(spot[0], spot[1])
+            place = self.to_pixel(spot[0], spot[1], view)
             if not place or not (0 <= place[0] < image.shape[1]
                                  and 0 <= place[1] < image.shape[0]):
                 continue
@@ -2072,7 +2137,7 @@ class Bench(object):
         except Exception:
             return None
 
-    def overlay_route(self, image, heading_now=None):
+    def overlay_route(self, image, heading_now=None, view="camera"):
         """Draw the running route into a live frame, from where the robot is.
 
         The waypoints were placed on a photograph taken from somewhere the robot
@@ -2096,7 +2161,7 @@ class Bench(object):
             if spot[1] <= 0.:
                 previous = None
                 continue
-            place = self.robot.pixel(spot[0], spot[1])
+            place = self.to_pixel(spot[0], spot[1], view)
             if not place or not (0 <= place[0] < image.shape[1]
                                  and 0 <= place[1] < image.shape[0]):
                 previous = None
@@ -2115,7 +2180,7 @@ class Bench(object):
                     (8, 20), cv2.FONT_HERSHEY_PLAIN, 1.0, (255, 210, 90), 2)
         return image
 
-    def live_jpeg(self, width=None):
+    def live_jpeg(self, width=None, view="camera", metadata=None):
         """The newest camera frame, with the running route drawn into it.
 
         The service runs its own camera worker that grabs continuously, so an
@@ -2133,6 +2198,8 @@ class Bench(object):
             observation = fetch.call('observation', timeout=2.)
         except Exception:
             return None
+        if metadata is not None:
+            metadata['camera_time'] = observation.get('time')
         blob = observation.get('jpeg_base64')
         if not blob:
             return None
@@ -2143,12 +2210,14 @@ class Bench(object):
 
         width = STREAM_WIDTH if width is None else width
         drawing = bool(self.live_route)
-        if not width and not drawing:
+        if not width and not drawing and view == "camera":
             return jpeg          # the cheap path: hand the bytes straight on
 
         image = cv2.imdecode(np.frombuffer(jpeg, np.uint8), cv2.IMREAD_COLOR)
         if image is None:
             return jpeg
+        if view == "floor":
+            image = self.warp.apply(image)
         if drawing:
             samples = observation.get('imu_samples') or []
             heading = None
@@ -2157,7 +2226,7 @@ class Bench(object):
                     heading = self.robot.heading(samples[-1])
                 except Exception:
                     heading = None
-            self.overlay_route(image, heading)
+            self.overlay_route(image, heading, view)
         scale = float(width) / image.shape[1] if width else 1.
         if scale < 1.:
             image = cv2.resize(image, (int(width), int(round(image.shape[0] * scale))),
@@ -2371,7 +2440,7 @@ class Handler(BaseHTTPRequestHandler):
                              'multipart/x-mixed-replace; boundary=jetbotframe')
             self.end_headers()
             while True:
-                jpeg = bench.live_jpeg()
+                jpeg = bench.live_jpeg(view="floor" if "view=floor" in self.path else "camera")
                 if jpeg:
                     self.wfile.write(b'--jetbotframe\r\nContent-Type: image/jpeg\r\n')
                     self.wfile.write(('Content-Length: %d\r\n\r\n'
@@ -2394,6 +2463,11 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def do_GET(self):
+        if urlparse(self.path).path == '/api/inspection':
+            if not self._local():
+                return self._send(b'{"error":"local only"}')
+            return self._send(json.dumps(getattr(self.server.bench,
+                'inspection_result', {'status': 'idle'})).encode())
         if not self._local():
             return self._send(b'{"error":"local only"}')
         path = urlparse(self.path).path
@@ -2412,6 +2486,23 @@ class Handler(BaseHTTPRequestHandler):
                 view_mode=bench.view_mode, alt_mode=other,
                 alt_points=alt or [], alt_hazards=alt_hazards,
                 note=bench.last_note, frame_token=bench.frame_token)).encode())
+        if path == '/api/planner-snapshot':
+            bench = self.server.bench
+            if not bench.running() and getattr(bench, 'planner_snapshot', {}).get('phase') in ('executing','replanning'):
+                bench.publish_snapshot('stopped')
+            return self._send(json.dumps(getattr(self.server.bench, 'planner_snapshot', {'phase':'waiting','id':0})).encode())
+        if path == '/api/live.jpg':
+            view = 'floor' if 'view=floor' in self.path else 'camera'
+            metadata = {}
+            jpeg = self.server.bench.live_jpeg(width=0, view=view, metadata=metadata)
+            if not jpeg:
+                self.send_error(503, 'Live camera unavailable'); return
+            self.send_response(200)
+            self.send_header('Content-Type', 'image/jpeg')
+            self.send_header('Content-Length', str(len(jpeg)))
+            self.send_header('Cache-Control', 'no-store')
+            self.send_header('X-Camera-Time', str(metadata.get('camera_time', '')))
+            self.end_headers(); self.wfile.write(jpeg); return
         if path == '/api/stream.mjpg':
             return self._stream()
         if path.startswith('/api/step'):
@@ -2464,7 +2555,13 @@ class Handler(BaseHTTPRequestHandler):
         bench = self.server.bench
         path = urlparse(self.path).path
         if path == '/api/halt':          # never queues behind a running leg
-            return self._send(json.dumps(bench.halt()).encode())
+            stopped = bench.halt()
+            try:
+                import gpt_audit
+                gpt_audit.command(path, body)
+            except Exception as exc:
+                bench.say('stop command audit failed: %s' % exc)
+            return self._send(json.dumps(stopped).encode())
         if bench.running() and path not in ('/api/mission', '/api/search',
                                             '/api/flow'):
             # A mission owns the robot for minutes and runs on its own thread,
@@ -2477,8 +2574,12 @@ class Handler(BaseHTTPRequestHandler):
         if not bench.lock.acquire(False):
             return self._send(json.dumps(dict(log=bench.log() + '\nbusy')).encode())
         try:
+            import gpt_audit
+            gpt_audit.command(path, body)
             if path == '/api/capture':
                 out = bench.capture()
+            elif path == '/api/inspection':
+                out = inspection_sequence.launch(bench, body)
             elif path == '/api/turn':
                 out = bench.turn(float(body.get('degrees', 0.)))
             elif path == '/api/run':

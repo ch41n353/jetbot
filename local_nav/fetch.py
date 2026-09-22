@@ -117,8 +117,9 @@ POINT = {'type': 'object', 'additionalProperties': False,
 SCHEMA = {
     'type': 'object', 'additionalProperties': False,
     'required': ['goal', 'all_done', 'visible', 'contact_pixel', 'route_pixels',
-                 'obstacles', 'turn_degrees', 'note'],
+                 'obstacles', 'turn_degrees', 'note', 'motion'],
     'properties': {
+        'motion': {'type': 'string', 'enum': ['follow', 'turn', 'hold']},
         # What the instruction asked for, read back in the model's own words, so
         # a misread shows up in the log rather than in the wheels.
         'goal': {'type': 'string'},
@@ -143,220 +144,19 @@ SCHEMA = {
     },
 }
 
-PROMPT = """You are the eyes of a small floor robot. You are given an instruction in plain
-words and one photograph, and you answer about that photograph.
-
-First read the instruction.
-
-goal - what the robot is being sent to NOW, in your own words and few of them.
-
-An instruction can have more than one step: "reach the pink box then the can of
-nuts" is two. Report the step being worked on, which is the first one not yet
-reached. When the robot has already arrived somewhere, last_time tells you so in
-already_reached -- move on to the next step rather than going back to it.
-
-Anything in already_reached is finished with. The robot is standing next to it,
-so it will fill the picture and it will be in the way, and neither of those
-makes it the goal again. It is an obstacle now: list it under obstacles, and
-keep goal on the step still to come. Naming it as the goal again strands the
-robot beside it, driving nowhere.
-
-Everything else you report is about reaching the goal you named.
-
-all_done - false while any step of the instruction is still to come. True only
-when there is nothing left to reach, including the step the robot is arriving at
-right now. For a one-step instruction that means true as it arrives; for "the
-pink box then the can of nuts" it stays false at the pink box and becomes true
-at the can.
-
-Obstacles are always avoided, whatever the instruction says about them. The
-robot refuses to drive within a body's width of anything you list, so a route
-that ignores something on the floor is not driven, it just stops in front of
-it. If an instruction asks you to push through or ignore what is in the way,
-route around it anyway and say so in the note.
-
-The robot is 12 cm wide and it cannot squeeze through gaps. It sees the floor
-from just above it, so the bottom of the image is the carpet right in front of
-its wheels and the top is far away.
-
-That low viewpoint distorts size badly, and you cannot judge distance from one
-picture, so here is what the robot's own width looks like in THIS image at
-different heights. Measure gaps against it:
-
-  height in frame        robot's width     gap it can pass through
-  bottom edge               340 px            860 px  (wider than the picture)
-  a sixth of the way up     270 px            670 px  (wider than the picture)
-  a third of the way up     175 px            440 px
-  halfway up                 95 px            230 px
-  just above halfway         70 px            170 px
-
-Low in the picture the robot is enormous. Two things that look comfortably
-apart down there are not a gap it can drive between - it does not fit, and the
-route will be refused. Go around the whole group instead. Higher up, a gap can
-be real; check it against the widths above before you commit to it.
-
-Report:
-
-visible - whether the requested object is in this image.
-
-contact_pixel - the single pixel where that object meets the floor, at its
-horizontal centre. This is how the robot works out where the object is, so put
-it on the carpet at the base of the object, not on its body and not on the wall
-behind it.
-
-route_pixels - the path the robot should drive, as successive pixels ON THE
-CARPET. End at the object's contact pixel and stay on floor you can actually
-see.
-
-Start roughly ahead. The robot is already facing up the picture and cannot move
-sideways, so the FIRST point belongs low in the frame and near the middle. It
-need not be dead centre - lean it towards the object by all means - but keep it
-within about a sixth of the image width of the centre line. That much offset is
-a gentle steer of roughly 25 degrees, which the robot takes in its stride.
-
-Twice that far out and it has to stop and pivot on the spot before it moves at
-all, and the turn eats the run. So lean the first point, and save the real
-change of direction for the points after it.
-
-Go around obstacles in a smooth, wide arc - like steering around a traffic
-island, not like turning a corner. Begin bending away while the obstacle is
-still well ahead of you, hold the curve out wide as you pass it, and only come
-back towards the object once it is behind you. Space the points evenly along
-that curve so it reads as one continuous bend, five to eight of them: each
-point should be a small step on from the last, never a sudden change of
-direction. If you joined your points with a pencil it should look like one
-sweeping line, not a series of corners.
-
-Turn gradually, over several points. Each point should carry on roughly in the
-direction the last one was heading, nudged a little to the side - never a sharp
-elbow. Spreading a big change of direction across four gentle points is always
-better than one hard corner, even when the long way round looks slower.
-
-When the instruction says HOW to get there -- between two things, round one
-side, along a wall -- that is part of the job and not a decoration. Put the
-route where it says, and say in the note if you could not.
-
-To pass between two things, aim at the MIDPOINT of their two contact pixels
-and carry on to the object from there. That is a pixel you can find; the gap
-in centimetres is not something one photograph can tell you.
-
-Never decide a gap is too narrow to use. You cannot measure it -- you have no
-scale from a single image -- and the robot can: it checks every leg against
-the width it actually needs and refuses one that does not fit. A gap you route
-through and the robot rejects costs one look. A gap you refuse on its behalf
-costs the instruction, and it is usually wider than it appears in the picture.
-
-Do not drive straight at something and turn aside at the last moment, and do
-not clip past it. The robot refuses any leg that passes close to something you
-have listed, so a route that just grazes an obstacle is not driven at all - it
-stops dead in front of it. Give obstacles a wider berth than looks necessary;
-swinging too wide costs a little carpet, cutting it fine costs the whole run.
-
-This is the part that matters most - a straight line through a cable or a box
-is worse than no answer.
-
-obstacles - anything on the floor the robot would hit, each with the pixel where
-it meets the carpet. Include things your route steers around.
-
-turn_degrees - normally null. Use it when driving is not the answer: something
-is too close to steer around, the object is off to one side or behind, or the
-way ahead is simply blocked. Give the rotation you want in degrees, negative
-for left and positive for right, and the robot will turn on the spot and take a
-new picture.
-
-It turns part of your angle at a time - about 30 degrees - then looks again and
-asks you afresh, so it can stop the moment open floor appears instead of
-committing blind to a heading chosen from one frame. Ask for the whole rotation
-you want each time; you will be asked again until it is done or no longer
-needed.
-
-Here is how to tell that driving is hopeless, since you cannot judge distance:
-
-  Look at the thing nearest the robot that you are avoiding. If its contact
-  pixel is in the BOTTOM THIRD of the picture, and it is anywhere near the
-  middle left-to-right, it is too close to steer around. There is no route.
-  Ask for a turn instead.
-
-That is not a suggestion about style - a route past something that close is
-refused outright and the robot stands still, wasting the look. Turn far enough
-to put the thing behind you and leave open floor ahead: for something that
-close that usually means 90 degrees or more, not 20. Then you get a fresh
-picture and can drive.
-
-Do not use it when a clear route exists - turning costs a look and gains
-nothing when the robot could be driving. Keep it within about 120 degrees
-either way.
-
-Give pixels only, never distances: you cannot judge scale from one image, and the
-robot measures distance itself. It checks your route and may reject it.
-
-If you cannot see the object, or cannot see where it meets the floor, say
-visible=false with contact_pixel=null.
-
-What route_pixels should be then depends on whether you have been here before:
-
-  * With no last_time, return an empty route. You have nothing to go on and
-    guessing is worse than saying so.
-
-  * With a last_time, DO NOT return an empty route. The object was in sight a
-    moment ago and the robot has only moved a little since; it is most likely
-    just outside the frame or behind something. Carry on along the route you
-    gave before -- it is drawn in this picture for you as numbered crosses
-    joined by a line -- correcting it for anything this picture shows that the
-    last one did not. Keep going until the object comes back into view or the
-    route runs out.
-
-    This is the case the drawing exists for, and it is a reference, not a
-    rail. Losing sight of the object does not mean losing the thread: the
-    crosses show the direction that was being taken, and heading that way is
-    what brings the object back into view. Use them for the direction and for
-    which side of things to pass. Where this picture offers a better line to
-    what the instruction asks for, take the better line.
-
-last_time - sometimes given to you. It is a route that has not been driven
-yet, carried into the photograph you are looking at now. Usually it is the one
-you returned for the PREVIOUS photograph; sometimes the person operating the
-robot drew it. You get it twice: drawn in the picture as numbered crosses
-joined by a line, and as the same pixels in last_time. The drawing and the
-numbers are the same points; trust either.
-
-Where the goal was is marked too -- a star if it is still in this picture, and
-an arrow to the edge with the bearing written beside it if it is not.
-
-It is a REFERENCE, never an order. THE INSTRUCTION ALWAYS WINS. Read the
-instruction first and work out from this picture what it asks for; only then
-look at the old line, and use it for what it is good at -- the direction that
-was being taken, which side of something was being passed, an approach chosen
-for a reason you can no longer see. Where the old line serves the instruction,
-continue it. Where it does not, leave it and say so in the note.
-
-Two things in particular do not justify keeping it. If the instruction has
-changed, that line was drawn for a different request and is no longer evidence
-of what is wanted. If following it would not do what is being asked now, it is
-simply the wrong line -- obstacle or no obstacle.
-
-What it is genuinely good for: if you chose to come at something from one
-side, that choice is in the shape of those points and nowhere else, and
-starting from scratch loses it.
-
-Obstacles are not in it. You are looking at the floor and can see them for
-yourself, which is better than a remembered position; list them afresh every
-time.
-
-target_was is the important one. It is where the goal was the last time you
-could see it, carried through every turn since, and it is given as a direction
-rather than a pixel because a direction survives leaving the frame. When
-still_in_view is false the goal is simply not in this photograph -- that is not
-a reason to give up or to start hunting something else. Use `where` and
-`bearing_degrees`: if it says the goal is off to your left or behind you, ask
-for a turn of about that many degrees, and you will see it again. Negative is
-left, positive is right, the same convention as turn_degrees.
-
-Keep note under 15 words: what you saw, or what your route steers around."""
+with open(os.path.join(ROOT, 'local_nav/prompts/trajectory-20260920.txt')) as _prompt_file:
+    PROMPT = _prompt_file.read()
 
 
 class Stop(Exception):
     """A condition the robot must not drive through."""
+
+
+class PlannerHold(Stop):
+    """Explicit no-motion result; raised before old-route fallback can run."""
+    def __init__(self, answer):
+        self.answer = answer
+        super().__init__('planner hold: ' + str(answer.get('note', 'no supported route')))
 
 
 def call(action, timeout=2., **fields):
@@ -941,14 +741,34 @@ def recognize(image, instruction, prior=None, timeout=20.):
     # call, which reads as a model failure and is not one.
     if effort != 'none':
         timeout = max(timeout, 90.)
-    with urllib.request.urlopen(request, timeout=timeout) as reply:
-        raw = json.load(reply)
+    from gpt_audit import Capture
+    audit = Capture(body)
+    if audit.path:
+        ok, clean = cv2.imencode(".jpg", image)
+        if ok:
+            (audit.path / "clean.jpg").write_bytes(clean.tobytes())
+    try:
+        with urllib.request.urlopen(request, timeout=timeout) as reply:
+            response_bytes = reply.read()
+        audit.response(response_bytes)
+        raw = json.loads(response_bytes)
+    except Exception as exc:
+        audit.event('error', error=str(exc))
+        raise
     if raw.get('status') != 'completed':
         raise Stop('recognizer returned %s' % raw.get('status'))
     text = ''.join(part.get('text', '')
                    for item in raw.get('output', []) if item.get('type') == 'message'
                    for part in item.get('content', []) if part.get('type') == 'output_text')
     answer = json.loads(text)
+    if audit.path:
+        answer['_audit_path'] = str(audit.path)
+    if answer.get('motion') == 'hold':
+        raise PlannerHold(answer)
+    if answer.get('motion') == 'turn':
+        answer['route_pixels'] = []
+    elif answer.get('motion') == 'follow':
+        answer['turn_degrees'] = None
     pixel = answer.get('contact_pixel')
     if answer.get('visible') and isinstance(pixel, dict):
         x, y = float(pixel['x']), float(pixel['y'])
@@ -1369,6 +1189,36 @@ def stop_short(route, goal, standoff):
     return kept
 
 
+def clip_standoff(route, goal, standoff):
+    """Clip at first entry into the target disk without inventing a new approach.
+
+    Unlike stop_short, this is safe on an already-trimmed or widened route.
+    """
+    if goal is None:
+        return list(route)
+    if math.hypot(*goal) <= standoff:
+        return []
+    kept, previous = [], (0., 0.)
+    for point in route:
+        dx, dz = point[0]-previous[0], point[1]-previous[1]
+        ox, oz = previous[0]-goal[0], previous[1]-goal[1]
+        a = dx*dx + dz*dz
+        b = 2*(ox*dx + oz*dz)
+        c = ox*ox + oz*oz - standoff*standoff
+        disc = b*b - 4*a*c
+        if a > 1e-12 and disc >= 0:
+            t = (-b-math.sqrt(disc))/(2*a)
+            if -1e-8 <= t <= 1+1e-8:
+                t = min(1., max(0., t))
+                stop = (previous[0]+t*dx, previous[1]+t*dz)
+                if math.hypot(stop[0]-previous[0], stop[1]-previous[1]) > 1e-6:
+                    kept.append(stop)
+                return kept
+        kept.append(point)
+        previous = point
+    return kept
+
+
 def round_corners(route, keep_last=True, passes=2):
     """Cut the corners off a route so it reads as an arc, not a dog-leg.
 
@@ -1433,6 +1283,15 @@ def avoid(route, obstacles, goal=None):
                 if goal is None
                 or math.hypot(spot[0] - goal[0], spot[1] - goal[1]) > GOAL_ADJACENT_CM]
     if not relevant or not route:
+        return list(route), 0
+
+    # Repair padding is only room for smoothing a necessary detour. It is not
+    # a second collision envelope: do not invent lateral steering for a route
+    # whose complete segments already satisfy the actual clearance limit.
+    limit = OBSTACLE_RADIUS_CM + CORRIDOR_HALF_CM
+    legs = [(0., 0.)] + list(route)
+    if all(_near_segment(start, end, spot)[1] >= limit
+           for start, end in zip(legs, legs[1:]) for spot in relevant):
         return list(route), 0
 
     def push(point, spot):
