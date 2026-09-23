@@ -736,6 +736,7 @@ class Bench(object):
         out = dict(log=self.log(), heading=self.heading, speed=self.robot.speed,
                    power=self.power(), view_mode=self.view_mode,
                    strip=len(self.strip), note=self.last_note,
+                   frame_token=self.frame_token,
                    mode='MOTION ENABLED' if self.enable_motion else 'PREVIEW ONLY')
         # Hand back whatever is armed, so a reloaded page draws the same thing
         # the live stream is drawing, and so a turn moves the obstacle circles
@@ -942,17 +943,50 @@ class Bench(object):
         time.sleep(.4)
         return self.state(mission=True)
 
-    def launch(self, target, seconds=MISSION_SECONDS):
+    def launch(self, target, seconds=MISSION_SECONDS, initial_plan=None,
+               seed_frame_token=None):
         """Start a mission on its own thread; the page polls /api/progress.
 
         `seconds` of None means do not plan recurrently: take one look, drive
         what it planned, and stop.
+
+        `initial_plan` is a high-level trajectory drawn on the currently staged
+        camera frame.  It replaces only the first GPT request; after that first
+        bounded movement the normal recurrent planner takes over.  Requiring
+        the frame token prevents coordinates from an older picture being
+        applied to a newer scene.
         """
         if self.running():
             self.say('a mission is already running; press STOP first')
             return self.state(mission=True)
+        if initial_plan is not None:
+            if not isinstance(initial_plan, dict):
+                self.say('initial plan must be an object')
+                return self.state(mission=False)
+            points = initial_plan.get('route_pixels')
+            if not isinstance(points, list) or not points:
+                self.say('initial plan needs at least one route pixel')
+                return self.state(mission=False)
+            if self.frame is None or seed_frame_token != self.frame_token:
+                self.say('initial plan rejected: its frame token is stale')
+                return self.state(mission=False)
+            for point in points:
+                if (not isinstance(point, dict)
+                        or not isinstance(point.get('x'), (int, float))
+                        or not isinstance(point.get('y'), (int, float))
+                        or not 0 <= point['x'] < 640 or not 0 <= point['y'] < 480):
+                    self.say('initial plan has an invalid route pixel')
+                    return self.state(mission=False)
+            # The command body belongs to the HTTP request thread.  Copy it so
+            # later caller mutation cannot change a trajectory already armed.
+            initial_plan = json.loads(json.dumps(initial_plan))
+            initial_plan.setdefault('motion', 'follow')
+            initial_plan.setdefault('visible', bool(initial_plan.get('contact_pixel')))
+            initial_plan.setdefault('obstacles', [])
+            initial_plan.setdefault('note', 'high-level seeded trajectory')
         self.abort.clear()
-        self.flight = threading.Thread(target=self.mission, args=(target, seconds),
+        self.flight = threading.Thread(target=self.mission,
+                                       args=(target, seconds, initial_plan),
                                        daemon=True)
         self.flight.start()
         time.sleep(.4)                # let the first line reach the log
@@ -1001,6 +1035,21 @@ class Bench(object):
         return dict(thread=worker, holder=holder, issued=time.monotonic())
 
     @staticmethod
+    def discard_after_turn(job):
+        """Keep the full response audit, but never execute this pre-turn view."""
+        def finish():
+            job['thread'].join()
+            from gpt_audit import plan_event
+            answer = job['holder'].get('answer')
+            if answer is None:
+                answer = getattr(job['holder'].get('error'), 'answer', {})
+            plan_event(answer, 'discarded', reason='pre-turn plan invalidated',
+                       mode='flow', sequence=job['seq'])
+        worker = threading.Thread(target=finish)
+        worker.daemon = True
+        worker.start()
+
+    @staticmethod
     def freshest(pending, applied):
         """Pick the newest finished look; report what to keep and what to drop.
 
@@ -1023,6 +1072,44 @@ class Bench(object):
         if newest['seq'] <= applied:
             return None, keep, dropped + 1
         return newest, keep, dropped
+
+    def turn_then_follow_plan(self, answer, route, obstacles, goal, drift_heading=0.):
+        """Execute one bounded planned turn, then rebase its paired floor route."""
+        asked = answer.get('turn_degrees')
+        if (not isinstance(asked, (int, float)) or isinstance(asked, bool)
+                or not math.isfinite(asked) or not 0 < abs(asked) <= MISSION_TURN_STEP_DEG
+                or not route):
+            raise fetch.Stop('combined plan needs a route and a turn within 30 degrees')
+        # The requested angle belongs to the capture heading, not reply arrival.
+        remaining = (asked - drift_heading + 180.) % 360. - 180.
+        if abs(remaining) > MISSION_TURN_STEP_DEG:
+            raise fetch.Stop('combined turn became stale; needs a fresh plan')
+        if self.abort.is_set():
+            raise fetch.Stop('combined plan cancelled')
+        shift = fetch.pivot_shift(remaining)
+        predicted = fetch.rebase(route, [shift[0], shift[1], remaining])
+        useful = next((p for p in predicted if math.hypot(*p) >= fetch.ROUTE_MIN_LEG_CM), None)
+        if (useful is None or useful[1] <= 0 or
+                abs(math.degrees(math.atan2(*useful))) > fetch.INITIAL_TURN_LIMIT_DEG or
+                abs(fetch.aim_turn([0., 0., 0.], useful)) > fetch.INITIAL_TURN_LIMIT_DEG):
+            raise fetch.Stop('combined route does not start near the post-turn heading')
+        self.live_route = list(route)
+        self.live_obstacles = list(obstacles)
+        self.publish_snapshot('turn_then_follow', route)
+        self.say('combined plan: turn %+.1f deg, then follow reprojected route' % remaining)
+        turned = self.robot.turn(remaining) if abs(remaining) > fetch.HEADING_TOLERANCE_DEG else 0.
+        shift = fetch.pivot_shift(turned)
+        motion = [shift[0], shift[1], turned]
+        self.advance(motion)
+        route = fetch.rebase(route, motion)
+        obstacles = list(zip([o[0] for o in obstacles],
+                             fetch.rebase([o[1] for o in obstacles], motion)))
+        goal = fetch.rebase([goal], motion)[0] if goal is not None else None
+        from gpt_audit import plan_event
+        plan_event(answer, 'turn_then_follow', requested_degrees=asked,
+                   remaining_degrees=remaining, measured_pose=motion,
+                   points_cm=route, obstacles_cm=obstacles, goal_cm=goal)
+        return route, obstacles, goal, motion
 
     def flow(self, target, every=FLOW_INTERVAL_S, span=FLOW_SECONDS):
         """Drive without ever standing still, keeping several looks in flight.
@@ -1055,6 +1142,7 @@ class Bench(object):
         memory = None
         pending, issued, applied = [], 0, -1
         stale, trouble, spun = 0, 0, 0.
+        rejected_starts = 0
         done = []                    # steps of the instruction already reached
         self.strip = []
         last_issue = 0.
@@ -1124,6 +1212,23 @@ class Bench(object):
                     from gpt_audit import plan_event
                     plan_event(answer, 'applied', mode='flow', sequence=newest['seq'])
                     points, found, spot, moved = build(answer, newest['shot'])
+                    if answer.get('motion') == 'turn_then_follow':
+                        drift = self.since_pose(newest['shot'], world)
+                        try:
+                            points, found, spot, turn_pose = self.turn_then_follow_plan(
+                                answer, points, found, spot, drift[2])
+                        except fetch.Stop as exc:
+                            self.robot.halt()
+                            self.say('PLANNER HOLD: %s' % exc)
+                            break
+                        world = self.compose(world, turn_pose)
+                        for job in pending:
+                            self.discard_after_turn(job)
+                        stale += len(pending)
+                        pending = []
+                        applied = issued - 1
+                        # Execute the paired route before scheduling another look.
+                        last_issue = time.monotonic()
                     # Each accepted observation replaces the obstacle set.
                     # build() already compensates for motion since its image.
                     goal, obstacles = spot, found
@@ -1167,7 +1272,8 @@ class Bench(object):
                     # heading until it is nearly behind -- so without this the
                     # wheels keep grinding at a route the executor refuses.
                     asked = answer.get('turn_degrees')
-                    if (not route and isinstance(asked, (int, float))
+                    if (answer.get('motion') != 'turn_then_follow' and not route
+                            and isinstance(asked, (int, float))
                             and math.isfinite(asked)
                             and abs(asked) >= MISSION_TURN_MIN_DEG):
                         asked = max(-MISSION_TURN_MAX_DEG,
@@ -1194,6 +1300,14 @@ class Bench(object):
                             spot = fetch.pivot_shift(turned)
                             moved_by = [spot[0], spot[1], turned]
                             world = self.compose(world, moved_by)
+                            # A pre-turn answer can immediately undo this view
+                            # change. Keep audit records, but require a new image.
+                            for job in pending:
+                                self.discard_after_turn(job)
+                            stale += len(pending)
+                            pending = []
+                            applied = issued - 1
+                            last_issue = 0.
                             # Everything held in the old frame follows the turn.
                             obstacles = list(zip(
                                 [o[0] for o in obstacles],
@@ -1230,8 +1344,14 @@ class Bench(object):
             self.pose_heading = self.imu_heading()
             self.publish_snapshot("executing", route)
 
+            start_rejected = [False]
+
             def record(event, **fields):
-                if event == 'pose':
+                if event == 'route_start_rejected':
+                    start_rejected[0] = True
+                    self.say('  route start rejected: %.1f deg exceeds %.0f deg; replanning'
+                             % (fields['bearing_deg'], fields['limit_deg']))
+                elif event == 'pose':
                     self.live_pose = [fields.get('x', 0.), fields.get('z', 0.),
                                       fields.get('heading', 0.)]
                     self.pose_heading = self.imu_heading()
@@ -1256,7 +1376,8 @@ class Bench(object):
             try:
                 pose = fetch.follow(self.robot, self.odometer, route, record,
                                     obstacles, deadline=slice_end,
-                                    interrupt=fresher)
+                                    interrupt=fresher,
+                                    initial_turn_limit_deg=fetch.INITIAL_TURN_LIMIT_DEG)
                 trouble = 0
             except fetch.Stop as exc:
                 self.robot.halt()
@@ -1269,6 +1390,17 @@ class Bench(object):
                     self.say('three slices in a row went wrong; stopping')
                     break
                 pose = list(self.live_pose)
+            if start_rejected[0]:
+                rejected_starts += 1
+                route = []
+                last_issue = 0.
+                if memory:
+                    memory = dict(memory, route=[])
+                if rejected_starts >= 3:
+                    self.say('PLANNER HOLD: three routes require a sharp initial turn')
+                    break
+            else:
+                rejected_starts = 0
             world = self.compose(world, pose)
             if math.hypot(pose[0], pose[1]) > 1.:
                 spun = 0.
@@ -1300,7 +1432,7 @@ class Bench(object):
         self.say('ended after %.0f s: %d looks issued, %d applied, %d stale dropped'
                  % (elapsed, issued, applied + 1, stale))
 
-    def mission(self, target, seconds=MISSION_SECONDS):
+    def mission(self, target, seconds=MISSION_SECONDS, initial_plan=None):
         """Drive to a named object, asking the model again every few seconds.
 
         One look is a plan made from one photograph, and it stops being true as
@@ -1323,6 +1455,7 @@ class Bench(object):
             return
 
         memory, pose, reached, trouble = None, [0., 0., 0.], False, 0
+        rejected_starts = 0
         self.strip = []
         closest, idle = None, 0       # nearest the target has come, and how many
                                       # looks since that last improved
@@ -1339,25 +1472,34 @@ class Bench(object):
             if self.abort.is_set():
                 self.say('stopped by the operator')
                 break
-            try:
-                image, _ = self.robot.frame()
-                self.restage(image)
-            except Exception as exc:
-                self.say('cycle %d: no picture (%s)' % (cycle + 1, exc))
-                break
+            seeded = cycle == 0 and initial_plan is not None
+            if seeded:
+                # launch() already tied these pixels to this staged frame.  Do
+                # not capture again here: doing so would silently change the
+                # image underneath the high-level trajectory.
+                answer = initial_plan
+                prior = None
+                self.say('seed 1: using high-level trajectory; first GPT call skipped')
+            else:
+                try:
+                    image, _ = self.robot.frame()
+                    self.restage(image)
+                except Exception as exc:
+                    self.say('cycle %d: no picture (%s)' % (cycle + 1, exc))
+                    break
 
-            prior = fetch.recall(self.robot, memory, pose) if memory else None
-            self.show_request(self.frame, prior, 'look %d: what was sent'
-                              % (cycle + 1))
-            try:
-                answer = fetch.recognize(self.frame, target, prior)
-            except fetch.PlannerHold as exc:
-                self.say('PLANNER HOLD: %s' % exc.answer.get('note', 'no supported route'))
-                break
-            except fetch.Stop as exc:
-                self.say('cycle %d: the model could not be asked: %s'
-                         % (cycle + 1, exc))
-                break
+                prior = fetch.recall(self.robot, memory, pose) if memory else None
+                self.show_request(self.frame, prior, 'look %d: what was sent'
+                                  % (cycle + 1))
+                try:
+                    answer = fetch.recognize(self.frame, target, prior)
+                except fetch.PlannerHold as exc:
+                    self.say('PLANNER HOLD: %s' % exc.answer.get('note', 'no supported route'))
+                    break
+                except fetch.Stop as exc:
+                    self.say('cycle %d: the model could not be asked: %s'
+                             % (cycle + 1, exc))
+                    break
 
             goal = None
             contact = answer.get('contact_pixel')
@@ -1401,6 +1543,17 @@ class Bench(object):
                 if len(obstacles) > was:
                     self.say('  still avoiding %d obstacle(s) now out of shot'
                              % (len(obstacles) - was))
+
+            if answer.get('motion') == 'turn_then_follow':
+                try:
+                    route, obstacles, goal, turn_pose = self.turn_then_follow_plan(
+                        answer, route, obstacles, goal)
+                except fetch.Stop as exc:
+                    self.robot.halt()
+                    self.say('PLANNER HOLD: %s' % exc)
+                    break
+                planned = list(route)
+                pose = [0., 0., 0.]  # memory below is now in the post-turn frame
 
             if not route and memory:
                 # It answered with nothing usable. The remembered route is still
@@ -1453,7 +1606,8 @@ class Bench(object):
             # to drive around: at 10 cm an obstacle blocks every heading until
             # it is nearly behind, so no route exists to draw.
             asked_turn = answer.get('turn_degrees')
-            if (isinstance(asked_turn, (int, float)) and math.isfinite(asked_turn)
+            if (answer.get('motion') != 'turn_then_follow'
+                    and isinstance(asked_turn, (int, float)) and math.isfinite(asked_turn)
                     and abs(asked_turn) >= MISSION_TURN_MIN_DEG
                     and (goal is None or math.hypot(*goal) > MISSION_STANDOFF_CM)):
                 asked_turn = max(-MISSION_TURN_MAX_DEG,
@@ -1565,9 +1719,14 @@ class Bench(object):
 
             self.publish_snapshot("executing", widened)
             legs = [0]
+            start_rejected = [False]
 
             def record(event, **fields):
-                if event == 'pose':
+                if event == 'route_start_rejected':
+                    start_rejected[0] = True
+                    self.say('  route start rejected: %.1f deg exceeds %.0f deg; replanning'
+                             % (fields['bearing_deg'], fields['limit_deg']))
+                elif event == 'pose':
                     self.live_pose = [fields.get('x', 0.), fields.get('z', 0.),
                                       fields.get('heading', 0.)]
                     self.pose_heading = self.imu_heading()
@@ -1587,7 +1746,8 @@ class Bench(object):
             try:
                 pose = fetch.follow(self.robot, self.odometer, widened, record,
                                     obstacles,
-                                    deadline=None if once else started + seconds)
+                                    deadline=None if once else started + seconds,
+                                    initial_turn_limit_deg=fetch.INITIAL_TURN_LIMIT_DEG)
                 trouble = 0
             except fetch.Stop as exc:
                 self.robot.halt()
@@ -1610,6 +1770,14 @@ class Bench(object):
                      % (time.monotonic() - started, math.hypot(pose[0], pose[1])))
             memory = dict(route=list(planned), obstacles=list(obstacles),
                           goal=goal, done=list(done))
+            if start_rejected[0]:
+                rejected_starts += 1
+                memory = dict(memory, route=[])
+                if once or rejected_starts >= 3:
+                    self.say('PLANNER HOLD: route requires a sharp initial turn')
+                    break
+                continue  # Do not interpret rejection as an escape-turn request.
+            rejected_starts = 0
             # Turning does not count as progress. While blocked, follow still
             # rotates to face each waypoint, so requiring zero rotation here
             # meant the escape never fired and the give-up counter reset every
@@ -2330,7 +2498,8 @@ class Bench(object):
             # carpet where anyone can see it.
             pose = fetch.follow(self.robot, self.odometer, route, record,
                                 deadline=(time.monotonic() + seconds)
-                                if seconds else None)
+                                if seconds else None,
+                                initial_turn_limit_deg=fetch.INITIAL_TURN_LIMIT_DEG)
             self.heading += pose[2]
             self.advance(pose)
             moved = fetch.rebase(route, pose)
@@ -2604,7 +2773,9 @@ class Handler(BaseHTTPRequestHandler):
             elif path == '/api/mission':
                 every = body.get('seconds')
                 out = bench.launch(body.get('target') or '',
-                                   None if every in (None, '') else float(every))
+                                   None if every in (None, '') else float(every),
+                                   body.get('initial_plan'),
+                                   body.get('seed_frame_token'))
             elif path == '/api/look':
                 out = bench.look(body.get('mode') or 'floor')
             elif path == '/api/ask':

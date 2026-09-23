@@ -231,7 +231,9 @@ class MemorySiteTests(unittest.TestCase):
                         break
                 index += 1
             call = ' '.join(text[start:index + 1].split())
-            if 'dict( self.memory' in call or 'dict(self.memory' in call:
+            if any(source in call for source in
+                   ('dict( self.memory', 'dict(self.memory',
+                    'dict( memory,', 'dict(memory,')):
                 # Derived from the memory it replaces, so everything not named
                 # here is carried through by dict() itself.
                 continue

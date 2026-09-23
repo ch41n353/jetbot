@@ -49,7 +49,28 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         path=self.path.split('?')[0]
         with lock:state=dict(latest)
-        if path=='/':
+        if path=='/clearance-priority':
+            try:
+                data=pathlib.Path('/mnt/robotlogs/goals/advil-flow-20260922-060659/clearance-ablation-priority-03/comparison.html').read_bytes()
+                kind='text/html; charset=utf-8'
+            except OSError:
+                self.send_error(404, 'Priority comparison unavailable');return
+        elif path=='/clearance-ablation':
+            try:
+                data=pathlib.Path('/mnt/robotlogs/goals/advil-flow-20260922-060659/clearance-ablation-02/comparison.html').read_bytes()
+                kind='text/html; charset=utf-8'
+            except OSError:
+                self.send_error(404, 'Ablation comparison unavailable');return
+        elif path=='/clearance-comparison':
+            try:
+                data=pathlib.Path('/mnt/robotlogs/goals/advil-flow-20260922-060659/clearance-replay-01/comparison.html').read_bytes()
+                kind='text/html; charset=utf-8'
+            except OSError:
+                self.send_error(404, 'Replay comparison unavailable');return
+        elif path=='/gallery':
+            data=pathlib.Path(__file__).with_name('static').joinpath('gpt_gallery.html').read_bytes()
+            kind='text/html; charset=utf-8'
+        elif path=='/':
             data=pathlib.Path(__file__).with_name('static').joinpath('control_visualizer.html').read_bytes()
             kind='text/html; charset=utf-8'
         elif path=='/api/planner-snapshot':

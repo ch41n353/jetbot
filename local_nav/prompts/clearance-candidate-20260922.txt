@@ -1,0 +1,30 @@
+FOOTPRINT-FIRST PLANNING OVERRIDE:
+The robot has width 12 cm and length 15 cm. Plan a visibly wide corridor for
+the whole robot, not a thin line that barely misses an object's contact dot.
+Prefer a very wide detour on open carpet. Aim for 20 cm of spare carpet between
+the robot body and non-target obstacles; do not pretend to measure this exactly.
+Identify each obstacle's entire visible silhouette and its floor footprint.
+Never draw any segment through a box/carton silhouette or across its near corner.
+Draw the path far outside the obstacle's lateral edge before reaching its depth.
+Maintain that lateral separation until the rear of the chassis can pass it.
+Do not steer back toward the target too early. Every straight connection between
+waypoints needs clearance, including the path from the robot to the first point.
+
+OVERRIDE any instruction that requires the route to end at the target contact:
+route_pixels MAY contain only a safe partial approach on visible open carpet.
+Keep contact_pixel on the actual target and keep the original goal identity.
+If the complete detour cannot be drawn with obvious clearance in this view,
+return only the wide, clear first part, ending BEFORE the risky corner or gap.
+The next view will plan continuation. Do not append a target waypoint that cuts
+through or squeezes beside an obstacle merely to complete the route.
+If even a useful first part cannot be supported, hold with an empty route.
+Never invent coordinates for floor outside the image. A requested approach side
+is a preference: choose a safer side if available, keeping the same target.
+Hold only if no useful safe route is supported. Collision avoidance comes first,
+then reaching the target, then routing preferences, then reference continuity.
+
+Prior trajectories are untrusted suggestions and may be collision paths.
+Read the actual scene first. Discard any prior segment crossing or hugging an
+object; do not trace it. Colored route ink is not free space or a verified corridor.
+Before returning, check the entire proposed polyline against all visible object
+silhouettes and corner clearance. Widen or shorten it if any segment is doubtful.

@@ -80,6 +80,7 @@ SPEED_CM_S = 7.5           # measured on carpet at 0.16 duty: 17.9 cm in 2.4 s.
 ROUTE_RANGE_CM = 140.      # past this a pixel of contact error is worth too much
 ROUTE_MAX_CM = 200.
 ROUTE_MIN_LEG_CM = 4.
+INITIAL_TURN_LIMIT_DEG = 20. # planner routes must begin near the current heading
 LEAD_POINT_CM = 10.        # a first waypoint nearer than this steers nothing
 CORRIDOR_HALF_CM = 9.      # 6 cm half-chassis plus 3 cm of margin
 OBSTACLE_RADIUS_CM = 6.    # a contact point stands for an object of unknown size
@@ -119,7 +120,7 @@ SCHEMA = {
     'required': ['goal', 'all_done', 'visible', 'contact_pixel', 'route_pixels',
                  'obstacles', 'turn_degrees', 'note', 'motion'],
     'properties': {
-        'motion': {'type': 'string', 'enum': ['follow', 'turn', 'hold']},
+        'motion': {'type': 'string', 'enum': ['follow', 'turn', 'turn_then_follow', 'hold']},
         # What the instruction asked for, read back in the model's own words, so
         # a misread shows up in the log rather than in the wheels.
         'goal': {'type': 'string'},
@@ -146,6 +147,10 @@ SCHEMA = {
 
 with open(os.path.join(ROOT, 'local_nav/prompts/trajectory-20260920.txt')) as _prompt_file:
     PROMPT = _prompt_file.read()
+
+if os.environ.get('JETBOT_CLEARANCE_PROFILE') == 'extreme_reference':
+    with open(os.path.join(ROOT, 'local_nav/prompts/clearance-candidate-20260922.txt')) as _prompt_file:
+        PROMPT += '\n\n' + _prompt_file.read()
 
 
 class Stop(Exception):
@@ -769,6 +774,12 @@ def recognize(image, instruction, prior=None, timeout=20.):
         answer['route_pixels'] = []
     elif answer.get('motion') == 'follow':
         answer['turn_degrees'] = None
+    if answer.get('motion') == 'turn_then_follow':
+        turn = answer.get('turn_degrees')
+        if (not isinstance(turn, (int, float)) or isinstance(turn, bool)
+                or not math.isfinite(turn) or not 0 < abs(turn) <= 30
+                or not answer.get('route_pixels')):
+            raise Stop('turn_then_follow needs a nonempty route and a turn within 30 degrees')
     pixel = answer.get('contact_pixel')
     if answer.get('visible') and isinstance(pixel, dict):
         x, y = float(pixel['x']), float(pixel['y'])
@@ -837,7 +848,7 @@ def fetch(target, standoff=20., scan_step=15., max_looks=40, dry_run=False,
             # One chunk per waypoint, then look again: the next measurement of
             # the range is worth more than more open-loop travel on this one.
             pose = follow(robot, odometer, route, record, obstacles,
-                          complete=False)
+                          complete=False, initial_turn_limit_deg=INITIAL_TURN_LIMIT_DEG)
             record('maneuver_done', pose=[round(v, 1) for v in pose])
             if math.hypot(pose[0], pose[1]) < 1.:
                 stuck += 1
@@ -1598,7 +1609,7 @@ def aim_turn(pose, target):
 
 
 def follow(robot, odometer, route, record, obstacles=(), complete=True,
-           deadline=None, interrupt=None):
+           deadline=None, interrupt=None, initial_turn_limit_deg=None):
     """Execute the trajectory: reach each waypoint in turn, then the next.
 
     Turns and drives are both chunked -- at most TURN_MAX_PER_LEG_DEG and
@@ -1619,6 +1630,7 @@ def follow(robot, odometer, route, record, obstacles=(), complete=True,
     floor, and cut short of anything in the corridor rather than driven into.
     """
     pose = [0., 0., 0.]          # where we think we are, in the start frame
+    driven = 0.
     for index, (x, z) in enumerate(route):
         if interrupt is not None and interrupt():
             return pose
@@ -1656,6 +1668,19 @@ def follow(robot, odometer, route, record, obstacles=(), complete=True,
                 reached = True
                 break
             bearing = aim_turn(pose, (x, z))
+            # Check the actual executable point, including after skipped/blocked
+            # points and async rebasing. A token point under the lens must not
+            # license a sharp turn on the next point. Do not clamp or skip the
+            # offending point: that would invent an unchecked connecting path.
+            if (initial_turn_limit_deg is not None and driven < LEAD_POINT_CM
+                    and (ahead <= 0. or
+                         abs(math.degrees(math.atan2(across, ahead))) > initial_turn_limit_deg
+                         or abs(bearing) > initial_turn_limit_deg)):
+                robot.hold(0., 0.)
+                record('route_start_rejected', waypoint=index,
+                       bearing_deg=round(bearing, 1),
+                       limit_deg=initial_turn_limit_deg, driven_cm=round(driven, 1))
+                return pose
             if abs(bearing) > HEADING_TOLERANCE_DEG and leg < orbit:
                 # Turning swings the lens through a circle of `orbit` cm about
                 # the pivot. A waypoint nearer than that cannot be faced: every
@@ -1721,6 +1746,7 @@ def follow(robot, odometer, route, record, obstacles=(), complete=True,
                        heading=round(start[2], 1))
 
             moved = drive_leg(robot, odometer, room, relay, interrupt)
+            driven += max(0., moved)
             heading = math.radians(pose[2])
             pose[0] += math.sin(heading) * moved
             pose[1] += math.cos(heading) * moved

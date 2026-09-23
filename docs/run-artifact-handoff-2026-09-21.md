@@ -113,8 +113,8 @@ The main source files are:
 - `/home/jetbot/jetbot/scripts/static/control_visualizer.html`: operator UI showing GPT calls, assistant interventions, and paired planner snapshots.
 - `/home/jetbot/jetbot/scripts/camera_recording_server.py`: recording viewer on port 8771.
 - `/home/jetbot/jetbot/scripts/render_mission_log.py`: creates newest-first Markdown from the append-only history.
-- `/home/jetbot/jetbot/skills/jetbot-task-control/SKILL.md`: operating workflow, ownership boundaries, audit requirements, and known limitations.
-- `/home/jetbot/.codex/skills/jetbot-task-control/references/operations.md`: installed operational interface and limitations used during these runs.
+- `/home/jetbot/jetbot/skills/jetbot-navigation/SKILL.md`: operating workflow, ownership boundaries, audit requirements, and known limitations.
+- `/home/jetbot/.codex/skills/jetbot-navigation/references/operations.md`: installed operational interface and limitations used during these runs.
 
 ## How the stack worked in these runs
 

@@ -45,6 +45,12 @@ class MotionContractTests(unittest.TestCase):
         result=self.recognize(dict(motion='follow',turn_degrees=90,visible=False))
         self.assertIsNone(result['turn_degrees'])
 
+    def test_combined_motion_preserves_both_turn_and_route(self):
+        result=self.recognize(dict(motion='turn_then_follow',turn_degrees=25,
+                                   route_pixels=[{'x':420,'y':300}],visible=True))
+        self.assertEqual(result['turn_degrees'],25)
+        self.assertEqual(result['route_pixels'],[{'x':420,'y':300}])
+
     def test_turn_cannot_also_drive(self):
         result=self.recognize(dict(motion='turn',turn_degrees=-20,route_pixels=[{'x':320,'y':300}],visible=False))
         self.assertEqual(result['route_pixels'],[])
@@ -72,5 +78,44 @@ class MotionContractTests(unittest.TestCase):
                     self.assertFalse(bench.live_route)
                     self.assertTrue(all(pair==(0,0) for pair in robot.outputs))
                 finally:server.shutdown();server.server_close();thread.join(2)
+
+    def test_seeded_mission_drives_before_its_first_gpt_call(self):
+        robot=FakeRobot()
+        status={'power':{'pack_voltage_v':12.,'motion_allowed':True},'imu':{}}
+        with patch.object(fetch,'Robot',return_value=robot),patch.object(fetch,'Odometer',return_value=object()),patch.object(fetch,'call',return_value=status),patch.dict(os.environ,OPENAI_API_KEY='test'):
+            bench=planner_demo.Bench(False)
+            bench.restage(np.zeros((480,640,3),np.uint8))
+            token=bench.frame_token
+            def moved(*args,**kwargs):
+                bench.abort.set()
+                return [0.,10.,0.]
+            with patch.object(fetch,'recognize') as recognize,patch.object(fetch,'follow',side_effect=moved) as follow:
+                server=planner_demo.Server(('127.0.0.1',0),planner_demo.Handler)
+                server.bench=bench;server.open_lan=False
+                thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
+                try:
+                    body=json.dumps(dict(target='Advil',seconds=3,
+                        seed_frame_token=token,
+                        initial_plan=dict(route_pixels=[dict(x=320,y=360)]))).encode()
+                    request=urllib.request.Request('http://127.0.0.1:%d/api/mission'%server.server_address[1],
+                        data=body,headers={'Content-Type':'application/json'})
+                    with urllib.request.urlopen(request,timeout=3) as response:self.assertTrue(json.load(response)['mission'])
+                    if bench.flight:bench.flight.join(2)
+                    follow.assert_called_once()
+                    recognize.assert_not_called()
+                    self.assertIn('first GPT call skipped',bench.log())
+                finally:server.shutdown();server.server_close();thread.join(2)
+
+    def test_seeded_mission_rejects_a_stale_frame(self):
+        robot=FakeRobot()
+        status={'power':{'pack_voltage_v':12.,'motion_allowed':True},'imu':{}}
+        with patch.object(fetch,'Robot',return_value=robot),patch.object(fetch,'Odometer',return_value=object()),patch.object(fetch,'call',return_value=status):
+            bench=planner_demo.Bench(False)
+            bench.restage(np.zeros((480,640,3),np.uint8))
+            state=bench.launch('Advil',3,dict(route_pixels=[dict(x=320,y=360)]),
+                               bench.frame_token-1)
+            self.assertFalse(state['mission'])
+            self.assertFalse(bench.running())
+            self.assertIn('frame token is stale',bench.log())
 
 if __name__=='__main__':unittest.main()

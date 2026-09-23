@@ -3,6 +3,8 @@
 All paths below are on this JetBot. These commands are instructions, not
 permission to move. Start disarmed and inspect before enabling motors.
 
+For tool-launched services, follow the [service lifecycle procedure](operations.md#service-lifecycle-for-tool-launched-runs); detached launches need the supported standalone mode.
+
 ## Service and shutdown
 
 ```bash
