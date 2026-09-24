@@ -7,13 +7,21 @@ import pathlib
 import uuid
 
 
+def enabled():
+    """Audit by default on a configured robot run; permit explicit opt-out."""
+    value = os.environ.get('JETBOT_GPT_AUDIT')
+    if value is not None:
+        return value.strip().lower() not in ('', '0', 'false', 'no', 'off')
+    return pathlib.Path('/mnt/robotlogs/current-search.json').exists()
+
+
 def now():
     return datetime.datetime.now(datetime.timezone.utc).isoformat()
 
 
 def command(endpoint, body):
     """Record actual incoming planner commands, including direct API callers."""
-    if not os.environ.get('JETBOT_GPT_AUDIT'):
+    if not enabled():
         return
     with open('/mnt/robotlogs/current-search.json') as f:
         root = pathlib.Path(json.load(f)['root']).resolve()
@@ -35,7 +43,7 @@ def plan_event(answer, event, **fields):
 class Capture:
     def __init__(self, body):
         self.path = None
-        if not os.environ.get('JETBOT_GPT_AUDIT'):
+        if not enabled():
             return
         with open('/mnt/robotlogs/current-search.json') as f:
             root = pathlib.Path(json.load(f)['root']).resolve()

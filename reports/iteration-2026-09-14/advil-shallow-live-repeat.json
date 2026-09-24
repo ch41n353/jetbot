@@ -1,0 +1,122 @@
+{
+  "outcome": "object_reached_estimate",
+  "requires_planner": false,
+  "intermediate_model_calls": 0,
+  "events": [
+    {
+      "event": "mission_started",
+      "elapsed_seconds": 0.09197108300213586,
+      "target_label": "Advil bottle"
+    },
+    {
+      "event": "local_route",
+      "elapsed_seconds": 0.47711198500110186,
+      "waypoints_cm": [
+        [
+          11.793810621558789,
+          96.05287940790114
+        ]
+      ]
+    },
+    {
+      "event": "local_recovery",
+      "elapsed_seconds": 7.328563099999883,
+      "reason": "Contact projective geometry inconsistent"
+    },
+    {
+      "event": "target_reacquired",
+      "elapsed_seconds": 7.888200735000282
+    },
+    {
+      "event": "arrival_braking",
+      "elapsed_seconds": 7.890498621000006
+    },
+    {
+      "event": "mission_complete",
+      "elapsed_seconds": 8.022739363001165,
+      "remote_vlm_needed": false
+    }
+  ],
+  "local_recoveries": 1,
+  "local_searches": 1,
+  "floor_recoveries": 0,
+  "power_start": {
+    "time": 29264.807804541,
+    "voltage_v": 5.016,
+    "source": "INA3221 POM_5V_IN",
+    "conversion_period_seconds": 0.053759999999999995,
+    "battery_percent": null,
+    "battery_state": "voltage_only_no_soc_estimate",
+    "input_time": 29264.807804541,
+    "pack_time": 29264.812139374,
+    "pack_voltage_v": 11.572000000000001,
+    "pack_source": "INA219-compatible bus1 address0x41",
+    "pack_conversion_period_seconds": 0.001064,
+    "pack_required": true,
+    "pack_profile": "Waveshare-compatible 3S inferred from hardware; board model unconfirmed",
+    "motion_allowed": true,
+    "stop_latched": false,
+    "stop_reason": null,
+    "warning": false,
+    "minimum_voltage_v": 5.008,
+    "minimum_pack_voltage_v": 11.56,
+    "warn_below_v": 4.9,
+    "stop_below_v": 4.8,
+    "stop_above_v": 5.25,
+    "pack_warn_below_v": 11.4,
+    "pack_stop_below_v": 10.8,
+    "pack_stop_above_v": 12.9,
+    "stale_after_seconds": 0.6,
+    "power_policy_revision": 2,
+    "stale": false,
+    "service_stop_latched": false
+  },
+  "last_measured_pose": [
+    13.001715861781486,
+    94.59803959813961,
+    1.8577479212540222
+  ],
+  "travel_cm": 96.15197695923021,
+  "final_range_cm": 24.67671185563942,
+  "power_end": {
+    "time": 29272.672766511,
+    "voltage_v": 5.024,
+    "source": "INA3221 POM_5V_IN",
+    "conversion_period_seconds": 0.053759999999999995,
+    "battery_percent": null,
+    "battery_state": "voltage_only_no_soc_estimate",
+    "input_time": 29272.672766511,
+    "pack_time": 29272.678474587,
+    "pack_voltage_v": 11.608,
+    "pack_source": "INA219-compatible bus1 address0x41",
+    "pack_conversion_period_seconds": 0.001064,
+    "pack_required": true,
+    "pack_profile": "Waveshare-compatible 3S inferred from hardware; board model unconfirmed",
+    "motion_allowed": true,
+    "stop_latched": false,
+    "stop_reason": null,
+    "warning": false,
+    "minimum_voltage_v": 5.0,
+    "minimum_pack_voltage_v": 11.432,
+    "warn_below_v": 4.9,
+    "stop_below_v": 4.8,
+    "stop_above_v": 5.25,
+    "pack_warn_below_v": 11.4,
+    "pack_stop_below_v": 10.8,
+    "pack_stop_above_v": 12.9,
+    "stale_after_seconds": 0.6,
+    "power_policy_revision": 2,
+    "stale": false,
+    "service_stop_latched": false
+  },
+  "last_observation": {
+    "image_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-224848-999cf7-route-01.json.last-observed.jpg",
+    "time": 29272.774745506,
+    "settled": true
+  },
+  "elapsed_seconds": 8.031861013001617,
+  "result_path": "/home/jetbot/jetbot/local_nav/goals/session-20260914-224848-999cf7-route-01.json",
+  "final_inspected_image": "/home/jetbot/jetbot/local_nav/goals/session-20260914-224848-999cf7-29278.973969.jpg",
+  "visual_verification": "Advil visible ahead-right; no contact visible. Range is camera/IMU estimate.",
+  "session_closed": true
+}

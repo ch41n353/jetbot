@@ -1,0 +1,25 @@
+{
+  "real_api": true,
+  "motors_used": false,
+  "simulation": "20ms synthetic tick; not camera/controller performance",
+  "elapsed_seconds": 0.043400518006819766,
+  "ticks_while_waiting": 3,
+  "max_poll_seconds": 0.000910841001314111,
+  "reply": {
+    "error": "URLError",
+    "snapshot": {
+      "time": 35302.165394059,
+      "pose": [
+        0,
+        0,
+        0
+      ],
+      "attitude": {},
+      "generation": [
+        "offline",
+        1
+      ]
+    },
+    "finished": 35302.188425241
+  }
+}

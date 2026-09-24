@@ -20,6 +20,7 @@ Requires a running local_nav/service.py and OPENAI_API_KEY in the environment.
 """
 import argparse
 import base64
+import fcntl
 import json
 import math
 import os
@@ -33,6 +34,7 @@ import numpy as np
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SOCKET = '/tmp/jetbot-local-nav/control.sock'
+SERVICE_LOCK = '/tmp/jetbot-local-nav/lock'
 MODEL = 'gpt-5.6-sol'
 
 TURN_POWER = .14           # validated band is 0.14-0.16
@@ -43,6 +45,11 @@ YAW_RATE_LIMIT = 260.      # Runaway guard only. Measured turn rates vary hugely
                            # with surface: ~85 deg/s on carpet but 143 mean and
                            # 169 peak on a hard floor at the same 0.14 duty, so a
                            # limit tuned to carpet stops normal turns elsewhere.
+YAW_RATE_PERSIST = 3       # consecutive over-limit samples before it is a runaway.
+                           # One sample is a knock or a gyro glitch, and a single
+                           # 315 deg/s reading killed an otherwise healthy leg.
+                           # At ~30 Hz this is about 100 ms, so a genuine runaway
+                           # is still caught inside ~30 degrees of rotation.
 STEP_MAX_CM = 15.
 STEP_MIN_CM = 4.
 ARRIVAL_CM = 6.            # how close to the standoff counts as arrived
@@ -82,9 +89,11 @@ ROUTE_MAX_CM = 200.
 ROUTE_MIN_LEG_CM = 4.
 INITIAL_TURN_LIMIT_DEG = 20. # planner routes must begin near the current heading
 LEAD_POINT_CM = 10.        # a first waypoint nearer than this steers nothing
-CORRIDOR_HALF_CM = 9.      # 6 cm half-chassis plus 3 cm of margin
-OBSTACLE_RADIUS_CM = 6.    # a contact point stands for an object of unknown size
-KEEP_BACK_CM = 6.          # stop this far short of whatever is in the way
+CORRIDOR_HALF_CM = 6.      # physical half-width of the 12 cm chassis
+OBSTACLE_RADIUS_CM = 4.    # 10 cm total lateral exclusion with the chassis
+KEEP_BACK_CM = 6.          # also yields a 10 cm forward exclusion threshold
+OBSTACLE_CORNER_X_PX = 96. # outer 15 percent of a 640 px fisheye frame
+OBSTACLE_CORNER_Y_PX = 360.# lower quarter: ground range is ill-conditioned
 HEADING_TOLERANCE_DEG = 6.
 STEER_GAIN = .004          # duty per degree of heading error, bounded below
 VISION_INTERVAL_S = .12    # measured: fits land 9/9 at 0.12 s and 5/5 at 0.20 s,
@@ -164,6 +173,35 @@ class PlannerHold(Stop):
         super().__init__('planner hold: ' + str(answer.get('note', 'no supported route')))
 
 
+def wait_for_service_release(timeout=15., socket_path=SOCKET,
+                             lock_path=SERVICE_LOCK):
+    """Wait until shutdown has released both its API and hardware lock.
+
+    The shutdown reply is intentionally sent before camera/IMU worker cleanup.
+    Treating that reply, or even disappearance of the socket, as process exit
+    races the next service against the still-held flock.  Acquiring the flock
+    is the authoritative lifecycle boundary.
+    """
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        handle = None
+        try:
+            handle = open(lock_path, 'a')
+            fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            if not os.path.exists(socket_path):
+                fcntl.flock(handle, fcntl.LOCK_UN)
+                handle.close()
+                return
+            fcntl.flock(handle, fcntl.LOCK_UN)
+        except (IOError, OSError):
+            pass
+        finally:
+            if handle is not None and not handle.closed:
+                handle.close()
+        time.sleep(.05)
+    raise Stop('service shutdown timed out before hardware lock release')
+
+
 def call(action, timeout=2., **fields):
     with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as link:
         link.settimeout(timeout)
@@ -178,6 +216,8 @@ def call(action, timeout=2., **fields):
     reply = json.loads(data)
     if 'error' in reply:
         raise Stop(reply['error'])
+    if action == 'shutdown' and reply.get('accepted'):
+        wait_for_service_release()
     return reply
 
 
@@ -358,6 +398,24 @@ class Robot:
             pass
         self.token['control_epoch'] = call('status')['control_epoch']
 
+    def resync(self):
+        """Adopt the service's current control generation without stopping.
+
+        The service bumps the generation on *any* request it rejects, and until
+        now `halt` was the only thing that ever re-read it. So a single
+        transient rejection left this object holding a dead lease, and every
+        later command failed with 'control generation changed (cancelled
+        elsewhere)' -- forever, or until an operator happened to press stop.
+        Measured: twenty consecutive trajectories refused in 0.2 s each, 0 cm
+        driven, after one stalled run hours earlier.
+
+        Only call this when the robot is known idle and this process is the one
+        that will drive next. Re-syncing mid-run would let a cancelled
+        controller resume, which is the thing the generation exists to prevent.
+        """
+        self.token['control_epoch'] = call('status')['control_epoch']
+        return self.token['control_epoch']
+
     def run_steered(self, command, done, limit):
         """Like _run, but `command()` supplies (left, right) afresh each cycle.
 
@@ -383,6 +441,7 @@ class Robot:
         if self.dry_run:
             return      # no command was sent, so there is no motion to measure
         started = last = time.monotonic()
+        over = 0                # consecutive over-limit yaw samples
         try:
             while True:
                 now = time.monotonic()
@@ -392,7 +451,12 @@ class Robot:
                 imu = status['imu']
                 rate = self.yaw_rate(imu)
                 if abs(rate) > YAW_RATE_LIMIT:
-                    raise Stop('yaw rate %.0f deg/s' % rate)
+                    over += 1
+                    if over >= YAW_RATE_PERSIST:
+                        raise Stop('yaw rate %.0f deg/s sustained over %d samples'
+                                   % (rate, over))
+                else:
+                    over = 0
                 step = now - last
                 last = now
                 if done(dict(elapsed=now - started, dt=step, rate=rate, imu=imu)):
@@ -404,7 +468,7 @@ class Robot:
             if settle:
                 time.sleep(.25)      # let it settle before the next measurement
 
-    def _sweep(self, direction, target, budget):
+    def _sweep(self, direction, target, budget, continuous=False):
         """Turn `target` degrees, regulating rate instead of predicting coast.
 
         The rate asked for falls as the target approaches, so the robot arrives
@@ -420,6 +484,7 @@ class Robot:
         swept = [0.]
         started = last = time.monotonic()
         moved = False
+        over = 0                # consecutive over-limit yaw samples
         try:
             while True:
                 now = time.monotonic()
@@ -432,7 +497,12 @@ class Robot:
                 previous[0] = heading
                 rate = abs(self.yaw_rate(imu))
                 if rate > YAW_RATE_LIMIT:
-                    raise Stop('yaw rate %.0f deg/s' % rate)
+                    over += 1
+                    if over >= YAW_RATE_PERSIST:
+                        raise Stop('yaw rate %.0f deg/s sustained over %d samples'
+                                   % (rate, over))
+                else:
+                    over = 0
                 if swept[0] > 2.:
                     moved = True
                 if now - started > 1.2 and not moved:
@@ -440,7 +510,8 @@ class Robot:
                 remaining = target - swept[0]
                 # Hand over to bursts once the rest is finer than this loop can
                 # steer: the robot cannot turn slower than stiction allows.
-                if remaining <= FINE_TURN_DEG:
+                cutoff=max(TURN_TOLERANCE_DEG,rate*self.coast_s) if continuous else FINE_TURN_DEG
+                if remaining <= cutoff:
                     break
                 # Learn how much rate this surface gives for the duty applied.
                 if rate > 15. and self.duty > .01:
@@ -530,6 +601,16 @@ class Robot:
                     .6 * self.pulse_rate + .4 * step / seconds))
             remaining -= step
         return remaining
+
+    def turn_continuous(self, degrees):
+        """One uninterrupted regulated sweep, then stop and measure coast.
+
+        No fine burst train or hidden reversal; executor checks final error.
+        """
+        if abs(degrees)<.5:return 0.
+        if self.dry_run:return degrees
+        direction=1. if degrees>0 else -1.
+        return direction*self._sweep(direction,abs(degrees),3.+abs(degrees)/12.,continuous=True)
 
     def turn(self, degrees):
         """Rotate by `degrees` (positive right), closed loop on the IMU.
@@ -696,7 +777,7 @@ def annotate(image, prior):
     return shot
 
 
-def recognize(image, instruction, prior=None, timeout=20.):
+def recognize(image, instruction, prior=None, timeout=20., paired=None):
     """Read a plain-words instruction against one photograph.
 
     `instruction` is plain words rather than a noun phrase -- "reach the can of
@@ -735,6 +816,26 @@ def recognize(image, instruction, prior=None, timeout=20.):
                                    + base64.b64encode(encoded).decode('ascii'))])],
                 text=dict(format=dict(type='json_schema', name='sighting',
                                       strict=True, schema=SCHEMA)))
+    if paired is not None:
+        from paired_planning import INSTRUCTIONS
+        body['instructions'] += '\n'+INSTRUCTIONS
+        content=body['input'][0]['content']
+        clean_prior=dict(prior or {})
+        # Pixel hints must match the metric previous route shown in both inputs.
+        from evaluate_gpt_routes import Lens
+        lens=Lens();pixels=[]
+        for x,z in paired[2].get('previous_route_cm',[]):
+            q=Robot.pixel(lens,x,z) if z>0 else None
+            if q and 0<=q[0]<640 and 0<=q[1]<480:pixels.append(dict(x=round(q[0],1),y=round(q[1],1)))
+        clean_prior['route_pixels']=pixels
+        public_map={k:v for k,v in paired[2].items() if not k.startswith('_')}
+        if paired[2].get('target_requires_fresh_rgb'):clean_prior.pop('target_was',None)
+        content[0]['text']=json.dumps(dict(instruction=instruction,last_time=clean_prior,local_map=public_map))
+        content[1]['image_url']='data:image/jpeg;base64,'+base64.b64encode(cv2.imencode('.jpg',paired[0])[1]).decode('ascii')
+        content.append(dict(type='input_image',detail='high',image_url='data:image/jpeg;base64,'+base64.b64encode(cv2.imencode('.jpg',paired[1])[1]).decode('ascii')))
+    # Apply the tested turn-specific clarification after paired-view rules.
+    with open(os.path.join(ROOT, 'local_nav/prompts/turn-clearance-candidate-20260923.txt')) as turn_prompt:
+        body['instructions'] += '\n\n' + turn_prompt.read()
     key = os.environ.get('OPENAI_API_KEY')
     if not key:
         raise Stop('OPENAI_API_KEY is not set')
@@ -749,6 +850,7 @@ def recognize(image, instruction, prior=None, timeout=20.):
     from gpt_audit import Capture
     audit = Capture(body)
     if audit.path:
+        if paired is not None:(audit.path / 'local-map.json').write_text(json.dumps(paired[2]))
         ok, clean = cv2.imencode(".jpg", image)
         if ok:
             (audit.path / "clean.jpg").write_bytes(clean.tobytes())
@@ -900,8 +1002,22 @@ def project_obstacles(robot, answer):
         if not isinstance(point, dict):
             continue
         try:
-            spot = robot.ground(float(point['x']), float(point['y']))
+            x, y = float(point['x']), float(point['y'])
         except (Stop, KeyError, TypeError, ValueError):
+            continue
+        # The lower fisheye corners turn a few pixels of model error into a
+        # large and often inverted floor-range error.  In the failed Advil run
+        # GPT placed an offscreen can at (639,478), which projected 12.5 cm from
+        # the robot and blocked a clear route.  Do not create or refresh an
+        # obstacle from those corners; a prior metric observation, if any,
+        # remains available through the separate obstacle-memory path.
+        if (y >= OBSTACLE_CORNER_Y_PX
+                and (x <= OBSTACLE_CORNER_X_PX
+                     or x >= 640. - OBSTACLE_CORNER_X_PX)):
+            continue
+        try:
+            spot = robot.ground(x, y)
+        except Stop:
             continue        # not on visible floor: it cannot be placed, so skip
         if math.hypot(*spot) <= ROUTE_RANGE_CM:
             spots.append((obstacle.get('label', '?'), spot))

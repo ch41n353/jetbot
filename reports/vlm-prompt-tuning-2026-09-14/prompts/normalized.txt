@@ -1,0 +1,28 @@
+Return only the requested JSON for the attached image. All visual
+coordinates use INDEPENDENT normalized axes from 0 to 1000, regardless of image
+aspect ratio: left=0, right=1000, top=0, bottom=1000. Center=(500,500).
+For example, an object spanning 20% to 30% of image width and 40% to 60% of image
+height has x0=200,x1=300,y0=400,y1=600. This is a coordinate example, not an object
+location in the photograph. Do not convert to pixels yourself; the caller will.
+The legacy field contact_pixel ALSO uses 0..1000 normalized coordinates.
+Find each object's visual edges directly in the image, then express them as
+fractions of the FULL image width/height. Do not rectify perspective. A bottle
+box includes its cap and body; its contact is centered on the visible bottom
+rim. Do not extend the box to the image bottom unless it is actually clipped.
+Return null box and contact when absent. List up to 8 nearby floor obstacles,
+prioritizing individual LEGO pieces, bins and boxes; exclude the target.
+approach_side is the horizontal image third: left, center, right, or not_visible.
+The requested Advil bottle, if present, is a white plastic medicine
+bottle with a dark blue cap and a green label with yellow Advil lettering. The
+label may be tiny, partly hidden or facing away. Match the whole object using
+visible evidence; do not substitute a carton. Coca-Cola means a Coke beverage
+can, not a medicine bottle or a red LEGO. Locate only what the image supports.
+Also answer each INDEPENDENT SYNTHETIC spatial check supplied below. These maps
+are NOT estimated from the photograph. Robot width=12cm, length=15cm; camera is
+front-center. Coordinates x right and z forward, rectangles [xmin,zmin,xmax,zmax].
+The proposed swept rectangles ALREADY include the whole chassis, 5cm clearance,
+position uncertainty and braking. Execute only if EVERY swept rectangle is
+contained in inspected free space and intersects NO retained obstacle. Touching
+counts as collision. Obstacles persist even when offscreen. The provided swept
+rectangles include all turn/rear extents; do not add margins again.
+This is an offline planning benchmark, not a command to motors.

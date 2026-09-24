@@ -1,0 +1,7 @@
+{
+  "candidate_path": "reports/iteration-2026-09-14/floor-correction-candidate.json",
+  "rotation_determinant": 0.9999999999999999,
+  "orthogonality_max_error": 3.4794938701063395e-18,
+  "premultiply_max_error": 0.0,
+  "conclusion": "Algebra valid proper rotation, but held-out mission consistency still fails: target-world drift19.21cm after correction. Do not install or permit autonomous motion on this candidate. It explains part of plane mismatch, not whole metric discrepancy."
+}

@@ -1,0 +1,58 @@
+[
+  {
+    "case": "baseline",
+    "outcome": "object_reached_estimate",
+    "reason": null,
+    "true_range_cm": 19.760163474961374,
+    "clearance_violations": 0,
+    "final_motor_output": [
+      0.0,
+      0.0
+    ],
+    "local_recoveries": 0,
+    "simulation_seconds": 6.090000000000231,
+    "wall_seconds": 6.323044896002102
+  },
+  {
+    "case": "short_occlusion",
+    "outcome": "object_reached_estimate",
+    "reason": null,
+    "true_range_cm": 18.740191147181847,
+    "clearance_violations": 0,
+    "final_motor_output": [
+      0.0,
+      0.0
+    ],
+    "local_recoveries": 1,
+    "simulation_seconds": 7.2450000000002746,
+    "wall_seconds": 6.904143859996111
+  },
+  {
+    "case": "cancellation",
+    "outcome": "stopped",
+    "reason": "Control cancelled or service restarted; replan",
+    "true_range_cm": 75.61907890541939,
+    "clearance_violations": 0,
+    "final_motor_output": [
+      0.0,
+      0.0
+    ],
+    "local_recoveries": 0,
+    "simulation_seconds": 0.9450000000000358,
+    "wall_seconds": 1.136654431997158
+  },
+  {
+    "case": "stale_camera",
+    "outcome": "stopped",
+    "reason": "Simulated camera/IMU failure",
+    "true_range_cm": 75.19952435132777,
+    "clearance_violations": 0,
+    "final_motor_output": [
+      0.0,
+      0.0
+    ],
+    "local_recoveries": 0,
+    "simulation_seconds": 0.9450000000000358,
+    "wall_seconds": 1.1268371149999439
+  }
+]

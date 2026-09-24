@@ -6,6 +6,7 @@ sys.path.insert(0,os.path.join(ROOT,'local_nav'))
 from point_controller import FloorTracker
 from unittest.mock import patch
 from point_controller import settled_frame, record_observation
+import point_controller
 
 class ObservationTests(unittest.TestCase):
     def test_fault_observation_survives_estimator_rejection(self):
@@ -45,6 +46,10 @@ class SettledFrameTests(unittest.TestCase):
                 settled_frame(None)
 
 class FloorMotionTests(unittest.TestCase):
+    def test_normal_carpet_noise_bounds_cover_observed_fit(self):
+        self.assertLess(point_controller.SCALE_LIMITS[0],.938)
+        self.assertGreater(point_controller.SCALE_LIMITS[1],1.062)
+        self.assertGreaterEqual(point_controller.MAX_RESIDUAL_CM,.351)
     def test_known_forward_translation(self):
         p=dict(camera_height_cm=9.5,pitch_degrees=14.25)
         i=dict(K=[[306.8,0,323.4],[0,308,252.1],[0,0,1]],D=[-.045,.045,-.057,.021])

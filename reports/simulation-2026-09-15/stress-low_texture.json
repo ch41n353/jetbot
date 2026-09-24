@@ -1,0 +1,51 @@
+{
+  "result": {
+    "outcome": "stopped",
+    "requires_planner": true,
+    "intermediate_model_calls": 0,
+    "events": [
+      {
+        "event": "remote_planner_required",
+        "elapsed_seconds": 0.07000000000000739,
+        "reason": "Insufficient carpet texture"
+      }
+    ],
+    "samples": [],
+    "local_recoveries": 0,
+    "local_searches": 0,
+    "floor_recoveries": 0,
+    "power_start": null,
+    "reason": "Insufficient carpet texture",
+    "power_end": null,
+    "elapsed_seconds": 0.07000000000000739
+  },
+  "true_pose": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "true_target_range_cm": 80.0,
+  "clearance_violations": [],
+  "commands": [
+    {
+      "time": 100.0,
+      "action": "status",
+      "fields": {}
+    },
+    {
+      "time": 100.07000000000001,
+      "action": "stop",
+      "fields": {}
+    },
+    {
+      "time": 100.07000000000001,
+      "action": "status",
+      "fields": {}
+    }
+  ],
+  "watchdog_stops": 0,
+  "final_motor_output": [
+    0.0,
+    0.0
+  ]
+}

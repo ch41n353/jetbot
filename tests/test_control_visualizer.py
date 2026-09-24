@@ -6,6 +6,7 @@ import threading
 import unittest
 import urllib.request
 import urllib.error
+import time
 from unittest.mock import patch
 sys.path.insert(0,str(pathlib.Path(__file__).resolve().parents[1]/'scripts'))
 import control_visualizer as visual
@@ -29,6 +30,20 @@ class VisualizerTests(unittest.TestCase):
  def test_partial_response_remains_pending(self):
   (self.root/'gpt'/self.ident/'response.json').write_text('{')
   self.assertEqual(visual.calls(self.root)[0]['status'],'awaiting response')
+ def test_saved_local_snapshot_restores_executor_grid(self):
+  execution=self.root/'local-executions'/('b'*32);shots=execution/'snapshots';shots.mkdir(parents=True)
+  (execution/'result.json').write_text(json.dumps({'phase':'completed','execution_id':'b'*32,'pose_cm_deg':[1,2,3]}))
+  (shots/'0012-camera.jpg').write_bytes(b'camera');(shots/'0012-floor.jpg').write_bytes(b'floor')
+  snapshot=server.saved_local_snapshot(self.root)
+  self.assertTrue(snapshot['id'].endswith('-0012'))
+  self.assertEqual(snapshot['execution']['pose_cm_deg'],[1,2,3])
+  self.assertIn('4 m x 4 m',snapshot['note'])
+  self.assertTrue(snapshot['images']['floor'].startswith('data:image/jpeg;base64,'))
+ def test_midlevel_floor_has_independent_pan_and_zoom_controls(self):
+  html=pathlib.Path(server.__file__).with_name('static').joinpath('control_visualizer.html').read_text()
+  for ident in ('midFloorViewport','midFloorZoom','midZoomIn','midZoomOut','midFloorCenter','midFloorFit'):
+   self.assertIn('id="'+ident+'"',html)
+  self.assertIn("function zoomMidFloor",html)
  def test_operator_http_path(self):
   server.latest.update(root=str(self.root),text='live mission log',error=None)
   http=server.Server(('127.0.0.1',0),server.Handler);thread=threading.Thread(target=http.serve_forever,daemon=True);thread.start();base='http://127.0.0.1:'+str(http.server_address[1])

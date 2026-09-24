@@ -1,0 +1,58 @@
+[
+  {
+    "case": "faster_drive",
+    "outcome": "object_reached_estimate",
+    "reason": null,
+    "true_range_cm": 17.450149701878345,
+    "clearance_violations": 0,
+    "final_motor_output": [
+      0.0,
+      0.0
+    ],
+    "local_recoveries": 0,
+    "simulation_seconds": 4.725000000000179,
+    "wall_seconds": 4.942855850997148
+  },
+  {
+    "case": "yaw_drift",
+    "outcome": "object_reached_estimate",
+    "reason": null,
+    "true_range_cm": 18.14447485204622,
+    "clearance_violations": 0,
+    "final_motor_output": [
+      0.0,
+      0.0
+    ],
+    "local_recoveries": 0,
+    "simulation_seconds": 6.300000000000239,
+    "wall_seconds": 5.87973601900012
+  },
+  {
+    "case": "long_coast",
+    "outcome": "object_reached_estimate",
+    "reason": null,
+    "true_range_cm": 17.960361892909603,
+    "clearance_violations": 0,
+    "final_motor_output": [
+      0.0,
+      0.0
+    ],
+    "local_recoveries": 0,
+    "simulation_seconds": 6.615000000000251,
+    "wall_seconds": 6.132196541002486
+  },
+  {
+    "case": "low_texture",
+    "outcome": "stopped",
+    "reason": "Insufficient carpet texture",
+    "true_range_cm": 80.0,
+    "clearance_violations": 0,
+    "final_motor_output": [
+      0.0,
+      0.0
+    ],
+    "local_recoveries": 0,
+    "simulation_seconds": 0.07000000000000739,
+    "wall_seconds": 0.41055048900307156
+  }
+]

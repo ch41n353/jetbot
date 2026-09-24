@@ -1,0 +1,80 @@
+{
+  "evidence": "Recorded live turn uncertainty and actual Sol final-image response; no new motion",
+  "turns": 6,
+  "yaw_sigma_degrees": 4.149798261038874,
+  "position_sigma_cm": 0.772345983822577,
+  "motion_allowed": false,
+  "recognition_choice": {
+    "kind": "approach"
+  },
+  "search_only_expected_outcome": "object_found",
+  "pose_valid": false,
+  "recognition": {
+    "answer": {
+      "target_visible": true,
+      "target_box": {
+        "x0": 565,
+        "y0": 178,
+        "x1": 639,
+        "y1": 238
+      },
+      "contact_pixel": {
+        "x": 614,
+        "y": 236
+      },
+      "obstacles": [
+        {
+          "label": "red LEGO brick",
+          "box": {
+            "x0": 0,
+            "y0": 341,
+            "x1": 58,
+            "y1": 431
+          }
+        },
+        {
+          "label": "orange LEGO block",
+          "box": {
+            "x0": 66,
+            "y0": 286,
+            "x1": 141,
+            "y1": 344
+          }
+        },
+        {
+          "label": "pink box",
+          "box": {
+            "x0": 0,
+            "y0": 230,
+            "x1": 64,
+            "y1": 300
+          }
+        },
+        {
+          "label": "medicine bottle",
+          "box": {
+            "x0": 43,
+            "y0": 150,
+            "x1": 127,
+            "y1": 294
+          }
+        }
+      ],
+      "spatial_answers": [],
+      "approach_side": "right"
+    },
+    "usage": {
+      "input_tokens": 1299,
+      "input_tokens_details": {
+        "cache_write_tokens": 1296,
+        "cached_tokens": 0
+      },
+      "output_tokens": 178,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1477
+    },
+    "model": "gpt-5.6-sol"
+  }
+}

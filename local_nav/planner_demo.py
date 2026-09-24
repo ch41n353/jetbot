@@ -666,7 +666,9 @@ class Bench(object):
             supply = status.get('power') or {}
             return 'pack %.2f V  motors %s' % (
                 supply.get('pack_voltage_v', 0.),
-                'armed' if supply.get('motion_allowed') else 'BLOCKED')
+                ('armed' if status.get('motion_enabled')
+                 else 'preview only') if supply.get('motion_allowed')
+                else 'BLOCKED')
         except Exception as exc:
             return 'service: %s' % exc
 
@@ -1432,6 +1434,49 @@ class Bench(object):
         self.say('ended after %.0f s: %d looks issued, %d applied, %d stale dropped'
                  % (elapsed, issued, applied + 1, stale))
 
+    def execute_mission_trajectory(self, route, seconds, record, obstacles):
+        """Mid-level validates clearance, then hands only a trajectory to Execution."""
+        start=[0.,0.]
+        for point in route:
+            dx,dz=point[0]-start[0],point[1]-start[1]
+            distance=math.hypot(dx,dz)
+            room,blame=fetch.clear_distance(obstacles,start,math.degrees(math.atan2(dx,dz)),distance)
+            if room+0.1<distance:raise fetch.Stop('mid-level clearance rejected trajectory: '+str(blame))
+            start=point
+        from trajectory_executor import Execution
+        body=dict(frame_token=self.frame_token,trajectory=dict(waypoints_cm=[list(p) for p in route]))
+        job=Execution(self,body,seconds=seconds)
+        self.local_execution=job
+        job.run()
+        result=job.result()
+        self.live_pose=list(result['pose_cm_deg'])
+        self.frame=job.camera.copy()
+        record('pose',x=self.live_pose[0],z=self.live_pose[1],heading=self.live_pose[2])
+        if job.travelled>0:record('leg',moved_cm=job.travelled,wanted_cm=job.travelled,by='new executor vision + IMU')
+        if job.phase not in ('completed','paused'):raise fetch.Stop(job.error or job.phase)
+        return list(job.pose)
+
+    def align_mission_target(self, goal, obstacles):
+        """Bounded final facing turn; caller must acquire a fresh target observation."""
+        from trajectory_executor import Execution,pivot_aim
+        turn=max(-30.,min(30.,pivot_aim(goal)))
+        # Check contact points against the rotating body plus pivot uncertainty.
+        # Do not apply forward-corridor clearance plus a second assumed object
+        # radius to in-place turns: that rejected separated side objects.
+        for angle in np.linspace(0.,turn,max(2,int(abs(turn))+1)):
+            shift=fetch.pivot_shift(float(angle))
+            for label,point in list(obstacles)+[('target',goal)]:
+                x,z=fetch.rebase([point],[shift[0],shift[1],float(angle)])[0]
+                margin=2.  # measured pivot uncertainty; points represent nearest contacts
+                if abs(x)<6.+margin and -15.-margin<z<margin:
+                    raise fetch.Stop('final facing turn blocked by '+label)
+        job=Execution(self,dict(frame_token=self.frame_token,
+                     trajectory=dict(initial_turn_deg=turn,waypoints_cm=[])))
+        self.local_execution=job;job.run()
+        self.live_pose=list(job.pose);self.frame=job.camera.copy()
+        if job.phase!='completed':raise fetch.Stop(job.error or job.phase)
+        return list(job.pose)
+
     def mission(self, target, seconds=MISSION_SECONDS, initial_plan=None):
         """Drive to a named object, asking the model again every few seconds.
 
@@ -1455,6 +1500,9 @@ class Bench(object):
             return
 
         memory, pose, reached, trouble = None, [0., 0., 0.], False, 0
+        facing_attempts=0
+        reference=[]
+        reference_distance=0.;reference_turn=0.
         rejected_starts = 0
         self.strip = []
         closest, idle = None, 0       # nearest the target has come, and how many
@@ -1472,6 +1520,10 @@ class Bench(object):
             if self.abort.is_set():
                 self.say('stopped by the operator')
                 break
+            reference_distance=(memory or {}).get('reference_distance_cm',0.)+math.hypot(pose[0],pose[1])
+            reference_turn=(memory or {}).get('reference_turn_deg',0.)+abs(pose[2])
+            remembered_goal=fetch.rebase([memory['goal']],pose)[0] if memory and memory.get('goal') is not None else None
+            reference=fetch.rebase(memory.get('top_reference',[]),pose) if memory else reference
             seeded = cycle == 0 and initial_plan is not None
             if seeded:
                 # launch() already tied these pixels to this staged frame.  Do
@@ -1492,7 +1544,9 @@ class Bench(object):
                 self.show_request(self.frame, prior, 'look %d: what was sent'
                                   % (cycle + 1))
                 try:
-                    answer = fetch.recognize(self.frame, target, prior)
+                    from paired_planning import observation
+                    pair=observation(self.robot,self.frame,memory,pose,reference)
+                    answer = fetch.recognize(self.frame, target, prior, paired=pair)
                 except fetch.PlannerHold as exc:
                     self.say('PLANNER HOLD: %s' % exc.answer.get('note', 'no supported route'))
                     break
@@ -1526,6 +1580,7 @@ class Bench(object):
                                                    float(point['y'])))
                 except (fetch.Stop, TypeError, ValueError):
                     continue
+            if seeded:reference=list(route)
             obstacles = fetch.project_obstacles(self.robot, answer)
             # The plan as the model drew it, before any trimming. This is what
             # goes back to it next look: handing back the truncated stub the
@@ -1553,6 +1608,8 @@ class Bench(object):
                     self.say('PLANNER HOLD: %s' % exc)
                     break
                 planned = list(route)
+                reference=fetch.rebase(reference,turn_pose)
+                if remembered_goal is not None:remembered_goal=fetch.rebase([remembered_goal],turn_pose)[0]
                 pose = [0., 0., 0.]  # memory below is now in the post-turn frame
 
             if not route and memory:
@@ -1589,7 +1646,10 @@ class Bench(object):
             for label, spot in obstacles:
                 self.say('  avoiding "%s" at %.0f cm' % (label, math.hypot(*spot)))
 
-            if goal is not None:
+            # Inside standoff, progress is angular rather than translational.
+            # Let the bounded facing branch verify bearing before declaring
+            # distance stagnation; it already limits alignment to three tries.
+            if goal is not None and math.hypot(*goal) > MISSION_STANDOFF_CM:
                 range_now = math.hypot(*goal)
                 if closest is None or range_now < closest - 3.:
                     closest, idle = range_now, 0
@@ -1635,10 +1695,32 @@ class Bench(object):
                 shift = fetch.pivot_shift(turned)
                 pose = [shift[0], shift[1], turned]
                 memory = dict(route=list(route), obstacles=list(obstacles),
-                              goal=goal, done=list(done))
+                              goal=goal if goal is not None else remembered_goal, done=list(done), top_reference=list(reference),
+                              reference_distance_cm=reference_distance,reference_turn_deg=reference_turn)
                 self.live_route = []
                 continue
             spins = 0.
+
+            # Arrival uses this fresh observation, never the requested turn alone.
+            bearing=math.degrees(math.atan2(goal[0],goal[1])) if goal is not None else None
+            if goal is not None and math.hypot(*goal)<=MISSION_STANDOFF_CM and abs(bearing)>8.:
+                if facing_attempts>=3:
+                    self.say('HOLD: final facing did not converge; not reached')
+                    break
+                facing_attempts+=1
+                self.say('within range but target is %+.1f degrees off-axis; aligning then rechecking'%bearing)
+                try:
+                    pose=self.align_mission_target(goal,obstacles)
+                except fetch.Stop as exc:
+                    self.robot.halt();self.say('HOLD: '+str(exc));break
+                from gpt_audit import plan_event
+                plan_event(answer,'final_facing',execution_id=self.local_execution.id,
+                           measured_pose=pose,verified_arrival=False)
+                memory=dict(route=list(planned),obstacles=list(obstacles),goal=goal,
+                            done=list(done),top_reference=list(reference),
+                            reference_distance_cm=reference_distance,reference_turn_deg=reference_turn)
+                if once:self.say('Facing turn complete; arrival unverified until a fresh observation')
+                continue
 
             if goal is not None and math.hypot(*goal) <= MISSION_STANDOFF_CM:
                 here = str(answer.get('goal') or target)[:40]
@@ -1681,9 +1763,7 @@ class Bench(object):
                 route = fetch.stop_short(route, goal, MISSION_STANDOFF_CM)
                 if not route:
                     self.say('')
-                    self.say('REACHED: already within %.0f cm of %s'
-                             % (MISSION_STANDOFF_CM, target))
-                    reached = True
+                    self.say('HOLD: no approach remains after standoff trimming; arrival not verified')
                     break
                 if len(route) < before:
                     self.say('  trimmed %d waypoint(s) to stop %.0f cm short of it'
@@ -1744,10 +1824,9 @@ class Bench(object):
 
             started = time.monotonic()
             try:
-                pose = fetch.follow(self.robot, self.odometer, widened, record,
-                                    obstacles,
-                                    deadline=None if once else started + seconds,
-                                    initial_turn_limit_deg=fetch.INITIAL_TURN_LIMIT_DEG)
+                pose = self.execute_mission_trajectory(widened,None if once else seconds,record,obstacles)
+                plan_event(answer,'local_execution',execution_id=self.local_execution.id,
+                           result=self.local_execution.result())
                 trouble = 0
             except fetch.Stop as exc:
                 self.robot.halt()
@@ -1764,12 +1843,14 @@ class Bench(object):
                     break
                 pose = list(self.live_pose)
                 memory = dict(route=list(planned), obstacles=list(obstacles),
-                              goal=goal, done=list(done))
+                              goal=goal if goal is not None else remembered_goal, done=list(done), top_reference=list(reference),
+                              reference_distance_cm=reference_distance,reference_turn_deg=reference_turn)
                 continue
             self.say('  %.1f s of motion, now %.0f cm from where the look started'
                      % (time.monotonic() - started, math.hypot(pose[0], pose[1])))
             memory = dict(route=list(planned), obstacles=list(obstacles),
-                          goal=goal, done=list(done))
+                          goal=goal if goal is not None else remembered_goal, done=list(done), top_reference=list(reference),
+                              reference_distance_cm=reference_distance,reference_turn_deg=reference_turn)
             if start_rejected[0]:
                 rejected_starts += 1
                 memory = dict(memory, route=[])
@@ -1806,7 +1887,8 @@ class Bench(object):
                     self.say('could not turn clear: %s' % exc)
                     break
                 shift = fetch.pivot_shift(turned)
-                pose = [shift[0], shift[1], turned]
+                from trajectory_executor import compose
+                pose = compose(pose,[shift[0],shift[1],turned])
                 # Counted in degrees, not attempts. Turning in 30 degree steps
                 # means an escape that needs 120 takes four cycles, and a limit
                 # of "three tries" would have given up part way round.
@@ -2660,6 +2742,9 @@ class Handler(BaseHTTPRequestHandler):
             if not bench.running() and getattr(bench, 'planner_snapshot', {}).get('phase') in ('executing','replanning'):
                 bench.publish_snapshot('stopped')
             return self._send(json.dumps(getattr(self.server.bench, 'planner_snapshot', {'phase':'waiting','id':0})).encode())
+        if path == '/api/local-execution':
+            job = getattr(self.server.bench, 'local_execution', None)
+            return self._send(json.dumps(job.result() if job else {'phase':'idle'}).encode())
         if path == '/api/live.jpg':
             view = 'floor' if 'view=floor' in self.path else 'camera'
             metadata = {}
@@ -2755,6 +2840,9 @@ class Handler(BaseHTTPRequestHandler):
                 every = body.get('seconds')
                 out = bench.run(body.get('points') or [],
                                 None if every in (None, '') else float(every))
+            elif path == '/api/local-execution':
+                import trajectory_executor
+                out = trajectory_executor.launch(bench, body)
             elif path == '/api/check':
                 out = bench.check_reprojection(
                     float(body.get('degrees') or 30.))
@@ -2819,10 +2907,14 @@ def main():
     parser.add_argument('--stream-width', type=int, default=STREAM_WIDTH,
                         help='shrink streamed frames to this width; 0 passes the '
                              'camera JPEG through without decoding it')
+    parser.add_argument('--restore-snapshot', help='Restore a saved visualization snapshot while idle')
     args = parser.parse_args()
     apply_stream_settings(args.stream_fps, args.stream_width)
     server = Server((args.host, args.port), Handler)
     server.bench = Bench(args.enable_motion)
+    if args.restore_snapshot:
+        with open(args.restore_snapshot) as handle:
+            server.bench.planner_snapshot = json.load(handle)
     server.open_lan = args.host == '0.0.0.0'
     print('planner bench: http://%s:%d/  (%s)' % (
         args.host, args.port,

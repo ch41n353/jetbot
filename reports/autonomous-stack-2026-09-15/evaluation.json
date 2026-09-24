@@ -1,0 +1,121 @@
+{
+  "api_calls": 0,
+  "cases": [
+    {
+      "evidence": {
+        "action": "object_found",
+        "model": "gpt-5.6-sol",
+        "motor_commands": 0
+      },
+      "name": "target_visible",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "action": "known_map_searched",
+        "motor_commands": 0,
+        "recognition": "negative"
+      },
+      "name": "target_absent",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "after_sweep": "map_required",
+        "before_sweep": "navigate_graph",
+        "local_turn_candidates": 0,
+        "motor_commands": 0
+      },
+      "name": "blocked_cable",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "attempts": [
+          {
+            "after_seconds": 8.0,
+            "outcome": "timeout"
+          },
+          {
+            "after_seconds": 9.0,
+            "outcome": "negative"
+          }
+        ],
+        "final_action": "known_map_searched",
+        "motor_commands_during_wait": 0,
+        "total_wait_seconds": 17.0
+      },
+      "name": "api_latency_failure",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "current_mission": "mission-after-target-change",
+        "motor_commands": 0,
+        "old_mission": "mission-before-target-change",
+        "stale_reply_accepted": false
+      },
+      "name": "stale_reply",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "late_reply_accepted": false,
+        "motor_commands": 0,
+        "next_action": "observe_heading"
+      },
+      "name": "cancellation",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "motion_dispatched": false,
+        "motor_commands": 0,
+        "power": {
+          "motion_allowed": false,
+          "stop_latched": true,
+          "stop_reason": "battery_pack_low",
+          "voltage_v": 10.7
+        },
+        "proposed": "navigate_graph"
+      },
+      "name": "low_battery",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "checkpoint_resumed": true,
+        "edges_traversed": 3,
+        "known_places": 4,
+        "observations": 40,
+        "outcome": "object_found",
+        "unsafe_edge_traversals": 0
+      },
+      "name": "multi_room_frontier_checkpoint",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "clearance_violations": 0,
+        "final_motor_output": [
+          0.0,
+          0.0
+        ],
+        "final_target_range_cm": 18.660302082811086,
+        "intermediate_model_calls": 0,
+        "outcome": "object_reached_estimate"
+      },
+      "name": "final_approach",
+      "passed": true
+    }
+  ],
+  "complete": true,
+  "hardware_calls": 0,
+  "limitations": [
+    "Graph mapping/localization events are synthetic",
+    "API timing and failures are scheduled, not network measurements",
+    "Final approach uses rendered camera/IMU/wheel dynamics"
+  ],
+  "model_contract": "gpt-5.6-sol",
+  "passed": true
+}

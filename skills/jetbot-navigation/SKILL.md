@@ -164,6 +164,10 @@ Read [revision 3 evidence and limitations](references/prompt-revision-20260920.m
 
 Earlier powered trials found and approached Advil, but also overshot standoff and drove too close to a bin. Prompt changes do not fix calibration error, all stale-path fallbacks, goal-adjacent obstacle exclusions, or the mismatch between the local checker and the five-cm margin. Keep those limits visible. Recording/logging are lifecycle responsibilities, not automatic hooks installed by loading this skill.
 
+## High-level reviewed-image contract
+
+Update the high-level planner panel only when the high-level assistant has actually reviewed an image. After each review, publish the exact reviewed RGB image with `scripts/publish_highlevel_review.py`, the exact prompt that will be sent to the GPT mid-level planner, and the high-level `route_pixels` and `goal_pixel`. The panel must remain frozen until the next explicit high-level image review. Camera polling, mid-level GPT calls, local-controller snapshots, reset captures, and command handoffs must not replace it. A new/reset run with no reviewed image should clearly say that no high-level review exists; it must not substitute an unreviewed readiness frame. Publish the review before dispatching its associated handoff, then verify `/api/highlevel-view` shows that prompt and trajectory.
+
 ## Live control visualizer
 
 Share http://192.168.86.158:8772/ before motion. It displays the current run, every saved GPT input image and response, proposed waypoints, controller output, and timestamped assistant instructions. For every intervention use `scripts/planner_audit_command.py ENDPOINT JSON REASON` with a concise observable rationale; it resolves the active run from `/mnt/robotlogs/current-search.json`. Verify the instruction appears in `/api/control` before continuing. An emergency halt must never wait for logging. Historical calls without execution events must remain labelled unverified; do not infer arrival from a model response or range estimate alone.

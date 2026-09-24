@@ -1,0 +1,15 @@
+.{"event": "sol_called", "elapsed_seconds": 0.009697624998807441, "target": "duct tape", "context": {"task": "search_and_navigate", "policy": "360_then_perimeter_astar", "pose_cm_degrees": [0.0, 0.0, 0.0], "searched_headings": {"start": [0.0]}, "scanned_rotation_degrees": {"start": 0.0}, "station": "start", "candidates": [{"id": "scan_right", "kind": "turn", "degrees": 30.0}], "travel_cm": 0.0, "completion_rule": "Only measured controller arrival; target absent means continue search"}}
+{"event": "search_decision", "elapsed_seconds": 0.015913258997898083, "policy": "deterministic", "choice": {"id": "scan_right", "kind": "turn", "degrees": 30.0}, "response": {"answer": {"target_visible": false, "target_box": {"x0": 300, "y0": 200, "x1": 340, "y1": 240}, "contact_pixel": {"x": 320, "y": 240}}}}
+{"event": "search_stopped", "elapsed_seconds": 0.01641852900502272, "reason": "Search cancelled during inference"}
+...{"event": "sol_called", "elapsed_seconds": 0.009693405998405069, "target": "duct tape", "context": {"task": "search_and_navigate", "policy": "360_then_perimeter_astar", "pose_cm_degrees": [0.0, 0.0, 0.0], "searched_headings": {"start": [0.0]}, "scanned_rotation_degrees": {"start": 0.0}, "station": "start", "candidates": [{"id": "scan_right", "kind": "turn", "degrees": 30.0}], "travel_cm": 0.0, "completion_rule": "Only measured controller arrival; target absent means continue search"}}
+{"event": "search_decision", "elapsed_seconds": 0.01530522699613357, "policy": "deterministic", "choice": {"id": "scan_right", "kind": "turn", "degrees": 30.0}, "response": {"answer": {"target_visible": false, "target_box": {"x0": 300, "y0": 200, "x1": 340, "y1": 240}, "contact_pixel": {"x": 320, "y": 240}}}}
+{"event": "trajectory_preview", "elapsed_seconds": 0.01650368599803187, "path": "/tmp/tmpaqo8av2n/preview.html", "kind": "search_turn"}
+{"event": "local_action_complete", "elapsed_seconds": 0.018569504994957242, "pose": [0.0, 0.0, 30.0], "travel_cm": 0.0}
+{"event": "sol_called", "elapsed_seconds": 0.020241201993485447, "target": "duct tape", "context": {"task": "search_and_navigate", "policy": "360_then_perimeter_astar", "pose_cm_degrees": [0.0, 0.0, 30.0], "searched_headings": {"start": [0.0, 30.0]}, "scanned_rotation_degrees": {"start": 30.0}, "station": "start", "candidates": [{"id": "scan_right", "kind": "turn", "degrees": 30.0}], "travel_cm": 0.0, "completion_rule": "Only measured controller arrival; target absent means continue search"}}
+{"event": "search_decision", "elapsed_seconds": 0.025677394995000213, "policy": "deterministic", "choice": {"kind": "approach"}, "response": {"answer": {"target_visible": true, "target_box": {"x0": 300, "y0": 200, "x1": 340, "y1": 240}, "contact_pixel": {"x": 320, "y": 240}}}}
+{"event": "trajectory_preview", "elapsed_seconds": 0.030269405993749388, "path": "/tmp/tmpaqo8av2n/preview.html", "kind": "approach"}
+.......
+----------------------------------------------------------------------
+Ran 11 tests in 0.546s
+
+OK

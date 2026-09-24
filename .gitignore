@@ -27,7 +27,10 @@ local_nav/goals/*.service.log
 local_nav/goals/*.stdout.log
 
 # Full-rate power traces stay local; selected short validation traces live in reports.
-local_nav/goals/*.power.jsonl
+# service.py's own rolling log is power.jsonl plus the .1/.2/.3 rolls;
+# maneuver_session.py writes a per-session <prefix>.power.jsonl.
+local_nav/goals/power.jsonl*
+local_nav/goals/*.power.jsonl*
 
 # Dashboard and bench run artifacts: camera frames, event logs and previews
 # from individual sessions. Regenerated every run and large (tens of MB).
@@ -40,3 +43,8 @@ local_nav/goals/*.power.jsonl
 
 # Bench console output is local, like the other session logs above.
 /logs/
+
+# Randomised local-executor reachability trials.
+local_nav/goals/*/local-reach-trials.jsonl
+local_nav/goals/*/local-reach-chain.jsonl
+local_nav/goals/*/charge-watch.jsonl

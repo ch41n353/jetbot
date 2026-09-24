@@ -1,0 +1,47 @@
+{
+  "accepted": true,
+  "motion_enabled": false,
+  "capture": "/home/jetbot/jetbot/local_nav/goals/session-20260914-190808-3d2aea-15945.627813.json",
+  "attitude": {
+    "time": 15945.627812802,
+    "down_camera": [
+      0.021036371912444132,
+      0.9479472158294089,
+      0.31773187919696283
+    ],
+    "yaw": 2.3692653442910244e-05,
+    "variance": 1.4271212799332657e-05,
+    "extrapolation_ms": 0.0
+  },
+  "power": {
+    "time": 15945.538807465,
+    "voltage_v": 5.024,
+    "source": "INA3221 POM_5V_IN",
+    "conversion_period_seconds": 0.053759999999999995,
+    "battery_percent": null,
+    "battery_state": "voltage_only_no_soc_estimate",
+    "input_time": 15945.538807465,
+    "pack_time": 15945.540825305,
+    "pack_voltage_v": 11.700000000000001,
+    "pack_source": "INA219-compatible bus1 address0x41",
+    "pack_conversion_period_seconds": 0.001064,
+    "pack_required": true,
+    "pack_profile": "Waveshare-compatible 3S inferred from hardware; board model unconfirmed",
+    "motion_allowed": true,
+    "stop_latched": false,
+    "stop_reason": null,
+    "warning": false,
+    "minimum_voltage_v": 5.016,
+    "minimum_pack_voltage_v": 11.556000000000001,
+    "warn_below_v": 4.9,
+    "stop_below_v": 4.8,
+    "stop_above_v": 5.25,
+    "pack_warn_below_v": 11.4,
+    "pack_stop_below_v": 10.8,
+    "pack_stop_above_v": 12.9,
+    "stale_after_seconds": 0.6,
+    "power_policy_revision": 2,
+    "stale": false,
+    "service_stop_latched": false
+  }
+}

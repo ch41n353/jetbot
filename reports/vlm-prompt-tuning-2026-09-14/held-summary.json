@@ -1,0 +1,62 @@
+[
+  {
+    "model": "gpt-5.4",
+    "variant": "baseline",
+    "calls": 12,
+    "errors": 0,
+    "unsafe": 0,
+    "target_pass": 0,
+    "target_box_pass": 0,
+    "present": 9,
+    "mean_iou": 0.12473341293173647,
+    "obstacles": 6,
+    "obstacle_total": 36,
+    "absent_correct": 3,
+    "median_seconds": 4.146186829500948
+  },
+  {
+    "model": "gpt-5.4",
+    "variant": "pixel_contract",
+    "calls": 12,
+    "errors": 0,
+    "unsafe": 0,
+    "target_pass": 1,
+    "target_box_pass": 4,
+    "present": 9,
+    "mean_iou": 0.2882666785151622,
+    "obstacles": 24,
+    "obstacle_total": 36,
+    "absent_correct": 3,
+    "median_seconds": 3.7977566059998935
+  },
+  {
+    "model": "gpt-5.4-mini",
+    "variant": "baseline",
+    "calls": 12,
+    "errors": 0,
+    "unsafe": 8,
+    "target_pass": 0,
+    "target_box_pass": 0,
+    "present": 9,
+    "mean_iou": 0.14997362195366115,
+    "obstacles": 5,
+    "obstacle_total": 36,
+    "absent_correct": 2,
+    "median_seconds": 2.462029425500077
+  },
+  {
+    "model": "gpt-5.4-mini",
+    "variant": "fewshot_pixels",
+    "calls": 12,
+    "errors": 0,
+    "unsafe": 7,
+    "target_pass": 0,
+    "target_box_pass": 0,
+    "present": 9,
+    "mean_iou": 0.17036788143366313,
+    "obstacles": 7,
+    "obstacle_total": 36,
+    "absent_correct": 3,
+    "median_seconds": 2.4690961399974185
+  }
+]

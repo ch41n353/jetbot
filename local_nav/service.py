@@ -17,6 +17,41 @@ from core import allowed, ControlGeneration
 from hardware import BNO055, ROOT, robot
 from battery import worker as battery_worker, power_permitted, read_shared
 
+LOG_VOLUME = '/mnt/robotlogs'
+DEFAULT_POWER_LOG = os.path.join(ROOT, 'local_nav', 'goals', 'power.jsonl')
+
+
+def power_log_path(requested):
+    """Resolve the power log, refusing to stream 5 Hz telemetry onto the SD card.
+
+    The battery worker appends a record five times a second for as long as the
+    service runs, so of everything under the runtime directory this is the one
+    thing that grows with runtime. It belongs on the USB volume with every
+    other run artifact: local_nav/goals is a symlink there.
+
+    When that volume is unmounted the symlink resolves back onto the root
+    filesystem, and a silent fallback onto the card is what destroyed the
+    previous one. Refuse at startup instead, loudly, while the operator is
+    still watching -- the worker guards motion, so a path it cannot use later
+    latches motion off with a much less obvious message.
+    """
+    path = os.path.realpath(requested or DEFAULT_POWER_LOG)
+    directory = os.path.dirname(path)
+    if not os.path.ismount(LOG_VOLUME):
+        raise RuntimeError('Run log volume '+LOG_VOLUME+' is not mounted; refusing to '
+                           'write power telemetry to the SD card')
+    # The mount check above is about the default path; this one is about any
+    # path. Compare devices rather than matching a prefix, so a --power-log
+    # pointed anywhere on / is caught too.
+    anchor = directory
+    while not os.path.exists(anchor) and anchor != os.path.dirname(anchor):
+        anchor = os.path.dirname(anchor)
+    if os.stat(anchor).st_dev == os.stat('/').st_dev:
+        raise RuntimeError('Power log '+path+' is on the root filesystem (SD card); '
+                           'run artifacts belong under '+LOG_VOLUME)
+    os.makedirs(directory, exist_ok=True)
+    return path
+
 
 def latest(q, value):
     try:
@@ -82,6 +117,7 @@ def motor_worker(pipe, enabled, power_shared):
     current = {}
     output = (0, 0)
     power_seen = power_latched = False
+    reported_power_latched = False
     power_values=[0.,0.,0.]
     try:
         pipe.send({'ready': True})
@@ -98,6 +134,10 @@ def motor_worker(pipe, enabled, power_shared):
             power_ok=power_permitted(power_values,now)
             if power_seen and not power_ok:power_latched=True
             power_seen=power_seen or power_ok
+            if power_latched != reported_power_latched:
+                pipe.send({'power_latched': power_latched,
+                           'power_latch_time': time.monotonic()})
+                reported_power_latched = power_latched
             valid = allowed(current, now, enabled) and power_ok and not power_latched
             desired = (current['left'], current['right']) if valid else (0, 0)
             if desired != output:
@@ -127,6 +167,9 @@ def main():
         raise RuntimeError('Runtime directory must be owned by this user with mode 0700')
     lock = open(os.path.join(args.directory, 'lock'), 'w')
     fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    # Resolve before claiming any hardware, so an unmounted log volume fails
+    # while the operator is reading the console.
+    power_log = power_log_path(args.power_log)
     ctx = mp.get_context('spawn')
     stop = ctx.Event()
     signal.signal(signal.SIGTERM, lambda *a: stop.set())
@@ -151,7 +194,7 @@ def main():
     workers = [ctx.Process(target=camera_worker, args=(cameraq, stop)),
                ctx.Process(target=imu_worker, args=(imuq, stop)),
                ctx.Process(target=battery_worker,args=(power_shared,powerq,stop,
-                           args.power_log or os.path.join(args.directory,'power.jsonl')))]
+                           power_log))]
     path = os.path.join(args.directory, 'control.sock')
     server = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
     camera, imu = {}, {}
@@ -173,7 +216,8 @@ def main():
         server.bind(path)
         server.listen(4)
         server.settimeout(.02)
-        print('READY '+path+' motion_enabled='+str(args.enable_motion), flush=True)
+        print('READY '+path+' motion_enabled='+str(args.enable_motion)
+              +' power_log='+power_log, flush=True)
         while not stop.is_set():
             for q, name in ((cameraq, 'camera'), (imuq, 'imu'), (powerq,'power')):
                 while True:
@@ -189,6 +233,13 @@ def main():
                             imu_history.append(value)
             while parent.poll():
                 motor_status.update(parent.recv())
+            # The watchdog evaluates the same shared rails independently while
+            # the parent may be busy serving a request. Its latch is authoritative:
+            # never advertise an armed service while the worker is forcing zero.
+            if motor_status.get('power_latched') and not power_latched:
+                power_latched=True
+                generation.invalidate()
+                parent.send({})
             if not motor.is_alive():
                 raise RuntimeError('Motor watchdog exited')
             now = time.monotonic()

@@ -1,0 +1,329 @@
+{
+  "cases": [
+    {
+      "source": "adjacent-floor-normals.json",
+      "paths": [
+        "local_nav/goals/session-20260914-203315-d1f494-route-02.json.action-02.json.observations/21171.485986.jpg",
+        "local_nav/goals/session-20260914-203315-d1f494-route-02.json.action-02.json.observations/21171.886401.jpg"
+      ],
+      "inliers": 51,
+      "normal": [
+        0.034758689810414925,
+        0.9648141229434087,
+        0.26062528973912774
+      ],
+      "pitch_degrees": 15.10716785092537,
+      "roll_degrees": 2.0632630196453015,
+      "singular_values": [
+        0.2579819750111562,
+        0.005416875232468913,
+        0.000861804761374921
+      ],
+      "rank1_residual_ratio": 0.02126118229144774,
+      "gyro_rotation_degrees": [
+        -1.0954014287036975,
+        -2.460207613730887,
+        -0.9360989944187452
+      ],
+      "raw_pitch_degrees": 18.81080165203962
+    },
+    {
+      "source": "adjacent-floor-normals.json",
+      "paths": [
+        "local_nav/goals/session-20260914-203315-d1f494-route-02.json.action-02.json.observations/21171.686223.jpg",
+        "local_nav/goals/session-20260914-203315-d1f494-route-02.json.action-02.json.observations/21171.886401.jpg"
+      ],
+      "inliers": 47,
+      "normal": [
+        -0.0025920244303656607,
+        0.9753352890118651,
+        0.2207132878136107
+      ],
+      "pitch_degrees": 12.75093126252455,
+      "roll_degrees": -0.15226734057271607,
+      "singular_values": [
+        0.2565323251141432,
+        0.009584377571758698,
+        0.002189102196477655
+      ],
+      "rank1_residual_ratio": 0.038323429180907594,
+      "gyro_rotation_degrees": [
+        -0.16356551252488702,
+        -2.1965532851188887,
+        -0.7721248738477642
+      ],
+      "raw_pitch_degrees": 17.88389314976359
+    },
+    {
+      "source": "adjacent-floor-normals.json",
+      "paths": [
+        "local_nav/goals/session-20260914-203315-d1f494-route-02.json.action-02.json.observations/21171.886401.jpg",
+        "local_nav/goals/session-20260914-203315-d1f494-route-02.json.action-02.json.observations/21172.120111.jpg"
+      ],
+      "inliers": 41,
+      "normal": [
+        -0.0017491659451288628,
+        0.9704735694734365,
+        0.2412011429740415
+      ],
+      "pitch_degrees": 13.957443630037027,
+      "roll_degrees": -0.1032688791866682,
+      "singular_values": [
+        0.3407398865068373,
+        0.01293565831558436,
+        0.0025644254497822786
+      ],
+      "rank1_residual_ratio": 0.03870225088977297,
+      "gyro_rotation_degrees": [
+        -0.08811669612459684,
+        1.3764998321128683,
+        0.5082878504017457
+      ],
+      "raw_pitch_degrees": 17.76988726282888
+    },
+    {
+      "source": "adjacent-floor-normals.json",
+      "paths": [
+        "local_nav/goals/session-20260914-203315-d1f494-route-02.json.action-02.json.observations/21172.052863.jpg",
+        "local_nav/goals/session-20260914-203315-d1f494-route-02.json.action-02.json.observations/21172.254796.jpg"
+      ],
+      "inliers": 39,
+      "normal": [
+        0.01233185735970478,
+        0.9739914265125309,
+        0.22624903618390352
+      ],
+      "pitch_degrees": 13.076336851292664,
+      "roll_degrees": 0.7253920409191924,
+      "singular_values": [
+        0.32183507251553345,
+        0.0033383733907045455,
+        0.0011828827409163902
+      ],
+      "rank1_residual_ratio": 0.01100484070205932,
+      "gyro_rotation_degrees": [
+        -0.4516181992330487,
+        4.075080427476721,
+        0.9732885563689332
+      ],
+      "raw_pitch_degrees": 17.785925076388125
+    },
+    {
+      "source": "adjacent-floor-normals.json",
+      "paths": [
+        "local_nav/goals/session-20260914-203315-d1f494-route-02.json.action-02.json.observations/21172.254796.jpg",
+        "local_nav/goals/session-20260914-203315-d1f494-route-02.json.action-02.json.observations/21172.418930.jpg"
+      ],
+      "inliers": 100,
+      "normal": [
+        0.01647574644473524,
+        0.9749688772999463,
+        0.2217301018706544
+      ],
+      "pitch_degrees": 12.810670547320882,
+      "roll_degrees": 0.9681343838833794,
+      "singular_values": [
+        0.2696685313360055,
+        0.002357923811569465,
+        0.0003803401864140966
+      ],
+      "rank1_residual_ratio": 0.008856805909477837,
+      "gyro_rotation_degrees": [
+        -0.18882769530368881,
+        1.5730311241820212,
+        0.5673642198233187
+      ],
+      "raw_pitch_degrees": 17.241866313098008
+    },
+    {
+      "source": "adjacent-floor-normals.json",
+      "paths": [
+        "local_nav/goals/session-20260914-203315-d1f494-route-02.json.action-02.json.observations/21172.418930.jpg",
+        "local_nav/goals/session-20260914-203315-d1f494-route-02.json.action-02.json.observations/21172.619187.jpg"
+      ],
+      "inliers": 53,
+      "normal": [
+        0.004093315361642148,
+        0.9748464185074187,
+        0.22284008861201107
+      ],
+      "pitch_degrees": 12.875900037125229,
+      "roll_degrees": 0.2405797586838704,
+      "singular_values": [
+        0.3325598158537049,
+        0.007346879755605017,
+        0.0006882906348490351
+      ],
+      "rank1_residual_ratio": 0.022188641377362043,
+      "gyro_rotation_degrees": [
+        -0.010478694572136982,
+        -0.9550371907476485,
+        -0.39380646000058683
+      ],
+      "raw_pitch_degrees": 17.01436249296031
+    },
+    {
+      "source": "adjacent-floor-normals.json",
+      "paths": [
+        "local_nav/goals/session-20260914-203315-d1f494-route-02.json.action-02.json.observations/21172.619187.jpg",
+        "local_nav/goals/session-20260914-203315-d1f494-route-02.json.action-02.json.observations/21172.786813.jpg"
+      ],
+      "inliers": 97,
+      "normal": [
+        0.006968126927835839,
+        0.9681238417765655,
+        0.2503750630372371
+      ],
+      "pitch_degrees": 14.499707586700959,
+      "roll_degrees": 0.4123825411605984,
+      "singular_values": [
+        0.24847730573119842,
+        0.001840174324711686,
+        0.000919687655477422
+      ],
+      "rank1_residual_ratio": 0.008279222121814615,
+      "gyro_rotation_degrees": [
+        -0.09712080361096839,
+        -2.1749940660719087,
+        -0.30638107555180394
+      ],
+      "raw_pitch_degrees": 17.02753823117592
+    },
+    {
+      "source": "adjacent-floor-normals.json",
+      "paths": [
+        "local_nav/goals/session-20260914-203315-d1f494-route-02.json.action-02.json.observations/21172.786813.jpg",
+        "local_nav/goals/session-20260914-203315-d1f494-route-02.json.action-02.json.observations/21172.953894.jpg"
+      ],
+      "inliers": 105,
+      "normal": [
+        0.010555595842842195,
+        0.9715588830464932,
+        0.23656271086088893
+      ],
+      "pitch_degrees": 13.683757146847483,
+      "roll_degrees": 0.6224710698159387,
+      "singular_values": [
+        0.25381679963009346,
+        0.0012998642886102988,
+        0.00045461023180106086
+      ],
+      "rank1_residual_ratio": 0.005425442657886113,
+      "gyro_rotation_degrees": [
+        -0.1262383755647808,
+        0.16687295638399194,
+        -0.22592870506427867
+      ],
+      "raw_pitch_degrees": 16.979405737361926
+    },
+    {
+      "source": "adjacent-floor-normals-heldout.json",
+      "paths": [
+        "local_nav/goals/session-20260914-203315-d1f494-route-02.json.action-02.json.observations/21172.953894.jpg",
+        "local_nav/goals/session-20260914-203315-d1f494-route-02.json.action-02.json.observations/21173.153968.jpg"
+      ],
+      "inliers": 45,
+      "normal": [
+        -0.034688653458509765,
+        0.9665823178092052,
+        0.2539986618465166
+      ],
+      "pitch_degrees": 14.714259271554385,
+      "roll_degrees": -2.055345719911974,
+      "singular_values": [
+        0.29564861496436184,
+        0.011946258668538911,
+        0.00016338197171714895
+      ],
+      "rank1_residual_ratio": 0.04041072831486608,
+      "gyro_rotation_degrees": [
+        0.3140315082040296,
+        1.9835529754338177,
+        0.5977734389630888
+      ],
+      "raw_pitch_degrees": 16.84956163303344
+    },
+    {
+      "source": "adjacent-floor-normals-heldout.json",
+      "paths": [
+        "local_nav/goals/session-20260914-203315-d1f494-route-02.json.action-02.json.observations/21173.153968.jpg",
+        "local_nav/goals/session-20260914-203315-d1f494-route-02.json.action-02.json.observations/21173.318939.jpg"
+      ],
+      "inliers": 75,
+      "normal": [
+        0.0066804551624293045,
+        0.9769594348186709,
+        0.21332049652484458
+      ],
+      "pitch_degrees": 12.317013158531152,
+      "roll_degrees": 0.39178281798609915,
+      "singular_values": [
+        0.25256484599056034,
+        0.005528383484644712,
+        0.000896545297966149
+      ],
+      "rank1_residual_ratio": 0.022174933505021907,
+      "gyro_rotation_degrees": [
+        -0.7602070943642376,
+        1.0892922993336132,
+        0.3865169409359263
+      ],
+      "raw_pitch_degrees": 17.115365146530255
+    },
+    {
+      "source": "adjacent-floor-normals-heldout.json",
+      "paths": [
+        "local_nav/goals/session-20260914-203315-d1f494-route-02.json.action-02.json.observations/21173.318939.jpg",
+        "local_nav/goals/session-20260914-203315-d1f494-route-02.json.action-02.json.observations/21173.485426.jpg"
+      ],
+      "inliers": 82,
+      "normal": [
+        0.03809809596051322,
+        0.9752929634626257,
+        0.21760553877250738
+      ],
+      "pitch_degrees": 12.568433582790167,
+      "roll_degrees": 2.2370209788098085,
+      "singular_values": [
+        0.2749595867385561,
+        0.004283186015865486,
+        0.0008206506283458863
+      ],
+      "rank1_residual_ratio": 0.015860858267470045,
+      "gyro_rotation_degrees": [
+        0.7962328958551688,
+        0.26111930432912694,
+        -0.5600308608261424
+      ],
+      "raw_pitch_degrees": 16.329417987418026
+    },
+    {
+      "source": "adjacent-floor-normals-heldout.json",
+      "paths": [
+        "local_nav/goals/session-20260914-203315-d1f494-route-02.json.action-02.json.observations/21173.485426.jpg",
+        "local_nav/goals/session-20260914-203315-d1f494-route-02.json.action-02.json.observations/21173.686106.jpg"
+      ],
+      "inliers": 44,
+      "normal": [
+        -0.000492280268030429,
+        0.9658115583713306,
+        0.2592446554443877
+      ],
+      "pitch_degrees": 15.02524740114406,
+      "roll_degrees": -0.02920401915738935,
+      "singular_values": [
+        0.3129102076473689,
+        0.002563078602949582,
+        3.936698804497882e-05
+      ],
+      "rank1_residual_ratio": 0.008192065475513946,
+      "gyro_rotation_degrees": [
+        0.34768701977260263,
+        -2.4847034303129245,
+        -0.5434284007310146
+      ],
+      "raw_pitch_degrees": 17.117779110721827
+    }
+  ],
+  "method": "Scale H against gyro rotation; minimize second/third singular values of alphaH\u2212R; first right singular vector is candidate plane normal"
+}

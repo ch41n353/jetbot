@@ -1,0 +1,2004 @@
+{
+  "two_rooms": {
+    "rooms": 2,
+    "outcome": "object_found",
+    "actions": {
+      "observe_heading": 16,
+      "navigate_graph": 1,
+      "edges_traversed": 1,
+      "object_found": 1
+    },
+    "observations": 16,
+    "duplicate_observations": 0,
+    "unsafe_edge_traversals": 0,
+    "stale_routes_rejected": 0,
+    "checkpoint_resumed": false,
+    "simulated_seconds": 13.199999999999998,
+    "wall_seconds": 0.003382439994311426,
+    "median_planner_ms": 0.04291699951863848,
+    "maximum_planner_ms": 0.20854399917880073,
+    "checkpoint_bytes": 1453,
+    "known_places": 2,
+    "events": [
+      {
+        "step": 0,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 1,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 2,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 3,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 4,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 5,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 6,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 7,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 8,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 9,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 10,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 11,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 12,
+        "place": "room_00000",
+        "action": "navigate_graph"
+      },
+      {
+        "step": 13,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 14,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 15,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 16,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 17,
+        "place": "room_00001",
+        "action": "object_found"
+      }
+    ],
+    "limitations": "Topological event simulation; no camera, dynamics, live mapping, motor or API calls"
+  },
+  "hundred_rooms": {
+    "rooms": 100,
+    "outcome": "object_found",
+    "actions": {
+      "observe_heading": 1192,
+      "navigate_graph": 99,
+      "edges_traversed": 99,
+      "object_found": 1
+    },
+    "observations": 1192,
+    "duplicate_observations": 0,
+    "unsafe_edge_traversals": 0,
+    "stale_routes_rejected": 0,
+    "checkpoint_resumed": false,
+    "simulated_seconds": 1228.4000000000274,
+    "wall_seconds": 0.5314244429973769,
+    "median_planner_ms": 0.04112050010007806,
+    "maximum_planner_ms": 5.663823998474982,
+    "checkpoint_bytes": 96116,
+    "known_places": 100,
+    "events": [
+      {
+        "step": 0,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 1,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 2,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 3,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 4,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 5,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 6,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 7,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 8,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 9,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 10,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 11,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 12,
+        "place": "room_00000",
+        "action": "navigate_graph"
+      },
+      {
+        "step": 13,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 14,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 15,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 16,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 17,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 18,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 19,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 20,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 21,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 22,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 23,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 24,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 25,
+        "place": "room_00001",
+        "action": "navigate_graph"
+      },
+      {
+        "step": 26,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 27,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 28,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 29,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 30,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 31,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 32,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 33,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 34,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 35,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 36,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 37,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 38,
+        "place": "room_00002",
+        "action": "navigate_graph"
+      },
+      {
+        "step": 39,
+        "place": "room_00003",
+        "action": "observe_heading"
+      }
+    ],
+    "limitations": "Topological event simulation; no camera, dynamics, live mapping, motor or API calls"
+  },
+  "thousand_rooms": {
+    "rooms": 1000,
+    "outcome": "object_found",
+    "actions": {
+      "observe_heading": 11992,
+      "navigate_graph": 999,
+      "edges_traversed": 999,
+      "object_found": 1
+    },
+    "observations": 11992,
+    "duplicate_observations": 0,
+    "unsafe_edge_traversals": 0,
+    "stale_routes_rejected": 0,
+    "checkpoint_resumed": false,
+    "simulated_seconds": 12388.400000001937,
+    "wall_seconds": 51.38322210700426,
+    "median_planner_ms": 0.041667000914458185,
+    "maximum_planner_ms": 75.74677400407381,
+    "checkpoint_bytes": 977277,
+    "known_places": 1000,
+    "events": [
+      {
+        "step": 0,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 1,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 2,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 3,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 4,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 5,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 6,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 7,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 8,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 9,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 10,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 11,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 12,
+        "place": "room_00000",
+        "action": "navigate_graph"
+      },
+      {
+        "step": 13,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 14,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 15,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 16,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 17,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 18,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 19,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 20,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 21,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 22,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 23,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 24,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 25,
+        "place": "room_00001",
+        "action": "navigate_graph"
+      },
+      {
+        "step": 26,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 27,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 28,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 29,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 30,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 31,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 32,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 33,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 34,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 35,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 36,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 37,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 38,
+        "place": "room_00002",
+        "action": "navigate_graph"
+      },
+      {
+        "step": 39,
+        "place": "room_00003",
+        "action": "observe_heading"
+      }
+    ],
+    "limitations": "Topological event simulation; no camera, dynamics, live mapping, motor or API calls"
+  },
+  "closed_door_detour": {
+    "rooms": 10,
+    "outcome": "object_found",
+    "actions": {
+      "observe_heading": 112,
+      "navigate_graph": 10,
+      "edges_traversed": 10,
+      "object_found": 1
+    },
+    "observations": 112,
+    "duplicate_observations": 0,
+    "unsafe_edge_traversals": 0,
+    "stale_routes_rejected": 1,
+    "checkpoint_resumed": false,
+    "simulated_seconds": 137.40000000000018,
+    "wall_seconds": 0.015829739000764675,
+    "median_planner_ms": 0.040730003092903644,
+    "maximum_planner_ms": 0.5720390036003664,
+    "checkpoint_bytes": 9288,
+    "known_places": 10,
+    "events": [
+      {
+        "step": 0,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 1,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 2,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 3,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 4,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 5,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 6,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 7,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 8,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 9,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 10,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 11,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 12,
+        "place": "room_00000",
+        "action": "navigate_graph"
+      },
+      {
+        "step": 13,
+        "place": "room_00000",
+        "action": "navigate_graph"
+      },
+      {
+        "step": 14,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 15,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 16,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 17,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 18,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 19,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 20,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 21,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 22,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 23,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 24,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 25,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 26,
+        "place": "room_00002",
+        "action": "navigate_graph"
+      },
+      {
+        "step": 27,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 28,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 29,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 30,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 31,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 32,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 33,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 34,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 35,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 36,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 37,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 38,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 39,
+        "place": "room_00001",
+        "action": "navigate_graph"
+      }
+    ],
+    "limitations": "Topological event simulation; no camera, dynamics, live mapping, motor or API calls"
+  },
+  "lost_localization": {
+    "rooms": 10,
+    "outcome": "object_found",
+    "actions": {
+      "observe_heading": 112,
+      "relocalize": 1,
+      "navigate_graph": 9,
+      "edges_traversed": 9,
+      "object_found": 1
+    },
+    "observations": 112,
+    "duplicate_observations": 0,
+    "unsafe_edge_traversals": 0,
+    "stale_routes_rejected": 0,
+    "checkpoint_resumed": false,
+    "simulated_seconds": 114.4000000000002,
+    "wall_seconds": 0.015054208000947256,
+    "median_planner_ms": 0.04072899901075289,
+    "maximum_planner_ms": 0.5388089994085021,
+    "checkpoint_bytes": 9090,
+    "known_places": 10,
+    "events": [
+      {
+        "step": 0,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 1,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 2,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 3,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 4,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 5,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 6,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 7,
+        "place": "room_00000",
+        "action": "relocalize"
+      },
+      {
+        "step": 8,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 9,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 10,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 11,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 12,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 13,
+        "place": "room_00000",
+        "action": "navigate_graph"
+      },
+      {
+        "step": 14,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 15,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 16,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 17,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 18,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 19,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 20,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 21,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 22,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 23,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 24,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 25,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 26,
+        "place": "room_00001",
+        "action": "navigate_graph"
+      },
+      {
+        "step": 27,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 28,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 29,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 30,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 31,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 32,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 33,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 34,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 35,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 36,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 37,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 38,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 39,
+        "place": "room_00002",
+        "action": "navigate_graph"
+      }
+    ],
+    "limitations": "Topological event simulation; no camera, dynamics, live mapping, motor or API calls"
+  },
+  "restart": {
+    "rooms": 10,
+    "outcome": "object_found",
+    "actions": {
+      "observe_heading": 112,
+      "navigate_graph": 9,
+      "edges_traversed": 9,
+      "object_found": 1
+    },
+    "observations": 112,
+    "duplicate_observations": 0,
+    "unsafe_edge_traversals": 0,
+    "stale_routes_rejected": 0,
+    "checkpoint_resumed": true,
+    "simulated_seconds": 112.40000000000019,
+    "wall_seconds": 0.02817500499804737,
+    "median_planner_ms": 0.04135400376981124,
+    "maximum_planner_ms": 0.5694339997717179,
+    "checkpoint_bytes": 9088,
+    "known_places": 10,
+    "events": [
+      {
+        "step": 0,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 1,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 2,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 3,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 4,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 5,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 6,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 7,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 8,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 9,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 10,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 11,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 12,
+        "place": "room_00000",
+        "action": "navigate_graph"
+      },
+      {
+        "step": 13,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 14,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 15,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 16,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 17,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 18,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 19,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 20,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 21,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 22,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 23,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 24,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 25,
+        "place": "room_00001",
+        "action": "navigate_graph"
+      },
+      {
+        "step": 26,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 27,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 28,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 29,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 30,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 31,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 32,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 33,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 34,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 35,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 36,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 37,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 38,
+        "place": "room_00002",
+        "action": "navigate_graph"
+      },
+      {
+        "step": 39,
+        "place": "room_00003",
+        "action": "observe_heading"
+      }
+    ],
+    "limitations": "Topological event simulation; no camera, dynamics, live mapping, motor or API calls"
+  },
+  "absent_target": {
+    "rooms": 10,
+    "outcome": "known_map_searched",
+    "actions": {
+      "observe_heading": 120,
+      "navigate_graph": 9,
+      "edges_traversed": 9,
+      "known_map_searched": 1
+    },
+    "observations": 120,
+    "duplicate_observations": 0,
+    "unsafe_edge_traversals": 0,
+    "stale_routes_rejected": 0,
+    "checkpoint_resumed": false,
+    "simulated_seconds": 114.00000000000021,
+    "wall_seconds": 0.016157086996827275,
+    "median_planner_ms": 0.040834001993061975,
+    "maximum_planner_ms": 0.5463619963848032,
+    "checkpoint_bytes": 9227,
+    "known_places": 10,
+    "events": [
+      {
+        "step": 0,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 1,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 2,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 3,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 4,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 5,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 6,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 7,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 8,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 9,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 10,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 11,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 12,
+        "place": "room_00000",
+        "action": "navigate_graph"
+      },
+      {
+        "step": 13,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 14,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 15,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 16,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 17,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 18,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 19,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 20,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 21,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 22,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 23,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 24,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 25,
+        "place": "room_00001",
+        "action": "navigate_graph"
+      },
+      {
+        "step": 26,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 27,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 28,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 29,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 30,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 31,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 32,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 33,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 34,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 35,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 36,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 37,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 38,
+        "place": "room_00002",
+        "action": "navigate_graph"
+      },
+      {
+        "step": 39,
+        "place": "room_00003",
+        "action": "observe_heading"
+      }
+    ],
+    "limitations": "Topological event simulation; no camera, dynamics, live mapping, motor or API calls"
+  },
+  "discovered_rooms": {
+    "rooms": 100,
+    "outcome": "object_found",
+    "actions": {
+      "observe_heading": 1192,
+      "map_frontier": 99,
+      "navigate_graph": 99,
+      "edges_traversed": 99,
+      "object_found": 1
+    },
+    "observations": 1192,
+    "duplicate_observations": 0,
+    "unsafe_edge_traversals": 0,
+    "stale_routes_rejected": 0,
+    "checkpoint_resumed": false,
+    "simulated_seconds": 1327.4000000000292,
+    "wall_seconds": 0.3423365199996624,
+    "median_planner_ms": 0.039739999920129776,
+    "maximum_planner_ms": 4.761260999657679,
+    "checkpoint_bytes": 96189,
+    "known_places": 100,
+    "events": [
+      {
+        "step": 0,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 1,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 2,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 3,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 4,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 5,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 6,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 7,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 8,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 9,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 10,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 11,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 12,
+        "place": "room_00000",
+        "action": "map_frontier"
+      },
+      {
+        "step": 13,
+        "place": "room_00000",
+        "action": "navigate_graph"
+      },
+      {
+        "step": 14,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 15,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 16,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 17,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 18,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 19,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 20,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 21,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 22,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 23,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 24,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 25,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 26,
+        "place": "room_00001",
+        "action": "map_frontier"
+      },
+      {
+        "step": 27,
+        "place": "room_00001",
+        "action": "navigate_graph"
+      },
+      {
+        "step": 28,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 29,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 30,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 31,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 32,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 33,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 34,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 35,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 36,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 37,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 38,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 39,
+        "place": "room_00002",
+        "action": "observe_heading"
+      }
+    ],
+    "limitations": "Topological event simulation; no camera, dynamics, live mapping, motor or API calls"
+  },
+  "blocked_frontier": {
+    "rooms": 10,
+    "outcome": "map_required",
+    "actions": {
+      "observe_heading": 12,
+      "map_frontier": 1,
+      "map_required": 1
+    },
+    "observations": 12,
+    "duplicate_observations": 0,
+    "unsafe_edge_traversals": 0,
+    "stale_routes_rejected": 0,
+    "checkpoint_resumed": false,
+    "simulated_seconds": 2.4,
+    "wall_seconds": 0.0020407560004969127,
+    "median_planner_ms": 0.04528700083028525,
+    "maximum_planner_ms": 0.10578300134511665,
+    "checkpoint_bytes": 675,
+    "known_places": 1,
+    "events": [
+      {
+        "step": 0,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 1,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 2,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 3,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 4,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 5,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 6,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 7,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 8,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 9,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 10,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 11,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 12,
+        "place": "room_00000",
+        "action": "map_frontier"
+      },
+      {
+        "step": 13,
+        "place": "room_00000",
+        "action": "map_required"
+      }
+    ],
+    "limitations": "Topological event simulation; no camera, dynamics, live mapping, motor or API calls"
+  },
+  "combined": {
+    "rooms": 100,
+    "outcome": "object_found",
+    "actions": {
+      "observe_heading": 1192,
+      "relocalize": 1,
+      "navigate_graph": 100,
+      "edges_traversed": 100,
+      "object_found": 1
+    },
+    "observations": 1192,
+    "duplicate_observations": 0,
+    "unsafe_edge_traversals": 0,
+    "stale_routes_rejected": 1,
+    "checkpoint_resumed": true,
+    "simulated_seconds": 1255.4000000000285,
+    "wall_seconds": 0.6299910730012925,
+    "median_planner_ms": 0.041250001231674105,
+    "maximum_planner_ms": 6.8012869960512035,
+    "checkpoint_bytes": 96320,
+    "known_places": 100,
+    "events": [
+      {
+        "step": 0,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 1,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 2,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 3,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 4,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 5,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 6,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 7,
+        "place": "room_00000",
+        "action": "relocalize"
+      },
+      {
+        "step": 8,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 9,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 10,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 11,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 12,
+        "place": "room_00000",
+        "action": "observe_heading"
+      },
+      {
+        "step": 13,
+        "place": "room_00000",
+        "action": "navigate_graph"
+      },
+      {
+        "step": 14,
+        "place": "room_00000",
+        "action": "navigate_graph"
+      },
+      {
+        "step": 15,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 16,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 17,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 18,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 19,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 20,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 21,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 22,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 23,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 24,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 25,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 26,
+        "place": "room_00002",
+        "action": "observe_heading"
+      },
+      {
+        "step": 27,
+        "place": "room_00002",
+        "action": "navigate_graph"
+      },
+      {
+        "step": 28,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 29,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 30,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 31,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 32,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 33,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 34,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 35,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 36,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 37,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 38,
+        "place": "room_00001",
+        "action": "observe_heading"
+      },
+      {
+        "step": 39,
+        "place": "room_00001",
+        "action": "observe_heading"
+      }
+    ],
+    "limitations": "Topological event simulation; no camera, dynamics, live mapping, motor or API calls"
+  }
+}

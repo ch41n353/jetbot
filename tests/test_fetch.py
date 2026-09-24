@@ -3,6 +3,11 @@ import math
 import os
 import sys
 import unittest
+import fcntl
+import multiprocessing
+import subprocess
+import tempfile
+import time
 from unittest.mock import patch
 
 import numpy as np
@@ -23,6 +28,35 @@ STATUS = dict(session_id='s', control_epoch=1, healthy=True, motion_enabled=True
 def robot(**overrides):
     with patch.object(fetch, 'call', return_value=dict(STATUS, **overrides)):
         return fetch.Robot()
+
+
+class ServiceLifecycleTests(unittest.TestCase):
+    def test_release_waits_for_hardware_lock_not_only_socket(self):
+        with tempfile.TemporaryDirectory() as root:
+            lock = os.path.join(root, 'lock')
+            socket_path = os.path.join(root, 'control.sock')
+            ready = os.path.join(root, 'ready')
+            code = (
+                'import fcntl,os,sys,time\n'
+                'h=open(sys.argv[1],"a")\n'
+                'fcntl.flock(h,fcntl.LOCK_EX)\n'
+                'open(sys.argv[2],"w").close()\n'
+                'open(sys.argv[3],"w").close()\n'
+                'time.sleep(.3)\n'
+                'os.unlink(sys.argv[2])\n'
+                'fcntl.flock(h,fcntl.LOCK_UN)\n')
+            child = subprocess.Popen([sys.executable, '-c', code,
+                                      lock, socket_path, ready])
+            try:
+                for _ in range(100):
+                    if os.path.exists(ready): break
+                    time.sleep(.01)
+                else: self.fail('lock holder did not start')
+                started = time.monotonic()
+                fetch.wait_for_service_release(2., socket_path, lock)
+                self.assertGreaterEqual(time.monotonic() - started, .2)
+            finally:
+                child.wait(timeout=2)
 
 
 class GeometryTests(unittest.TestCase):
@@ -126,7 +160,7 @@ class ObstacleTests(unittest.TestCase):
     """Obstacles must cut a leg short rather than be discovered by the wheels."""
 
     def test_something_dead_ahead_stops_the_leg_short_of_it(self):
-        room, blame = fetch.clear_distance([('bin', (0., 40.))], (0., 0.), 0., 30.)
+        room, blame = fetch.clear_distance([('bin', (0., 40.))], (0., 0.), 0., 35.)
         self.assertAlmostEqual(room, 40. - fetch.OBSTACLE_RADIUS_CM - fetch.KEEP_BACK_CM)
         self.assertEqual(blame, 'bin')
 
@@ -142,14 +176,36 @@ class ObstacleTests(unittest.TestCase):
 
     def test_the_corridor_turns_with_the_robot(self):
         # An obstacle due north blocks a north leg, but not an east one.
-        north = fetch.clear_distance([('bin', (0., 40.))], (0., 0.), 0., 30.)[0]
-        east = fetch.clear_distance([('bin', (0., 40.))], (0., 0.), 90., 30.)[0]
-        self.assertLess(north, 30.)
-        self.assertEqual(east, 30.)
+        north = fetch.clear_distance([('bin', (0., 40.))], (0., 0.), 0., 35.)[0]
+        east = fetch.clear_distance([('bin', (0., 40.))], (0., 0.), 90., 35.)[0]
+        self.assertLess(north, 35.)
+        self.assertEqual(east, 35.)
 
     def test_an_obstacle_on_top_of_the_robot_yields_no_room(self):
         room, _ = fetch.clear_distance([('x', (0., 5.))], (0., 0.), 0., 25.)
         self.assertEqual(room, 0.)
+
+    def test_configured_clearance_threshold_is_ten_cm(self):
+        self.assertEqual(fetch.CORRIDOR_HALF_CM + fetch.OBSTACLE_RADIUS_CM, 10.)
+        self.assertEqual(fetch.KEEP_BACK_CM + fetch.OBSTACLE_RADIUS_CM, 10.)
+
+    def test_lower_fisheye_corner_obstacles_are_ignored(self):
+        class Lens(object):
+            def __init__(self): self.points = []
+            def ground(self, x, y):
+                self.points.append((x, y))
+                return (x / 10., y / 10.)
+        lens = Lens()
+        answer = {'obstacles': [
+            {'label': 'failed-run can', 'contact_pixel': {'x': 639, 'y': 478}},
+            {'label': 'left corner', 'contact_pixel': {'x': 20, 'y': 400}},
+            {'label': 'usable edge', 'contact_pixel': {'x': 617, 'y': 330}},
+            {'label': 'usable floor', 'contact_pixel': {'x': 500, 'y': 400}},
+        ]}
+        placed = fetch.project_obstacles(lens, answer)
+        self.assertEqual([label for label, _ in placed],
+                         ['usable edge', 'usable floor'])
+        self.assertEqual(lens.points, [(617., 330.), (500., 400.)])
 
 class FollowTests(unittest.TestCase):
     """A waypoint is a destination, not a direction to nudge once toward."""
@@ -703,14 +759,15 @@ class ContinuedRouteTests(unittest.TestCase):
     def test_clearance_does_not_depend_on_seeing_the_goal(self):
         route = [(0., 20.), (0., 40.), (0., 60.), (0., 80.)]
         obstacles = [('box', (0., 45.))]
-        # 15 cm written out, not OBSTACLE_RADIUS_CM + CORRIDOR_HALF_CM. Deriving
+        # 10 cm written out, not OBSTACLE_RADIUS_CM + CORRIDOR_HALF_CM. Deriving
         # it from the constants under test makes the assertion shrink with them,
         # so halving the corridor passes -- which is exactly what it did. The
-        # robot is 12 cm across and needs 15; that is a fact about the hardware,
-        # so it belongs in the test as a number.
-        need = 15.
+        # it from the constants under test would let the test silently follow
+        # an accidental configuration change. This is the operator-selected
+        # exclusion threshold for the 12 cm-wide differential-drive chassis.
+        need = 10.
         self.assertGreaterEqual(fetch.OBSTACLE_RADIUS_CM + fetch.CORRIDOR_HALF_CM,
-                                need, 'the configured corridor is under 15 cm')
+                                need, 'the configured corridor is under 10 cm')
         for goal in ((0., 80.), None):
             widened, nudged = fetch.avoid(route, obstacles, goal)
             self.assertTrue(widened, goal)

@@ -8,6 +8,7 @@ import time
 import urllib.request
 import pathlib
 import re
+import base64
 from control_visualizer import calls, interventions, detail, planner_state
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from socketserver import ThreadingMixIn
@@ -45,6 +46,25 @@ def watch():
             with lock:latest['error']=str(exc)
         time.sleep(2)
 
+def saved_local_snapshot(root):
+    """Restore the last executor grid after planner restarts or GPT previews."""
+    results=list((root/'local-executions').glob('*/result.json'))
+    if not results:return None
+    result_path=max(results,key=lambda p:p.stat().st_mtime_ns)
+    directory=result_path.parent;snapshots=directory/'snapshots'
+    floors=list(snapshots.glob('*-floor.jpg'))
+    if not floors:return None
+    floor=max(floors,key=lambda p:int(p.name.split('-',1)[0]))
+    stem=floor.name.split('-',1)[0];camera=snapshots/(stem+'-camera.jpg')
+    if not camera.exists():return None
+    result=json.loads(result_path.read_text())
+    uri=lambda p:'data:image/jpeg;base64,'+base64.b64encode(p.read_bytes()).decode('ascii')
+    return dict(id='saved-'+directory.name+'-'+stem,phase=result.get('phase','stopped'),
+                image_time=max(camera.stat().st_mtime,floor.stat().st_mtime),
+                note='Restored last local executor snapshot from USB; 4 m x 4 m camera-centered grid.',
+                retained_plan=True,images=dict(camera=uri(camera),floor=uri(floor)),
+                execution=result)
+
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         path=self.path.split('?')[0]
@@ -73,10 +93,46 @@ class Handler(BaseHTTPRequestHandler):
         elif path=='/':
             data=pathlib.Path(__file__).with_name('static').joinpath('control_visualizer.html').read_bytes()
             kind='text/html; charset=utf-8'
+        elif path=='/api/highlevel-view':
+            try:
+                from highlevel_view import view
+                payload=view(pathlib.Path(state['root']))
+            except Exception as exc:payload=dict(available=False,note='High-level view unavailable: '+str(exc))
+            data,kind=json.dumps(payload).encode(),'application/json'
+        elif path=='/api/midlevel-view':
+            try:
+                from midlevel_view import local_view,call_view,seeded_view
+                from urllib.parse import parse_qs,urlsplit
+                query=parse_qs(urlsplit(self.path).query)
+                root=pathlib.Path(state['root'])
+                ident=query.get('call',[''])[0]
+                if ident:
+                    if not re.fullmatch('[a-f0-9]{32}',ident):raise ValueError('Invalid call')
+                    directory=root/'gpt'/ident
+                    version=tuple(p.stat().st_mtime_ns for p in directory.glob('*.json'))
+                    payload=call_view(str(directory),version)
+                else:
+                    directories=list((root/'local-executions').glob('*/command.json'))
+                    if not directories:payload=seeded_view(root)
+                    else:
+                        command=max(directories,key=lambda p:p.stat().st_mtime);snapshot={}
+                        try:
+                            with urllib.request.urlopen('http://127.0.0.1:8770/api/planner-snapshot',timeout=2) as response:snapshot=json.load(response)
+                        except Exception:pass
+                        if snapshot.get('execution',{}).get('execution_id')!=command.parent.name:snapshot={}
+                        payload=local_view(str(command.parent),command.stat().st_mtime_ns,json.dumps(snapshot))
+                data,kind=json.dumps(payload).encode(),'application/json'
+            except Exception as exc:
+                data,kind=json.dumps(dict(available=False,note='Reference view unavailable: '+str(exc))).encode(),'application/json'
         elif path=='/api/planner-snapshot':
             try:
                 with urllib.request.urlopen('http://127.0.0.1:8770/api/planner-snapshot',timeout=3) as response:
-                    data=response.read()
+                    live=json.load(response)
+                # ASK/GPT previews and planner restarts must not replace the
+                # local controller's durable 4 m executor representation.
+                if not live.get('execution'):
+                    live=saved_local_snapshot(pathlib.Path(state['root'])) or live
+                data=json.dumps(live).encode()
                 kind='application/json'
             except Exception:
                 self.send_error(503, 'Planner snapshot unavailable');return

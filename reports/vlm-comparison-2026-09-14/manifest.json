@@ -1,0 +1,477 @@
+{
+  "version": 1,
+  "reference_author": "root assistant, hand-inspected before candidate responses",
+  "limitations": "Four correlated room photos plus one absent-target task; annotations are not independent physical ground truth. Spatial checks are synthetic, not image-derived.",
+  "cases": [
+    {
+      "id": "far_left",
+      "image": "/home/jetbot/jetbot/local_nav/goals/session-20260914-224255-1ac1c2-29024.854240.jpg",
+      "image_sha256": "eb0bf5b912c26f399f59dccf30d4b0ec58a242b9a49fad45c671120aad109b42",
+      "target": "Advil bottle",
+      "reference": {
+        "target_visible": true,
+        "target_box": [
+          262,
+          171,
+          281,
+          206
+        ],
+        "contact_pixel": [
+          271.5,
+          206
+        ],
+        "obstacle_boxes": [
+          [
+            250,
+            194,
+            263,
+            208
+          ],
+          [
+            198,
+            169,
+            263,
+            207
+          ],
+          [
+            299,
+            188,
+            350,
+            206
+          ]
+        ]
+      }
+    },
+    {
+      "id": "far_right",
+      "image": "/home/jetbot/jetbot/local_nav/goals/session-20260914-224848-999cf7-29162.462213.jpg",
+      "image_sha256": "6c16801fe92d56f09c9b381ccdd12660f953df612420eeb1ae35a0550b4a91be",
+      "target": "Advil bottle",
+      "reference": {
+        "target_visible": true,
+        "target_box": [
+          399,
+          171,
+          417,
+          203
+        ],
+        "contact_pixel": [
+          408,
+          203
+        ],
+        "obstacle_boxes": [
+          [
+            390,
+            190,
+            402,
+            204
+          ],
+          [
+            337,
+            168,
+            399,
+            200
+          ],
+          [
+            430,
+            191,
+            480,
+            208
+          ]
+        ]
+      }
+    },
+    {
+      "id": "near_left",
+      "image": "/home/jetbot/jetbot/local_nav/goals/session-20260914-224255-1ac1c2-29062.113672.jpg",
+      "image_sha256": "aa41adb36f4df726ebd49ddee5d83f042b73522457301059d701e823960dffde",
+      "target": "Advil bottle",
+      "reference": {
+        "target_visible": true,
+        "target_box": [
+          195,
+          145,
+          279,
+          307
+        ],
+        "contact_pixel": [
+          237,
+          307
+        ],
+        "obstacle_boxes": [
+          [
+            150,
+            248,
+            200,
+            304
+          ],
+          [
+            116,
+            163,
+            283,
+            240
+          ],
+          [
+            344,
+            220,
+            551,
+            320
+          ]
+        ]
+      }
+    },
+    {
+      "id": "near_right",
+      "image": "/home/jetbot/jetbot/local_nav/goals/session-20260914-224848-999cf7-29278.973969.jpg",
+      "image_sha256": "9fe749b8163cc80fa0289c6119d6b5da1629242e2186858eaa4fc5ed76916cec",
+      "target": "Advil bottle",
+      "reference": {
+        "target_visible": true,
+        "target_box": [
+          530,
+          151,
+          612,
+          329
+        ],
+        "contact_pixel": [
+          571,
+          329
+        ],
+        "obstacle_boxes": [
+          [
+            490,
+            264,
+            533,
+            331
+          ],
+          [
+            410,
+            259,
+            482,
+            294
+          ],
+          [
+            276,
+            155,
+            463,
+            241
+          ]
+        ]
+      }
+    },
+    {
+      "id": "coke_absent",
+      "image": "/home/jetbot/jetbot/local_nav/goals/session-20260914-224848-999cf7-29278.973969.jpg",
+      "image_sha256": "9fe749b8163cc80fa0289c6119d6b5da1629242e2186858eaa4fc5ed76916cec",
+      "target": "Coca-Cola can",
+      "reference": {
+        "target_visible": false,
+        "target_box": null,
+        "contact_pixel": null,
+        "obstacle_boxes": [
+          [
+            490,
+            264,
+            533,
+            331
+          ],
+          [
+            410,
+            259,
+            482,
+            294
+          ],
+          [
+            276,
+            155,
+            463,
+            241
+          ]
+        ]
+      }
+    }
+  ],
+  "spatial_checks": [
+    {
+      "id": "clear_drive",
+      "free": [
+        -35,
+        -35,
+        55,
+        120
+      ],
+      "obstacles": [
+        [
+          30,
+          70,
+          40,
+          80
+        ]
+      ],
+      "swept": [
+        [
+          -16,
+          -24,
+          16,
+          73
+        ]
+      ]
+    },
+    {
+      "id": "offscreen_rear_turn",
+      "free": [
+        -50,
+        -50,
+        70,
+        120
+      ],
+      "obstacles": [
+        [
+          -29,
+          -22,
+          -23,
+          -16
+        ]
+      ],
+      "obstacle_visibility": "offscreen",
+      "swept": [
+        [
+          -31,
+          -31,
+          31,
+          31
+        ],
+        [
+          -16,
+          -24,
+          16,
+          73
+        ]
+      ]
+    },
+    {
+      "id": "narrow_gap",
+      "free": [
+        -40,
+        -35,
+        40,
+        100
+      ],
+      "obstacles": [
+        [
+          -40,
+          30,
+          -10,
+          45
+        ],
+        [
+          10,
+          30,
+          40,
+          45
+        ]
+      ],
+      "swept": [
+        [
+          -16,
+          -24,
+          16,
+          73
+        ]
+      ]
+    },
+    {
+      "id": "unknown_space",
+      "free": [
+        -20,
+        -20,
+        20,
+        80
+      ],
+      "obstacles": [],
+      "swept": [
+        [
+          -16,
+          -24,
+          16,
+          73
+        ]
+      ]
+    },
+    {
+      "id": "detour_clear",
+      "free": [
+        -60,
+        -40,
+        60,
+        110
+      ],
+      "obstacles": [
+        [
+          15,
+          40,
+          30,
+          55
+        ]
+      ],
+      "swept": [
+        [
+          -31,
+          -31,
+          10,
+          31
+        ],
+        [
+          -45,
+          -25,
+          -15,
+          90
+        ]
+      ]
+    }
+  ],
+  "prompt": "You are the high-level planner of a JetBot. Produce one compact JSON\nanswer; no tools or follow-up questions. The photograph is 640x480, with pixel\norigin top-left. Locate the requested target, give a tight full-object box and\nthe center of its actual floor contact. Null both if not visible. Identify up to\n8 relevant floor obstacles (especially LEGO pieces, bins and boxes near the\napproach), excluding the target. Use tight object boxes, not free-space boxes.\napproach_side is the target's horizontal image third (left x<213.33, center\nx<=426.67, right otherwise); not_visible when absent.\n\nAlso answer each INDEPENDENT SYNTHETIC spatial check supplied below. These maps\nare NOT estimated from the photograph. Robot width=12cm, length=15cm; camera is\nfront-center. Coordinates x right and z forward, rectangles [xmin,zmin,xmax,zmax].\nThe proposed swept rectangles ALREADY include the whole chassis, 5cm clearance,\nposition uncertainty and braking. Execute only if EVERY swept rectangle is\ncontained in inspected free space and intersects NO retained obstacle. Touching\ncounts as collision. Obstacles persist even when offscreen. The provided swept\nrectangles include all turn/rear extents; do not add margins again.\nThis is an offline planning benchmark, not a command to motors.",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "target_visible": {
+        "type": "boolean"
+      },
+      "target_box": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "x0": {
+                "type": "number"
+              },
+              "y0": {
+                "type": "number"
+              },
+              "x1": {
+                "type": "number"
+              },
+              "y1": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "x0",
+              "y0",
+              "x1",
+              "y1"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "contact_pixel": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "x",
+              "y"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "obstacles": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "box": {
+              "type": "object",
+              "properties": {
+                "x0": {
+                  "type": "number"
+                },
+                "y0": {
+                  "type": "number"
+                },
+                "x1": {
+                  "type": "number"
+                },
+                "y1": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x0",
+                "y0",
+                "x1",
+                "y1"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "label",
+            "box"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "spatial_answers": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "decision": {
+              "type": "string",
+              "enum": [
+                "execute",
+                "hold"
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "decision"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "approach_side": {
+        "type": "string",
+        "enum": [
+          "left",
+          "center",
+          "right",
+          "not_visible"
+        ]
+      }
+    },
+    "required": [
+      "target_visible",
+      "target_box",
+      "contact_pixel",
+      "obstacles",
+      "spatial_answers",
+      "approach_side"
+    ],
+    "additionalProperties": false
+  }
+}

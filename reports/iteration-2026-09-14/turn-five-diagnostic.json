@@ -1,0 +1,75 @@
+{
+  "result": {
+    "target_degrees": 5.0,
+    "power": 0.14,
+    "samples": [
+      {
+        "time": 15367.599562725,
+        "angle_degrees": -1.4169186959912927e-05,
+        "command": {
+          "left": 0.14,
+          "right": -0.14
+        }
+      },
+      {
+        "time": 15367.899867111,
+        "angle_degrees": 2.372123857170626,
+        "command": {
+          "left": 0.14,
+          "right": -0.14
+        }
+      },
+      {
+        "time": 15368.16791999,
+        "angle_degrees": 4.494470043489584,
+        "command": null
+      }
+    ],
+    "mode": "execute",
+    "outcome": "turn_reached_imu_estimate",
+    "elapsed": 0.6567107800001395
+  },
+  "peak_imu": {
+    "acceleration": [
+      9.08,
+      -0.86,
+      -0.27
+    ],
+    "gyro": [
+      -49.5,
+      1.5625,
+      -0.9375
+    ],
+    "euler": [
+      270.25,
+      84.75,
+      175.0625
+    ],
+    "gyro_units": "deg/s",
+    "euler_units": "deg",
+    "calibration": [
+      0,
+      3,
+      0,
+      0
+    ],
+    "self_test": 15,
+    "system_status": 5,
+    "error": 0,
+    "time": 15367.778367232,
+    "sequence": 2446
+  },
+  "peak_gyro_norm_deg_s": 49.53352715585677,
+  "visual_only_yaw_deg": 4.693290541728301,
+  "visual_translation_cm": [
+    -0.5887564105044962,
+    0.07238371542407407
+  ],
+  "quality": {
+    "matches": 95,
+    "residual_cm": 0.03938285083726479,
+    "scale": 1.0068668225573485,
+    "yaw_variance": 0.0001949551486634935
+  },
+  "raw_imu_samples": 43
+}

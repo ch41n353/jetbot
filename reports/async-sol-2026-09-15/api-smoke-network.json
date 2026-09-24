@@ -1,0 +1,101 @@
+{
+  "real_api": true,
+  "motors_used": false,
+  "simulation": "20ms synthetic tick; not camera/controller performance",
+  "elapsed_seconds": 6.432688989996677,
+  "ticks_while_waiting": 311,
+  "max_poll_seconds": 0.000983029000053648,
+  "reply": {
+    "response": {
+      "answer": {
+        "target_visible": true,
+        "target_box": {
+          "x0": 261,
+          "y0": 173,
+          "x1": 278,
+          "y1": 203
+        },
+        "contact_pixel": {
+          "x": 269,
+          "y": 203
+        },
+        "obstacles": [
+          {
+            "label": "red plastic bin",
+            "box": {
+              "x0": 198,
+              "y0": 175,
+              "x1": 262,
+              "y1": 205
+            }
+          },
+          {
+            "label": "cardboard box",
+            "box": {
+              "x0": 293,
+              "y0": 172,
+              "x1": 326,
+              "y1": 201
+            }
+          },
+          {
+            "label": "white box",
+            "box": {
+              "x0": 295,
+              "y0": 190,
+              "x1": 350,
+              "y1": 204
+            }
+          },
+          {
+            "label": "small box",
+            "box": {
+              "x0": 250,
+              "y0": 194,
+              "x1": 263,
+              "y1": 207
+            }
+          },
+          {
+            "label": "cardboard box",
+            "box": {
+              "x0": 352,
+              "y0": 167,
+              "x1": 383,
+              "y1": 191
+            }
+          }
+        ],
+        "spatial_answers": [],
+        "approach_side": "center"
+      },
+      "usage": {
+        "input_tokens": 1099,
+        "input_tokens_details": {
+          "cache_write_tokens": 1096,
+          "cached_tokens": 0
+        },
+        "output_tokens": 207,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 1306
+      },
+      "model": "gpt-5.6-sol"
+    },
+    "snapshot": {
+      "time": 35328.760722457,
+      "pose": [
+        0,
+        0,
+        0
+      ],
+      "attitude": {},
+      "generation": [
+        "offline",
+        1
+      ]
+    },
+    "finished": 35335.192501179
+  }
+}

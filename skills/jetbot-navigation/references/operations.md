@@ -35,6 +35,27 @@ validates lifecycle behavior, not powered navigation reliability. Evidence:
 `/mnt/robotlogs/goals/advil-retry-20260922-181058/debug-default.json` and
 `debug-standalone.json` in that directory.
 
+### Power telemetry log
+
+The service's ~5 Hz power log defaults to `/mnt/robotlogs/goals/power.jsonl`
+through the `local_nav/goals` symlink, rolling to `.1`/`.2`/`.3` at 16 MB each
+(~64 MB total). It previously defaulted under `--directory`, i.e.
+`/tmp/jetbot-local-nav/power.jsonl`; `/tmp` is on the SD card here, not a
+tmpfs, so that was a continuous write stream on the card.
+
+The service now refuses to start when the log would land on the root
+filesystem. It checks that `/mnt/robotlogs` is mounted and that the resolved
+path is off the root device, before any hardware is claimed, so a missing USB
+volume is a startup `RuntimeError` rather than a silent fallback onto the card.
+Do not work around it by pointing `--power-log` at `/`. The `READY` line
+reports the resolved path as `power_log=`; confirm it is under `/mnt/robotlogs`
+when starting a run.
+
+Start the service from `/home/jetbot/jetbot`, not a git worktree: `goals` is a
+real directory in a worktree, so the default resolves onto the card and the
+service correctly refuses. Pass `--power-log` under `/mnt/robotlogs` to run a
+worktree copy.
+
 ## Services and tools
 
 | Component | Interface | Purpose |

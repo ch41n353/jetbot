@@ -1,0 +1,174 @@
+{
+  "injected": true,
+  "simulation_imu": "existing simulator20ms plant audit: actual yaw/rate and derived linear acceleration; no physical fusion",
+  "result": {
+    "outcome": "object_reached_estimate",
+    "requires_planner": false,
+    "intermediate_model_calls": 0,
+    "events": [
+      {
+        "event": "mission_started",
+        "elapsed_seconds": 0.1150000000000091,
+        "target_label": "simulated object"
+      },
+      {
+        "event": "local_route",
+        "elapsed_seconds": 0.4600000000000364,
+        "waypoints_cm": [
+          [
+            -5.207010359954807e-18,
+            15.0
+          ],
+          [
+            -1.0414020719909615e-17,
+            30.0
+          ],
+          [
+            -1.3885360959879487e-17,
+            40.0
+          ]
+        ]
+      },
+      {
+        "event": "arrival_braking",
+        "elapsed_seconds": 4.370000000000346
+      },
+      {
+        "event": "floor_recovery_started",
+        "elapsed_seconds": 4.440000000000353,
+        "reason": "Camera tilt/height or tracking changed (scale1.030 injected)"
+      },
+      {
+        "event": "floor_recovered",
+        "elapsed_seconds": 4.985000000000326,
+        "bridge_seconds": 0.6149999999999807,
+        "bridge_cm": 1.8005693815131016
+      },
+      {
+        "event": "arrival_braking",
+        "elapsed_seconds": 5.030000000000328
+      },
+      {
+        "event": "mission_complete",
+        "elapsed_seconds": 5.260000000000346,
+        "remote_vlm_needed": false
+      }
+    ],
+    "local_recoveries": 0,
+    "local_searches": 1,
+    "floor_recoveries": 1,
+    "last_measured_pose": [
+      -0.06441160870925201,
+      41.51957018028924,
+      -0.5010277595409511
+    ],
+    "travel_cm": 41.52019743722559,
+    "final_range_cm": 18.702437943792468,
+    "last_observation": {
+      "image_path": "/tmp/tmpb6885vkp/mission.json.last-observed.jpg",
+      "time": 105.14500000000034,
+      "settled": true
+    },
+    "elapsed_seconds": 5.260000000000346
+  },
+  "true_target_range_cm": 18.47535728043325,
+  "clearance_violation_count": 0,
+  "watchdog_stops": 0,
+  "final_motor_output": [
+    0.0,
+    0.0
+  ],
+  "recovery_commands": [
+    {
+      "time": 104.44000000000035,
+      "action": "motors_hold",
+      "fields": {
+        "left": 0.0,
+        "right": 0.0,
+        "session_id": "simulation",
+        "control_epoch": 0
+      }
+    },
+    {
+      "time": 104.44000000000035,
+      "action": "motors_hold",
+      "fields": {
+        "left": 0.0,
+        "right": 0.0,
+        "session_id": "simulation",
+        "control_epoch": 0
+      }
+    },
+    {
+      "time": 104.44000000000035,
+      "action": "motors_hold",
+      "fields": {
+        "left": 0.0,
+        "right": 0.0,
+        "session_id": "simulation",
+        "control_epoch": 0
+      }
+    },
+    {
+      "time": 104.47833333333368,
+      "action": "motors_hold",
+      "fields": {
+        "left": 0.0,
+        "right": 0.0,
+        "session_id": "simulation",
+        "control_epoch": 0
+      }
+    },
+    {
+      "time": 104.56166666666701,
+      "action": "motors_hold",
+      "fields": {
+        "left": 0.0,
+        "right": 0.0,
+        "session_id": "simulation",
+        "control_epoch": 0
+      }
+    },
+    {
+      "time": 104.64500000000034,
+      "action": "motors_hold",
+      "fields": {
+        "left": 0.0,
+        "right": 0.0,
+        "session_id": "simulation",
+        "control_epoch": 0
+      }
+    },
+    {
+      "time": 104.72833333333367,
+      "action": "motors_hold",
+      "fields": {
+        "left": 0.0,
+        "right": 0.0,
+        "session_id": "simulation",
+        "control_epoch": 0
+      }
+    },
+    {
+      "time": 104.811666666667,
+      "action": "motors_hold",
+      "fields": {
+        "left": 0.0,
+        "right": 0.0,
+        "session_id": "simulation",
+        "control_epoch": 0
+      }
+    },
+    {
+      "time": 104.89500000000032,
+      "action": "motors_hold",
+      "fields": {
+        "left": 0.0,
+        "right": 0.0,
+        "session_id": "simulation",
+        "control_epoch": 0
+      }
+    }
+  ],
+  "powered_commands_during_recovery": 0
+}

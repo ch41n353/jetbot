@@ -1,0 +1,13 @@
+{
+  "outcome": "object_reached_estimate",
+  "reason": null,
+  "floor_recoveries": 1,
+  "elapsed_seconds": 7.5583333333335645,
+  "travel_cm": 60.8877620405192,
+  "clearance_violations": 0,
+  "motors": [
+    0.0,
+    0.0
+  ],
+  "true_range": 19.16009635214838
+}

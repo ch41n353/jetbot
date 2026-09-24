@@ -1,0 +1,616 @@
+{
+  "dev": [
+    {
+      "id": "far_left",
+      "image": "/home/jetbot/jetbot/local_nav/goals/session-20260914-224255-1ac1c2-29024.854240.jpg",
+      "image_sha256": "eb0bf5b912c26f399f59dccf30d4b0ec58a242b9a49fad45c671120aad109b42",
+      "target": "Advil bottle",
+      "reference": {
+        "target_visible": true,
+        "target_box": [
+          262,
+          171,
+          281,
+          206
+        ],
+        "contact_pixel": [
+          271.5,
+          206
+        ],
+        "obstacle_boxes": [
+          [
+            250,
+            194,
+            263,
+            208
+          ],
+          [
+            198,
+            169,
+            263,
+            207
+          ],
+          [
+            299,
+            188,
+            350,
+            206
+          ]
+        ]
+      }
+    },
+    {
+      "id": "near_right",
+      "image": "/home/jetbot/jetbot/local_nav/goals/session-20260914-224848-999cf7-29278.973969.jpg",
+      "image_sha256": "9fe749b8163cc80fa0289c6119d6b5da1629242e2186858eaa4fc5ed76916cec",
+      "target": "Advil bottle",
+      "reference": {
+        "target_visible": true,
+        "target_box": [
+          530,
+          151,
+          612,
+          329
+        ],
+        "contact_pixel": [
+          571,
+          329
+        ],
+        "obstacle_boxes": [
+          [
+            490,
+            264,
+            533,
+            331
+          ],
+          [
+            410,
+            259,
+            482,
+            294
+          ],
+          [
+            276,
+            155,
+            463,
+            241
+          ]
+        ]
+      }
+    },
+    {
+      "id": "near_center_new",
+      "image": "/home/jetbot/jetbot/local_nav/goals/session-20260914-225729-037635-29752.710527.jpg",
+      "image_sha256": "4b39be2d3e887b5ca853f12590e4ac67e6ea2eef53e1db7e12b6c34c8ce4850b",
+      "target": "Advil bottle",
+      "reference": {
+        "target_visible": true,
+        "target_box": [
+          294,
+          141,
+          380,
+          293
+        ],
+        "contact_pixel": [
+          337,
+          293
+        ],
+        "obstacle_boxes": [
+          [
+            254,
+            241,
+            297,
+            293
+          ],
+          [
+            217,
+            241,
+            272,
+            271
+          ],
+          [
+            152,
+            157,
+            304,
+            237
+          ],
+          [
+            405,
+            213,
+            585,
+            294
+          ]
+        ]
+      }
+    },
+    {
+      "id": "coke_absent",
+      "image": "/home/jetbot/jetbot/local_nav/goals/session-20260914-225729-037635-29752.710527.jpg",
+      "image_sha256": "4b39be2d3e887b5ca853f12590e4ac67e6ea2eef53e1db7e12b6c34c8ce4850b",
+      "target": "Coca-Cola can",
+      "reference": {
+        "target_visible": false,
+        "target_box": null,
+        "contact_pixel": null,
+        "obstacle_boxes": [
+          [
+            254,
+            241,
+            297,
+            293
+          ],
+          [
+            217,
+            241,
+            272,
+            271
+          ],
+          [
+            152,
+            157,
+            304,
+            237
+          ],
+          [
+            405,
+            213,
+            585,
+            294
+          ]
+        ]
+      }
+    }
+  ],
+  "held": [
+    {
+      "id": "held_mid_right",
+      "image": "/home/jetbot/jetbot/local_nav/goals/session-20260914-191854-d9cf7e-16569.301958.jpg",
+      "image_sha256": "19e6c1b9fc5df2a41901985ba5bbd967f6d56f9157ae79d4303f8c6614a35524",
+      "target": "Advil bottle",
+      "reference": {
+        "target_visible": true,
+        "target_box": [
+          495,
+          162,
+          538,
+          239
+        ],
+        "contact_pixel": [
+          516.5,
+          239
+        ],
+        "obstacle_boxes": [
+          [
+            356,
+            154,
+            473,
+            214
+          ],
+          [
+            537,
+            205,
+            636,
+            250
+          ],
+          [
+            294,
+            190,
+            309,
+            202
+          ]
+        ]
+      }
+    },
+    {
+      "id": "held_far_left",
+      "image": "/home/jetbot/jetbot/local_nav/goals/session-20260914-202836-4a4deb-20750.308779.jpg",
+      "image_sha256": "bc3172ebdccfdd07c252688c3f612135bbe282389d553f90d234c590f8a2856b",
+      "target": "Advil bottle",
+      "reference": {
+        "target_visible": true,
+        "target_box": [
+          122,
+          178,
+          140,
+          211
+        ],
+        "contact_pixel": [
+          131,
+          211
+        ],
+        "obstacle_boxes": [
+          [
+            78,
+            178,
+            123,
+            214
+          ],
+          [
+            157,
+            190,
+            201,
+            206
+          ],
+          [
+            50,
+            211,
+            62,
+            221
+          ]
+        ]
+      }
+    },
+    {
+      "id": "held_near_center",
+      "image": "/home/jetbot/jetbot/local_nav/goals/session-20260914-203315-d1f494-22629.274970.jpg",
+      "image_sha256": "ae3bd1a41391f659356bafa152ff489fc2e572c1e808911d615b81a900ec0816",
+      "target": "Advil bottle",
+      "reference": {
+        "target_visible": true,
+        "target_box": [
+          281,
+          143,
+          365,
+          307
+        ],
+        "contact_pixel": [
+          323,
+          307
+        ],
+        "obstacle_boxes": [
+          [
+            214,
+            249,
+            276,
+            287
+          ],
+          [
+            187,
+            159,
+            290,
+            236
+          ],
+          [
+            429,
+            230,
+            640,
+            340
+          ]
+        ]
+      }
+    },
+    {
+      "id": "held_coke_absent",
+      "image": "/home/jetbot/jetbot/local_nav/goals/session-20260914-191854-d9cf7e-16569.301958.jpg",
+      "image_sha256": "19e6c1b9fc5df2a41901985ba5bbd967f6d56f9157ae79d4303f8c6614a35524",
+      "target": "Coca-Cola can",
+      "reference": {
+        "target_visible": false,
+        "target_box": null,
+        "contact_pixel": null,
+        "obstacle_boxes": [
+          [
+            356,
+            154,
+            473,
+            214
+          ],
+          [
+            537,
+            205,
+            636,
+            250
+          ],
+          [
+            294,
+            190,
+            309,
+            202
+          ]
+        ]
+      }
+    }
+  ],
+  "schema": {
+    "type": "object",
+    "properties": {
+      "target_visible": {
+        "type": "boolean"
+      },
+      "target_box": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "x0": {
+                "type": "number"
+              },
+              "y0": {
+                "type": "number"
+              },
+              "x1": {
+                "type": "number"
+              },
+              "y1": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "x0",
+              "y0",
+              "x1",
+              "y1"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "contact_pixel": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "x",
+              "y"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "obstacles": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "box": {
+              "type": "object",
+              "properties": {
+                "x0": {
+                  "type": "number"
+                },
+                "y0": {
+                  "type": "number"
+                },
+                "x1": {
+                  "type": "number"
+                },
+                "y1": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x0",
+                "y0",
+                "x1",
+                "y1"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "label",
+            "box"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "spatial_answers": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "decision": {
+              "type": "string",
+              "enum": [
+                "execute",
+                "hold"
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "decision"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "approach_side": {
+        "type": "string",
+        "enum": [
+          "left",
+          "center",
+          "right",
+          "not_visible"
+        ]
+      }
+    },
+    "required": [
+      "target_visible",
+      "target_box",
+      "contact_pixel",
+      "obstacles",
+      "spatial_answers",
+      "approach_side"
+    ],
+    "additionalProperties": false
+  },
+  "spatial_checks": [
+    {
+      "id": "clear_drive",
+      "free": [
+        -35,
+        -35,
+        55,
+        120
+      ],
+      "obstacles": [
+        [
+          30,
+          70,
+          40,
+          80
+        ]
+      ],
+      "swept": [
+        [
+          -16,
+          -24,
+          16,
+          73
+        ]
+      ]
+    },
+    {
+      "id": "offscreen_rear_turn",
+      "free": [
+        -50,
+        -50,
+        70,
+        120
+      ],
+      "obstacles": [
+        [
+          -29,
+          -22,
+          -23,
+          -16
+        ]
+      ],
+      "obstacle_visibility": "offscreen",
+      "swept": [
+        [
+          -31,
+          -31,
+          31,
+          31
+        ],
+        [
+          -16,
+          -24,
+          16,
+          73
+        ]
+      ]
+    },
+    {
+      "id": "narrow_gap",
+      "free": [
+        -40,
+        -35,
+        40,
+        100
+      ],
+      "obstacles": [
+        [
+          -40,
+          30,
+          -10,
+          45
+        ],
+        [
+          10,
+          30,
+          40,
+          45
+        ]
+      ],
+      "swept": [
+        [
+          -16,
+          -24,
+          16,
+          73
+        ]
+      ]
+    },
+    {
+      "id": "unknown_space",
+      "free": [
+        -20,
+        -20,
+        20,
+        80
+      ],
+      "obstacles": [],
+      "swept": [
+        [
+          -16,
+          -24,
+          16,
+          73
+        ]
+      ]
+    },
+    {
+      "id": "detour_clear",
+      "free": [
+        -60,
+        -40,
+        60,
+        110
+      ],
+      "obstacles": [
+        [
+          15,
+          40,
+          30,
+          55
+        ]
+      ],
+      "swept": [
+        [
+          -31,
+          -31,
+          10,
+          31
+        ],
+        [
+          -45,
+          -25,
+          -15,
+          90
+        ]
+      ]
+    }
+  ],
+  "variants": {
+    "baseline": {
+      "prompt": "You are the high-level planner of a JetBot. Produce one compact JSON\nanswer; no tools or follow-up questions. The photograph is 640x480, with pixel\norigin top-left. Locate the requested target, give a tight full-object box and\nthe center of its actual floor contact. Null both if not visible. Identify up to\n8 relevant floor obstacles (especially LEGO pieces, bins and boxes near the\napproach), excluding the target. Use tight object boxes, not free-space boxes.\napproach_side is the target's horizontal image third (left x<213.33, center\nx<=426.67, right otherwise); not_visible when absent.\n\nAlso answer each INDEPENDENT SYNTHETIC spatial check supplied below. These maps\nare NOT estimated from the photograph. Robot width=12cm, length=15cm; camera is\nfront-center. Coordinates x right and z forward, rectangles [xmin,zmin,xmax,zmax].\nThe proposed swept rectangles ALREADY include the whole chassis, 5cm clearance,\nposition uncertainty and braking. Execute only if EVERY swept rectangle is\ncontained in inspected free space and intersects NO retained obstacle. Touching\ncounts as collision. Obstacles persist even when offscreen. The provided swept\nrectangles include all turn/rear extents; do not add margins again.\nThis is an offline planning benchmark, not a command to motors.",
+      "coordinate_space": "pixels"
+    },
+    "pixel_contract": {
+      "prompt": "Return JSON for the attached 640-column by 480-row photograph.\nAll visual coordinates are ORIGINAL image pixels, measured directly on the image\nplane. Top-left=(0,0), bottom-right=(640,480), center=(320,240).\nQuarter-height rows are 120,240,360; quarter-width columns are 160,320,480.\nEstimate horizontal and vertical fractions independently; multiply horizontal\nfractions by 640 and vertical fractions by 480. Do not use a square canvas,\n1000-unit coordinates, perspective-corrected coordinates, or floor distances.\nBound each object tightly by its visible top, bottom, left and right edges.\nFor a bottle include the cap and body. The floor-contact point lies on the\nbottle's bottom rim, not at the image bottom or the label's bottom.\nCheck that boxes match the object's apparent size and that the contact sits on\nthe observed bottom edge. Null target_box and contact_pixel if target is absent.\nList up to 8 nearby floor obstacles, prioritizing LEGO, bins and boxes. Exclude\nthe target. Each obstacle gets its own tight box. approach_side is the image\nthird containing the target center: left, center, right; otherwise not_visible.\nThe requested Advil bottle, if present, is a white plastic medicine\nbottle with a dark blue cap and a green label with yellow Advil lettering. The\nlabel may be tiny, partly hidden or facing away. Match the whole object using\nvisible evidence; do not substitute a carton. Coca-Cola means a Coke beverage\ncan, not a medicine bottle or a red LEGO. Locate only what the image supports.\nAlso answer each INDEPENDENT SYNTHETIC spatial check supplied below. These maps\nare NOT estimated from the photograph. Robot width=12cm, length=15cm; camera is\nfront-center. Coordinates x right and z forward, rectangles [xmin,zmin,xmax,zmax].\nThe proposed swept rectangles ALREADY include the whole chassis, 5cm clearance,\nposition uncertainty and braking. Execute only if EVERY swept rectangle is\ncontained in inspected free space and intersects NO retained obstacle. Touching\ncounts as collision. Obstacles persist even when offscreen. The provided swept\nrectangles include all turn/rear extents; do not add margins again.\nThis is an offline planning benchmark, not a command to motors.",
+      "coordinate_space": "pixels"
+    },
+    "normalized": {
+      "prompt": "Return only the requested JSON for the attached image. All visual\ncoordinates use INDEPENDENT normalized axes from 0 to 1000, regardless of image\naspect ratio: left=0, right=1000, top=0, bottom=1000. Center=(500,500).\nFor example, an object spanning 20% to 30% of image width and 40% to 60% of image\nheight has x0=200,x1=300,y0=400,y1=600. This is a coordinate example, not an object\nlocation in the photograph. Do not convert to pixels yourself; the caller will.\nThe legacy field contact_pixel ALSO uses 0..1000 normalized coordinates.\nFind each object's visual edges directly in the image, then express them as\nfractions of the FULL image width/height. Do not rectify perspective. A bottle\nbox includes its cap and body; its contact is centered on the visible bottom\nrim. Do not extend the box to the image bottom unless it is actually clipped.\nReturn null box and contact when absent. List up to 8 nearby floor obstacles,\nprioritizing individual LEGO pieces, bins and boxes; exclude the target.\napproach_side is the horizontal image third: left, center, right, or not_visible.\nThe requested Advil bottle, if present, is a white plastic medicine\nbottle with a dark blue cap and a green label with yellow Advil lettering. The\nlabel may be tiny, partly hidden or facing away. Match the whole object using\nvisible evidence; do not substitute a carton. Coca-Cola means a Coke beverage\ncan, not a medicine bottle or a red LEGO. Locate only what the image supports.\nAlso answer each INDEPENDENT SYNTHETIC spatial check supplied below. These maps\nare NOT estimated from the photograph. Robot width=12cm, length=15cm; camera is\nfront-center. Coordinates x right and z forward, rectangles [xmin,zmin,xmax,zmax].\nThe proposed swept rectangles ALREADY include the whole chassis, 5cm clearance,\nposition uncertainty and braking. Execute only if EVERY swept rectangle is\ncontained in inspected free space and intersects NO retained obstacle. Touching\ncounts as collision. Obstacles persist even when offscreen. The provided swept\nrectangles include all turn/rear extents; do not add margins again.\nThis is an offline planning benchmark, not a command to motors.",
+      "coordinate_space": "normalized_1000"
+    },
+    "compact_normalized": {
+      "prompt": "Label the target and nearby floor obstacles in the photograph.\nReturn JSON only. Every visual coordinate, including contact_pixel, is normalized\n0..1000 separately for width and height. Top-left=(0,0), bottom-right=(1000,1000).\nBoxes tightly cover visible objects; include a bottle's cap. Contact is the\ncenter of the bottom rim touching carpet. Missing target: false and nulls.\nIdentify up to 8 obstacles, prioritizing LEGO beside the target, then bins and\nboxes. Exclude target. approach_side: horizontal image third or not_visible.\nThe requested Advil bottle, if present, is a white plastic medicine\nbottle with a dark blue cap and a green label with yellow Advil lettering. The\nlabel may be tiny, partly hidden or facing away. Match the whole object using\nvisible evidence; do not substitute a carton. Coca-Cola means a Coke beverage\ncan, not a medicine bottle or a red LEGO. Locate only what the image supports.\nThe spatial_checks are independent synthetic maps, NOT image coordinates.\nAll their rectangles already include body size, clearance, uncertainty and\nbraking. For every proposed swept rectangle b and inspected rectangle f:\nrequire f.xmin<=b.xmin, f.zmin<=b.zmin, b.xmax<=f.xmax, b.zmax<=f.zmax.\nFor each retained obstacle o require at least one STRICT separation:\nb.xmax<o.xmin OR o.xmax<b.xmin OR b.zmax<o.zmin OR o.zmax<b.zmin.\nIf any requirement fails, hold. Otherwise execute. Check every swept rectangle,\nincluding rear and turning extents. Keep obstacles that are offscreen.\n",
+      "coordinate_space": "normalized_1000"
+    }
+  },
+  "selection": "Minimize unsafe approvals, maximize target/contact passes, mean target IoU (misses zero), obstacle matches, then minimize median latency. Choose from tuned variants using dev only.",
+  "limitations": "Held-out photos are previously unused in model benchmarks, but from the same room and historical robot runs. Not an independent environment. References are assistant annotations."
+}

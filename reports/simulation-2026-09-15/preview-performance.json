@@ -1,0 +1,23 @@
+[
+  {
+    "degrees": -30,
+    "old_seconds": 3.5338896670000395,
+    "new_seconds": 0.06211117200291483,
+    "speedup": 56.896200040053934,
+    "max_hull_vertex_difference_cm": 0.0
+  },
+  {
+    "degrees": 30,
+    "old_seconds": 3.3740767459967174,
+    "new_seconds": 0.04942105899681337,
+    "speedup": 68.27204464020642,
+    "max_hull_vertex_difference_cm": 0.0
+  },
+  {
+    "degrees": 180,
+    "old_seconds": 3.2595249360019807,
+    "new_seconds": 0.050656439998419955,
+    "speedup": 64.34571667696447,
+    "max_hull_vertex_difference_cm": 0.0
+  }
+]

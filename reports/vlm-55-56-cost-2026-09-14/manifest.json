@@ -1,0 +1,683 @@
+{
+  "version": 1,
+  "reference_author": "root assistant, hand-inspected before candidate responses",
+  "limitations": "Six correlated room photos plus one absent-target task; annotations are not independent physical ground truth. Spatial checks are synthetic, not image-derived.",
+  "cases": [
+    {
+      "id": "far_left",
+      "image": "/home/jetbot/jetbot/local_nav/goals/session-20260914-224255-1ac1c2-29024.854240.jpg",
+      "image_sha256": "eb0bf5b912c26f399f59dccf30d4b0ec58a242b9a49fad45c671120aad109b42",
+      "target": "Advil bottle",
+      "reference": {
+        "target_visible": true,
+        "target_box": [
+          262,
+          171,
+          281,
+          206
+        ],
+        "contact_pixel": [
+          271.5,
+          206
+        ],
+        "obstacle_boxes": [
+          [
+            250,
+            194,
+            263,
+            208
+          ],
+          [
+            198,
+            169,
+            263,
+            207
+          ],
+          [
+            299,
+            188,
+            350,
+            206
+          ]
+        ]
+      }
+    },
+    {
+      "id": "far_right",
+      "image": "/home/jetbot/jetbot/local_nav/goals/session-20260914-224848-999cf7-29162.462213.jpg",
+      "image_sha256": "6c16801fe92d56f09c9b381ccdd12660f953df612420eeb1ae35a0550b4a91be",
+      "target": "Advil bottle",
+      "reference": {
+        "target_visible": true,
+        "target_box": [
+          399,
+          171,
+          417,
+          203
+        ],
+        "contact_pixel": [
+          408,
+          203
+        ],
+        "obstacle_boxes": [
+          [
+            390,
+            190,
+            402,
+            204
+          ],
+          [
+            337,
+            168,
+            399,
+            200
+          ],
+          [
+            430,
+            191,
+            480,
+            208
+          ]
+        ]
+      }
+    },
+    {
+      "id": "near_left",
+      "image": "/home/jetbot/jetbot/local_nav/goals/session-20260914-224255-1ac1c2-29062.113672.jpg",
+      "image_sha256": "aa41adb36f4df726ebd49ddee5d83f042b73522457301059d701e823960dffde",
+      "target": "Advil bottle",
+      "reference": {
+        "target_visible": true,
+        "target_box": [
+          195,
+          145,
+          279,
+          307
+        ],
+        "contact_pixel": [
+          237,
+          307
+        ],
+        "obstacle_boxes": [
+          [
+            150,
+            248,
+            200,
+            304
+          ],
+          [
+            116,
+            163,
+            283,
+            240
+          ],
+          [
+            344,
+            220,
+            551,
+            320
+          ]
+        ]
+      }
+    },
+    {
+      "id": "near_right",
+      "image": "/home/jetbot/jetbot/local_nav/goals/session-20260914-224848-999cf7-29278.973969.jpg",
+      "image_sha256": "9fe749b8163cc80fa0289c6119d6b5da1629242e2186858eaa4fc5ed76916cec",
+      "target": "Advil bottle",
+      "reference": {
+        "target_visible": true,
+        "target_box": [
+          530,
+          151,
+          612,
+          329
+        ],
+        "contact_pixel": [
+          571,
+          329
+        ],
+        "obstacle_boxes": [
+          [
+            490,
+            264,
+            533,
+            331
+          ],
+          [
+            410,
+            259,
+            482,
+            294
+          ],
+          [
+            276,
+            155,
+            463,
+            241
+          ]
+        ]
+      }
+    },
+    {
+      "id": "far_center_new",
+      "image": "/home/jetbot/jetbot/local_nav/goals/session-20260914-225729-037635-29683.720780.jpg",
+      "image_sha256": "ea8b820b4d8d09b5ae0193696eb8aa63617f21a2e20936ff7d14b922837607e0",
+      "target": "Advil bottle",
+      "reference": {
+        "target_visible": true,
+        "target_box": [
+          302,
+          168,
+          322,
+          202
+        ],
+        "contact_pixel": [
+          312,
+          202
+        ],
+        "obstacle_boxes": [
+          [
+            291,
+            189,
+            304,
+            203
+          ],
+          [
+            234,
+            166,
+            302,
+            201
+          ],
+          [
+            336,
+            186,
+            391,
+            204
+          ]
+        ]
+      }
+    },
+    {
+      "id": "near_center_new",
+      "image": "/home/jetbot/jetbot/local_nav/goals/session-20260914-225729-037635-29752.710527.jpg",
+      "image_sha256": "4b39be2d3e887b5ca853f12590e4ac67e6ea2eef53e1db7e12b6c34c8ce4850b",
+      "target": "Advil bottle",
+      "reference": {
+        "target_visible": true,
+        "target_box": [
+          294,
+          141,
+          380,
+          293
+        ],
+        "contact_pixel": [
+          337,
+          293
+        ],
+        "obstacle_boxes": [
+          [
+            254,
+            241,
+            297,
+            293
+          ],
+          [
+            217,
+            241,
+            272,
+            271
+          ],
+          [
+            152,
+            157,
+            304,
+            237
+          ],
+          [
+            405,
+            213,
+            585,
+            294
+          ]
+        ]
+      }
+    },
+    {
+      "id": "coke_absent",
+      "image": "/home/jetbot/jetbot/local_nav/goals/session-20260914-225729-037635-29752.710527.jpg",
+      "image_sha256": "4b39be2d3e887b5ca853f12590e4ac67e6ea2eef53e1db7e12b6c34c8ce4850b",
+      "target": "Coca-Cola can",
+      "reference": {
+        "target_visible": false,
+        "target_box": null,
+        "contact_pixel": null,
+        "obstacle_boxes": [
+          [
+            254,
+            241,
+            297,
+            293
+          ],
+          [
+            217,
+            241,
+            272,
+            271
+          ],
+          [
+            152,
+            157,
+            304,
+            237
+          ],
+          [
+            405,
+            213,
+            585,
+            294
+          ]
+        ]
+      }
+    }
+  ],
+  "spatial_checks": [
+    {
+      "id": "clear_drive",
+      "free": [
+        -35,
+        -35,
+        55,
+        120
+      ],
+      "obstacles": [
+        [
+          30,
+          70,
+          40,
+          80
+        ]
+      ],
+      "swept": [
+        [
+          -16,
+          -24,
+          16,
+          73
+        ]
+      ]
+    },
+    {
+      "id": "offscreen_rear_turn",
+      "free": [
+        -50,
+        -50,
+        70,
+        120
+      ],
+      "obstacles": [
+        [
+          -29,
+          -22,
+          -23,
+          -16
+        ]
+      ],
+      "obstacle_visibility": "offscreen",
+      "swept": [
+        [
+          -31,
+          -31,
+          31,
+          31
+        ],
+        [
+          -16,
+          -24,
+          16,
+          73
+        ]
+      ]
+    },
+    {
+      "id": "narrow_gap",
+      "free": [
+        -40,
+        -35,
+        40,
+        100
+      ],
+      "obstacles": [
+        [
+          -40,
+          30,
+          -10,
+          45
+        ],
+        [
+          10,
+          30,
+          40,
+          45
+        ]
+      ],
+      "swept": [
+        [
+          -16,
+          -24,
+          16,
+          73
+        ]
+      ]
+    },
+    {
+      "id": "unknown_space",
+      "free": [
+        -20,
+        -20,
+        20,
+        80
+      ],
+      "obstacles": [],
+      "swept": [
+        [
+          -16,
+          -24,
+          16,
+          73
+        ]
+      ]
+    },
+    {
+      "id": "detour_clear",
+      "free": [
+        -60,
+        -40,
+        60,
+        110
+      ],
+      "obstacles": [
+        [
+          15,
+          40,
+          30,
+          55
+        ]
+      ],
+      "swept": [
+        [
+          -31,
+          -31,
+          10,
+          31
+        ],
+        [
+          -45,
+          -25,
+          -15,
+          90
+        ]
+      ]
+    }
+  ],
+  "prompt": "Return JSON for the attached 640-column by 480-row photograph.\nAll visual coordinates are ORIGINAL image pixels, measured directly on the image\nplane. Top-left=(0,0), bottom-right=(640,480), center=(320,240).\nQuarter-height rows are 120,240,360; quarter-width columns are 160,320,480.\nEstimate horizontal and vertical fractions independently; multiply horizontal\nfractions by 640 and vertical fractions by 480. Do not use a square canvas,\n1000-unit coordinates, perspective-corrected coordinates, or floor distances.\nBound each object tightly by its visible top, bottom, left and right edges.\nFor a bottle include the cap and body. The floor-contact point lies on the\nbottle's bottom rim, not at the image bottom or the label's bottom.\nCheck that boxes match the object's apparent size and that the contact sits on\nthe observed bottom edge. Null target_box and contact_pixel if target is absent.\nList up to 8 nearby floor obstacles, prioritizing LEGO, bins and boxes. Exclude\nthe target. Each obstacle gets its own tight box. approach_side is the image\nthird containing the target center: left, center, right; otherwise not_visible.\nThe requested Advil bottle, if present, is a white plastic medicine\nbottle with a dark blue cap and a green label with yellow Advil lettering. The\nlabel may be tiny, partly hidden or facing away. Match the whole object using\nvisible evidence; do not substitute a carton. Coca-Cola means a Coke beverage\ncan, not a medicine bottle or a red LEGO. Locate only what the image supports.\nAlso answer each INDEPENDENT SYNTHETIC spatial check supplied below. These maps\nare NOT estimated from the photograph. Robot width=12cm, length=15cm; camera is\nfront-center. Coordinates x right and z forward, rectangles [xmin,zmin,xmax,zmax].\nThe proposed swept rectangles ALREADY include the whole chassis, 5cm clearance,\nposition uncertainty and braking. Execute only if EVERY swept rectangle is\ncontained in inspected free space and intersects NO retained obstacle. Touching\ncounts as collision. Obstacles persist even when offscreen. The provided swept\nrectangles include all turn/rear extents; do not add margins again.\nThis is an offline planning benchmark, not a command to motors.",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "target_visible": {
+        "type": "boolean"
+      },
+      "target_box": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "x0": {
+                "type": "number"
+              },
+              "y0": {
+                "type": "number"
+              },
+              "x1": {
+                "type": "number"
+              },
+              "y1": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "x0",
+              "y0",
+              "x1",
+              "y1"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "contact_pixel": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "x",
+              "y"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "obstacles": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "box": {
+              "type": "object",
+              "properties": {
+                "x0": {
+                  "type": "number"
+                },
+                "y0": {
+                  "type": "number"
+                },
+                "x1": {
+                  "type": "number"
+                },
+                "y1": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x0",
+                "y0",
+                "x1",
+                "y1"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "label",
+            "box"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "spatial_answers": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "decision": {
+              "type": "string",
+              "enum": [
+                "execute",
+                "hold"
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "decision"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "approach_side": {
+        "type": "string",
+        "enum": [
+          "left",
+          "center",
+          "right",
+          "not_visible"
+        ]
+      }
+    },
+    "required": [
+      "target_visible",
+      "target_box",
+      "contact_pixel",
+      "obstacles",
+      "spatial_answers",
+      "approach_side"
+    ],
+    "additionalProperties": false
+  },
+  "coordinate_space": "pixels",
+  "configs": [
+    [
+      "gpt-5.5",
+      "none"
+    ],
+    [
+      "gpt-5.5",
+      "low"
+    ],
+    [
+      "gpt-5.5",
+      "medium"
+    ],
+    [
+      "gpt-5.6-sol",
+      "none"
+    ],
+    [
+      "gpt-5.6-sol",
+      "low"
+    ],
+    [
+      "gpt-5.6-sol",
+      "medium"
+    ],
+    [
+      "gpt-5.6-terra",
+      "none"
+    ],
+    [
+      "gpt-5.6-terra",
+      "low"
+    ],
+    [
+      "gpt-5.6-terra",
+      "medium"
+    ],
+    [
+      "gpt-5.6-luna",
+      "none"
+    ],
+    [
+      "gpt-5.6-luna",
+      "low"
+    ],
+    [
+      "gpt-5.6-luna",
+      "medium"
+    ],
+    [
+      "gpt-5.4",
+      "none"
+    ],
+    [
+      "gpt-6-astra",
+      "high"
+    ]
+  ],
+  "repeats": 2,
+  "workers": 4,
+  "prices_usd_per_million": {
+    "gpt-5.4": [
+      2.5,
+      0.25,
+      15,
+      null
+    ],
+    "gpt-5.5": [
+      5,
+      0.5,
+      30,
+      null
+    ],
+    "gpt-5.6-sol": [
+      4,
+      0.4,
+      20,
+      5
+    ],
+    "gpt-5.6-terra": [
+      2,
+      0.2,
+      12,
+      2.5
+    ],
+    "gpt-5.6-luna": [
+      0.2,
+      0.02,
+      1.2,
+      0.25
+    ],
+    "gpt-6-astra": [
+      10,
+      1,
+      50,
+      12.5
+    ]
+  },
+  "price_date": "2026-09-14",
+  "price_fields": [
+    "uncached_input",
+    "cached_input",
+    "output_including_reasoning",
+    "cache_write"
+  ],
+  "price_sources": {
+    "gpt-5.4": "https://developers.openai.com/api/docs/models/gpt-5.4",
+    "gpt-5.5": "https://developers.openai.com/api/docs/models/gpt-5.5",
+    "gpt-5.6-sol": "https://developers.openai.com/api/docs/models/gpt-5.6-sol",
+    "gpt-5.6-terra": "https://developers.openai.com/api/docs/models/gpt-5.6-terra",
+    "gpt-5.6-luna": "https://developers.openai.com/api/docs/models/gpt-5.6-luna",
+    "gpt-6-astra": "https://developers.openai.com/api/docs/models/gpt-6-astra"
+  },
+  "pricing_caveat": "Standard short-context list-price estimate from reported usage; before credits, taxes, account discounts or regional uplifts. No tool-call charges. Sol promotional pricing is documented through at least 2026-11-21.",
+  "design": "All configurations interleaved with identical tuned pixel prompt, image detail high, schema, 4500 max output tokens, four concurrent calls. New matching GPT-5.4 and Astra controls. No motors or live-plan execution."
+}

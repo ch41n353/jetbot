@@ -1,0 +1,63 @@
+{
+  "capture_time": 22629.274969618,
+  "manual_box": [
+    282,
+    142,
+    362,
+    307
+  ],
+  "manual_base_pixel": [
+    322.0,
+    307.0
+  ],
+  "base_row_uncertainty_pixels": 2,
+  "raw_down_camera": [
+    -0.00140654028597207,
+    0.9541485302733408,
+    0.2993302587805782
+  ],
+  "corrected_down_camera": [
+    -0.00140654028597207,
+    0.972704495746382,
+    0.2320430684144668
+  ],
+  "floor_alignment_rotation": [
+    [
+      1.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.9975640502598242,
+      0.0697564737441253
+    ],
+    [
+      0.0,
+      -0.0697564737441253,
+      0.9975640502598242
+    ]
+  ],
+  "ground_contact_cm": [
+    -0.09911170685232716,
+    21.70415144293012
+  ],
+  "range_cm": 21.704377737868477,
+  "range_from_plus_minus2_pixels_cm": [
+    22.09542512342797,
+    21.32470194349826
+  ],
+  "mission_samples": 46,
+  "confidence_minimum": 0.9263882040977478,
+  "confidence_final": 0.9321316480636597,
+  "initial_range_cm": 59.85661656977578,
+  "final_recorded_range_cm": 20.82849683107929,
+  "last_position_cm": [
+    2.1740863333613945,
+    39.906299240825625
+  ],
+  "approx_forward_world_range_change_cm": 0.8806202766265585,
+  "target_recoveries": 0,
+  "projection_rejection": null,
+  "limits": "Manual contact independently inspected on fresh RGB frame; range uses existing intrinsics/9.5cm height and candidate scene-scoped\u22124degree plane correction. Not physical ruler groundtruth. Forwardworldrangecheckignoresbearing/yawandisdiagnostic only."
+}

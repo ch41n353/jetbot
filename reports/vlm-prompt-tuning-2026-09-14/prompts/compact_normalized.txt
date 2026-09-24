@@ -1,0 +1,21 @@
+Label the target and nearby floor obstacles in the photograph.
+Return JSON only. Every visual coordinate, including contact_pixel, is normalized
+0..1000 separately for width and height. Top-left=(0,0), bottom-right=(1000,1000).
+Boxes tightly cover visible objects; include a bottle's cap. Contact is the
+center of the bottom rim touching carpet. Missing target: false and nulls.
+Identify up to 8 obstacles, prioritizing LEGO beside the target, then bins and
+boxes. Exclude target. approach_side: horizontal image third or not_visible.
+The requested Advil bottle, if present, is a white plastic medicine
+bottle with a dark blue cap and a green label with yellow Advil lettering. The
+label may be tiny, partly hidden or facing away. Match the whole object using
+visible evidence; do not substitute a carton. Coca-Cola means a Coke beverage
+can, not a medicine bottle or a red LEGO. Locate only what the image supports.
+The spatial_checks are independent synthetic maps, NOT image coordinates.
+All their rectangles already include body size, clearance, uncertainty and
+braking. For every proposed swept rectangle b and inspected rectangle f:
+require f.xmin<=b.xmin, f.zmin<=b.zmin, b.xmax<=f.xmax, b.zmax<=f.zmax.
+For each retained obstacle o require at least one STRICT separation:
+b.xmax<o.xmin OR o.xmax<b.xmin OR b.zmax<o.zmin OR o.zmax<b.zmin.
+If any requirement fails, hold. Otherwise execute. Check every swept rectangle,
+including rear and turning extents. Keep obstacles that are offscreen.
+

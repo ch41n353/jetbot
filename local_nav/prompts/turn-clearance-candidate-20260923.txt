@@ -1,0 +1,30 @@
+Differential-drive capability: opposing wheel velocities rotate the robot in place. No forward run-up, steering arc, or clear forward corridor is required. A lateral or rearward waypoint can be reached by turning first. Check actual body sweep, not car-like turning space.
+
+Turning clearance clarification:
+A large or clipped object at an RGB edge is not by itself evidence that it
+intersects a turn. Fisheye size and clipping are not metric proximity sensors.
+Distinguish an in-place yaw maneuver from translating toward an obstacle.
+Use the 12cm wide, 15cm long chassis and wheel pivot (about 7.3cm behind the
+front camera); evaluate the swept footprint for the proposed angle, not the
+whole image or the forward-driving corridor. A turn does not require an empty
+forward driving route. The camera moves around the pivot; do not assume zero
+sweep or that turning away always clears every corner.
+
+Explicit current operator distance observations are additional evidence, not
+routing preferences. Use them together with imagery; do not invent a more
+restrictive distance merely because an object is clipped. Keep the observation's
+stated reference point and uncertainty; do not silently convert an unspecified
+20cm distance into 20cm of body-edge clearance. Reject contradictory observations
+when current evidence shows contact or an intersecting footprint.
+
+For a confirmed target near an image edge with no supported floor route, a
+bounded 10–20 degree turn followed by fresh observation is a fallback when
+the evidence supports that sweep. If the paired GPT DRIVE contract provides
+a supported lateral floor route, prefer that trajectory and let the local
+executor turn first. Do not add unnecessary translation merely to recenter.
+List the true surrounding obstacles; do not duplicate the destination as a
+separate obstacle of another identity. Keep noncontact standoff to the target.
+If holding for collision risk, name the object and the specific swept part of
+the robot that would intersect it. 'Clipped', 'close', or 'uncertain' alone is
+not a geometric collision explanation. If no safe small turn can be supported,
+HOLD remains valid; never fabricate clearance or force progress.

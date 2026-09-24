@@ -175,6 +175,15 @@ def read_shared(shared,previous):
 
 LOG_MAX_BYTES = 16 * 1024 * 1024   # roll at 16 MB, about an hour of samples
 LOG_KEEP = 3                       # this file plus three older ones: ~64 MB total
+# Buffer the stream instead of line-buffering it: at ~850 bytes a record and
+# 5 Hz, buffering=1 meant a write syscall per sample for the life of the
+# service. Flush on a timer rather than only when the block fills, though --
+# the last few seconds before a brownout or a hard power cut are exactly the
+# part of a power log anyone reads back, and a 64 KB block holds ~15 s of it.
+# Two seconds bounds that loss while still coalescing ~10 records per syscall.
+# Still no per-record fsync: that is what destroyed the previous SD card.
+LOG_BUFFER_BYTES = 64 * 1024
+LOG_FLUSH_SECONDS = 2.
 
 
 def _roll(path, keep=LOG_KEEP):
@@ -211,11 +220,12 @@ def worker(shared,q,stop,log_path):
     guard=PowerGuard(require_pack=True)
     try:
         sensor=PowerSensors()
-        log = open(log_path,'a',buffering=1)
+        log = open(log_path,'a',buffering=LOG_BUFFER_BYTES)
         try:
             written = os.path.getsize(log_path)
         except OSError:
             written = 0
+        next_flush = time.monotonic() + LOG_FLUSH_SECONDS
         try:
             while not stop.is_set():
                 try:
@@ -228,11 +238,16 @@ def worker(shared,q,stop,log_path):
                 line=json.dumps(status)+'\n'
                 log.write(line)
                 written+=len(line)
+                now=time.monotonic()
+                if now>=next_flush:
+                    log.flush()
+                    next_flush=now+LOG_FLUSH_SECONDS
                 if written>=LOG_MAX_BYTES:
-                    log.close()
+                    log.close()  # flushes what the buffer still holds
                     if _roll(log_path):
                         written=0
-                    log=open(log_path,'a',buffering=1)
+                    log=open(log_path,'a',buffering=LOG_BUFFER_BYTES)
+                    next_flush=time.monotonic()+LOG_FLUSH_SECONDS
                     if written:
                         try:written=os.path.getsize(log_path)
                         except OSError:written=0

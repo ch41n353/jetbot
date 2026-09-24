@@ -1,0 +1,134 @@
+{
+  "motors_used": false,
+  "map_is_synthetic": true,
+  "calls": [
+    {
+      "case": "absent",
+      "image": "local_nav/goals/session-20260915-003515-01f40f-35550.053299.jpg",
+      "seconds": 4.2649053650020505,
+      "response": {
+        "answer": {
+          "target_visible": false,
+          "target_box": null,
+          "contact_pixel": null,
+          "obstacles": [
+            {
+              "label": "red bin",
+              "box": {
+                "x0": 111,
+                "y0": 181,
+                "x1": 168,
+                "y1": 211
+              }
+            },
+            {
+              "label": "small cardboard box",
+              "box": {
+                "x0": 197,
+                "y0": 175,
+                "x1": 226,
+                "y1": 202
+              }
+            },
+            {
+              "label": "white box",
+              "box": {
+                "x0": 224,
+                "y0": 190,
+                "x1": 274,
+                "y1": 202
+              }
+            },
+            {
+              "label": "dark box",
+              "box": {
+                "x0": 250,
+                "y0": 165,
+                "x1": 275,
+                "y1": 191
+              }
+            }
+          ],
+          "spatial_answers": [],
+          "approach_side": "not_visible"
+        },
+        "usage": {
+          "input_tokens": 1389,
+          "input_tokens_details": {
+            "cache_write_tokens": 1386,
+            "cached_tokens": 0
+          },
+          "output_tokens": 154,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 1543
+        },
+        "model": "gpt-5.6-sol"
+      },
+      "choice": {
+        "id": "scan_right",
+        "kind": "turn",
+        "degrees": 30.0
+      }
+    },
+    {
+      "case": "near_tape",
+      "image": "local_nav/goals/session-20260915-004451-97c72c-36429.290487.jpg",
+      "seconds": 4.312285157000588,
+      "response": {
+        "answer": {
+          "target_visible": true,
+          "target_box": {
+            "x0": 299,
+            "y0": 235,
+            "x1": 344,
+            "y1": 262
+          },
+          "contact_pixel": {
+            "x": 322,
+            "y": 261
+          },
+          "obstacles": [
+            {
+              "label": "LEGO cluster",
+              "box": {
+                "x0": 472,
+                "y0": 237,
+                "x1": 554,
+                "y1": 291
+              }
+            },
+            {
+              "label": "red LEGO",
+              "box": {
+                "x0": 578,
+                "y0": 231,
+                "x1": 597,
+                "y1": 255
+              }
+            }
+          ],
+          "spatial_answers": [],
+          "approach_side": "center"
+        },
+        "usage": {
+          "input_tokens": 1389,
+          "input_tokens_details": {
+            "cache_write_tokens": 1386,
+            "cached_tokens": 0
+          },
+          "output_tokens": 121,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 1510
+        },
+        "model": "gpt-5.6-sol"
+      },
+      "choice": {
+        "kind": "approach"
+      }
+    }
+  ]
+}

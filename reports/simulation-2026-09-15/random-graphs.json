@@ -1,0 +1,1208 @@
+{
+  "cases": 200,
+  "failures": 0,
+  "oracle": "Independent Bellman-Ford",
+  "wall_seconds": 2.172087922997889,
+  "runs": [
+    {
+      "seed": 0,
+      "places": 32,
+      "edges": 123,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 1,
+      "places": 16,
+      "edges": 42,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 2,
+      "places": 11,
+      "edges": 12,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 3,
+      "places": 23,
+      "edges": 65,
+      "outcome": "map_required"
+    },
+    {
+      "seed": 4,
+      "places": 23,
+      "edges": 68,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 5,
+      "places": 47,
+      "edges": 282,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 6,
+      "places": 44,
+      "edges": 239,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 7,
+      "places": 28,
+      "edges": 100,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 8,
+      "places": 22,
+      "edges": 54,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 9,
+      "places": 37,
+      "edges": 172,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 10,
+      "places": 44,
+      "edges": 229,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 11,
+      "places": 36,
+      "edges": 136,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 12,
+      "places": 38,
+      "edges": 176,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 13,
+      "places": 24,
+      "edges": 71,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 14,
+      "places": 14,
+      "edges": 26,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 15,
+      "places": 21,
+      "edges": 55,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 16,
+      "places": 31,
+      "edges": 125,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 17,
+      "places": 41,
+      "edges": 192,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 18,
+      "places": 19,
+      "edges": 31,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 19,
+      "places": 10,
+      "edges": 15,
+      "outcome": "map_required"
+    },
+    {
+      "seed": 20,
+      "places": 17,
+      "edges": 40,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 21,
+      "places": 18,
+      "edges": 34,
+      "outcome": "map_required"
+    },
+    {
+      "seed": 22,
+      "places": 16,
+      "edges": 31,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 23,
+      "places": 26,
+      "edges": 77,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 24,
+      "places": 32,
+      "edges": 113,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 25,
+      "places": 32,
+      "edges": 120,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 26,
+      "places": 20,
+      "edges": 46,
+      "outcome": "map_required"
+    },
+    {
+      "seed": 27,
+      "places": 49,
+      "edges": 283,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 28,
+      "places": 15,
+      "edges": 20,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 29,
+      "places": 43,
+      "edges": 204,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 30,
+      "places": 42,
+      "edges": 221,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 31,
+      "places": 8,
+      "edges": 9,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 32,
+      "places": 12,
+      "edges": 19,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 33,
+      "places": 44,
+      "edges": 233,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 34,
+      "places": 41,
+      "edges": 196,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 35,
+      "places": 43,
+      "edges": 231,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 36,
+      "places": 29,
+      "edges": 94,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 37,
+      "places": 46,
+      "edges": 236,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 38,
+      "places": 48,
+      "edges": 259,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 39,
+      "places": 21,
+      "edges": 51,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 40,
+      "places": 37,
+      "edges": 167,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 41,
+      "places": 32,
+      "edges": 116,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 42,
+      "places": 48,
+      "edges": 264,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 43,
+      "places": 10,
+      "edges": 12,
+      "outcome": "map_required"
+    },
+    {
+      "seed": 44,
+      "places": 34,
+      "edges": 145,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 45,
+      "places": 25,
+      "edges": 71,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 46,
+      "places": 12,
+      "edges": 17,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 47,
+      "places": 30,
+      "edges": 108,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 48,
+      "places": 43,
+      "edges": 219,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 49,
+      "places": 12,
+      "edges": 16,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 50,
+      "places": 39,
+      "edges": 170,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 51,
+      "places": 23,
+      "edges": 65,
+      "outcome": "map_required"
+    },
+    {
+      "seed": 52,
+      "places": 25,
+      "edges": 65,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 53,
+      "places": 47,
+      "edges": 256,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 54,
+      "places": 16,
+      "edges": 26,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 55,
+      "places": 13,
+      "edges": 21,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 56,
+      "places": 43,
+      "edges": 216,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 57,
+      "places": 10,
+      "edges": 9,
+      "outcome": "map_required"
+    },
+    {
+      "seed": 58,
+      "places": 45,
+      "edges": 218,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 59,
+      "places": 22,
+      "edges": 49,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 60,
+      "places": 27,
+      "edges": 88,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 61,
+      "places": 39,
+      "edges": 178,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 62,
+      "places": 44,
+      "edges": 204,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 63,
+      "places": 36,
+      "edges": 172,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 64,
+      "places": 38,
+      "edges": 165,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 65,
+      "places": 34,
+      "edges": 155,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 66,
+      "places": 12,
+      "edges": 14,
+      "outcome": "map_required"
+    },
+    {
+      "seed": 67,
+      "places": 12,
+      "edges": 17,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 68,
+      "places": 37,
+      "edges": 172,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 69,
+      "places": 10,
+      "edges": 9,
+      "outcome": "map_required"
+    },
+    {
+      "seed": 70,
+      "places": 15,
+      "edges": 25,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 71,
+      "places": 28,
+      "edges": 88,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 72,
+      "places": 12,
+      "edges": 14,
+      "outcome": "map_required"
+    },
+    {
+      "seed": 73,
+      "places": 25,
+      "edges": 70,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 74,
+      "places": 47,
+      "edges": 241,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 75,
+      "places": 36,
+      "edges": 168,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 76,
+      "places": 31,
+      "edges": 119,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 77,
+      "places": 24,
+      "edges": 64,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 78,
+      "places": 20,
+      "edges": 37,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 79,
+      "places": 17,
+      "edges": 31,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 80,
+      "places": 25,
+      "edges": 69,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 81,
+      "places": 40,
+      "edges": 197,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 82,
+      "places": 17,
+      "edges": 35,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 83,
+      "places": 39,
+      "edges": 181,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 84,
+      "places": 26,
+      "edges": 70,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 85,
+      "places": 20,
+      "edges": 35,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 86,
+      "places": 9,
+      "edges": 10,
+      "outcome": "map_required"
+    },
+    {
+      "seed": 87,
+      "places": 17,
+      "edges": 28,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 88,
+      "places": 33,
+      "edges": 124,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 89,
+      "places": 13,
+      "edges": 16,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 90,
+      "places": 21,
+      "edges": 47,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 91,
+      "places": 13,
+      "edges": 16,
+      "outcome": "map_required"
+    },
+    {
+      "seed": 92,
+      "places": 34,
+      "edges": 120,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 93,
+      "places": 39,
+      "edges": 188,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 94,
+      "places": 42,
+      "edges": 220,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 95,
+      "places": 42,
+      "edges": 204,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 96,
+      "places": 31,
+      "edges": 111,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 97,
+      "places": 20,
+      "edges": 49,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 98,
+      "places": 30,
+      "edges": 95,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 99,
+      "places": 33,
+      "edges": 134,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 100,
+      "places": 17,
+      "edges": 35,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 101,
+      "places": 45,
+      "edges": 239,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 102,
+      "places": 17,
+      "edges": 30,
+      "outcome": "map_required"
+    },
+    {
+      "seed": 103,
+      "places": 37,
+      "edges": 141,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 104,
+      "places": 9,
+      "edges": 12,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 105,
+      "places": 45,
+      "edges": 243,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 106,
+      "places": 38,
+      "edges": 181,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 107,
+      "places": 23,
+      "edges": 53,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 108,
+      "places": 16,
+      "edges": 32,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 109,
+      "places": 25,
+      "edges": 70,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 110,
+      "places": 32,
+      "edges": 122,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 111,
+      "places": 21,
+      "edges": 41,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 112,
+      "places": 38,
+      "edges": 166,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 113,
+      "places": 9,
+      "edges": 7,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 114,
+      "places": 23,
+      "edges": 74,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 115,
+      "places": 26,
+      "edges": 77,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 116,
+      "places": 46,
+      "edges": 238,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 117,
+      "places": 23,
+      "edges": 61,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 118,
+      "places": 48,
+      "edges": 269,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 119,
+      "places": 26,
+      "edges": 84,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 120,
+      "places": 40,
+      "edges": 219,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 121,
+      "places": 13,
+      "edges": 25,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 122,
+      "places": 40,
+      "edges": 188,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 123,
+      "places": 11,
+      "edges": 20,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 124,
+      "places": 25,
+      "edges": 80,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 125,
+      "places": 23,
+      "edges": 63,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 126,
+      "places": 44,
+      "edges": 234,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 127,
+      "places": 10,
+      "edges": 11,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 128,
+      "places": 23,
+      "edges": 57,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 129,
+      "places": 45,
+      "edges": 235,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 130,
+      "places": 41,
+      "edges": 207,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 131,
+      "places": 28,
+      "edges": 90,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 132,
+      "places": 34,
+      "edges": 149,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 133,
+      "places": 39,
+      "edges": 170,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 134,
+      "places": 38,
+      "edges": 166,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 135,
+      "places": 50,
+      "edges": 302,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 136,
+      "places": 44,
+      "edges": 235,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 137,
+      "places": 12,
+      "edges": 14,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 138,
+      "places": 20,
+      "edges": 53,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 139,
+      "places": 8,
+      "edges": 9,
+      "outcome": "map_required"
+    },
+    {
+      "seed": 140,
+      "places": 14,
+      "edges": 22,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 141,
+      "places": 41,
+      "edges": 189,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 142,
+      "places": 45,
+      "edges": 243,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 143,
+      "places": 19,
+      "edges": 37,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 144,
+      "places": 36,
+      "edges": 146,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 145,
+      "places": 35,
+      "edges": 144,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 146,
+      "places": 16,
+      "edges": 24,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 147,
+      "places": 46,
+      "edges": 236,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 148,
+      "places": 33,
+      "edges": 129,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 149,
+      "places": 12,
+      "edges": 14,
+      "outcome": "map_required"
+    },
+    {
+      "seed": 150,
+      "places": 28,
+      "edges": 90,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 151,
+      "places": 34,
+      "edges": 110,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 152,
+      "places": 33,
+      "edges": 107,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 153,
+      "places": 39,
+      "edges": 181,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 154,
+      "places": 21,
+      "edges": 61,
+      "outcome": "map_required"
+    },
+    {
+      "seed": 155,
+      "places": 45,
+      "edges": 251,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 156,
+      "places": 39,
+      "edges": 155,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 157,
+      "places": 47,
+      "edges": 269,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 158,
+      "places": 22,
+      "edges": 56,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 159,
+      "places": 33,
+      "edges": 131,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 160,
+      "places": 15,
+      "edges": 21,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 161,
+      "places": 41,
+      "edges": 183,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 162,
+      "places": 11,
+      "edges": 8,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 163,
+      "places": 42,
+      "edges": 224,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 164,
+      "places": 14,
+      "edges": 23,
+      "outcome": "map_required"
+    },
+    {
+      "seed": 165,
+      "places": 9,
+      "edges": 11,
+      "outcome": "map_required"
+    },
+    {
+      "seed": 166,
+      "places": 19,
+      "edges": 42,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 167,
+      "places": 22,
+      "edges": 56,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 168,
+      "places": 15,
+      "edges": 32,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 169,
+      "places": 24,
+      "edges": 62,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 170,
+      "places": 30,
+      "edges": 98,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 171,
+      "places": 43,
+      "edges": 226,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 172,
+      "places": 30,
+      "edges": 106,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 173,
+      "places": 28,
+      "edges": 116,
+      "outcome": "map_required"
+    },
+    {
+      "seed": 174,
+      "places": 8,
+      "edges": 9,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 175,
+      "places": 36,
+      "edges": 146,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 176,
+      "places": 9,
+      "edges": 16,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 177,
+      "places": 21,
+      "edges": 56,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 178,
+      "places": 15,
+      "edges": 23,
+      "outcome": "map_required"
+    },
+    {
+      "seed": 179,
+      "places": 20,
+      "edges": 47,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 180,
+      "places": 17,
+      "edges": 41,
+      "outcome": "map_required"
+    },
+    {
+      "seed": 181,
+      "places": 45,
+      "edges": 228,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 182,
+      "places": 36,
+      "edges": 145,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 183,
+      "places": 14,
+      "edges": 26,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 184,
+      "places": 25,
+      "edges": 83,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 185,
+      "places": 15,
+      "edges": 25,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 186,
+      "places": 29,
+      "edges": 106,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 187,
+      "places": 30,
+      "edges": 101,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 188,
+      "places": 22,
+      "edges": 64,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 189,
+      "places": 38,
+      "edges": 172,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 190,
+      "places": 12,
+      "edges": 15,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 191,
+      "places": 41,
+      "edges": 222,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 192,
+      "places": 31,
+      "edges": 107,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 193,
+      "places": 43,
+      "edges": 198,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 194,
+      "places": 46,
+      "edges": 243,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 195,
+      "places": 46,
+      "edges": 252,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 196,
+      "places": 49,
+      "edges": 285,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 197,
+      "places": 42,
+      "edges": 202,
+      "outcome": "navigate_graph"
+    },
+    {
+      "seed": 198,
+      "places": 11,
+      "edges": 9,
+      "outcome": "map_required"
+    },
+    {
+      "seed": 199,
+      "places": 30,
+      "edges": 97,
+      "outcome": "navigate_graph"
+    }
+  ]
+}

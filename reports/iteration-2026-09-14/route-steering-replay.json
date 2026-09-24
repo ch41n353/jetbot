@@ -1,0 +1,66 @@
+{
+  "source": "local_nav/goals/session-20260914-203315-d1f494-route-02.json.action-02.json",
+  "note": "Read-only replay of recorded poses; changed commands are counterfactual and do not establish improved trajectory.",
+  "parameters": {
+    "desired_heading_limit_degrees": 1.5,
+    "heading_gain": 0.3,
+    "yaw_rate_gain": 0.03,
+    "duty_limit": 0.025
+  },
+  "last_samples": [
+    {
+      "time": 21173.686106412,
+      "x_cm": 0.765004668942783,
+      "z_cm": 24.764773550301246,
+      "yaw_degrees": -1.1656279969562753,
+      "yaw_rate_degrees_s": 13.382161445656006,
+      "previous_steer": -0.009196879458761626,
+      "new_steer": -0.008757651061684696
+    },
+    {
+      "time": 21173.718964317,
+      "x_cm": 0.8261409571654751,
+      "z_cm": 25.203169494103374,
+      "yaw_degrees": -0.7434152651964618,
+      "yaw_rate_degrees_s": 12.849654649563558,
+      "previous_steer": -0.012630305917129981,
+      "new_steer": -0.01068953184916743
+    },
+    {
+      "time": 21173.785751856,
+      "x_cm": 0.9217176094492112,
+      "z_cm": 26.14643107018251,
+      "yaw_degrees": -0.44254339955237937,
+      "yaw_rate_degrees_s": 4.504910199370685,
+      "previous_steer": -0.016117200367436878,
+      "new_steer": -0.007895595276997916
+    },
+    {
+      "time": 21173.852497728,
+      "x_cm": 0.9373016728395906,
+      "z_cm": 26.908107686971597,
+      "yaw_degrees": -1.004323510615717,
+      "yaw_rate_degrees_s": -8.416701950931422,
+      "previous_steer": -0.01348740785216207,
+      "new_steer": 0.0018116188067387677
+    },
+    {
+      "time": 21173.920378352,
+      "x_cm": 0.9494949501680601,
+      "z_cm": 27.751503223065242,
+      "yaw_degrees": -1.5761660048303283,
+      "yaw_rate_degrees_s": -8.424237441009714,
+      "previous_steer": -0.010737113100672978,
+      "new_steer": 0.004809724678175772
+    },
+    {
+      "time": 21173.985879992,
+      "x_cm": 0.8824146337240659,
+      "z_cm": 28.630930579428114,
+      "yaw_degrees": -2.6443262336130577,
+      "yaw_rate_degrees_s": -16.30738144508997,
+      "previous_steer": -0.0038026328924587356,
+      "new_steer": 0.014530203105911622
+    }
+  ]
+}

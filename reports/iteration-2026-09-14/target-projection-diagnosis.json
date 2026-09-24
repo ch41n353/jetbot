@@ -1,0 +1,158 @@
+{
+  "pair": [
+    "21346.953528",
+    "21440.801114"
+  ],
+  "features": 250,
+  "fb_good": 5,
+  "homography_inliers": 4,
+  "H": [
+    [
+      -2.9514145527802587,
+      -0.2773225384120944,
+      0.007420378105105026
+    ],
+    [
+      -0.7185834629471376,
+      -6.1491055484299855,
+      0.5942256196036213
+    ],
+    [
+      -1.0261359132915313,
+      -19.050302692820477,
+      1.0
+    ]
+  ],
+  "solutions": [
+    {
+      "normal": [
+        0.06350367677534516,
+        0.993889555179748,
+        0.09028197572392406
+      ],
+      "pitch_degrees": 5.179829149570377,
+      "translation_cm": [
+        0.2857850165852278,
+        28.32961598189306,
+        57.2008299322384
+      ],
+      "rotation_vector_degrees": [
+        151.87177303696066,
+        4.769317735665247,
+        -1.6141139207555077
+      ],
+      "positive_plane_fraction": 1.0
+    },
+    {
+      "normal": [
+        -0.06350367677534516,
+        -0.993889555179748,
+        -0.09028197572392406
+      ],
+      "pitch_degrees": -5.179829149570377,
+      "translation_cm": [
+        -0.2857850165852278,
+        -28.32961598189306,
+        -57.2008299322384
+      ],
+      "rotation_vector_degrees": [
+        151.87177303696066,
+        4.769317735665247,
+        -1.6141139207555077
+      ],
+      "positive_plane_fraction": 0.0
+    },
+    {
+      "normal": [
+        0.061124517136710695,
+        0.9774753284842325,
+        -0.20200439502507275
+      ],
+      "pitch_degrees": -11.654195126811405,
+      "translation_cm": [
+        2.6224459448760093,
+        10.67949920802963,
+        62.8780950222413
+      ],
+      "rotation_vector_degrees": [
+        -1.2049428889902236,
+        3.1751353229525203,
+        10.102115326699108
+      ],
+      "positive_plane_fraction": 0.4
+    },
+    {
+      "normal": [
+        -0.061124517136710695,
+        -0.9774753284842325,
+        0.20200439502507275
+      ],
+      "pitch_degrees": 11.654195126811405,
+      "translation_cm": [
+        -2.6224459448760093,
+        -10.67949920802963,
+        -62.8780950222413
+      ],
+      "rotation_vector_degrees": [
+        -1.2049428889902236,
+        3.1751353229525203,
+        10.102115326699108
+      ],
+      "positive_plane_fraction": 0.6
+    }
+  ],
+  "direct_target_tracking_error": "Target scale changed too quickly",
+  "homography_accepted": false,
+  "homography_rejection": "Only4\u20138 inliers across wide-gap experiments; normals not credible.",
+  "fault_diagnostic_test": {
+    "outcome": "stopped",
+    "reason": "Target recovery exhausted: Target moved or projection inconsistent with retained map",
+    "fault": {
+      "frame_time": 103.15000000000012,
+      "target_box": [
+        311.0,
+        165.0,
+        334.0,
+        215.0
+      ],
+      "base_pixel": [
+        322.5,
+        255.0
+      ],
+      "confidence": 0.9099162817001343,
+      "local_target_cm": [
+        -0.10530417693899927,
+        36.006654876914716
+      ],
+      "observed_world_cm": [
+        -0.10300238451029697,
+        43.33384797948585
+      ],
+      "target_world_cm": [
+        0.0001486832279838726,
+        79.95792882827114
+      ],
+      "pose_cm_degrees": [
+        -0.002990487143827996,
+        7.327178013834871,
+        0.008421366007646557
+      ],
+      "disagreement_cm": 36.62422611006458,
+      "limit_cm": 5.0,
+      "frame_attitude": {
+        "down_camera": [
+          0.0,
+          0.9692456324989107,
+          0.24609531462786235
+        ],
+        "yaw": 0.00011115869039878778,
+        "variance": 1.9038588736669286e-05
+      }
+    },
+    "motors": [
+      0.0,
+      0.0
+    ]
+  },
+  "conclusion": "Accepted target NCC remained high while target projection disagreed with floor VIO. Insufficient observations to attribute conclusively to pitch calibration or floor VIO. No calibration or safety threshold changed."
+}

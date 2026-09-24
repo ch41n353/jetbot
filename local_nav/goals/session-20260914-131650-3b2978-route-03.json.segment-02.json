@@ -1,8 +1,0 @@
-{
-  "outcome": "stopped",
-  "samples": [],
-  "passed_waypoints_cm": [],
-  "travel_direction": "forward",
-  "reason": "Starting pose differs from calibrated floor pose",
-  "powered_seconds": null
-}
