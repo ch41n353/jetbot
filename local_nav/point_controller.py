@@ -38,8 +38,25 @@ def call(action, **fields):
 #: Where a tracked point is allowed to land, as (x0,y0,x1,y1). The default sits
 #: barely 20px outside the source box, which suits forward driving but discards
 #: nearly every point once the chassis rotates. Rotation-heavy callers widen it.
+#: The y bounds are re-derived per calibration alongside the source box below;
+#: these values are the ones that matched the original 14.25 degree mount.
 DRIVE_FLOW_WINDOW=(140,270,500,470)
 TURN_FLOW_WINDOW=(30,250,610,478)
+
+#: The metric floor band the tracker samples, near..far in centimetres.
+#:
+#: This used to be written as fixed image rows 280..460, which silently encoded
+#: 27..7 cm at the original 14.25 degree pitch -- and stopped meaning that the
+#: moment the mount moved. Tilting the camera down to 30.40 degrees left those
+#: same rows looking at 13.3..3.5 cm instead, where the same wheel speed puts
+#: roughly twice the pixel displacement through a 21 px LK window: measured 5 of
+#: 250 features surviving on carpet that had been tracking fine an hour earlier.
+#:
+#: Near is bounded by how close the lens can focus and how fast that floor
+#: sweeps past; far by where a pixel stops being worth a useful number of
+#: millimetres. Derive the rows from the calibration so the band stays put in
+#: centimetres, which is what the tracker actually cares about.
+FLOOR_BAND_CM=(7.,27.)
 
 #: Diagnostic apparent-floor-scale range. Scale is not a stop condition: the
 #: same textured carpet repeatedly produced 1.089 during otherwise valid motion.
@@ -62,15 +79,64 @@ MIN_INLIERS=8
 MIN_INLIER_FRACTION=.5
 
 
+def band_rows(profile,intrinsics,band=FLOOR_BAND_CM,height=480):
+    """Image rows spanning a metric floor band at the calibrated pitch.
+
+    Returns (top_row, bottom_row) with top the farther edge. Falls back to the
+    rows that matched the original mount when the geometry cannot be evaluated,
+    so a malformed calibration degrades to the previous behaviour rather than
+    leaving the tracker with no mask at all.
+    """
+    try:
+        K=np.asarray(intrinsics['K'],dtype=float)
+        D=np.asarray(intrinsics['D'],dtype=float)
+        camera_height=float(profile['camera_height_cm'])
+        pitch=math.radians(float(profile['pitch_degrees']))
+    except (KeyError,TypeError,ValueError):
+        return 280.,460.
+    down=np.array([0.,math.cos(pitch),math.sin(pitch)])
+    forward=np.array([0.,0.,1.])-down*down[2]
+    forward=forward/np.linalg.norm(forward)
+
+    def reach(row):
+        xy=cv2.fisheye.undistortPoints(np.array([[[320.,float(row)]]]),K,D).reshape(2)
+        ray=np.array([xy[0],xy[1],1.])
+        denominator=ray.dot(down)
+        if denominator<.05:
+            return None
+        return camera_height/denominator*ray.dot(forward)
+
+    def row_for(centimetres):
+        low,high=1.,float(height)-1.
+        for _ in range(60):
+            middle=(low+high)/2.
+            got=reach(middle)
+            if got is None or got>centimetres:low=middle
+            else:high=middle
+        return (low+high)/2.
+
+    near,far=min(band),max(band)
+    top,bottom=row_for(far),row_for(near)
+    if not (0.<top<bottom<height):
+        return 280.,460.
+    return top,bottom
+
+
 class FloorTracker:
     def __init__(self,profile,intrinsics,max_features=250,crop_flow=True,
-                 flow_window=DRIVE_FLOW_WINDOW):
+                 flow_window=None):
         if type(max_features) is not int or max_features not in (80, 125, 250):
             raise ValueError("Feature budget must be 80, 125 or 250")
         self.max_features=max_features
         if type(crop_flow) is not bool:
             raise ValueError('crop_flow must be boolean')
         self.crop_flow=crop_flow
+        # Source box and landing window both follow the calibration, so moving
+        # the mount does not silently retarget the tracker at different floor.
+        self.floor_top,self.floor_bottom=band_rows(profile,intrinsics)
+        if flow_window is None:
+            flow_window=(DRIVE_FLOW_WINDOW[0],self.floor_top-10.,
+                         DRIVE_FLOW_WINDOW[2],self.floor_bottom+10.)
         window=tuple(float(v) for v in flow_window)
         if len(window)!=4 or window[0]>=window[2] or window[1]>=window[3]:
             raise ValueError('flow_window must be (x0,y0,x1,y1) with x0<x1 and y0<y1')
@@ -113,7 +179,8 @@ class FloorTracker:
         gray1=cv2.cvtColor(after[region],cv2.COLOR_BGR2GRAY)
         # Remove global exposure offsets using the tracked floor region.
         # Geometric inlier and forward/backward checks still validate motion.
-        floor=(slice(280-oy,460-oy),slice(160-ox,480-ox))
+        top,bottom=int(round(self.floor_top)),int(round(self.floor_bottom))
+        floor=(slice(max(0,top-oy),max(1,bottom-oy)),slice(160-ox,480-ox))
         gray0=np.clip(gray0.astype(np.float32)-gray0[floor].mean()+128,0,255).astype(np.uint8)
         gray1=np.clip(gray1.astype(np.float32)-gray1[floor].mean()+128,0,255).astype(np.uint8)
         mask=np.zeros_like(gray0)

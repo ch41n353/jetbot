@@ -481,7 +481,15 @@ MISSION_SECONDS = 4.       # wheels turn for about this long between looks. Long
                            # enough that the picture still resembles the plan.
 MISSION_CYCLES = 25        # bound on a run, so a mission that is getting nowhere
                            # ends by itself rather than driving until the battery
-MISSION_STANDOFF_CM = 20.
+MISSION_STANDOFF_CM = 20.  # range to the target's contact pixel at which the
+                           # mission declares arrival. For a wide flat object the
+                           # contact pixel migrates to its near edge as the robot
+                           # closes, so the robot ends up nearer than this number.
+                           # Measured 2026-09-24 on the same box: aiming for 20 cm
+                           # from a point ranged at 46 cm left it 5 cm away. 35 cm
+                           # over-corrected and stopped it well short. Until the
+                           # standoff is measured to the nearest part of the target
+                           # rather than one pixel, 20 is the operator's choice.
 MISSION_COMMIT_CM = 30.
 FLOW_INTERVAL_S = 1.        # how often a look is issued when flowing. At ~3 s a
                             # call that keeps about three in the air at once.
@@ -497,6 +505,9 @@ MISSION_TURN_STEP_DEG = 30. # how much of a requested turn to do before looking
                             # seconds and every view along the way; in steps the
                             # robot stops as soon as open floor appears, and a
                             # heading chosen from one frame is not committed to.
+MISSION_HOLD_FALLBACKS = 3  # consecutive holds answered with the remembered
+                            # route before the mission really does give up.
+                            # Bounded so a stale route cannot drive forever.
 MISSION_TURN_BUDGET_DEG = 270.  # total rotation allowed without driving. Enough
                                 # to look all the way round and a bit more; past
                                 # that the robot is searching, not escaping.
@@ -945,8 +956,41 @@ class Bench(object):
         time.sleep(.4)
         return self.state(mission=True)
 
+    def remembered_plan(self, memory, pose, answer=None):
+        """The previous route, rebased into this frame, as a plan to re-offer.
+
+        Returns None when nothing usable survives -- no remembered route, or
+        every point of it now falls outside the image. The caller still gets
+        the ordinary clearance and commit treatment, so an unsafe remembered
+        route is refused downstream exactly like a fresh one.
+        """
+        try:
+            route = fetch.rebase(list(memory.get('route') or []), pose)
+        except Exception:
+            return None
+        pixels = []
+        for spot in route:
+            if spot[1] <= 0.:
+                continue                       # behind the robot: no pixel
+            try:
+                point = self.robot.pixel(spot[0], spot[1])
+            except Exception:
+                point = None
+            if point and all(math.isfinite(v) for v in point) \
+                    and 0 <= point[0] < 640 and 0 <= point[1] < 480:
+                pixels.append(dict(x=round(float(point[0]), 1),
+                                   y=round(float(point[1]), 1)))
+        if not pixels:
+            return None
+        carried = (answer or {}).get('obstacles') or []
+        return dict(motion='follow', visible=False, all_done=True,
+                    contact_pixel=None, route_pixels=pixels, turn_degrees=None,
+                    goal=(answer or {}).get('goal', 'remembered target'),
+                    obstacles=carried,
+                    note='controller fallback: remembered route re-offered after a planner hold')
+
     def launch(self, target, seconds=MISSION_SECONDS, initial_plan=None,
-               seed_frame_token=None):
+               seed_frame_token=None, carry_memory=True):
         """Start a mission on its own thread; the page polls /api/progress.
 
         `seconds` of None means do not plan recurrently: take one look, drive
@@ -987,8 +1031,17 @@ class Bench(object):
             initial_plan.setdefault('obstacles', [])
             initial_plan.setdefault('note', 'high-level seeded trajectory')
         self.abort.clear()
+        if not carry_memory:
+            # Goal-only: no seed is used and none is accepted silently, so the
+            # first look is the model's own and every look after it is too.
+            if initial_plan is not None:
+                self.say('goal-only run: the seeded trajectory is ignored')
+            initial_plan = None
+            self.say('goal-only: no remembered trajectory or obstacles are sent; '
+                     'the model plans every look from the picture and the goal')
         self.flight = threading.Thread(target=self.mission,
                                        args=(target, seconds, initial_plan),
+                                       kwargs=dict(carry_memory=carry_memory),
                                        daemon=True)
         self.flight.start()
         time.sleep(.4)                # let the first line reach the log
@@ -1435,7 +1488,28 @@ class Bench(object):
                  % (elapsed, issued, applied + 1, stale))
 
     def execute_mission_trajectory(self, route, seconds, record, obstacles):
-        """Mid-level validates clearance, then hands only a trajectory to Execution."""
+        """Last-line clearance check, then hand a trajectory to Execution.
+
+        This is a backstop, not a planner. Obstacle avoidance is the job of the
+        layers that can see -- the mid-level planner and the operator above it
+        -- and this must never rewrite a route, only refuse one. It tests the
+        planner's own detections against the chassis, which is arithmetic this
+        layer legitimately owns; it does not decide where to go.
+
+        It was briefly deleted on 2026-09-24 on the argument that a layer with
+        no vision should not overrule one with vision. The very next measurement
+        refuted that: on call 099667ca the planner drew a route passing 5.9 cm
+        from a green block with a 6 cm chassis half-width -- the robot's edge
+        through it by a millimetre -- while its own note read "green block
+        remains well right of approach". In pixels, the units the model is told
+        to judge in, it left 44 px where scale_px_by_row required 125. The
+        refusal was correct and it was the only thing that caught it.
+
+        `along` is bounded by the leg length below. Without that an obstacle
+        beyond the end of a leg still truncated it, because clear_distance
+        projects onto an infinite heading ray; that is what produced deadlocks
+        earlier the same day.
+        """
         start=[0.,0.]
         for point in route:
             dx,dz=point[0]-start[0],point[1]-start[1]
@@ -1477,7 +1551,8 @@ class Bench(object):
         if job.phase!='completed':raise fetch.Stop(job.error or job.phase)
         return list(job.pose)
 
-    def mission(self, target, seconds=MISSION_SECONDS, initial_plan=None):
+    def mission(self, target, seconds=MISSION_SECONDS, initial_plan=None,
+                carry_memory=True):
         """Drive to a named object, asking the model again every few seconds.
 
         One look is a plan made from one photograph, and it stops being true as
@@ -1490,6 +1565,19 @@ class Bench(object):
         a small robot drives at something: it leaves the top of the picture long
         before it is reached. The memory is what carries the mission across that
         gap, and the prompt says so.
+
+        carry_memory=False runs the goal-only variant: nothing remembered is
+        handed to the model except the goal itself. No high-level seed, no
+        previous route of its own, no obstacle it reported on an earlier look.
+        It receives the goal and the current picture, and draws the whole
+        trajectory from that, every look, starting with the first -- which is
+        not skipped. An obstacle it cannot see now does not exist. Measured 2026-09-24 on one replayed call: with the reference
+        present the route passed 6.1 cm from an obstacle across four samples and
+        none cleared the chassis; with the reference removed and nothing else
+        changed the median was 14.2 cm and three of four cleared it. Continuity
+        is what is traded away: each look is planned afresh, so the approach
+        side can change between looks and a target that leaves the frame is not
+        carried by a remembered path.
         """
         target = (target or '').strip()
         if not target:
@@ -1508,6 +1596,9 @@ class Bench(object):
         closest, idle = None, 0       # nearest the target has come, and how many
                                       # looks since that last improved
         done, repeats = [], 0         # steps of the instruction already reached
+        held = 0                      # consecutive holds answered with the
+                                      # remembered route; reset by any look that
+                                      # comes back with a plan of its own
         spins = 0.                    # degrees turned since anything was driven
         once = seconds is None
         self.lines = []
@@ -1524,7 +1615,16 @@ class Bench(object):
             reference_turn=(memory or {}).get('reference_turn_deg',0.)+abs(pose[2])
             remembered_goal=fetch.rebase([memory['goal']],pose)[0] if memory and memory.get('goal') is not None else None
             reference=fetch.rebase(memory.get('top_reference',[]),pose) if memory else reference
-            seeded = cycle == 0 and initial_plan is not None
+            if not carry_memory:
+                # Goal-only: no trajectory the model drew before, in text or as
+                # ink. Remembered obstacles are kept, but only as rings on the
+                # top-down map -- the map presents them as past sightings with
+                # an uncertainty radius, where the text list reads as a fact
+                # about the present. The goal survives; that is the point.
+                reference=[]
+                if memory is not None:
+                    memory=dict(memory,route=[],top_reference=[])
+            seeded = cycle == 0 and initial_plan is not None and carry_memory
             if seeded:
                 # launch() already tied these pixels to this staged frame.  Do
                 # not capture again here: doing so would silently change the
@@ -1545,15 +1645,38 @@ class Bench(object):
                                   % (cycle + 1))
                 try:
                     from paired_planning import observation
-                    pair=observation(self.robot,self.frame,memory,pose,reference)
+                    pair=observation(self.robot,self.frame,memory,pose,reference,
+                                     obstacles_in_text=carry_memory)
                     answer = fetch.recognize(self.frame, target, prior, paired=pair)
                 except fetch.PlannerHold as exc:
-                    self.say('PLANNER HOLD: %s' % exc.answer.get('note', 'no supported route'))
-                    break
+                    # A hold used to end the mission outright. But the payload's
+                    # own rule is "preserve the previous route only when the
+                    # current route to goal is uncertain", and a hold is exactly
+                    # that state -- the model could not identify the target, not
+                    # that the way is blocked. Measured 2026-09-24: on one such
+                    # call the remembered route ended 22 cm from the target and
+                    # was simply discarded, four cycles running. Re-offer it as
+                    # the plan and let the ordinary clearance, widening and
+                    # commit path decide whether any of it is still safe; that
+                    # is a decision the controller can make and the model
+                    # repeatedly would not, however the prompt was worded.
+                    fallback = self.remembered_plan(memory, pose, answer=exc.answer)
+                    if fallback is None or held >= MISSION_HOLD_FALLBACKS:
+                        self.say('PLANNER HOLD: %s'
+                                 % exc.answer.get('note', 'no supported route'))
+                        break
+                    held += 1
+                    self.say('  hold: "%s"' % str(exc.answer.get('note', ''))[:70])
+                    self.say('  following the remembered route instead (%d of %d)'
+                             % (held, MISSION_HOLD_FALLBACKS))
+                    answer = fallback
                 except fetch.Stop as exc:
                     self.say('cycle %d: the model could not be asked: %s'
                              % (cycle + 1, exc))
                     break
+
+            if not str(answer.get('note','')).startswith('controller fallback'):
+                held = 0
 
             goal = None
             contact = answer.get('contact_pixel')
@@ -2863,7 +2986,8 @@ class Handler(BaseHTTPRequestHandler):
                 out = bench.launch(body.get('target') or '',
                                    None if every in (None, '') else float(every),
                                    body.get('initial_plan'),
-                                   body.get('seed_frame_token'))
+                                   body.get('seed_frame_token'),
+                                   carry_memory=bool(body.get('carry_memory', True)))
             elif path == '/api/look':
                 out = bench.look(body.get('mode') or 'floor')
             elif path == '/api/ask':

@@ -26,10 +26,33 @@ def rows(path):
     return result
 
 
+# One GPT call directory is immutable once its response lands, but the dashboard
+# polls /api/control every couple of seconds and calls() re-parsed every
+# request.json each time -- 9.4 MB across 69 directories on 2026-09-24, to pull
+# one short string from each. That alone made the handler take 2.25 s and pinned
+# a core. Parse a directory once, keyed on the mtimes that would change it.
+_CALL_CACHE = {}
+
+
+def _call_version(directory):
+    version = []
+    for name in ('request.json', 'response.json', 'events.jsonl'):
+        try: version.append((name, (directory / name).stat().st_mtime_ns))
+        except OSError: version.append((name, None))
+    return tuple(version)
+
+
 def calls(root):
     result = []
+    seen = set()
     for directory in (root / 'gpt').glob('*'):
         if not re.fullmatch('[a-f0-9]{32}', directory.name): continue
+        key = (str(directory), _call_version(directory))
+        seen.add(key)
+        cached = _CALL_CACHE.get(key)
+        if cached is not None:
+            result.append(cached)
+            continue
         events = rows(directory / 'events.jsonl')
         request = read_json(directory / 'request.json')
         if request is None: continue
@@ -55,6 +78,11 @@ def calls(root):
                            image='/api/gpt/%s/image-0.jpg' % directory.name,
                            clean_image=('/api/gpt/%s/clean.jpg' % directory.name) if (directory/'clean.jpg').exists() else None,
                            usage=(response or {}).get('usage')))
+        _CALL_CACHE[key] = result[-1]
+    # Drop entries for directories that vanished or changed, so a long-running
+    # dashboard does not hold every version of every call it has ever seen.
+    for stale in set(_CALL_CACHE) - seen:
+        _CALL_CACHE.pop(stale, None)
     return sorted(result, key=lambda c:c['dispatched'], reverse=True)
 
 

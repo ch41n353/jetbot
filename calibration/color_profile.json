@@ -1,0 +1,12 @@
+{
+    "version": 1,
+    "channel_order": "BGR",
+    "gains": [
+        0.9665,
+        1.0819,
+        0.9606
+    ],
+    "measured_at": "2026-09-25T00:31:00.127072+00:00",
+    "reference": "Three large carpet patches, averaged. The carpet dominates the frame and is the surface objects are judged against.",
+    "why": "calibration/color_profile.json did not exist, so load_gains() returned ones and correct_bgr was an identity LUT -- the colour pipeline was wired up and doing nothing. Measured 2026-09-24: carpet read R/G 1.147, B/G 1.139 and the planner refused a target saying \"visible red object is the white cube under pink lighting\". The far wall reads a much stronger cast (R/G 1.41) than the near carpet, so the illuminant is not uniform and no single gain fixes both; correcting on the wall turned the carpet green. Re-measure if the room lighting changes."
+}

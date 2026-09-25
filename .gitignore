@@ -48,3 +48,4 @@ local_nav/goals/*.power.jsonl*
 local_nav/goals/*/local-reach-trials.jsonl
 local_nav/goals/*/local-reach-chain.jsonl
 local_nav/goals/*/charge-watch.jsonl
+.artifact-build/

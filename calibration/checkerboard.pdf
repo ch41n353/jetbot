@@ -1,0 +1,71 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.2756 841.8898] /Resources << /Font << /F1 5 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 1970 >>
+stream
+0 0 0 rg
+49.6063 643.4646 70.8661 70.8661 re f
+191.3386 643.4646 70.8661 70.8661 re f
+333.0709 643.4646 70.8661 70.8661 re f
+474.8031 643.4646 70.8661 70.8661 re f
+120.4724 572.5984 70.8661 70.8661 re f
+262.2047 572.5984 70.8661 70.8661 re f
+403.9370 572.5984 70.8661 70.8661 re f
+49.6063 501.7323 70.8661 70.8661 re f
+191.3386 501.7323 70.8661 70.8661 re f
+333.0709 501.7323 70.8661 70.8661 re f
+474.8031 501.7323 70.8661 70.8661 re f
+120.4724 430.8661 70.8661 70.8661 re f
+262.2047 430.8661 70.8661 70.8661 re f
+403.9370 430.8661 70.8661 70.8661 re f
+49.6063 360.0000 70.8661 70.8661 re f
+191.3386 360.0000 70.8661 70.8661 re f
+333.0709 360.0000 70.8661 70.8661 re f
+474.8031 360.0000 70.8661 70.8661 re f
+0.5 w 0 0 0 RG
+49.6063 360.0000 496.0630 354.3307 re S
+BT /F1 13.0 Tf 49.6063 779.5276 Td (Floor-geometry calibration board) Tj ET
+BT /F1 9.5 Tf 49.6063 761.1024 Td (7 x 5 squares of 25.0 mm  --  6 x 4 interior corners for findChessboardCorners) Tj ET
+BT /F1 9.5 Tf 49.6063 745.5118 Td (PRINT AT 100% / ACTUAL SIZE. Do not use "fit to page" or "shrink to fit".) Tj ET
+0.8 w
+49.6063 303.3071 m 333.0709 303.3071 l S
+49.6063 303.3071 m 49.6063 314.6457 l S
+77.9528 303.3071 m 77.9528 310.3937 l S
+106.2992 303.3071 m 106.2992 310.3937 l S
+134.6457 303.3071 m 134.6457 310.3937 l S
+162.9921 303.3071 m 162.9921 310.3937 l S
+191.3386 303.3071 m 191.3386 314.6457 l S
+219.6850 303.3071 m 219.6850 310.3937 l S
+248.0315 303.3071 m 248.0315 310.3937 l S
+276.3780 303.3071 m 276.3780 310.3937 l S
+304.7244 303.3071 m 304.7244 310.3937 l S
+333.0709 303.3071 m 333.0709 314.6457 l S
+BT /F1 9.0 Tf 49.6063 287.7165 Td (This line is exactly 100 mm. Measure it. If it is not, the squares are not 25.0 mm either.) Tj ET
+BT /F1 9.0 Tf 49.6063 266.4567 Td (Lay flat on the floor, squares facing up, near edge about 12 cm ahead of the lens.) Tj ET
+BT /F1 9.0 Tf 49.6063 252.2835 Td (Keep the whole board in frame and unshadowed; it does not need to be square to the robot.) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000002273 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+2343
+%%EOF

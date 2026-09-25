@@ -185,9 +185,22 @@ class ObstacleTests(unittest.TestCase):
         room, _ = fetch.clear_distance([('x', (0., 5.))], (0., 0.), 0., 25.)
         self.assertEqual(room, 0.)
 
-    def test_configured_clearance_threshold_is_ten_cm(self):
-        self.assertEqual(fetch.CORRIDOR_HALF_CM + fetch.OBSTACLE_RADIUS_CM, 10.)
-        self.assertEqual(fetch.KEEP_BACK_CM + fetch.OBSTACLE_RADIUS_CM, 10.)
+    def test_lateral_and_forward_exclusions_match(self):
+        """The corridor is as wide as it is deep.
+
+        This pinned the literal 10 cm until 2026-09-24. The number moved when
+        OBSTACLE_RADIUS_CM went 4 -> 8: a single contact pixel plus a 4 cm
+        radius could not stand in for anything in this room -- a milk carton
+        measured 12.3 cm across its near edge, so a route cleared to 14.6 cm
+        from its contact point still passed 11.6 cm from its corner and the
+        chassis edge went by at 5.6 cm. What must hold is the invariant, not
+        the constant: an obstacle beside the robot and one in front of it get
+        the same exclusion, and that exclusion covers the assumed half-extent.
+        """
+        self.assertEqual(fetch.CORRIDOR_HALF_CM + fetch.OBSTACLE_RADIUS_CM,
+                         fetch.KEEP_BACK_CM + fetch.OBSTACLE_RADIUS_CM)
+        self.assertGreaterEqual(fetch.OBSTACLE_RADIUS_CM, 6.,
+                                'too small for the objects this robot meets')
 
     def test_lower_fisheye_corner_obstacles_are_ignored(self):
         class Lens(object):

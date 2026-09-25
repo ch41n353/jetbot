@@ -90,7 +90,25 @@ ROUTE_MIN_LEG_CM = 4.
 INITIAL_TURN_LIMIT_DEG = 20. # planner routes must begin near the current heading
 LEAD_POINT_CM = 10.        # a first waypoint nearer than this steers nothing
 CORRIDOR_HALF_CM = 6.      # physical half-width of the 12 cm chassis
-OBSTACLE_RADIUS_CM = 4.    # 10 cm total lateral exclusion with the chassis
+OBSTACLE_RADIUS_CM = 6.    # half-extent assumed for an obstacle given as ONE contact
+                           # pixel. The model returns a single point per obstacle and
+                           # this stands in for the object's real size. 4 cm was too
+                           # small for anything in this room: measured 2026-09-24, a
+                           # milk carton's near edge is 12.3 cm long on the floor, so
+                           # a route cleared to 14.6 cm from its contact point still
+                           # passed 11.6 cm from its left corner and the chassis edge
+                           # went by at 5.6 cm. Stopgap until obstacles carry an
+                           # extent (two base pixels) instead of a radius.
+                           #
+                           # 8 was too large in the other direction. A turn moves an
+                           # obstacle to at most its own distance from the new
+                           # heading, so anything nearer than the exclusion floor
+                           # cannot be escaped by turning at all: with the floor at
+                           # 14 cm a Lego baseplate 10.7 cm ahead deadlocked the
+                           # robot completely. 6 keeps the floor at 12 cm, still
+                           # covering the ~12 cm objects in this room, while leaving
+                           # turning a viable escape. Reversing is not an option --
+                           # there is no rear sensor.
 KEEP_BACK_CM = 6.          # also yields a 10 cm forward exclusion threshold
 OBSTACLE_CORNER_X_PX = 96. # outer 15 percent of a 640 px fisheye frame
 OBSTACLE_CORNER_Y_PX = 360.# lower quarter: ground range is ill-conditioned
@@ -117,7 +135,7 @@ GOAL_ADJACENT_CM = 22.     # an obstacle this near the target is part of the
                            # a bottle among toys cannot be reached otherwise
 REPAIR_PASSES = 3          # nudging one waypoint clear can push it into the
                            # next obstacle, so the sweep is repeated
-REPAIR_MARGIN_CM = 2.5     # a vertex placed exactly on the clearance circle
+REPAIR_MARGIN_CM = 6.      # a vertex placed exactly on the clearance circle
                            # still lets the two segments either side cut across
                            # it as a chord, so the push goes a little beyond
 POINT = {'type': 'object', 'additionalProperties': False,
@@ -1412,12 +1430,16 @@ def avoid(route, obstacles, goal=None):
     if not relevant or not route:
         return list(route), 0
 
-    # Repair padding is only room for smoothing a necessary detour. It is not
-    # a second collision envelope: do not invent lateral steering for a route
-    # whose complete segments already satisfy the actual clearance limit.
-    limit = OBSTACLE_RADIUS_CM + CORRIDOR_HALF_CM
+    # Widen to the padded figure, not the bare limit. Testing against the bare
+    # limit here meant any route that merely scraped past was returned
+    # untouched: measured 2026-09-24, the planner drew a route passing an
+    # obstacle at 11.6 cm, which clears the 10 cm floor, so this exited early
+    # and the padding was never applied -- the chassis edge went by 5.6 cm from
+    # the box. The obstacles themselves are declared with 5 cm of position
+    # uncertainty, so the floor alone is not a margin. Routes already outside
+    # the padded figure are still returned untouched.
     legs = [(0., 0.)] + list(route)
-    if all(_near_segment(start, end, spot)[1] >= limit
+    if all(_near_segment(start, end, spot)[1] >= clearance
            for start, end in zip(legs, legs[1:]) for spot in relevant):
         return list(route), 0
 

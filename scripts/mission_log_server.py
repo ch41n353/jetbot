@@ -9,6 +9,7 @@ import urllib.request
 import pathlib
 import re
 import base64
+import hashlib
 from control_visualizer import calls, interventions, detail, planner_state
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from socketserver import ThreadingMixIn
@@ -66,6 +67,14 @@ def saved_local_snapshot(root):
                 execution=result)
 
 class Handler(BaseHTTPRequestHandler):
+    # HTTP/1.0 (the BaseHTTPRequestHandler default) closes after every
+    # response, so a dashboard polling a few times a second costs a new TCP
+    # connection and a new ThreadingMixIn thread per poll. Measured
+    # 2026-09-24: one browser tab held this process at a full core, 480
+    # minutes of CPU. Every response below sets Content-Length, which is
+    # what keepalive needs to frame the body, so this is safe here.
+    protocol_version = 'HTTP/1.1'
+
     def do_GET(self):
         path=self.path.split('?')[0]
         with lock:state=dict(latest)
@@ -120,7 +129,16 @@ class Handler(BaseHTTPRequestHandler):
                             with urllib.request.urlopen('http://127.0.0.1:8770/api/planner-snapshot',timeout=2) as response:snapshot=json.load(response)
                         except Exception:pass
                         if snapshot.get('execution',{}).get('execution_id')!=command.parent.name:snapshot={}
-                        payload=local_view(str(command.parent),command.stat().st_mtime_ns,json.dumps(snapshot))
+                        # local_view is lru_cached on its arguments and reads only
+                        # these two fields. Passing the whole snapshot made the key
+                        # include every rendered pane image, so it changed on every
+                        # poll and the cache never hit -- while also thrashing a
+                        # four-entry cache of large payloads.
+                        lean={} if not snapshot else dict(
+                            source_rgb=snapshot.get('source_rgb'),
+                            execution=dict(pose_cm_deg=(snapshot.get('execution') or {}).get('pose_cm_deg')))
+                        payload=local_view(str(command.parent),command.stat().st_mtime_ns,
+                                           json.dumps(lean,sort_keys=True))
                 data,kind=json.dumps(payload).encode(),'application/json'
             except Exception as exc:
                 data,kind=json.dumps(dict(available=False,note='Reference view unavailable: '+str(exc))).encode(),'application/json'
@@ -155,10 +173,20 @@ class Handler(BaseHTTPRequestHandler):
             try:
                 if state.get('error'): raise RuntimeError(state['error'])
                 root=pathlib.Path(state['root'])
-                payload=dict(state, calls=calls(root), interventions=interventions(root), planner=planner_state())
+                # `power` is a live pack-voltage string that changes on every
+                # poll. Left in this 300 KB body it invalidated the ETag every
+                # time, so the slow-changing 99% of the payload could never be
+                # revalidated away. It is served on its own below instead.
+                planner=planner_state();planner.pop('power',None)
+                payload=dict(state, calls=calls(root), interventions=interventions(root), planner=planner)
                 data,kind=json.dumps(payload).encode(),'application/json'
             except Exception as exc:
                 data,kind=json.dumps({'error':str(exc)}).encode(),'application/json'
+        elif path=='/api/power':
+            state_=planner_state()
+            data=json.dumps(dict(power=state_.get('power'),running=state_.get('running'),
+                                 error=state_.get('error'))).encode()
+            kind='application/json'
         elif path.startswith('/api/gpt/'):
             match=re.fullmatch(r'/api/gpt/([a-f0-9]{32})/(detail|request.json|response.json|clean.jpg|image-\d+\.jpg)',path)
             if not match or state.get('error') or not state.get('root'):
@@ -181,8 +209,18 @@ class Handler(BaseHTTPRequestHandler):
         elif path=='/api/log':data,kind=json.dumps(state).encode(),'application/json'
         elif path=='/mission.md':data,kind=state['text'].encode(),'text/markdown; charset=utf-8'
         else:self.send_error(404);return
+        # Most panes change far more slowly than the page polls them. Tag every
+        # body so an unchanged pane costs a 304 with no body instead of a few
+        # hundred KB of JSON to serialise, send and re-parse. 'no-cache' rather
+        # than 'no-store': the client must revalidate every time, but it has to
+        # be allowed to keep the copy in order to revalidate at all.
+        tag='"%s"'%hashlib.md5(data).hexdigest()
+        if self.headers.get('If-None-Match')==tag:
+            self.send_response(304);self.send_header('ETag',tag)
+            self.send_header('Cache-Control','no-cache');self.end_headers();return
         self.send_response(200);self.send_header('Content-Type',kind)
-        self.send_header('Content-Length',str(len(data)));self.send_header('Cache-Control','no-store');self.end_headers();self.wfile.write(data)
+        self.send_header('Content-Length',str(len(data)));self.send_header('ETag',tag)
+        self.send_header('Cache-Control','no-cache');self.end_headers();self.wfile.write(data)
     def log_message(self,*args):pass
 
 class Server(ThreadingMixIn,HTTPServer):
