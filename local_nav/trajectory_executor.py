@@ -174,6 +174,8 @@ class ZonedFloorProjection:
     against 3 for a 1 m square at 6.4 px/cm and 1 for a smooth r = R*d/(d+k).
     """
     INNER_CM, OUTER_CM, EDGE_PX = 100., 200., 318.
+    REAR_CM = 50.          # how far behind the robot is worth any pixels
+    MARGIN_PX = 6
     INNER_PX_PER_CM = EDGE_PX / (INNER_CM + (OUTER_CM - INNER_CM) / 2.)
     OUTER_PX_PER_CM = INNER_PX_PER_CM / 2.
     INNER_EDGE_PX = INNER_CM * INNER_PX_PER_CM
@@ -186,10 +188,10 @@ class ZonedFloorProjection:
             return cls.INNER_EDGE_PX + (range_cm - cls.INNER_CM) * cls.OUTER_PX_PER_CM
         return cls.EDGE_PX
 
-    def __init__(self, robot):
+    def _sample(self, robot, px, py):
+        """Camera pixel and validity for points on the polar canvas."""
         cls = type(self)
-        yy, xx = np.indices((640, 640), dtype=np.float32)
-        dx, dy = xx - 320., 320. - yy
+        dx, dy = px - 320., 320. - py
         rho = np.hypot(dx, dy)
         inside = rho < cls.EDGE_PX
         clipped = np.clip(rho, 0., cls.EDGE_PX)
@@ -207,19 +209,53 @@ class ZonedFloorProjection:
         pixels, _ = cv2.fisheye.projectPoints(
             rays.reshape(1, -1, 3).astype(np.float64),
             np.zeros(3), np.zeros(3), robot.K, robot.D)
-        pixels = pixels.reshape(640, 640, 2)
-        self.x = pixels[:, :, 0].astype(np.float32)
-        self.y = pixels[:, :, 1].astype(np.float32)
-        self.visible = (inside & (forward > 0) & (rays[:, :, 2] > 0)
-                        & (self.x >= 0) & (self.x <= 639)
-                        & (self.y >= 0) & (self.y <= 479))
+        pixels = pixels.reshape(px.shape + (2,))
+        x = pixels[..., 0].astype(np.float32)
+        y = pixels[..., 1].astype(np.float32)
+        good = (inside & (forward > 0) & (rays[..., 2] > 0)
+                & (x >= 0) & (x <= 639) & (y >= 0) & (y <= 479))
+        return x, y, good
+
+    def __init__(self, robot):
+        cls = type(self)
+        # The camera sees a forward wedge, so a full circle of canvas is most
+        # of the way empty -- measured at 27% of the frame carrying anything,
+        # with everything below the centre row blank. Find what is actually
+        # visible at low resolution, keep a little ground behind the robot so
+        # the footprint has context, and spend the whole output on that.
+        probe = np.linspace(0., 639., 160, dtype=np.float32)
+        py, px = np.meshgrid(probe, probe, indexing='ij')
+        _, _, good = self._sample(robot, px, py)
+        cols = np.where(good.any(0))[0]
+        rows = np.where(good.any(1))[0]
+        if len(cols) and len(rows):
+            x0, x1 = probe[cols.min()], probe[cols.max()]
+            y0 = probe[rows.min()]
+        else:                                   # nothing visible; keep it all
+            x0, x1, y0 = 0., 639., 0.
+        rear = cls.radius_px(cls.REAR_CM)
+        x0 = max(0., x0 - cls.MARGIN_PX); x1 = min(639., x1 + cls.MARGIN_PX)
+        y0 = max(0., y0 - cls.MARGIN_PX); y1 = min(639., 320. + rear)
+        width, height = x1 - x0, y1 - y0
+        self.zoom = min(640. / width, 640. / height)
+        self.out_w = int(round(width * self.zoom))
+        self.out_h = int(round(height * self.zoom))
+        self.origin = (x0, y0)
+        # One resample straight onto the output grid, so cropping costs nothing
+        # in sharpness.
+        v, u = np.indices((self.out_h, self.out_w), dtype=np.float32)
+        px = x0 + u / self.zoom
+        py = y0 + v / self.zoom
+        self.x, self.y, self.visible = self._sample(robot, px, py)
 
     def place(self, right, forward):
         """Image pixel for a ground point, so overlays land where the warp put it."""
         r = type(self).radius_px(math.hypot(right, forward))
         bearing = math.atan2(right, forward)
-        return (int(round(320. + r * math.sin(bearing))),
-                int(round(320. - r * math.cos(bearing))))
+        px = 320. + r * math.sin(bearing)
+        py = 320. - r * math.cos(bearing)
+        return (int(round((px - self.origin[0]) * self.zoom)),
+                int(round((py - self.origin[1]) * self.zoom)))
 
     def apply(self, image):
         out = cv2.remap(image, self.x, self.y, cv2.INTER_LINEAR,

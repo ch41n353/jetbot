@@ -12,19 +12,22 @@ image 1 -- perspective RGB, 640x480, from the robot's camera.
     Fresh evidence. This is the only picture that shows what is actually there
     now. Use it to identify the target and to find obstacles.
 
-image 2 -- radial map of the floor, 640x640, robot at the centre facing up.
-    Angle about the centre is the bearing: straight up is dead ahead. Distance
-    from the centre is range. The thick blue ring is 100 cm; the thin rings
-    inside it are 20, 40, 60 and 80 cm. Outside the blue ring the scale halves,
-    and anything past 200 cm sits on the rim.
+image 2 -- radial map of the floor around the robot.
+    The robot is the small white outline near the bottom, facing up, and the
+    map is drawn around it. Angle about that outline is the bearing: straight
+    up is dead ahead. Distance from it is range. The thick blue ring is 100 cm;
+    the thin rings inside it are 20, 40, 60 and 80 cm. Outside the blue ring
+    the scale halves, and anything past 200 cm sits on the rim. Only the
+    forward wedge the camera can see is drawn, with a little ground behind the
+    robot for context.
 
     Use this picture to judge what is close. Inside the blue ring is the only
     distance that decides whether you may drive at all, and the only distance
     at which this warp is accurate -- further out, things standing up smear
     into streaks pointing away from the camera, so use image 1 for those. The
-    white outline at the centre is the robot's own footprint at the same scale,
-    so anything drawn narrower than it is a gap the robot cannot fit through.
-    Dark area is floor the camera cannot see; it is NOT known to be free.
+    white outline is the robot's own footprint at the same scale, so anything
+    drawn narrower than it is a gap the robot cannot fit through. Dark area is
+    floor the camera cannot see; it is NOT known to be free.
 
 COORDINATES
     Everything metric is in centimetres in the robot's frame: [right, forward].

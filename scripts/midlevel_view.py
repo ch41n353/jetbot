@@ -22,13 +22,15 @@ def render_pair(camera,reference,proposal=(),target=None,previous=(),obstacles=(
     lens,projection=geometry()
     rgb=camera.copy();floor=projection.apply(camera)
     Z=ZonedFloorProjection
+    hub=projection.place(0.,0.)
+    def ring_px(cm):return int(round(Z.radius_px(cm)*projection.zoom))
     for degrees in range(-90,91,15):
-        a=math.radians(degrees)
-        cv2.line(floor,(320,320),(int(320+Z.EDGE_PX*math.sin(a)),
-                                  int(320-Z.EDGE_PX*math.cos(a))),(60,60,60),1)
+        a=math.radians(degrees);reach=ring_px(Z.OUTER_CM)
+        cv2.line(floor,hub,(int(hub[0]+reach*math.sin(a)),
+                            int(hub[1]-reach*math.cos(a))),(60,60,60),1)
     for cm in (20,40,60,80,125,150,175):
-        cv2.circle(floor,(320,320),int(round(Z.radius_px(cm))),(86,86,86),1)
-    cv2.circle(floor,(320,320),int(round(Z.INNER_EDGE_PX)),(90,200,255),2)
+        cv2.circle(floor,hub,ring_px(cm),(86,86,86),1)
+    cv2.circle(floor,hub,ring_px(Z.INNER_CM),(90,200,255),2)
     # A route is a list of places to go, so the leg the robot actually drives
     # first -- from where it stands to waypoint one -- is not in it. Drawing
     # only the supplied points renders a two-point route as one short segment
@@ -160,7 +162,7 @@ def render_pair(camera,reference,proposal=(),target=None,previous=(),obstacles=(
         cv2.drawMarker(floor,at,(180,180,180),cv2.MARKER_TILTED_CROSS,12,2)
         cv2.putText(floor,o.get('label','remembered')[:24],at,0,.35,(200,200,200),1)
     if target_cm is not None:cv2.drawMarker(floor,gp(target_cm),(60,220,220),cv2.MARKER_STAR,22,2)
-    cv2.arrowedLine(floor,(320,320),(320,296),(0,220,255),3)
+    cv2.arrowedLine(floor,hub,(hub[0],hub[1]-24),(0,220,255),3)
     cv2.putText(floor,'radial | blue ring 100 cm, scale halves outside it '
                 '(as sent to GPT)',(8,20),0,.42,(255,255,255),1)
     if dropped:
