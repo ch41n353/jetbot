@@ -53,6 +53,32 @@ def render_pair(camera,reference,proposal=(),target=None,previous=(),obstacles=(
                     ok,start,end=cv2.clipLine((0,0,640,480),last,q)
                     if ok:cv2.line(rgb,start,end,color,width)
                 last=q
+    # The waypoints themselves. A route is a list of places the model chose,
+    # and drawn as a bare line it is impossible to tell a two-point plan from a
+    # ten-point one, or to see where it decided to bend. Index 0 is the robot,
+    # put back by from_robot(), so the model's own points are numbered from 1.
+    for points,color,heavy in [(reference,(200,120,240),False),
+                               (previous,(0,160,255),False),
+                               (proposal,(255,210,90),True)]:
+        for n,p in enumerate(points):
+            if n==0:continue
+            at=projection.place(*p)
+            if heavy:
+                cv2.circle(floor,at,6,(20,20,20),-1);cv2.circle(floor,at,6,color,2)
+                cv2.putText(floor,'%d'%n,(at[0]-3,at[1]+4),0,.36,color,1)
+                label='%d (%.0f,%.0f)'%(n,p[0],p[1])
+                cv2.putText(floor,label,(at[0]+10,at[1]-8),0,.36,color,1)
+            else:
+                cv2.circle(floor,at,3,color,-1)
+            q=lens.pixel(*p) if p[1]>0 else None
+            if q and all(math.isfinite(v) and abs(v)<1e6 for v in q):
+                q=(int(q[0]),int(q[1]))
+                if 0<=q[0]<640 and 0<=q[1]<480:
+                    if heavy:
+                        cv2.circle(rgb,q,6,(20,20,20),-1);cv2.circle(rgb,q,6,color,2)
+                        cv2.putText(rgb,'%d'%n,(q[0]-3,q[1]+4),0,.36,color,1)
+                    else:
+                        cv2.circle(rgb,q,3,color,-1)
     if target:
         q=(int(target['x']),int(target['y']))
         cv2.drawMarker(rgb,q,(60,220,220),cv2.MARKER_STAR,22,2)

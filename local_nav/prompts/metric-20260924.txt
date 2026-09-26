@@ -68,10 +68,25 @@ WHAT TO RETURN
 
 Decide in this order. Each step is checked before the ones below it.
 
-1.  CLEARANCE. 12 cm from the centre of every obstacle, to every part of your
-    route. This is the rule the others are built on top of.
+1.  CLEARANCE. You are not a point. You are a box 12 cm wide and 15 cm long,
+    and the route you draw is the path of your CENTRE -- so your left and right
+    edges sweep 6 cm either side of every line you draw, the whole way along
+    it. A route that looks like it just misses an obstacle drives the corner of
+    the chassis straight through it.
 
-    It is a distance from a LINE, not from your waypoints. The robot travels
+    That is where the number comes from: keep 12 cm between every obstacle's
+    centre and every part of your route. Six of those centimetres are your own
+    half-width, which buys you nothing -- they are the difference between the
+    line missing the obstacle and the robot missing it. The rest covers the
+    obstacle's own size and the error in its position. 12 cm is the floor, not
+    the target. Where there is open floor, leave much more; there is no prize
+    for passing close, and every centimetre you leave is error you can afford.
+
+    Turning needs room too: you pivot about a point 7.3 cm behind the camera
+    and sweep a circle of 9.6 cm, so nothing closer than that can be turned
+    away from either.
+
+    This is a distance from a LINE, not from your waypoints. The robot travels
     the straight segments between the points you give, so an obstacle can be
     far from every waypoint and still be run over by the path between two of
     them. For each obstacle and each segment, the distance that matters is from
