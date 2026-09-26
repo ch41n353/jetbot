@@ -47,7 +47,25 @@ def grab(path):
 
 
 def detect(image, corners_x, corners_y):
+    """Board corners, sub-pixel, or None.
+
+    findChessboardCornersSB is tried first. A board lying on the floor is seen
+    at a shallow angle, so its squares are heavily sheared, and the classic
+    detector gives up on exactly the views this calibration needs -- on
+    2026-09-25 it found nothing at any pattern size from 3 to 9 in a frame
+    where SB found all 24 corners immediately. SB also returns sub-pixel
+    positions directly, so it does not need cornerSubPix refining it.
+    """
     grey = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    if hasattr(cv2, 'findChessboardCornersSB'):
+        try:
+            found, corners = cv2.findChessboardCornersSB(
+                grey, (corners_x, corners_y),
+                cv2.CALIB_CB_EXHAUSTIVE | cv2.CALIB_CB_ACCURACY)
+            if found:
+                return corners
+        except cv2.error:
+            pass
     flags = (cv2.CALIB_CB_ADAPTIVE_THRESH | cv2.CALIB_CB_NORMALIZE_IMAGE |
              cv2.CALIB_CB_FAST_CHECK)
     found, corners = cv2.findChessboardCorners(grey, (corners_x, corners_y), flags)
