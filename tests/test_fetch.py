@@ -161,11 +161,15 @@ class ObstacleTests(unittest.TestCase):
 
     def test_something_dead_ahead_stops_the_leg_short_of_it(self):
         room, blame = fetch.clear_distance([('bin', (0., 40.))], (0., 0.), 0., 35.)
-        self.assertAlmostEqual(room, 40. - fetch.OBSTACLE_RADIUS_CM - fetch.KEEP_BACK_CM)
+        # The assumed radius is clamped like any measured one, so the leg stops
+        # at the effective half-extent rather than the raw constant.
+        radius = min(fetch.OBSTACLE_RADIUS_CM, fetch.OBSTACLE_MAX_RADIUS_CM)
+        self.assertAlmostEqual(room, 40. - radius - fetch.KEEP_BACK_CM)
         self.assertEqual(blame, 'bin')
 
     def test_something_beside_the_corridor_does_not(self):
-        wide = fetch.CORRIDOR_HALF_CM + fetch.OBSTACLE_RADIUS_CM + 2.
+        wide = (fetch.CORRIDOR_HALF_CM
+                + min(fetch.OBSTACLE_RADIUS_CM, fetch.OBSTACLE_MAX_RADIUS_CM) + 2.)
         room, blame = fetch.clear_distance([('block', (wide, 30.))], (0., 0.), 0., 25.)
         self.assertEqual(room, 25.)
         self.assertIsNone(blame)

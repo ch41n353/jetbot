@@ -91,6 +91,15 @@ INITIAL_TURN_LIMIT_DEG = 20. # planner routes must begin near the current headin
 LEAD_POINT_CM = 10.        # a first waypoint nearer than this steers nothing
 CORRIDOR_HALF_CM = 6.      # physical half-width of the 12 cm chassis
 OBSTACLE_RADIUS_CM = 6.    # half-extent assumed for an obstacle given as ONE contact
+# Ceiling on any obstacle's modelled half-extent, measured or assumed. A disc
+# is a poor stand-in for a real footprint: it is too big on the diagonal and
+# too small across a wide flat face, and the error grows with the object. Two
+# base pixels projected near the horizon have produced half-extents of 74 cm,
+# which fence off the room. Capping keeps one bad reading from doing that --
+# at the cost of under-modelling anything genuinely wider than 10 cm, which is
+# the same direction as the 4 cm constant that drove into a 12.3 cm carton on
+# 2026-09-24. Interim, pending real polygons.
+OBSTACLE_MAX_RADIUS_CM = 5.
                            # pixel. The model returns a single point per obstacle and
                            # this stands in for the object's real size. 4 cm was too
                            # small for anything in this room: measured 2026-09-24, a
@@ -141,6 +150,54 @@ REPAIR_MARGIN_CM = 6.      # a vertex placed exactly on the clearance circle
 POINT = {'type': 'object', 'additionalProperties': False,
          'required': ['x', 'y'],
          'properties': {'x': {'type': 'number'}, 'y': {'type': 'number'}}}
+
+# Metric contract (2026-09-24). The model answers in centimetres in the robot
+# frame -- the same frame the controller drives in -- so no projection stands
+# between what it drew and what is executed. The pixel schema below it is kept
+# for the callers that still use it and for replaying stored runs.
+VEC = {'type': 'object', 'additionalProperties': False,
+       'required': ['right', 'forward'],
+       'properties': {'right': {'type': 'number'}, 'forward': {'type': 'number'}}}
+
+METRIC_SCHEMA = {
+    'type': 'object', 'additionalProperties': False,
+    'required': ['goal', 'all_done', 'visible', 'target_px', 'route_cm',
+                 'obstacles', 'turn_degrees', 'note', 'motion'],
+    'properties': {
+        'motion': {'type': 'string', 'enum': ['follow', 'turn', 'hold']},
+        'goal': {'type': 'string'},
+        'all_done': {'type': 'boolean'},
+        # Whether the target was identified in image 1 this call. Distinct from
+        # target_cm, which can be known while the target is out of frame.
+        'visible': {'type': 'boolean'},
+        # Where the target meets the floor in image 1, when it was found there
+        # this call. Null when it was not: the supplied target_cm then stands,
+        # and visible=false says so. Same reasoning as obstacles -- a fresh
+        # sighting is a pixel, not a number that could have come from memory.
+        'target_px': {'anyOf': [POINT, {'type': 'null'}]},
+        'route_cm': {'type': 'array', 'items': VEC},
+        'turn_degrees': {'anyOf': [{'type': 'number'}, {'type': 'null'}]},
+        # radius_cm is the half-extent of the real object, not a constant the
+        # controller invents. A 12.3 cm carton modelled as a 4 cm disc is what
+        # drove this robot into one on 2026-09-24.
+        # Obstacles are seen in image 1, so they are reported where they are
+        # seen: the two pixels where the object meets the floor at its left and
+        # right edges. The controller projects both and takes the separation as
+        # the real width. That keeps perception with the layer that has eyes and
+        # measurement with the layer that has the calibration, and it means a
+        # reported obstacle is evidence that the picture was looked at -- a
+        # metric position can be echoed back from memory, a pixel cannot.
+        'obstacles': {'type': 'array', 'items': {
+            'type': 'object', 'additionalProperties': False,
+            'required': ['label', 'base_left_px', 'base_right_px'],
+            'properties': {'label': {'type': 'string'},
+                           'base_left_px': POINT, 'base_right_px': POINT}}},
+        'note': {'type': 'string'},
+    },
+}
+
+with open(os.path.join(ROOT, 'local_nav/prompts/metric-20260924.txt')) as _metric_file:
+    METRIC_PROMPT = _metric_file.read()
 
 SCHEMA = {
     'type': 'object', 'additionalProperties': False,
@@ -795,7 +852,7 @@ def annotate(image, prior):
     return shot
 
 
-def recognize(image, instruction, prior=None, timeout=20., paired=None):
+def recognize(image, instruction, prior=None, timeout=20., paired=None, metric=False):
     """Read a plain-words instruction against one photograph.
 
     `instruction` is plain words rather than a noun phrase -- "reach the can of
@@ -834,7 +891,21 @@ def recognize(image, instruction, prior=None, timeout=20., paired=None):
                                    + base64.b64encode(encoded).decode('ascii'))])],
                 text=dict(format=dict(type='json_schema', name='sighting',
                                       strict=True, schema=SCHEMA)))
-    if paired is not None:
+    if paired is not None and metric:
+        # Metric contract: one prompt written for the inputs actually sent, a
+        # schema in centimetres, and nothing drawn on either picture. Replaces
+        # the whole stack of appended override blocks rather than adding to it.
+        body['instructions'] = METRIC_PROMPT
+        body['text'] = dict(format=dict(type='json_schema', name='plan',
+                                        strict=True, schema=METRIC_SCHEMA))
+        content = body['input'][0]['content']
+        content[0]['text'] = json.dumps(dict(instruction=instruction, **paired[2]))
+        content[1]['image_url'] = ('data:image/jpeg;base64,'
+            + base64.b64encode(cv2.imencode('.jpg', paired[0])[1]).decode('ascii'))
+        content.append(dict(type='input_image', detail='high',
+            image_url='data:image/jpeg;base64,'
+                      + base64.b64encode(cv2.imencode('.jpg', paired[1])[1]).decode('ascii')))
+    elif paired is not None:
         from paired_planning import INSTRUCTIONS
         body['instructions'] += '\n'+INSTRUCTIONS
         content=body['input'][0]['content']
@@ -851,9 +922,10 @@ def recognize(image, instruction, prior=None, timeout=20., paired=None):
         content[0]['text']=json.dumps(dict(instruction=instruction,last_time=clean_prior,local_map=public_map))
         content[1]['image_url']='data:image/jpeg;base64,'+base64.b64encode(cv2.imencode('.jpg',paired[0])[1]).decode('ascii')
         content.append(dict(type='input_image',detail='high',image_url='data:image/jpeg;base64,'+base64.b64encode(cv2.imencode('.jpg',paired[1])[1]).decode('ascii')))
-    # Apply the tested turn-specific clarification after paired-view rules.
-    with open(os.path.join(ROOT, 'local_nav/prompts/turn-clearance-candidate-20260923.txt')) as turn_prompt:
-        body['instructions'] += '\n\n' + turn_prompt.read()
+    if not (paired is not None and metric):
+        # Apply the tested turn-specific clarification after paired-view rules.
+        with open(os.path.join(ROOT, 'local_nav/prompts/turn-clearance-candidate-20260923.txt')) as turn_prompt:
+            body['instructions'] += '\n\n' + turn_prompt.read()
     key = os.environ.get('OPENAI_API_KEY')
     if not key:
         raise Stop('OPENAI_API_KEY is not set')
@@ -1052,15 +1124,22 @@ def clear_distance(obstacles, start, heading, wanted):
     """
     limit, blame = wanted, None
     angle = math.radians(heading)
-    for label, (ox, oz) in obstacles:
+    for item in obstacles:
+        label, (ox, oz) = item[0], item[1]
+        # An obstacle may carry the half-extent the planner measured for it.
+        # Where it does not, fall back on the constant -- which is a guess, and
+        # was the reason a 12.3 cm carton was modelled as an 8 cm disc and
+        # driven into on 2026-09-24.
+        radius = float(item[2]) if len(item) > 2 and item[2] else OBSTACLE_RADIUS_CM
+        radius = min(radius, OBSTACLE_MAX_RADIUS_CM)
         dx, dz = ox - start[0], oz - start[1]
         along = math.cos(angle) * dz + math.sin(angle) * dx
         across = math.cos(angle) * dx - math.sin(angle) * dz
         if along <= 0:
             continue        # behind the robot: not in the way of this leg
-        if abs(across) > CORRIDOR_HALF_CM + OBSTACLE_RADIUS_CM:
+        if abs(across) > CORRIDOR_HALF_CM + radius:
             continue        # passes to one side
-        room = along - OBSTACLE_RADIUS_CM - KEEP_BACK_CM
+        room = along - radius - KEEP_BACK_CM
         if room < limit:
             limit, blame = room, label
     return max(0., limit), blame
@@ -1203,10 +1282,17 @@ def merge_obstacles(remembered, pose, fresh, keep_cm=60.):
     since carrying stale positions forever would eventually wall the robot in.
     """
     kept = list(fresh)
-    spots = [spot for _, spot in fresh]
-    labels = [label for label, _ in remembered]
-    moved = rebase([spot for _, spot in remembered], pose)
-    for label, spot in zip(labels, moved):
+    # fresh carries a measured half-extent as a third element under the metric
+    # contract. Unpacking two names here raised on every cycle that had memory
+    # to merge -- which is every cycle after the first -- and the mission died
+    # silently inside its own thread, always after exactly one leg.
+    spots = [item[1] for item in fresh]
+    # Remembered obstacles are three-tuples since the metric contract; carry
+    # the measured half-extent through rather than dropping it on every rebase.
+    extents = [item[2] if len(item) > 2 else None for item in remembered]
+    labels = [item[0] for item in remembered]
+    moved = rebase([item[1] for item in remembered], pose)
+    for label, spot, extent in zip(labels, moved, extents):
         if spot[1] < -OBSTACLE_RADIUS_CM or math.hypot(*spot) > keep_cm:
             continue                      # behind, or far enough to re-see
         if any(math.hypot(spot[0] - s[0], spot[1] - s[1]) < OBSTACLE_RADIUS_CM * 2.
@@ -1215,7 +1301,7 @@ def merge_obstacles(remembered, pose, fresh, keep_cm=60.):
         # Do not re-suffix something already carried: it compounded into
         # "blue block (remembered) (remembered) (remembered)" over four cycles.
         kept.append((label if label.endswith(')') else label + ' (remembered)',
-                     spot))
+                     spot, extent))
     return kept
 
 
@@ -1423,10 +1509,14 @@ def avoid(route, obstacles, goal=None):
     being fetched is usually sitting among them, and routing away from them
     means never arriving.
     """
-    clearance = OBSTACLE_RADIUS_CM + CORRIDOR_HALF_CM + REPAIR_MARGIN_CM
-    relevant = [spot for _, spot in obstacles
+    # Each obstacle keeps its own clearance, from its own measured half-extent
+    # where the planner supplied one.
+    relevant = [(item[1],
+                 (float(item[2]) if len(item) > 2 and item[2] else OBSTACLE_RADIUS_CM)
+                 + CORRIDOR_HALF_CM + REPAIR_MARGIN_CM)
+                for item in obstacles
                 if goal is None
-                or math.hypot(spot[0] - goal[0], spot[1] - goal[1]) > GOAL_ADJACENT_CM]
+                or math.hypot(item[1][0] - goal[0], item[1][1] - goal[1]) > GOAL_ADJACENT_CM]
     if not relevant or not route:
         return list(route), 0
 
@@ -1440,10 +1530,10 @@ def avoid(route, obstacles, goal=None):
     # the padded figure are still returned untouched.
     legs = [(0., 0.)] + list(route)
     if all(_near_segment(start, end, spot)[1] >= clearance
-           for start, end in zip(legs, legs[1:]) for spot in relevant):
+           for start, end in zip(legs, legs[1:]) for spot, clearance in relevant):
         return list(route), 0
 
-    def push(point, spot):
+    def push(point, spot, clearance):
         dx, dz = point[0] - spot[0], point[1] - spot[1]
         gap = math.hypot(dx, dz)
         if gap < 1e-6:            # sitting on it: no outward direction to use
@@ -1476,10 +1566,10 @@ def avoid(route, obstacles, goal=None):
         for index, point in enumerate(fixed):
             if index == last:
                 continue          # the last point is the target; do not move it
-            for spot in relevant:
+            for spot, clearance in relevant:
                 if math.hypot(point[0] - spot[0], point[1] - spot[1]) >= clearance:
                     continue
-                moved = push(point, spot)
+                moved = push(point, spot, clearance)
                 if moved:
                     point, touched = moved, True
             if point != fixed[index]:
@@ -1491,13 +1581,13 @@ def avoid(route, obstacles, goal=None):
         pinch = None
         legs = [(0., 0.)] + fixed
         for leg in range(len(legs) - 1):
-            for spot in relevant:
+            for spot, clearance in relevant:
                 close, gap = _near_segment(legs[leg], legs[leg + 1], spot)
                 if gap < clearance and (pinch is None or gap < pinch[0]):
-                    pinch = (gap, leg, close, spot)
+                    pinch = (gap, leg, close, spot, clearance)
         if pinch is not None:
-            _, leg, close, spot = pinch
-            moved = push(close, spot)
+            _, leg, close, spot, clearance = pinch
+            moved = push(close, spot, clearance)
             if moved:
                 fixed.insert(leg, moved)   # legs[0] is the robot, so leg == index
                 if last is not None:
@@ -1522,11 +1612,11 @@ def avoid(route, obstacles, goal=None):
     # Then fix only what is genuinely too close, and only as far as the real
     # limit rather than the padded one, so a correction here is a nudge and not
     # a new corner.
-    limit = OBSTACLE_RADIUS_CM + CORRIDOR_HALF_CM
     for index, point in enumerate(curved):
         if goal is not None and index == len(curved) - 1:
             continue
-        for spot in relevant:
+        for spot, clearance in relevant:
+            limit = clearance - REPAIR_MARGIN_CM      # the real limit, unpadded
             gap = math.hypot(point[0] - spot[0], point[1] - spot[1])
             if gap >= limit or gap < 1e-6:
                 continue

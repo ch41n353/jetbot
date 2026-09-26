@@ -126,6 +126,13 @@ into free space solely because time passed.
 # third look. This gives the same judgement in the units it already works in --
 # pixels -- at the row where a gap is seen.
 SCALE_ROWS = (400, 340, 290, 250, 215, 190, 172, 158, 146, 136)
+# Near field only. This is a fisheye, and the row-to-range mapping stops being
+# usable well before the horizon: rows compress, so a row a few pixels higher
+# is metres further out, and the width figure derived from it is meaningless.
+# Inside half a metre the rows are still spread far enough apart that a pixel
+# gap means something. Beyond it the table would be a precise-looking number
+# the lens cannot support, which is worse than no number at all.
+SCALE_MAX_RANGE_CM = 50.
 
 
 def scale_table(lens):
@@ -136,7 +143,7 @@ def scale_table(lens):
     for row in SCALE_ROWS:
         try:
             forward = lens.ground(320., float(row))[1]
-            if not (0. < forward < 400.):
+            if not (0. < forward <= SCALE_MAX_RANGE_CM):
                 continue
             body = [fetch.Robot.pixel(lens, s * half, forward) for s in (-1, 1)]
             clear = [fetch.Robot.pixel(lens, s * need, forward) for s in (-1, 1)]
@@ -171,6 +178,34 @@ def scale_table(lens):
 FOV_EDGE_MARGIN_PX = 60.
 
 
+
+STANDOFF_CM = 20.                 # what counts as arrived; the model is told
+DEFAULT_OBSTACLE_RADIUS_CM = 6.   # only for memories recorded before radius existed
+
+
+def vec(point):
+    return dict(right=round(float(point[0]),1),forward=round(float(point[1]),1))
+
+
+def pixel_of(lens,point):
+    """Image-1 pixel for a floor position, or None when it is not in frame."""
+    if point is None or point[1]<=0:return None
+    try:q=lens.pixel(float(point[0]),float(point[1]))
+    except Exception:return None
+    if not q or not all(math.isfinite(v) for v in q):return None
+    if not (0<=q[0]<640 and 0<=q[1]<480):return None
+    return dict(x=round(float(q[0]),1),y=round(float(q[1]),1))
+
+
+def pixels_of(lens,points):
+    """The same list in image-1 pixels, dropping what falls outside the frame."""
+    out=[]
+    for p in points or []:
+        q=pixel_of(lens,p)
+        if q:out.append(q)
+    return out
+
+
 def in_fov(lens,point,margin=FOV_EDGE_MARGIN_PX):
     if point[1]<=0:return False
     pixel=lens.pixel(*point)
@@ -181,6 +216,7 @@ def in_fov(lens,point,margin=FOV_EDGE_MARGIN_PX):
 def reference_reliability(distance_cm,turn_deg):
     # Advisory only: half weight at 1 m translation OR 180 degrees cumulative yaw.
     return 2.**(-max(0.,distance_cm)/100.-max(0.,turn_deg)/180.)
+
 
 
 def observation(lens,image,memory=None,pose=(0,0,0),reference=None,
@@ -206,52 +242,60 @@ def observation(lens,image,memory=None,pose=(0,0,0),reference=None,
     for item in memory.get('obstacles',[]):
         name,point=item[:2];p=fetch.rebase([point],pose)[0]
         if in_fov(lens,p):continue
-        obstacles.append(dict(label=name,position_cm=list(p),uncertainty_cm=5.,source='previous observation; estimated pose',age='not timestamped'))
-    # Remembered obstacles can be shown on the map without being asserted as
-    # a list. The map says "something was seen here, with this uncertainty";
-    # the text list reads as a fact about the present. In the goal-only run the
-    # drawing is kept and the list is dropped, so memory informs the picture
-    # without competing with what the camera can see now.
-    context=dict(frame='current camera, cm right/forward; clockwise degrees',reference_cm=ref,
-                 previous_route_cm=route,target_cm=goal,
-                 obstacles=obstacles if obstacles_in_text else [],
-                 previous_route_role='preserve only when current route to goal is uncertain; fresh evidence takes precedence',
-                 target_requires_fresh_rgb=goal_in_fov,reference_reliability=reliability,
-                 reference_distance_cm=distance,reference_turn_deg=rotation,
-                 reference_weight_kind='heuristic, not calibrated probability',
-                 unknown_is_free=False,pose_uncertainty='not statistically calibrated',footprint_cm=[12,15],
-                 scale_px_by_row=scale_table(lens),
-                 scale_note='robot_width_px is the 12 cm chassis at that image row; '
-                            'required_clear_px is the full width a route needs there '
-                            '(chassis half-width plus obstacle radius, both sides). '
-                            'Measure gaps in pixels at the row where you see them and '
-                            'compare against these; do not convert to centimetres.')
-    if goal is not None:context['target_bearing_deg']=math.degrees(math.atan2(goal[0],goal[1]))
+        radius=float(item[2]) if len(item)>2 and item[2] else DEFAULT_OBSTACLE_RADIUS_CM
+        obstacles.append(dict(label=name,position_cm=vec(p),radius_cm=round(radius,1),
+                              source='seen earlier, position carried on odometry'))
+
+    # Nothing is drawn on either picture. Everything remembered is supplied as
+    # numbers instead, in two matching sets: metric for the frame the robot
+    # drives in, and pixels for image 1 so the model can relate a number to
+    # what it sees. Ink was worse than useless -- the model has no way to tell
+    # a drawn belief from an observed thing, and measured 2026-09-24 it followed
+    # an inked route into an obstacle it had itself reported (6.1 cm median
+    # clearance with the ink present, 14.2 cm with it removed).
+    context=dict(
+        frame='centimetres in the robot frame: [right, forward]. '
+              'Right positive, forward positive. The robot is at [0,0] facing [0,+1]. '
+              'This is the frame of image 2 and the frame you answer in.',
+        target_cm=vec(goal) if goal is not None else None,
+        # target_px is deliberately NOT supplied. The model reports a fresh
+        # sighting as a pixel, and handing it the pixel the remembered position
+        # projects to would let that report be a copy rather than an
+        # observation -- which is exactly what happened on 2026-09-24, when
+        # every obstacle and the target came back with the supplied
+        # coordinates unchanged and visible=true. reference_px and previous_px
+        # stay: those are never reported back, so they cannot be echoed.
+        target_bearing_deg=(round(math.degrees(math.atan2(goal[0],goal[1])),1)
+                            if goal is not None else None),
+        reference_cm=[vec(p) for p in ref],
+        reference_px=pixels_of(lens,ref),
+        previous_cm=[vec(p) for p in route],
+        previous_px=pixels_of(lens,route),
+        obstacles=obstacles if obstacles_in_text else [],
+        footprint_cm=dict(width=12,length=15),
+        standoff_cm=STANDOFF_CM,
+        # Near field only -- see SCALE_MAX_RANGE_CM.
+        scale_px_by_row=scale_table(lens),
+        reference_reliability=round(reliability,3),
+        reference_note='the operator\'s intended direction of travel, not a path to '
+                       'trace; accuracy falls off with distance from the robot',
+        # Plumbing, not prompt content. target_requires_fresh_rgb is what
+        # recognize() keys on to drop target_was from last_time on the legacy
+        # path, and the dashboard reports the two accumulators. Dropping them in
+        # the metric rewrite broke both silently: the visible-target memory
+        # leaked into last_time and midlevel_view raised KeyError.
+        target_requires_fresh_rgb=goal_in_fov,
+        reference_distance_cm=round(distance,1),
+        reference_turn_deg=round(rotation,1))
     floor=CameraFloorProjection(lens).apply(image)
     for v in range(0,640,40):
         cv2.line(floor,(v,0),(v,639),(65,65,65),1);cv2.line(floor,(0,v),(639,v),(65,65,65),1)
-    def gp(p):return tuple(int(round(v)) for v in (320+p[0]*1.6,320-p[1]*1.6))
-    rgb=image.copy()
-    for points,color,width in [(ref,tuple(int(v*(.25+.75*reliability)) for v in (220,100,255)),3),(route,(100,85,40),1)]:
-        if len(points)>1:cv2.polylines(floor,[np.array([gp(p) for p in points],np.int32)],False,color,width)
-        # Project only visible metric segments. Do not project remembered obstacles into RGB.
-        for a,b in zip(points,points[1:]):
-            last=None
-            for t in np.linspace(0,1,120):
-                p=[a[i]+t*(b[i]-a[i]) for i in (0,1)]
-                q=lens.pixel(*p) if p[1]>0 else None
-                q=tuple(int(round(v)) for v in q) if q and all(math.isfinite(v) and abs(v)<1e6 for v in q) else None
-                if q and last:
-                    ok,start,end=cv2.clipLine((0,0,640,480),last,q)
-                    if ok:cv2.line(rgb,start,end,color,width)
-                last=q
-    for o in obstacles:
-        p=gp(o['position_cm']);cv2.circle(floor,p,int((6+o['uncertainty_cm'])*1.6),(80,80,255),2)
-        cv2.putText(floor,o['label'][:24],p,0,.35,(100,100,255),1)
-    if goal is not None:
-        cv2.drawMarker(floor,gp(goal),(60,220,220),cv2.MARKER_STAR,22,2)
-        cv2.putText(floor,'TARGET',gp(goal),0,.45,(60,220,220),1)
+    # The robot's own footprint, to scale, is the one mark left on the map: it
+    # defines the grid's scale visually and cannot be mistaken for a belief
+    # about the world. The heading arrow is gone -- it was the same yellow as
+    # the target star and read as a second goal.
     cv2.rectangle(floor,(310,320),(330,344),(220,220,220),1)
-    cv2.arrowedLine(floor,(320,320),(320,296),(0,220,255),2)
-    cv2.putText(floor,'4m x 4m | 25cm grid | UNKNOWN IS NOT FREE',(8,20),0,.45,(230,230,230),1)
-    return rgb,floor,context
+    cv2.putText(floor,'4m x 4m | 25cm grid | robot at centre facing up | DARK IS NOT KNOWN FREE',
+                (8,20),0,.42,(230,230,230),1)
+    return image.copy(),floor,context
+

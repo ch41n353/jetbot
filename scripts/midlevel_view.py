@@ -24,6 +24,16 @@ def render_pair(camera,reference,proposal=(),target=None,previous=(),obstacles=(
     for v in range(0,640,40):
         cv2.line(floor,(v,0),(v,639),(65,65,65),1)
         cv2.line(floor,(0,v),(639,v),(65,65,65),1)
+    # A route is a list of places to go, so the leg the robot actually drives
+    # first -- from where it stands to waypoint one -- is not in it. Drawing
+    # only the supplied points renders a two-point route as one short segment
+    # floating in the scene, which reads as a plan that goes nowhere near the
+    # robot. Put the origin back for the drawing only.
+    def from_robot(points):
+        points=[list(p) for p in points or []]
+        if not points:return points
+        return points if math.hypot(points[0][0],points[0][1])<1. else [[0.,0.]]+points
+    reference,previous,proposal=from_robot(reference),from_robot(previous),from_robot(proposal)
     for points,color,width in [(reference,tuple(int(v*(.25+.75*reference_weight)) for v in (220,100,255)),9),(previous,(0,160,255),6),(proposal,(255,210,90),3)]:
         for a,b in zip(points,points[1:]):
             cv2.line(floor,(round(320+a[0]*1.6),round(320-a[1]*1.6)),
@@ -38,28 +48,110 @@ def render_pair(camera,reference,proposal=(),target=None,previous=(),obstacles=(
                     if ok:cv2.line(rgb,start,end,color,width)
                 last=q
     if target:
-        cv2.drawMarker(rgb,(int(target['x']),int(target['y'])),(60,220,220),cv2.MARKER_STAR,22,2)
+        q=(int(target['x']),int(target['y']))
+        cv2.drawMarker(rgb,q,(60,220,220),cv2.MARKER_STAR,22,2)
+        cv2.putText(rgb,'TARGET',(q[0]+12,q[1]+4),0,.45,(60,220,220),1)
         x,z=lens.ground(float(target['x']),float(target['y']))
-        cv2.drawMarker(floor,(int(round(320+x*1.6)),int(round(320-z*1.6))),(60,220,220),cv2.MARKER_STAR,18,2)
+        at=(int(round(320+x*1.6)),int(round(320-z*1.6)))
+        cv2.drawMarker(floor,at,(60,220,220),cv2.MARKER_STAR,18,2)
+        cv2.putText(floor,'TARGET %.0f,%.0f'%(x,z),(at[0]+10,at[1]+4),0,.4,(60,220,220),1)
+        target_cm=None            # already drawn from the pixel; no second star
     def gp(p):return (int(round(320+p[0]*1.6)),int(round(320-p[1]*1.6)))
+    drawn=[]                      # answer obstacles, to dedupe the remembered ones
+    dropped=[]                    # reported past the range the planner trusts
+    unplaced=[]                   # base pixel above the horizon: no floor point
     for o in obstacles:
         p=o.get('contact_pixel')
-        if not p:continue
-        q=(int(p['x']),int(p['y']))
-        cv2.drawMarker(rgb,q,(80,80,255),cv2.MARKER_SQUARE,14,2)
-        cv2.putText(rgb,o.get('label','obstacle')[:28],(q[0]+8,q[1]-8),0,.4,(80,80,255),1)
-        try:cv2.circle(floor,gp(lens.ground(p['x'],p['y'])),6,(80,80,255),2)
-        except (fetch.Stop,ValueError):pass
+        if p:
+            q=(int(p['x']),int(p['y']))
+            cv2.drawMarker(rgb,q,(80,80,255),cv2.MARKER_SQUARE,14,2)
+            cv2.putText(rgb,o.get('label','obstacle')[:28],(q[0]+8,q[1]-8),0,.4,(80,80,255),1)
+            try:cv2.circle(floor,gp(lens.ground(p['x'],p['y'])),6,(80,80,255),2)
+            except (fetch.Stop,ValueError):pass
+            continue
+        # Metric contract: the model reports where an object meets the floor as
+        # two pixels in image 1, left and right edge. Project both, take the
+        # midpoint as its position and half the separation as its extent --
+        # the same arithmetic the controller does, so the picture shows what
+        # the controller acted on rather than a redrawing of it.
+        left,right=o.get('base_left_px'),o.get('base_right_px')
+        if isinstance(left,dict) and isinstance(right,dict):
+            try:
+                a2=lens.ground(float(left['x']),float(left['y']))
+                b2=lens.ground(float(right['x']),float(right['y']))
+            except (fetch.Stop,ValueError,KeyError,TypeError):
+                # A base pixel at or above the horizon has no floor
+                # intersection, so there is no position to place it at. The
+                # model did see the thing -- show that it did, on the only
+                # picture where it can be shown, rather than dropping it
+                # silently and leaving the view looking like it was never
+                # reported.
+                for q in (left,right):
+                    try:pt=(int(q['x']),int(q['y']))
+                    except (KeyError,TypeError,ValueError):continue
+                    if 0<=pt[0]<640 and 0<=pt[1]<480:
+                        cv2.drawMarker(rgb,pt,(120,120,120),cv2.MARKER_DIAMOND,7,1)
+                unplaced.append(o.get('label','obstacle'))
+                continue
+            spot=((a2[0]+b2[0])/2.,(a2[1]+b2[1])/2.)
+            radius=max(1.,math.hypot(a2[0]-b2[0],a2[1]-b2[1])/2.)
+            edges=(left,right)
+        else:
+            m=o.get('position_cm')
+            if not isinstance(m,dict) or 'right' not in m:continue
+            spot=(float(m['right']),float(m['forward']))
+            edges=()
+            try:radius=max(1.,float(o.get('radius_cm') or 6.))
+            except (TypeError,ValueError):radius=6.
+        # Every obstacle is drawn at the extent the planner will actually use
+        # it at, capped the same way, so the picture is not more confident than
+        # the clearance check that acts on it.
+        radius=min(radius,fetch.OBSTACLE_MAX_RADIUS_CM)
+        if math.hypot(*spot) > fetch.ROUTE_RANGE_CM:dropped.append(o.get('label','obstacle'))
+        # Mark the two edges in the camera view, so a badly picked edge shows
+        # up as a wrong-sized box rather than hiding inside a number.
+        for q in edges:
+            if 0<=q['x']<640 and 0<=q['y']<480:
+                cv2.drawMarker(rgb,(int(q['x']),int(q['y'])),(80,80,255),
+                               cv2.MARKER_TILTED_CROSS,10,2)
+        c=gp(spot)
+        cv2.circle(floor,c,int(radius*1.6),(80,80,255),2)
+        cv2.putText(floor,o.get('label','obstacle')[:24],(c[0]+6,c[1]-6),0,.35,(100,100,255),1)
+        drawn.append(spot)
+        if spot[1] > 0:
+            try:q=lens.pixel(*spot)
+            except Exception:q=None
+            if q and all(math.isfinite(v) for v in q) and 0<=q[0]<640 and 0<=q[1]<480:
+                q=(int(q[0]),int(q[1]))
+                # The circle's radius in pixels at that range, so the drawing
+                # says how big the thing was reported to be, not just where.
+                edge=lens.pixel(spot[0]+radius,spot[1])
+                px=int(abs(edge[0]-q[0])) if edge else 8
+                cv2.circle(rgb,q,max(4,min(120,px)),(80,80,255),2)
+                cv2.putText(rgb,o.get('label','obstacle')[:28],(q[0]+8,q[1]-8),0,.4,(80,80,255),1)
     for o in remembered:
-        p=o['position_cm'];q=lens.pixel(*p) if p[1]>0 else None
+        p=o['position_cm']
+        if isinstance(p,dict) and 'right' in p:p=[float(p['right']),float(p['forward'])]
+        # The model echoes remembered obstacles back in its own list, so without
+        # this every carried obstacle was drawn twice, once per source.
+        if any(math.hypot(p[0]-d[0],p[1]-d[1]) < 8. for d in drawn):continue
+        q=lens.pixel(*p) if p[1]>0 else None
         if q and 0<=q[0]<640 and 0<=q[1]<480:continue
-        at=gp(p);radius=int(max(6,min(50,o.get('uncertainty_cm',5)*1.6)))
+        at=gp(p)
+        radius=int(max(6,min(fetch.OBSTACLE_MAX_RADIUS_CM*1.6,
+                            float(o.get('radius_cm') or o.get('uncertainty_cm') or 5)*1.6)))
         cv2.circle(floor,at,radius,(180,180,180),1)
         cv2.drawMarker(floor,at,(180,180,180),cv2.MARKER_TILTED_CROSS,12,2)
         cv2.putText(floor,o.get('label','remembered')[:24],at,0,.35,(200,200,200),1)
     if target_cm is not None:cv2.drawMarker(floor,gp(target_cm),(60,220,220),cv2.MARKER_STAR,22,2)
     cv2.arrowedLine(floor,(320,320),(320,296),(0,220,255),3)
     cv2.putText(floor,'4 m x 4 m | 25 cm grid | camera at center',(8,20),0,.45,(255,255,255),1)
+    if dropped:
+        cv2.putText(floor,'%d obstacle(s) past %.0f cm: position uncertain'
+                    %(len(dropped),fetch.ROUTE_RANGE_CM),(8,636),0,.4,(140,140,255),1)
+    if unplaced:
+        cv2.putText(rgb,'%d obstacle(s) above the horizon, ignored'%len(unplaced),
+                    (8,474),0,.4,(150,150,150),1)
     return dict(camera=encode(rgb),floor=encode(floor))
 
 def pixels_to_floor(points):
@@ -83,22 +175,47 @@ def call_view(directory,version):
     metric=context.get('local_map') or {}
     if (directory/'local-map.json').exists():metric=json.loads((directory/'local-map.json').read_text())
     top=prior.get('source')=='top_level_synthetic_demo'
-    previous=metric.get('_previous_route_visualization',metric.get('previous_route_cm',pixels_to_floor(prior.get('route_pixels') or [])))
-    reference=metric.get('reference_cm',previous if top else [])
+    # The metric contract (2026-09-24) renamed these and answers in centimetres.
+    # Accept both shapes so historical calls still render.
+    def as_cm(points):
+        out=[]
+        for q in points or []:
+            if isinstance(q,dict) and 'right' in q:out.append([float(q['right']),float(q['forward'])])
+            elif isinstance(q,(list,tuple)) and len(q)>=2:out.append([float(q[0]),float(q[1])])
+        return out
+    previous=metric.get('_previous_route_visualization')
+    if previous is None:
+        previous=as_cm(metric.get('previous_cm')) or metric.get('previous_route_cm') \
+                 or pixels_to_floor(prior.get('route_pixels') or [])
+    reference=as_cm(metric.get('reference_cm')) or metric.get('reference_cm') or (previous if top else [])
     if top:previous=[]
     proposal=[];answer={}
     if (directory/'response.json').exists():
         response=json.loads((directory/'response.json').read_text())
         answer=json.loads(''.join(c.get('text','') for x in response.get('output',[]) for c in x.get('content',[]) if c.get('type')=='output_text'))
-        proposal=pixels_to_floor(answer.get('route_pixels') or [])
-    target=answer.get('contact_pixel') or (prior.get('target_was') or {}).get('contact_pixel')
+        proposal=as_cm(answer.get('route_cm')) or pixels_to_floor(answer.get('route_pixels') or [])
+    # The metric contract answers with target_px, not contact_pixel. Reading
+    # only the old name left every metric call with no target drawn at all --
+    # the one mark that says what the route is for.
+    target=answer.get('target_px') or answer.get('contact_pixel') \
+           or (prior.get('target_was') or {}).get('contact_pixel')
+    goal_cm=metric.get('target_cm')
+    if goal_cm is None and answer.get('visible') and isinstance(target,dict):
+        # Project the pixel the model claimed, so the top-down view marks where
+        # the robot now thinks the goal is rather than where it was told.
+        try:goal_cm=list(geometry()[0].ground(float(target['x']),float(target['y'])))
+        except (fetch.Stop,ValueError,KeyError,TypeError):goal_cm=None
+    if isinstance(goal_cm,dict) and 'right' in goal_cm:
+        goal_cm=[float(goal_cm['right']),float(goal_cm['forward'])]
+    if isinstance(answer.get('target_cm'),dict) and 'right' in (answer.get('target_cm') or {}):
+        goal_cm=[float(answer['target_cm']['right']),float(answer['target_cm']['forward'])]
     note='Same captured observation for all layers; previous plan and memory are in this camera frame using the saved motion estimate.'
     if not metric and not top:note+=' Historical call: no separate top-level reference or metric obstacle memory was recorded.'
     if '_previous_route_visualization' in metric:note+=' Orange shows the full previous plan for inspection; GPT received only its first 15 cm as a faint hint (see exact inputs).'
     if 'reference_reliability' in metric:note+=' Reference heuristic weight %.2f after %.0f cm estimated displacement / %.0f degrees accumulated yaw; fresh RGB takes priority.'%(metric['reference_reliability'],metric['reference_distance_cm'],metric['reference_turn_deg'])
     if top:note='Synthetic stationary demo; no motion executed.'
     return dict(available=True,images=render_pair(camera,reference,proposal,target,previous,
-                answer.get('obstacles',[]),metric.get('obstacles',[]),metric.get('target_cm'),metric.get('reference_reliability',1.)),
+                answer.get('obstacles',[]),metric.get('obstacles',[]),goal_cm,metric.get('reference_reliability',1.)),
                 reference_cm=reference,previous_cm=previous,proposal_cm=proposal,
                 remembered_obstacles=metric.get('obstacles',[]),source='saved_gpt_request',note=note)
 

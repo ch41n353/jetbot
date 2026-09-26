@@ -482,6 +482,10 @@ MISSION_SECONDS = 4.       # wheels turn for about this long between looks. Long
 MISSION_CYCLES = 25        # bound on a run, so a mission that is getting nowhere
                            # ends by itself rather than driving until the battery
 MISSION_STANDOFF_CM = 20.  # range to the target's contact pixel at which the
+# A leg shorter than this is not progress, whatever the executor reports it
+# as. Below fetch.ROUTE_MIN_LEG_CM, so a leg the router would not have
+# bothered to plan does not count as having driven one.
+MISSION_MIN_PROGRESS_CM = 3.
                            # mission declares arrival. For a wide flat object the
                            # contact pixel migrates to its near edge as the robot
                            # closes, so the robot ends up nearer than this number.
@@ -505,6 +509,12 @@ MISSION_TURN_STEP_DEG = 30. # how much of a requested turn to do before looking
                             # seconds and every view along the way; in steps the
                             # robot stops as soon as open floor appears, and a
                             # heading chosen from one frame is not committed to.
+# How far the final leg may be off the bearing to the target before it is
+# re-aimed, and how long the leg added to re-aim it is. The tolerance is
+# wide enough that a route already pointing roughly at the goal is left
+# alone; the leg is short enough to stay inside one look.
+FACING_TOLERANCE_DEG = 15.
+FACING_LEG_CM = 12.
 MISSION_HOLD_FALLBACKS = 3  # consecutive holds answered with the remembered
                             # route before the mission really does give up.
                             # Bounded so a stale route cannot drive forever.
@@ -723,12 +733,18 @@ class Bench(object):
         if len(points) != len(self.live_route):
             points = None            # part of it is off view; do not half-draw
         hazards = []
-        for label, spot in self.live_obstacles:
+        for item in self.live_obstacles:
+            # Obstacles carry a measured half-extent since the metric contract;
+            # unpacking two names off a three-tuple threw on every view request
+            # and took the whole dashboard down mid-drive.
+            label, spot = item[0], item[1]
+            radius = float(item[2]) if len(item) > 2 and item[2] else fetch.OBSTACLE_RADIUS_CM
+            radius = min(radius, fetch.OBSTACLE_MAX_RADIUS_CM)
             place = self.on_view(spot, mode)
             if place:
                 hazards.append([place[0], place[1],
-                                (fetch.OBSTACLE_RADIUS_CM + fetch.CORRIDOR_HALF_CM)
-                                * BEV_SCALE, label[:16]])
+                                (radius + fetch.CORRIDOR_HALF_CM) * BEV_SCALE,
+                                label[:16]])
         return points, hazards
 
     def both_views(self):
@@ -990,7 +1006,7 @@ class Bench(object):
                     note='controller fallback: remembered route re-offered after a planner hold')
 
     def launch(self, target, seconds=MISSION_SECONDS, initial_plan=None,
-               seed_frame_token=None, carry_memory=True):
+               seed_frame_token=None, carry_memory=True, metric=False):
         """Start a mission on its own thread; the page polls /api/progress.
 
         `seconds` of None means do not plan recurrently: take one look, drive
@@ -1039,9 +1055,13 @@ class Bench(object):
             initial_plan = None
             self.say('goal-only: no remembered trajectory or obstacles are sent; '
                      'the model plans every look from the picture and the goal')
+        if metric:
+            self.say('metric contract: nothing is drawn on either picture; '
+                     'the model answers in centimetres in the robot frame')
         self.flight = threading.Thread(target=self.mission,
                                        args=(target, seconds, initial_plan),
-                                       kwargs=dict(carry_memory=carry_memory),
+                                       kwargs=dict(carry_memory=carry_memory,
+                                                   metric=metric),
                                        daemon=True)
         self.flight.start()
         time.sleep(.4)                # let the first line reach the log
@@ -1552,7 +1572,7 @@ class Bench(object):
         return list(job.pose)
 
     def mission(self, target, seconds=MISSION_SECONDS, initial_plan=None,
-                carry_memory=True):
+                carry_memory=True, metric=False):
         """Drive to a named object, asking the model again every few seconds.
 
         One look is a plan made from one photograph, and it stops being true as
@@ -1600,6 +1620,7 @@ class Bench(object):
                                       # remembered route; reset by any look that
                                       # comes back with a plan of its own
         spins = 0.                    # degrees turned since anything was driven
+        facing_turns = 0              # rotations spent aligning on arrival
         once = seconds is None
         self.lines = []
         if once:
@@ -1647,7 +1668,8 @@ class Bench(object):
                     from paired_planning import observation
                     pair=observation(self.robot,self.frame,memory,pose,reference,
                                      obstacles_in_text=carry_memory)
-                    answer = fetch.recognize(self.frame, target, prior, paired=pair)
+                    answer = fetch.recognize(self.frame, target, prior, paired=pair,
+                                             metric=metric)
                 except fetch.PlannerHold as exc:
                     # A hold used to end the mission outright. But the payload's
                     # own rule is "preserve the previous route only when the
@@ -1678,9 +1700,28 @@ class Bench(object):
             if not str(answer.get('note','')).startswith('controller fallback'):
                 held = 0
 
+            if metric:
+                # The model answered in the frame the robot drives in, so there
+                # is nothing to project. Every range error that came from
+                # reading a contact pixel near the horizon -- where one row is
+                # worth tens of centimetres -- is simply absent here.
+                answer = dict(answer)
+                answer['route_pixels'] = []
+                answer['contact_pixel'] = None
             goal = None
             contact = answer.get('contact_pixel')
-            if answer.get('visible') and isinstance(contact, dict):
+            if metric:
+                # A fresh sighting arrives as a pixel and is projected here; the
+                # remembered position stands only when nothing was seen.
+                seen = answer.get('target_px')
+                if answer.get('visible') and isinstance(seen, dict):
+                    try:
+                        goal = self.robot.ground(float(seen['x']), float(seen['y']))
+                    except (fetch.Stop, KeyError, TypeError, ValueError):
+                        goal = None
+                if goal is None and remembered_goal is not None:
+                    goal = remembered_goal
+            elif answer.get('visible') and isinstance(contact, dict):
                 try:
                     goal = self.robot.ground(float(contact['x']), float(contact['y']))
                     # Plan against the near edge of the range bracket, not its
@@ -1695,21 +1736,73 @@ class Bench(object):
                     goal = None
 
             route = []
-            for point in answer.get('route_pixels') or []:
-                if not isinstance(point, dict) or 'x' not in point:
-                    continue
-                try:
-                    route.append(self.robot.ground(float(point['x']),
-                                                   float(point['y'])))
-                except (fetch.Stop, TypeError, ValueError):
-                    continue
+            if metric:
+                for point in answer.get('route_cm') or []:
+                    if isinstance(point, dict) and 'right' in point:
+                        route.append((float(point['right']), float(point['forward'])))
+            else:
+                for point in answer.get('route_pixels') or []:
+                    if not isinstance(point, dict) or 'x' not in point:
+                        continue
+                    try:
+                        route.append(self.robot.ground(float(point['x']),
+                                                       float(point['y'])))
+                    except (fetch.Stop, TypeError, ValueError):
+                        continue
             if seeded:reference=list(route)
-            obstacles = fetch.project_obstacles(self.robot, answer)
+            if metric:
+                # Each obstacle carries the half-extent the model measured, so
+                # the controller stops substituting one constant for the size of
+                # everything it never saw. A carton and a Lego brick were both
+                # 4 cm discs until now.
+                # Two base pixels per obstacle, projected here. The separation
+                # is the measured width, so the half-extent is a measurement
+                # rather than the one constant that made a 12.3 cm carton an
+                # 8 cm disc. Remembered obstacles are merged in below: the
+                # model is told not to repeat them, so they arrive only from
+                # memory and only while out of view.
+                obstacles = []
+                far = 0
+                for item in answer.get('obstacles') or []:
+                    left, right = item.get('base_left_px'), item.get('base_right_px')
+                    if not (isinstance(left, dict) and isinstance(right, dict)):
+                        continue
+                    try:
+                        a = self.robot.ground(float(left['x']), float(left['y']))
+                        b = self.robot.ground(float(right['x']), float(right['y']))
+                    except (fetch.Stop, KeyError, TypeError, ValueError):
+                        continue
+                    middle = ((a[0] + b[0]) / 2., (a[1] + b[1]) / 2.)
+                    half = math.hypot(a[0] - b[0], a[1] - b[1]) / 2.
+                    # Everything the model can see is kept, however far: the
+                    # robot is told to find as many obstacles as it can, and a
+                    # distant one still becomes near once it drives at it. Only
+                    # the extent is bounded, by the same ceiling every obstacle
+                    # gets -- see fetch.OBSTACLE_MAX_RADIUS_CM.
+                    if math.hypot(*middle) > fetch.ROUTE_RANGE_CM:
+                        far += 1
+                    obstacles.append((str(item.get('label') or 'obstacle'), middle,
+                                      max(3., min(fetch.OBSTACLE_MAX_RADIUS_CM, half))))
+                if far:
+                    self.say('  %d obstacle(s) reported beyond %.0f cm; kept, '
+                             'position uncertain' % (far, fetch.ROUTE_RANGE_CM))
+                for item in (memory or {}).get('obstacles', []) or []:
+                    spot = fetch.rebase([item[1]], pose)[0]
+                    radius = float(item[2]) if len(item) > 2 and item[2] else fetch.OBSTACLE_RADIUS_CM
+                    radius = min(radius, fetch.OBSTACLE_MAX_RADIUS_CM)
+                    if any(math.hypot(spot[0] - o[1][0], spot[1] - o[1][1]) < 10.
+                           for o in obstacles):
+                        continue      # seen again this look; the fresh one wins
+                    obstacles.append((str(item[0]), (spot[0], spot[1]), radius))
+            else:
+                obstacles = fetch.project_obstacles(self.robot, answer)
             # The plan as the model drew it, before any trimming. This is what
             # goes back to it next look: handing back the truncated stub the
             # wheels were given loses the shape it chose -- ask for an approach
             # from the left and the stub is a couple of points aimed straight
             # ahead, so the next look has nothing of the curve to continue.
+            if metric:
+                route = self.face_the_target(route, goal, obstacles)
             planned = list(route)
             if memory:
                 # Carry what was on the floor last time into this frame. The
@@ -1766,8 +1859,9 @@ class Bench(object):
             self.frame_token += 1
             if answer.get('note'):
                 self.say('  "%s"' % str(answer['note'])[:80])
-            for label, spot in obstacles:
-                self.say('  avoiding "%s" at %.0f cm' % (label, math.hypot(*spot)))
+            for item in obstacles:
+                self.say('  avoiding "%s" at %.0f cm'
+                         % (item[0], math.hypot(*item[1])))
 
             # Inside standoff, progress is angular rather than translational.
             # Let the bounded facing branch verify bearing before declaring
@@ -1922,6 +2016,7 @@ class Bench(object):
 
             self.publish_snapshot("executing", widened)
             legs = [0]
+            moved = [0.]          # centimetres, not leg count -- see below
             start_rejected = [False]
 
             def record(event, **fields):
@@ -1936,6 +2031,7 @@ class Bench(object):
                     return
                 if event == 'leg':
                     legs[0] += 1
+                    moved[0] += float(fields.get('moved_cm', 0.) or 0.)
                     self.say('  drove %.1f cm of %.1f asked (%s)'
                              % (fields.get('moved_cm', 0.), fields.get('wanted_cm', 0.),
                                 fields.get('by', '')))
@@ -1986,9 +2082,39 @@ class Bench(object):
             # rotates to face each waypoint, so requiring zero rotation here
             # meant the escape never fired and the give-up counter reset every
             # cycle -- nine looks in a row against one cable, going nowhere.
-            if legs[0] == 0:
+            # Counting legs missed the way this actually fails. With something
+            # 15 cm ahead the clearance check leaves about 4 cm of room, so the
+            # executor drives a real but tiny leg -- 3.4, then 2.9, 1.2, 0.6 --
+            # and legs[0] is 1 every time, so the escape turn never fires and
+            # the robot crawls at the obstacle instead of going around it.
+            # Measured 2026-09-25 against a red block on the approach to the
+            # tissue box: six looks, 56 cm covered, then stuck at 74 cm out.
+            if legs[0] == 0 or moved[0] < MISSION_MIN_PROGRESS_CM:
                 if goal is not None and math.hypot(*goal) <= MISSION_STANDOFF_CM + 15.:
-                    self.say('near target with no forward progress; stopping without recovery turn')
+                    # Arrived on distance. Arriving also means facing it: the
+                    # camera only looks forward, so stopping beside the target
+                    # while aimed elsewhere leaves it out of the next picture.
+                    # There is no route that fixes this -- at this range a route
+                    # is a few centimetres long and driving it leaves the
+                    # standoff -- so rotate on the spot, which costs no ground.
+                    bearing = math.degrees(math.atan2(goal[0], goal[1]))
+                    if abs(bearing) > FACING_TOLERANCE_DEG and facing_turns < 3:
+                        step = math.copysign(
+                            min(abs(bearing), MISSION_TURN_STEP_DEG), bearing)
+                        self.say('  at the target but %+.0f deg off it; turning '
+                                 '%+.0f to face it' % (bearing, step))
+                        try:
+                            turned = self.robot.turn(step)
+                        except fetch.Stop as exc:
+                            self.say('could not turn to face it: %s' % exc)
+                            break
+                        facing_turns += 1
+                        shift = fetch.pivot_shift(turned)
+                        from trajectory_executor import compose
+                        pose = compose(pose, [shift[0], shift[1], turned])
+                        continue
+                    self.say('arrived: %.0f cm from the target, %+.0f deg off'
+                             % (math.hypot(*goal), bearing))
                     break
                 # Nothing moved. Usually that means the robot has closed inside
                 # the keep-back distance of something, where every heading whose
@@ -1996,7 +2122,14 @@ class Bench(object):
                 # of about 42 degrees, so most of them. Turning is the only move
                 # that is always safe here: it shifts the corridor without
                 # carrying the robot into anything.
-                here = fetch.merge_obstacles(memory['obstacles'], pose, [])
+                # The thing blocking the robot is usually the one it just saw,
+                # not one it remembers: on the first look memory is empty, so
+                # escaping from memory alone reported "nothing is in the way"
+                # while a block sat 15 cm ahead. Give it this cycle's obstacles
+                # as the fresh list and let memory fill in what has since left
+                # the frame.
+                here = fetch.merge_obstacles((memory or {}).get('obstacles', []),
+                                             pose, obstacles)
                 turn = fetch.escape_heading(here)
                 if turn is None:
                     self.say('nothing moved and nothing is in the way; stopping')
@@ -2032,6 +2165,86 @@ class Bench(object):
         self.say('')
         self.say('mission %s' % ('complete' if reached else 'ended'))
         self.publish_snapshot('stopped')
+
+    def face_the_target(self, route, goal, obstacles):
+        """Make the last leg point at the goal, so the robot stops looking at it.
+
+        The robot faces along whatever its final segment was, and the camera
+        only looks forward. A route that swings wide of an obstacle and never
+        swings back finishes aimed past the target, which drops it out of the
+        next picture and sends the planner searching for something the robot is
+        standing beside.
+
+        Asking for this in the prompt was measured on 2026-09-25 over three
+        calls on one scene: the final-leg error went from -51 degrees to a
+        median of -32, with one call in three actually complying. That is a
+        nudge, not a constraint, so it is imposed here instead -- a short final
+        leg straight at the goal, kept only if it is as clear as the route it
+        extends.
+        """
+        if goal is None or not route:
+            return route
+        last = route[-1]
+        gap = math.hypot(goal[0] - last[0], goal[1] - last[1])
+        if gap <= MISSION_STANDOFF_CM:
+            return route              # already inside the standoff; nothing to aim
+        before = route[-2] if len(route) > 1 else (0., 0.)
+        leg = (last[0] - before[0], last[1] - before[1])
+        toward = (goal[0] - last[0], goal[1] - last[1])
+        if math.hypot(*leg) < 1e-6:
+            return route
+        error = abs(math.degrees(math.atan2(leg[0] * toward[1] - leg[1] * toward[0],
+                                            leg[0] * toward[0] + leg[1] * toward[1])))
+        if error <= FACING_TOLERANCE_DEG:
+            return route
+        reach = min(FACING_LEG_CM, gap - MISSION_STANDOFF_CM)
+        if reach < fetch.ROUTE_MIN_LEG_CM:
+            return route
+        aimed = (last[0] + toward[0] / gap * reach, last[1] + toward[1] / gap * reach)
+        # The added leg is a claim about floor the model did not route over, so
+        # it gets the same clearance test as every other leg rather than a free
+        # pass for being ours.
+        room, blame = fetch.clear_distance(obstacles, last,
+                                           math.degrees(math.atan2(toward[0], toward[1])),
+                                           reach)
+        if room < reach:
+            self.say('  final leg would face the target but %s blocks it at '
+                     '%.1f of %.1f cm; left as answered (%.0f deg off)'
+                     % (blame or 'something', room, reach, error))
+            return route
+        extended = list(route) + [aimed]
+        self.say('  final leg aimed at the target: %.0f deg off, +%.0f cm'
+                 % (error, reach))
+        return extended
+
+    def plan_once(self, target, metric=True):
+        """One planning call and nothing else -- no motor service is opened.
+
+        The mission loop is the only other way to reach the model, and it
+        drives. That makes a prompt change expensive to test: every check of
+        whether the model obeys a new rule costs a drive across the carpet and
+        a scene to reset. This asks once from where the robot stands and hands
+        back the raw answer, so a rule can be measured before anything moves.
+        """
+        target = (target or '').strip()
+        if not target:
+            return dict(error='name something to drive to')
+        if not os.environ.get('OPENAI_API_KEY'):
+            return dict(error='OPENAI_API_KEY is not set')
+        if self.running():
+            return dict(error='a run is in progress; stop it first')
+        try:
+            image, _ = self.robot.frame()
+            self.restage(image)
+        except Exception as exc:
+            return dict(error='no picture (%s)' % exc)
+        try:
+            from paired_planning import observation
+            pair = observation(self.robot, self.frame)
+            answer = fetch.recognize(self.frame, target, paired=pair, metric=metric)
+        except (fetch.Stop, fetch.PlannerHold) as exc:
+            return dict(error=str(exc))
+        return dict(answer=answer)
 
     def ask(self, target):
         """Let the model place the waypoints instead of the operator.
@@ -2141,7 +2354,8 @@ class Bench(object):
         widened, nudged = fetch.avoid(route, obstacles, goal)
         if goal is not None:
             self.say('target is %.0f cm away' % math.hypot(*goal))
-        for label, spot in obstacles:
+        for item in obstacles:
+            label, spot = item[0], item[1]
             self.say('  obstacle "%s" at %.0f cm, %+.0f cm across'
                      % (label, math.hypot(*spot), spot[0]))
         if not obstacles:
@@ -2170,11 +2384,14 @@ class Bench(object):
             return [x, y] if inside else [x, y, 1]
 
         hazards = []
-        for label, spot in obstacles:
+        for item in obstacles:
+            label, spot = item[0], item[1]
+            radius = float(item[2]) if len(item) > 2 and item[2] else fetch.OBSTACLE_RADIUS_CM
             pixel = on_view(spot)
             if pixel:
                 hazards.append([pixel[0], pixel[1],
-                                (fetch.OBSTACLE_RADIUS_CM + fetch.CORRIDOR_HALF_CM)
+                                (min(radius, fetch.OBSTACLE_MAX_RADIUS_CM)
+                                 + fetch.CORRIDOR_HALF_CM)
                                 * BEV_SCALE, label[:16]])
         drawn = []
         for spot in widened:
@@ -2324,9 +2541,11 @@ class Bench(object):
             was_drawn = self.live_drawn
             self.live_route = [spot for spot in fetch.rebase(self.live_route, moved)]
             self.live_drawn = was_drawn
-            self.live_obstacles = list(zip(
-                [label for label, _ in self.live_obstacles],
-                fetch.rebase([spot for _, spot in self.live_obstacles], moved)))
+            self.live_obstacles = [
+                (item[0], spot) + tuple(item[2:])
+                for item, spot in zip(
+                    self.live_obstacles,
+                    fetch.rebase([o[1] for o in self.live_obstacles], moved))]
             self.live_pose = [0., 0., 0.]     # the route is in this frame now
             self.pose_heading = self.imu_heading()
             if self.memory:
@@ -2737,9 +2956,11 @@ class Bench(object):
         was_drawn = self.live_drawn
         self.live_route = list(moved)
         self.live_drawn = was_drawn
-        self.live_obstacles = list(zip(
-            [label for label, _ in self.live_obstacles],
-            fetch.rebase([spot for _, spot in self.live_obstacles], pose)))
+        self.live_obstacles = [
+            (item[0], spot) + tuple(item[2:])
+            for item, spot in zip(
+                self.live_obstacles,
+                fetch.rebase([o[1] for o in self.live_obstacles], pose))]
         self.live_pose = [0., 0., 0.]     # what is held is in this frame now
         self.pose_heading = self.imu_heading()
 
@@ -2987,11 +3208,15 @@ class Handler(BaseHTTPRequestHandler):
                                    None if every in (None, '') else float(every),
                                    body.get('initial_plan'),
                                    body.get('seed_frame_token'),
-                                   carry_memory=bool(body.get('carry_memory', True)))
+                                   carry_memory=bool(body.get('carry_memory', True)),
+                                   metric=bool(body.get('metric', False)))
             elif path == '/api/look':
                 out = bench.look(body.get('mode') or 'floor')
             elif path == '/api/ask':
                 out = bench.ask(body.get('target') or '')
+            elif path == '/api/plan-once':
+                out = bench.plan_once(body.get('target') or '',
+                                      bool(body.get('metric', True)))
             elif path == '/api/project':
                 spots, total = bench.project(body.get('points') or [])
                 out = bench.state(length=total)

@@ -15,6 +15,14 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from socketserver import ThreadingMixIn
 from render_mission_log import render
 
+# The view modules pull in cv2, whose Jetson package rebinds sys.modules['cv2']
+# part-way through its own bootstrap. Importing them lazily from a request
+# handler means two ThreadingMixIn threads can race through that window and one
+# walks away with the half-built module -- it surfaced as
+# "module 'cv2' has no attribute 'imread'" on /api/midlevel-view. Serialise the
+# lazy imports; after the first one the module cache makes the lock free.
+_IMPORTING = threading.Lock()
+
 CURRENT = '/mnt/robotlogs/current-search.json'
 lock = threading.Lock()
 latest = {'text': 'Waiting for a run.', 'error': None}
@@ -104,13 +112,15 @@ class Handler(BaseHTTPRequestHandler):
             kind='text/html; charset=utf-8'
         elif path=='/api/highlevel-view':
             try:
-                from highlevel_view import view
+                with _IMPORTING:
+                    from highlevel_view import view
                 payload=view(pathlib.Path(state['root']))
             except Exception as exc:payload=dict(available=False,note='High-level view unavailable: '+str(exc))
             data,kind=json.dumps(payload).encode(),'application/json'
         elif path=='/api/midlevel-view':
             try:
-                from midlevel_view import local_view,call_view,seeded_view
+                with _IMPORTING:
+                    from midlevel_view import local_view,call_view,seeded_view
                 from urllib.parse import parse_qs,urlsplit
                 query=parse_qs(urlsplit(self.path).query)
                 root=pathlib.Path(state['root'])

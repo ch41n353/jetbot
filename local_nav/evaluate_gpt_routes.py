@@ -131,7 +131,8 @@ def score(route, obstacles, goal):
     closest = None
     blocked = HALF_WIDTH_CM + OBSTACLE_RADIUS_CM
     legs = [(0., 0.)] + list(route)
-    for label, spot in obstacles:
+    for item in obstacles:
+        label, spot = item[0], item[1]
         gap = min(segment_clearance(legs[i], legs[i + 1], spot)
                   for i in range(len(legs) - 1))
         if closest is None or gap < closest:
@@ -180,7 +181,8 @@ def plan_view(route, obstacles, goal, repaired=()):
         cv2.circle(canvas, place(0., 0.), int(ring * scale), (60, 60, 60), 1)
         cv2.putText(canvas, '%d' % ring, (PLAN_PIXELS // 2 + 3,
                     place(0., ring)[1]), cv2.FONT_HERSHEY_PLAIN, .7, (90, 90, 90), 1)
-    for label, spot in obstacles:
+    for item in obstacles:
+        label, spot = item[0], item[1]
         centre = place(*spot)
         cv2.circle(canvas, centre, max(3, int(OBSTACLE_RADIUS_CM * scale)),
                    (60, 60, 220), -1)
@@ -302,7 +304,7 @@ def examine(lens, path, target, out_dir, attempt=None):
         range_cm=round(math.hypot(*goal), 1) if goal else None,
         route_points=len(route),
         obstacles=[[label, round(spot[0], 1), round(spot[1], 1)]
-                   for label, spot in obstacles],
+                   for label, spot in ((o[0], o[1]) for o in obstacles)],
         closest_obstacle_cm=round(closest, 1) if closest is not None else None,
         findings=findings,
         route_cm=[[round(v, 1) for v in p] for p in route],
