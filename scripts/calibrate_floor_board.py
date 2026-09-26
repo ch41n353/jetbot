@@ -186,6 +186,18 @@ def main():
                                                             args.square_mm))
         profile['roll_source'] = 'Measured from the same board, not assumed'
         profile['mounting_verified'] = True
+        # Any recorded validation described the geometry being replaced, and a
+        # stale pass is worse than none: this file claimed "Passed independent
+        # near-center 50 cm check, predicted 48.6 cm" while the geometry then
+        # in it computed 17.2 cm for that very pixel, because an earlier
+        # --apply overwrote the pose and left the claim behind.
+        stale = profile.pop('validation', None)
+        profile.pop('verification_status', None)
+        if stale:
+            profile['validation_note'] = (
+                'Cleared on re-solve: the previous check was made against the '
+                'superseded pose. Re-validate against measured floor points '
+                'before trusting this profile.')
         profile['notes'] = ('Height, pitch and roll solved together from a planar board; '
                             'median reprojection residual %.3f px over %d corners. Previous '
                             'file kept as floor_geometry.json.bak.'

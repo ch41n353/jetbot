@@ -1,15 +1,15 @@
 {
     "version": 1,
-    "camera_height_cm": 9.5,
-    "height_source": "User measurement: camera lens center above carpet",
+    "camera_height_cm": 8.364806086970956,
+    "height_source": "Solved with pitch and roll from a 6 x 4 checkerboard of 25.0 mm squares",
     "intrinsics_path": "/home/jetbot/Projects/car/calibration/fisheye_calibration.json",
     "image_width": 640,
     "image_height": 480,
-    "pitch_degrees": 30.400751068689885,
-    "roll_degrees": 0.0,
+    "pitch_degrees": 29.106097345262302,
+    "roll_degrees": 0.23013188300473433,
     "mounting_verified": true,
-    "notes": "Pitch re-solved after the camera mount was moved, from known 22.5 cm object; worst residual 0.00 cm. Previous file kept as floor_geometry.json.bak.",
-    "roll_source": "Assumed zero; not independently measured",
+    "notes": "Height, pitch and roll solved together from a planar board; median reprojection residual 0.202 px over 24 corners. Previous file kept as floor_geometry.json.bak.",
+    "roll_source": "Measured from the same board, not assumed",
     "calibration_reference": {
         "image": "/home/jetbot/jetbot/calibration/floor-reference-30cm.jpg",
         "pixel": [
