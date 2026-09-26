@@ -253,6 +253,9 @@ def observation(lens,image,memory=None,pose=(0,0,0),reference=None,
     # a drawn belief from an observed thing, and measured 2026-09-24 it followed
     # an inked route into an obstacle it had itself reported (6.1 cm median
     # clearance with the ink present, 14.2 cm with it removed).
+    # Built here rather than at the drawing step below: the context now
+    # carries the previous route in this map's own pixels.
+    zones=ZonedFloorProjection(lens)
     context=dict(
         frame='centimetres in the robot frame: [right, forward]. '
               'Right positive, forward positive. The robot is at [0,0] facing [0,+1]. '
@@ -271,6 +274,11 @@ def observation(lens,image,memory=None,pose=(0,0,0),reference=None,
         reference_px=pixels_of(lens,ref),
         previous_cm=[vec(p) for p in route],
         previous_px=pixels_of(lens,route),
+        # ...and in image 2's own pixels, because that is the frame the
+        # model now answers in. Handing back only image-1 pixels asked it
+        # to continue a plan expressed in a different picture.
+        previous_map_px=[dict(x=q[0],y=q[1]) for q in
+                         (zones.place(*p) for p in route)],
         obstacles=obstacles if obstacles_in_text else [],
         footprint_cm=dict(width=12,length=15),
         standoff_cm=STANDOFF_CM,
@@ -287,7 +295,7 @@ def observation(lens,image,memory=None,pose=(0,0,0),reference=None,
         target_requires_fresh_rgb=goal_in_fov,
         reference_distance_cm=round(distance,1),
         reference_turn_deg=round(rotation,1))
-    zones=ZonedFloorProjection(lens);floor=zones.apply(image)
+    floor=zones.apply(image)
     Z=ZonedFloorProjection
     hub=zones.place(0.,0.)                       # the robot, after cropping
     def ring_px(cm):return int(round(Z.radius_px(cm)*zones.zoom))

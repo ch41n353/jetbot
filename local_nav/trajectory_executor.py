@@ -288,6 +288,27 @@ class ZonedFloorProjection:
         scale = max(0., scale)
         return (int(round(hub_x + dx * scale)), int(round(hub_y + dy * scale)))
 
+    def unplace(self, u, v):
+        """Ground position for a pixel of this map: the inverse of place().
+
+        The model draws in the picture it is given, and the picture is the one
+        place where its route, the obstacles and the target are all in the same
+        frame. Converting here keeps every metric number on this side of the
+        wire, where it can be checked, rather than asking for arithmetic that
+        has been the least reliable thing it produces.
+        """
+        cls = type(self)
+        px = self.origin[0] + float(u) / self.zoom
+        py = self.origin[1] + float(v) / self.zoom
+        dx, dy = px - 320., 320. - py
+        rho = min(math.hypot(dx, dy), cls.EDGE_PX)
+        if rho <= cls.INNER_EDGE_PX:
+            span = rho / cls.INNER_PX_PER_CM
+        else:
+            span = cls.INNER_CM + (rho - cls.INNER_EDGE_PX) / cls.OUTER_PX_PER_CM
+        bearing = math.atan2(dx, dy)
+        return (span * math.sin(bearing), span * math.cos(bearing))
+
     def apply(self, image):
         out = cv2.remap(image, self.x, self.y, cv2.INTER_LINEAR,
                         borderMode=cv2.BORDER_CONSTANT)

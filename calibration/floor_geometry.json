@@ -1,14 +1,14 @@
 {
     "version": 1,
-    "camera_height_cm": 8.364806086970956,
-    "height_source": "Solved with pitch and roll from a 6 x 4 checkerboard of 25.0 mm squares",
+    "camera_height_cm": 7.653179207579196,
+    "height_source": "Solved with pitch and roll from a 6 x 4 checkerboard of 23.2 mm squares",
     "intrinsics_path": "/home/jetbot/Projects/car/calibration/fisheye_calibration.json",
     "image_width": 640,
     "image_height": 480,
-    "pitch_degrees": 29.106097345262302,
-    "roll_degrees": 0.23013188300473433,
+    "pitch_degrees": 26.71473158438979,
+    "roll_degrees": 1.0160246044634058,
     "mounting_verified": true,
-    "notes": "Height, pitch and roll solved together from a planar board; median reprojection residual 0.202 px over 24 corners. Previous file kept as floor_geometry.json.bak.",
+    "notes": "Height, pitch and roll solved together from a planar board; median reprojection residual 0.340 px over 24 corners. Previous file kept as floor_geometry.json.bak.",
     "roll_source": "Measured from the same board, not assumed",
     "calibration_reference": {
         "image": "/home/jetbot/jetbot/calibration/floor-reference-30cm.jpg",
@@ -20,20 +20,5 @@
         "confirmed_by_user": true,
         "description": "Tape entry at black housing; horizontal distance from directly below lens"
     },
-    "verification_status": "Passed independent near-center 50 cm check",
-    "validation": {
-        "image": "/home/jetbot/jetbot/calibration/floor-reference-50cm.jpg",
-        "pixel": [
-            331,
-            235
-        ],
-        "measured_forward_cm": 50.0,
-        "predicted_forward_cm": 48.609168190152936,
-        "error_cm": -1.3908318098470644,
-        "relative_error_percent": -2.781663619694129,
-        "acceptance_tolerance_cm": 5.0,
-        "passed": true,
-        "pixel_selection_uncertainty_px": 2,
-        "scope": "Near-center floor points, tested at 30 and 50 cm; zero roll assumed. Not validated across the whole image."
-    }
+    "validation_note": "Cleared on re-solve: the previous check was made against the superseded pose. Re-validate against measured floor points before trusting this profile."
 }

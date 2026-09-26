@@ -100,6 +100,64 @@ Decide in this order. Each step is checked before the ones below it.
     and measure again. Repeat until the closest obstacle in the whole scene is
     at least 12 cm from every part of the route.
 
+    AIM FOR 25 CM, NOT 12. Twelve is the floor -- the point at which the robot
+    is refused and does not move. It is not the target. A route that passes an
+    obstacle at 12 cm is a route you should have drawn wider, because the
+    obstacle's position carries error, the robot drifts as it drives, and you
+    are re-asked in a few seconds anyway. Where there is open floor, put 25 cm
+    or more between the path and anything on it.
+
+    Before you answer, look at your route and the nearest obstacle to it, and
+    ask one question: could I have gone around that with more room? If the
+    answer is yes -- if there is open floor on either side -- then move the
+    path and do it. Going wide costs almost nothing. Measured 2026-09-26: a
+    route passed 8.9 cm from a block while 36 cm and 52 cm of clear floor sat
+    unused on the other side of it.
+
+    In note, name the closest obstacle and which side you pass it -- left or
+    right. Do not state a distance. Asked for the figure on 2026-09-25, six
+    calls answered "about 16 cm", "about 18 cm", "about 17 cm" and "about
+    14 cm" for routes that measured -2.7, -2.3, -1.2 and -2.8 cm: the routes
+    went through the block every time. A number that was not measured is worse
+    than no number, because it reads as a check that was carried out. Which
+    side you passed is something you actually chose, so say that instead.
+
+    Why 12 and not less: the route is the path of the robot's CENTRE and the
+    robot is 12 cm wide, so 12 cm from a centre leaves only 6 cm of air at the
+    edge, and the obstacle's own position carries error on top of that. 12 is
+    the floor. Leave more wherever the floor allows -- there is no prize for
+    passing close.
+
+    Measured 2026-09-25, with this rule stated but no procedure given: three
+    calls on one scene reported 4 to 7 obstacles each and returned routes
+    passing 3.9, 5.2 and 9.0 cm from them. The obstacles were seen. They were
+    listed. The routes went over them anyway.
+
+    TURNING IS THE LAST RESORT, NOT THE FIRST. A route is what moves the robot;
+    a turn moves nothing. Before you return motion="turn", satisfy yourself that
+    NO route exists -- not that one is awkward, that none exists.
+
+    Almost always one does. An obstacle only blocks you if it is BOTH close --
+    under about 25 cm -- AND nearly straight ahead, within about 30 degrees of
+    your heading. Anything else can be driven around, and you should draw that
+    route instead:
+
+      a block 35 cm ahead          -> go around it, left or right
+      a block 40 cm ahead          -> go around it
+      anything off to one side     -> it is not in your way at all
+      something 15 cm dead ahead   -> now turn; nothing else will do
+
+    Measured 2026-09-26, reaching for a tissue box: four consecutive looks
+    returned turns with the target in plain sight at 49 to 72 cm and the
+    nearest obstacle 34 to 42 cm away at 11 to 23 degrees -- all passable --
+    and one of them turned away from a block that was 88 degrees off to the
+    side, nowhere near the path. Two of the four turned TOWARD the obstacle
+    they named as the reason. The robot covered no ground at all and the run
+    was abandoned.
+
+    If you do turn, turn toward the side with more open floor, and say in note
+    which obstacle left you no route.
+
     In note, name the closest obstacle and which side you pass it -- left or
     right. Do not state a distance. Asked for the figure on 2026-09-25, six
     calls answered "about 16 cm", "about 18 cm", "about 17 cm" and "about
@@ -189,27 +247,10 @@ Decide in this order. Each step is checked before the ones below it.
     it is also an obstacle, the exclusion zone around it covers the place the
     robot is being sent and the robot stops short of its own goal.
 
-    Report each as two pixels in image 1: base_left_px and base_right_px.
-
-    BOTH PIXELS MUST BE ON THE FLOOR. Not on the object -- on the floor, at the
-    line where the object touches it. Follow the object down to where it meets
-    the carpet and put the pixels there, at its left and right edges. If there
-    is a shadow or a dark contact line under it, that line is what you want.
-    When unsure, pick the LOWEST pixel of the object in the image, the one with
-    the largest y -- never its middle, its label, its lid, or anything you can
-    see of its front face.
-
-    This is not a detail. The robot has no depth sensor; distance comes from
-    which row of the image a floor point sits in, and nothing else. A pixel
-    higher up the picture is a floor point further away. So marking an object's
-    body instead of its base does not blur the answer, it moves the object
-    backwards -- and the robot drives into the space it thinks is empty.
-    Measured 2026-09-25: the marks came back on the objects themselves, roughly
-    mid-height, on every obstacle in the frame.
-
-    The two pixels are also the object's width: the controller projects both
-    and takes the distance between them. So mark the actual left and right
-    edges of its footprint on the floor, not a pair of dots near its middle.
+    Report each as two pixels in IMAGE 1: base_left_px and base_right_px,
+    where that object's left and right edges meet the floor. The controller
+    projects both and takes the distance between them as its real width, so
+    mark the actual edges of its footprint, not two dots near its middle.
 
     The supplied obstacles list is only what has passed OUT of view; anything
     visible has already been removed from it, so there is nothing in it for you
@@ -220,27 +261,59 @@ Decide in this order. Each step is checked before the ones below it.
     is empty. What you leave out is what it forgets.
 
 6.  THE TARGET. If you find the target in image 1, set visible=true and give
-    target_px: the pixel where it meets the floor. If you cannot find it, set
-    visible=false and target_px=null, and the supplied target_cm stands.
+    target_px: the pixel where it meets the floor, in image 1. If you cannot
+    find it, set visible=false and target_px=null, and the supplied target_cm
+    stands.
+
+    Where the target rests on top of something else, mark where the thing it
+    stands on meets the carpet -- that is the place the robot can actually
+    drive to. A pixel up on the object itself has no floor position and the
+    mission cannot act on it.
 
     Everything supplied to you is what the robot believed before this picture
     was taken, and it may be stale or wrong. A pixel is a claim about this
-    picture; do not report one you have not looked at. Measured 2026-09-24: a
-    call returned the supplied target position unchanged with visible=true
-    while the target was in plain sight 153 cm from where it said, and every
-    obstacle it listed was the supplied list copied back.
+    picture; do not report one you have not looked at.
 
-BEFORE YOU RETURN A ROUTE, CHECK THIS ONE THING. Take your last two waypoints.
-The robot will be facing along the step between them when it stops. Does that
-direction point at the target? If continuing straight from your last waypoint
-would not arrive at the target, the route is not finished -- move the last
-waypoint, or add one, until it does. A route that ends pointing anywhere else
-is wrong even when every point on it is safe and every obstacle is cleared.
+HOW YOU GIVE THE ROUTE. route_px is a list of pixels in IMAGE 1 -- points on
+the floor in the camera picture, in the order the robot should drive through
+them. You are drawing the path on the picture, not calculating it. Do not
+convert anything to centimetres; the controller projects your pixels through
+the calibration and works out the distances itself.
 
-    Why this and not something else: the camera looks forward only. Stop facing
-    away from the target and it is out of the next picture, and the robot has to
-    hunt for a thing it is parked beside. The detour around an obstacle belongs
-    in the middle of your route. Come back onto the bearing before the end.
+    Every point must be on the floor, below the horizon. Draw from near the
+    robot outward -- do not include the robot's own position. Two or three
+    points is usually right.
+
+    Drawing it in image 1 means the path, the obstacles and the target are all
+    in the same picture, and you can see the route pass to one side of a thing
+    rather than having to work it out. Use image 2 to judge how far away
+    something is and how much room there is; use image 1 to put the points.
+
+    Check the last point against the target before you answer. The route should
+    stop SHORT of the target, roughly a robot's length short -- never on top of
+    it and never beyond it.
+
+WHEN YOU TURN, BRING A ROUTE WITH YOU. There are two motions: "follow" and
+"turn". A turn may carry a route, and when it does the robot turns first and
+then drives it -- so give turn_degrees AND route_px together whenever there is
+somewhere worth going once the turn is done.
+
+    Draw that route in image 1 exactly as you see it now. The controller
+    rotates it into the post-turn heading itself; you do not have to imagine
+    the view after turning.
+
+    Do this whenever the target is off to one side. A turn on its own moves
+    nothing and throws the look away: by the next picture the target may have
+    swung out of frame, and that look starts from nothing. With a route
+    attached the robot turns, drives, and the next look receives your path to
+    continue even when the target is no longer in view.
+
+    The turn may be at most 30 degrees. Ask for 30 and the rest follows on the
+    next look. Keep the route's first leg pointing roughly where the robot will
+    be looking once it has turned.
+
+    Return a turn with no route only when there is genuinely nothing to drive
+    -- something is in the way and you need a new view before you can plan.
 
 motion is "follow" when you return a route, "turn" when only a change of view is
 justified (give turn_degrees, positive right), and "hold" when nothing is safe.

@@ -1287,7 +1287,7 @@ class Bench(object):
                     from gpt_audit import plan_event
                     plan_event(answer, 'applied', mode='flow', sequence=newest['seq'])
                     points, found, spot, moved = build(answer, newest['shot'])
-                    if answer.get('motion') == 'turn_then_follow':
+                    if answer.get('motion') == 'turn' and points:
                         drift = self.since_pose(newest['shot'], world)
                         try:
                             points, found, spot, turn_pose = self.turn_then_follow_plan(
@@ -1559,7 +1559,14 @@ class Bench(object):
         # radius to in-place turns: that rejected separated side objects.
         for angle in np.linspace(0.,turn,max(2,int(abs(turn))+1)):
             shift=fetch.pivot_shift(float(angle))
-            for label,point in list(obstacles)+[('target',goal)]:
+            # Obstacles carry a measured half-extent, so they are three-tuples.
+            # Unpacking two names here raised ValueError, and the caller only
+            # catches fetch.Stop -- so the mission thread died silently right
+            # after announcing the final facing turn, and the robot never made
+            # it. Measured 2026-09-26 arriving at a can of nuts 17 cm away,
+            # 49 degrees off-axis.
+            for item in [(o[0],o[1]) for o in obstacles]+[('target',goal)]:
+                label,point=item
                 x,z=fetch.rebase([point],[shift[0],shift[1],float(angle)])[0]
                 margin=2.  # measured pivot uncertainty; points represent nearest contacts
                 if abs(x)<6.+margin and -15.-margin<z<margin:
@@ -1621,6 +1628,8 @@ class Bench(object):
                                       # comes back with a plan of its own
         spins = 0.                    # degrees turned since anything was driven
         facing_turns = 0              # rotations spent aligning on arrival
+        turn_way = 0.                 # committed rotation direction, if any
+        turned_since_drive_reset = True   # cleared on a turn, set by real motion
         once = seconds is None
         self.lines = []
         if once:
@@ -1737,9 +1746,19 @@ class Bench(object):
 
             route = []
             if metric:
-                for point in answer.get('route_cm') or []:
-                    if isinstance(point, dict) and 'right' in point:
-                        route.append((float(point['right']), float(point['forward'])))
+                # The route is drawn in image 1, like everything else the model
+                # returns, and projected here. Pointing is what it does
+                # reliably; the metric waypoints it used to return were
+                # arithmetic, and on 2026-09-26 one ended 6 cm past a target it
+                # had itself placed at 42 cm.
+                for point in answer.get('route_px') or []:
+                    if not isinstance(point, dict) or 'x' not in point:
+                        continue
+                    try:
+                        route.append(self.robot.ground(float(point['x']),
+                                                       float(point['y'])))
+                    except (fetch.Stop, TypeError, ValueError):
+                        continue
             else:
                 for point in answer.get('route_pixels') or []:
                     if not isinstance(point, dict) or 'x' not in point:
@@ -1816,18 +1835,26 @@ class Bench(object):
                     self.say('  still avoiding %d obstacle(s) now out of shot'
                              % (len(obstacles) - was))
 
-            if answer.get('motion') == 'turn_then_follow':
+            # A turn carrying a route: turn first, then drive what was drawn.
+            # There is no separate motion name -- the route's presence is what
+            # says the robot has somewhere to go once it has turned.
+            if answer.get('motion') == 'turn' and route:
                 try:
                     route, obstacles, goal, turn_pose = self.turn_then_follow_plan(
                         answer, route, obstacles, goal)
                 except fetch.Stop as exc:
-                    self.robot.halt()
-                    self.say('PLANNER HOLD: %s' % exc)
-                    break
+                    # Not drivable after the turn; take the turn alone rather
+                    # than abandoning the cycle.
+                    self.say('  %s; turning without a route' % exc)
+                    route = []
+                    turn_pose = None
                 planned = list(route)
-                reference=fetch.rebase(reference,turn_pose)
-                if remembered_goal is not None:remembered_goal=fetch.rebase([remembered_goal],turn_pose)[0]
-                pose = [0., 0., 0.]  # memory below is now in the post-turn frame
+                if turn_pose is not None:
+                    reference=fetch.rebase(reference,turn_pose)
+                if turn_pose is not None:
+                    if remembered_goal is not None:
+                        remembered_goal=fetch.rebase([remembered_goal],turn_pose)[0]
+                    pose = [0., 0., 0.]  # memory below is now in the post-turn frame
 
             if not route and memory and answer.get('motion') != 'turn':
                 # A turn is an answer, not an absence of one. This fallback was
@@ -1893,12 +1920,29 @@ class Bench(object):
             # to drive around: at 10 cm an obstacle blocks every heading until
             # it is nearly behind, so no route exists to draw.
             asked_turn = answer.get('turn_degrees')
-            if (answer.get('motion') != 'turn_then_follow'
+            if (not (answer.get('motion') == 'turn' and route)
                     and isinstance(asked_turn, (int, float)) and math.isfinite(asked_turn)
                     and abs(asked_turn) >= MISSION_TURN_MIN_DEG
                     and (goal is None or math.hypot(*goal) > MISSION_STANDOFF_CM)):
                 asked_turn = max(-MISSION_TURN_MAX_DEG,
                                  min(MISSION_TURN_MAX_DEG, float(asked_turn)))
+                # Each look is judged on its own, so the model can ask to turn
+                # back the way it just came without knowing it. Measured
+                # 2026-09-26 reaching for a tissue box: turn left to face the
+                # target, which puts a block in the path; turn right to clear
+                # the block, which loses the target; four looks, 0 cm covered,
+                # the two reasons stated plainly in its own notes. Hold the
+                # committed direction until something is actually driven --
+                # going the long way round a block reaches the target, and
+                # alternating never does.
+                if (turn_way and asked_turn * turn_way < 0
+                        and not turned_since_drive_reset):
+                    self.say('  it now asks %+.0f deg, reversing the last turn; '
+                             'holding %s until something moves'
+                             % (asked_turn, 'right' if turn_way > 0 else 'left'))
+                    asked_turn = math.copysign(abs(asked_turn), turn_way)
+                turn_way = math.copysign(1., asked_turn)
+                turned_since_drive_reset = False
                 step = math.copysign(min(abs(asked_turn), MISSION_TURN_STEP_DEG),
                                      asked_turn)
                 spins += abs(step)
@@ -1940,6 +1984,13 @@ class Bench(object):
                     pose=self.align_mission_target(goal,obstacles)
                 except fetch.Stop as exc:
                     self.robot.halt();self.say('HOLD: '+str(exc));break
+                except Exception as exc:
+                    # Anything else here used to kill the mission thread with
+                    # no line in the log at all.
+                    self.robot.halt()
+                    self.say('HOLD: final facing failed (%s: %s)'
+                             % (type(exc).__name__, exc))
+                    break
                 from gpt_audit import plan_event
                 plan_event(answer,'final_facing',execution_id=self.local_execution.id,
                            measured_pose=pose,verified_arrival=False)
@@ -2099,6 +2150,11 @@ class Bench(object):
             # the robot crawls at the obstacle instead of going around it.
             # Measured 2026-09-25 against a red block on the approach to the
             # tissue box: six looks, 56 cm covered, then stuck at 74 cm out.
+            if moved[0] >= MISSION_MIN_PROGRESS_CM:
+                # Real ground covered: the robot is somewhere new, so a request
+                # to turn the other way is no longer a contradiction.
+                turn_way = 0.
+                turned_since_drive_reset = True
             if legs[0] == 0 or moved[0] < MISSION_MIN_PROGRESS_CM:
                 if goal is not None and math.hypot(*goal) <= MISSION_STANDOFF_CM + 15.:
                     # Arrived on distance. Arriving also means facing it: the
@@ -2175,6 +2231,14 @@ class Bench(object):
         self.say('')
         self.say('mission %s' % ('complete' if reached else 'ended'))
         self.publish_snapshot('stopped')
+
+    def floor_map(self):
+        """The image-2 projection, built once -- it costs a fisheye solve."""
+        made = getattr(self, '_floor_map', None)
+        if made is None:
+            from trajectory_executor import ZonedFloorProjection
+            made = self._floor_map = ZonedFloorProjection(self.robot)
+        return made
 
     def trim_to_own_obstacles(self, route, obstacles):
         """Cut a route where it runs into something the model itself reported.

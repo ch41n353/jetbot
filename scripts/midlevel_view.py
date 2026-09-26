@@ -121,7 +121,18 @@ def render_pair(camera,reference,proposal=(),target=None,previous=(),obstacles=(
         # midpoint as its position and half the separation as its extent --
         # the same arithmetic the controller does, so the picture shows what
         # the controller acted on rather than a redrawing of it.
-        left,right=o.get('base_left_px'),o.get('base_right_px')
+        left,right=o.get('left_map_px'),o.get('right_map_px')
+        if isinstance(left,dict) and isinstance(right,dict):
+            # Historical: a stretch of calls answered in image-2 pixels.
+            try:
+                a2=projection.unplace(float(left['x']),float(left['y']))
+                b2=projection.unplace(float(right['x']),float(right['y']))
+            except (ValueError,KeyError,TypeError):continue
+            spot=((a2[0]+b2[0])/2.,(a2[1]+b2[1])/2.)
+            radius=max(1.,math.hypot(a2[0]-b2[0],a2[1]-b2[1])/2.)
+            edges=()
+        else:
+            left,right=o.get('base_left_px'),o.get('base_right_px')
         if isinstance(left,dict) and isinstance(right,dict):
             try:
                 a2=lens.ground(float(left['x']),float(left['y']))
@@ -221,6 +232,7 @@ def pixels_to_floor(points):
 
 @lru_cache(maxsize=12)
 def call_view(directory,version):
+    lens,projection=geometry()
     directory=Path(directory)
     camera=cv2.imread(str(directory/'clean.jpg'))
     if camera is None:return dict(available=False,note='Clean RGB unavailable for this historical call; no synthetic overlay shown.')
@@ -252,13 +264,32 @@ def call_view(directory,version):
     if (directory/'response.json').exists():
         response=json.loads((directory/'response.json').read_text())
         answer=json.loads(''.join(c.get('text','') for x in response.get('output',[]) for c in x.get('content',[]) if c.get('type')=='output_text'))
-        proposal=as_cm(answer.get('route_cm')) or pixels_to_floor(answer.get('route_pixels') or [])
+        # The route arrives as image-2 pixels now; older calls used metric
+        # waypoints, and older ones still used image-1 pixels. Accept all three
+        # so the whole history stays viewable.
+        drawn_px=answer.get('route_map_px')
+        if answer.get('route_px'):
+            proposal=pixels_to_floor(answer['route_px'])
+        elif drawn_px:
+            proposal=[]
+            for q in drawn_px:
+                try:proposal.append(list(projection.unplace(float(q['x']),float(q['y']))))
+                except (TypeError,ValueError,KeyError):continue
+        else:
+            proposal=as_cm(answer.get('route_cm')) or pixels_to_floor(answer.get('route_pixels') or [])
     # The metric contract answers with target_px, not contact_pixel. Reading
     # only the old name left every metric call with no target drawn at all --
     # the one mark that says what the route is for.
+    mapped=answer.get('target_map_px')
+    if isinstance(mapped,dict):
+        try:
+            g=projection.unplace(float(mapped['x']),float(mapped['y']))
+            goal_from_map=list(g)
+        except (ValueError,KeyError,TypeError):goal_from_map=None
+    else:goal_from_map=None
     target=answer.get('target_px') or answer.get('contact_pixel') \
            or (prior.get('target_was') or {}).get('contact_pixel')
-    goal_cm=metric.get('target_cm')
+    goal_cm=goal_from_map or metric.get('target_cm')
     if goal_cm is None and answer.get('visible') and isinstance(target,dict):
         # Project the pixel the model claimed, so the top-down view marks where
         # the robot now thinks the goal is rather than where it was told.

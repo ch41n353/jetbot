@@ -144,7 +144,18 @@ GOAL_ADJACENT_CM = 22.     # an obstacle this near the target is part of the
                            # a bottle among toys cannot be reached otherwise
 REPAIR_PASSES = 3          # nudging one waypoint clear can push it into the
                            # next obstacle, so the sweep is repeated
-REPAIR_MARGIN_CM = 6.      # a vertex placed exactly on the clearance circle
+REPAIR_MARGIN_CM = 10.     # how far past the clearance circle a repaired
+                           # vertex is pushed. The model aims for the floor of
+                           # the rule rather than the target -- measured
+                           # 2026-09-26 it drew a path 8.9 cm from a block with
+                           # 36 cm of clear floor unused beside it, and asking
+                           # for 25 cm in the prompt moved that only to 10.5.
+                           # Widening here is deterministic where the prompt is
+                           # not. Swept on one frame: 6 cm of margin yields
+                           # 14.6 cm of clearance, 10 yields 18.4, and beyond
+                           # that it falls off again as the repair fights
+                           # itself -- 22 gives 14.2. 10 is the peak.
+                           # a vertex placed exactly on the clearance circle
                            # still lets the two segments either side cut across
                            # it as a chord, so the push goes a little beyond
 POINT = {'type': 'object', 'additionalProperties': False,
@@ -161,9 +172,13 @@ VEC = {'type': 'object', 'additionalProperties': False,
 
 METRIC_SCHEMA = {
     'type': 'object', 'additionalProperties': False,
-    'required': ['goal', 'all_done', 'visible', 'target_px', 'route_cm',
+    'required': ['goal', 'all_done', 'visible', 'target_px', 'route_px',
                  'obstacles', 'turn_degrees', 'note', 'motion'],
     'properties': {
+        # Two motions only. A "turn" may carry a route, and when it does the
+        # controller turns and then drives it, rotating the route into the
+        # post-turn frame itself -- so the model draws in the picture it can
+        # see and never has to name a third thing.
         'motion': {'type': 'string', 'enum': ['follow', 'turn', 'hold']},
         'goal': {'type': 'string'},
         'all_done': {'type': 'boolean'},
@@ -175,7 +190,13 @@ METRIC_SCHEMA = {
         # and visible=false says so. Same reasoning as obstacles -- a fresh
         # sighting is a pixel, not a number that could have come from memory.
         'target_px': {'anyOf': [POINT, {'type': 'null'}]},
-        'route_cm': {'type': 'array', 'items': VEC},
+        # Everything the model returns is a point in IMAGE 1 -- the route
+        # included. That is the picture where a thing can be recognised: the
+        # ground-plane map smears anything upright into a streak, and marking
+        # positions on it put a wide panel 8 cm out and a leaning board off the
+        # frame entirely (2026-09-26). Drawing the path in the same picture as
+        # the obstacles and the target keeps one frame for the whole answer.
+        'route_px': {'type': 'array', 'items': POINT},
         'turn_degrees': {'anyOf': [{'type': 'number'}, {'type': 'null'}]},
         # radius_cm is the half-extent of the real object, not a constant the
         # controller invents. A 12.3 cm carton modelled as a 4 cm disc is what
@@ -187,6 +208,13 @@ METRIC_SCHEMA = {
         # measurement with the layer that has the calibration, and it means a
         # reported obstacle is evidence that the picture was looked at -- a
         # metric position can be echoed back from memory, a pixel cannot.
+        # Also in IMAGE 2: the left and right edges of where the object stands
+        # on the floor, as pixels of the map. The separation between them is
+        # its width, converted here. Upright things smear into radial streaks
+        # in that warp, but a streak begins at the object's real contact with
+        # the floor and runs away from the camera, so its near end is the point
+        # wanted -- and unlike a perspective base pixel it can never fail to
+        # project.
         'obstacles': {'type': 'array', 'items': {
             'type': 'object', 'additionalProperties': False,
             'required': ['label', 'base_left_px', 'base_right_px'],
@@ -962,16 +990,26 @@ def recognize(image, instruction, prior=None, timeout=20., paired=None, metric=F
         answer['_audit_path'] = str(audit.path)
     if answer.get('motion') == 'hold':
         raise PlannerHold(answer)
-    if answer.get('motion') == 'turn':
-        answer['route_pixels'] = []
+    # A turn that carries a route IS a turn_then_follow, whatever the model
+    # labelled it. Making the two agree here rather than insisting the model
+    # pick the right word: a bare turn throws the look away -- the robot
+    # rotates, the target swings out of frame, and the next look starts from
+    # nothing -- so any route offered alongside a turn is worth keeping.
+    turn = answer.get('turn_degrees')
+    usable_turn = (isinstance(turn, (int, float)) and not isinstance(turn, bool)
+                   and math.isfinite(turn) and 0 < abs(turn) <= 30)
+    has_route = bool(answer.get('route_pixels') or answer.get('route_px')
+                     or answer.get('route_cm'))
+    if answer.get('motion') in ('turn', 'turn_then_follow'):
+        answer['motion'] = 'turn'
+        if not (usable_turn and has_route):
+            # Nothing drivable attached, or the turn is too large to pair with
+            # a route. Empty it rather than failing the cycle -- this used to
+            # raise and discard the whole look.
+            answer['route_pixels'] = []
+            answer['route_px'] = []
     elif answer.get('motion') == 'follow':
         answer['turn_degrees'] = None
-    if answer.get('motion') == 'turn_then_follow':
-        turn = answer.get('turn_degrees')
-        if (not isinstance(turn, (int, float)) or isinstance(turn, bool)
-                or not math.isfinite(turn) or not 0 < abs(turn) <= 30
-                or not answer.get('route_pixels')):
-            raise Stop('turn_then_follow needs a nonempty route and a turn within 30 degrees')
     pixel = answer.get('contact_pixel')
     if answer.get('visible') and isinstance(pixel, dict):
         x, y = float(pixel['x']), float(pixel['y'])
