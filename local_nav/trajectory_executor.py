@@ -248,14 +248,45 @@ class ZonedFloorProjection:
         py = y0 + v / self.zoom
         self.x, self.y, self.visible = self._sample(robot, px, py)
 
-    def place(self, right, forward):
-        """Image pixel for a ground point, so overlays land where the warp put it."""
+    def place_exact(self, right, forward):
+        """Output pixel for a ground point, unclamped -- may fall off the image."""
         r = type(self).radius_px(math.hypot(right, forward))
         bearing = math.atan2(right, forward)
         px = 320. + r * math.sin(bearing)
         py = 320. - r * math.cos(bearing)
-        return (int(round((px - self.origin[0]) * self.zoom)),
-                int(round((py - self.origin[1]) * self.zoom)))
+        return ((px - self.origin[0]) * self.zoom,
+                (py - self.origin[1]) * self.zoom)
+
+    def on_map(self, right, forward):
+        """Whether a ground point lands inside the drawn image."""
+        x, y = self.place_exact(right, forward)
+        return 0. <= x < self.out_w and 0. <= y < self.out_h
+
+    def place(self, right, forward, inset=3.):
+        """Output pixel, pulled onto the border when the point is off the map.
+
+        Range is already clamped at the rim, but the rim is outside the crop
+        over most of its arc, so a target to the side or behind the robot used
+        to be drawn past the edge of the image and simply vanish. Sliding it
+        down its own bearing ray to the frame edge keeps the one thing that
+        survives at that range -- the direction -- and keeps the mark visible.
+        Use on_map() to tell a real position from a clamped one.
+        """
+        x, y = self.place_exact(right, forward)
+        low, high_x, high_y = inset, self.out_w - 1. - inset, self.out_h - 1. - inset
+        if low <= x <= high_x and low <= y <= high_y:
+            return (int(round(x)), int(round(y)))
+        hub_x, hub_y = self.place_exact(0., 0.)
+        dx, dy = x - hub_x, y - hub_y
+        scale = 1.
+        for delta, start, lo, hi in ((dx, hub_x, low, high_x),
+                                     (dy, hub_y, low, high_y)):
+            if delta > 1e-9:
+                scale = min(scale, (hi - start) / delta)
+            elif delta < -1e-9:
+                scale = min(scale, (lo - start) / delta)
+        scale = max(0., scale)
+        return (int(round(hub_x + dx * scale)), int(round(hub_y + dy * scale)))
 
     def apply(self, image):
         out = cv2.remap(image, self.x, self.y, cv2.INTER_LINEAR,

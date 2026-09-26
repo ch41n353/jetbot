@@ -67,9 +67,15 @@ def render_pair(camera,reference,proposal=(),target=None,previous=(),obstacles=(
             cv2.putText(rgb,'(above the horizon: no floor position)',
                         (q[0]+12,q[1]+20),0,.38,(60,220,220),1)
         else:
-            at=projection.place(x,z)
+            at=projection.place(x,z);here=projection.on_map(x,z)
             cv2.drawMarker(floor,at,(60,220,220),cv2.MARKER_STAR,18,2)
-            cv2.putText(floor,'TARGET %.0f,%.0f'%(x,z),(at[0]+10,at[1]+4),0,.4,(60,220,220),1)
+            # Off the drawn map the mark sits on the border, on the right
+            # bearing at a range the picture cannot show. Ring it and say so,
+            # rather than let a border mark read as a position.
+            if not here:cv2.circle(floor,at,13,(60,220,220),1)
+            cv2.putText(floor,'TARGET %.0f,%.0f%s'%(x,z,'' if here else ' (off map)'),
+                        (min(at[0]+10,floor.shape[1]-160),
+                         max(14,min(at[1]+4,floor.shape[0]-6))),0,.4,(60,220,220),1)
             target_cm=None        # already drawn from the pixel; no second star
     def gp(p):return projection.place(p[0],p[1])
     drawn=[]                      # answer obstacles, to dedupe the remembered ones
@@ -130,9 +136,13 @@ def render_pair(camera,reference,proposal=(),target=None,previous=(),obstacles=(
                 cv2.drawMarker(rgb,(int(q['x']),int(q['y'])),(80,80,255),
                                cv2.MARKER_TILTED_CROSS,10,2)
         c=gp(spot)
-        edge=projection.place(spot[0]+radius,spot[1])
-        cv2.circle(floor,c,max(3,int(math.hypot(edge[0]-c[0],edge[1]-c[1]))),(80,80,255),2)
-        cv2.putText(floor,o.get('label','obstacle')[:24],(c[0]+6,c[1]-6),0,.35,(100,100,255),1)
+        if projection.on_map(*spot):
+            edge=projection.place(spot[0]+radius,spot[1])
+            cv2.circle(floor,c,max(3,int(math.hypot(edge[0]-c[0],edge[1]-c[1]))),(80,80,255),2)
+        else:
+            cv2.drawMarker(floor,c,(80,80,255),cv2.MARKER_TRIANGLE_UP,11,2)
+        cv2.putText(floor,o.get('label','obstacle')[:24],
+                    (min(c[0]+6,floor.shape[1]-130),max(12,c[1]-6)),0,.35,(100,100,255),1)
         drawn.append(spot)
         if spot[1] > 0:
             try:q=lens.pixel(*spot)
