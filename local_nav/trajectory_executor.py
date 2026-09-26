@@ -128,10 +128,17 @@ def encode(image):
 
 
 class CameraFloorProjection:
-    """Calibrated RGB sampling onto a camera-centered 4 m floor square."""
-    def __init__(self, robot):
+    """Calibrated RGB sampling onto a camera-centered square of floor.
+
+    `scale` is pixels per centimetre, so the default 1.6 gives the 4 m square
+    the dashboard draws. A larger scale keeps the same 640x640 output and
+    shrinks the ground it covers -- 6.4 px/cm is a 1 m square, which spends the
+    whole image on the near floor where the projection is actually accurate
+    instead of on a horizon that warps every upright object into a streak.
+    """
+    def __init__(self, robot, scale=1.6):
         yy,xx=np.indices((640,640),dtype=np.float32)
-        right=(xx-320)/1.6;forward=(320-yy)/1.6
+        right=(xx-320)/scale;forward=(320-yy)/scale
         down=np.array([0.,math.cos(robot.pitch),math.sin(robot.pitch)])
         ahead=np.array([0.,0.,1.])-down*down[2];ahead/=np.linalg.norm(ahead)
         side=np.cross(down,ahead)
@@ -144,6 +151,80 @@ class CameraFloorProjection:
     def apply(self,image):
         out=cv2.remap(image,self.x,self.y,cv2.INTER_LINEAR,borderMode=cv2.BORDER_CONSTANT)
         out[~self.visible]=(28,28,28)
+        return out
+
+
+class ZonedFloorProjection:
+    """Ground plane on a radial map with two linear scales.
+
+    A single scale cannot serve both jobs. Linear over 4 m and the near floor
+    -- the only place a ground-plane warp is accurate, and the only distance
+    that decides whether the robot may move -- is a few dozen pixels. Linear
+    over 1 m and the world stops at the frame edge. A smoothly compressing
+    scale fixes both and creates a third problem: nothing on the picture has a
+    fixed size, so no distance can be judged without inverting the mapping.
+
+    Two linear zones keep the compression but make it legible. Inside
+    INNER_CM the scale is constant; outside it, constant at half. Past
+    OUTER_CM everything is drawn on the rim, so a far target still has a
+    bearing without claiming a range the projection cannot support.
+
+    Measured 2026-09-25 on one frame with a block 15 cm ahead, 11 calls each
+    at effort=none: this returned the correct "cannot drive, turn" 8 times,
+    against 3 for a 1 m square at 6.4 px/cm and 1 for a smooth r = R*d/(d+k).
+    """
+    INNER_CM, OUTER_CM, EDGE_PX = 100., 200., 318.
+    INNER_PX_PER_CM = EDGE_PX / (INNER_CM + (OUTER_CM - INNER_CM) / 2.)
+    OUTER_PX_PER_CM = INNER_PX_PER_CM / 2.
+    INNER_EDGE_PX = INNER_CM * INNER_PX_PER_CM
+
+    @classmethod
+    def radius_px(cls, range_cm):
+        if range_cm <= cls.INNER_CM:
+            return range_cm * cls.INNER_PX_PER_CM
+        if range_cm <= cls.OUTER_CM:
+            return cls.INNER_EDGE_PX + (range_cm - cls.INNER_CM) * cls.OUTER_PX_PER_CM
+        return cls.EDGE_PX
+
+    def __init__(self, robot):
+        cls = type(self)
+        yy, xx = np.indices((640, 640), dtype=np.float32)
+        dx, dy = xx - 320., 320. - yy
+        rho = np.hypot(dx, dy)
+        inside = rho < cls.EDGE_PX
+        clipped = np.clip(rho, 0., cls.EDGE_PX)
+        span = np.where(clipped <= cls.INNER_EDGE_PX,
+                        clipped / cls.INNER_PX_PER_CM,
+                        cls.INNER_CM + (clipped - cls.INNER_EDGE_PX) / cls.OUTER_PX_PER_CM)
+        bearing = np.arctan2(dx, dy)
+        right, forward = span * np.sin(bearing), span * np.cos(bearing)
+        down = np.array([0., math.cos(robot.pitch), math.sin(robot.pitch)])
+        ahead = np.array([0., 0., 1.]) - down * down[2]
+        ahead /= np.linalg.norm(ahead)
+        side = np.cross(down, ahead)
+        rays = (right[..., None] * side + forward[..., None] * ahead
+                + robot.height * down)
+        pixels, _ = cv2.fisheye.projectPoints(
+            rays.reshape(1, -1, 3).astype(np.float64),
+            np.zeros(3), np.zeros(3), robot.K, robot.D)
+        pixels = pixels.reshape(640, 640, 2)
+        self.x = pixels[:, :, 0].astype(np.float32)
+        self.y = pixels[:, :, 1].astype(np.float32)
+        self.visible = (inside & (forward > 0) & (rays[:, :, 2] > 0)
+                        & (self.x >= 0) & (self.x <= 639)
+                        & (self.y >= 0) & (self.y <= 479))
+
+    def place(self, right, forward):
+        """Image pixel for a ground point, so overlays land where the warp put it."""
+        r = type(self).radius_px(math.hypot(right, forward))
+        bearing = math.atan2(right, forward)
+        return (int(round(320. + r * math.sin(bearing))),
+                int(round(320. - r * math.cos(bearing))))
+
+    def apply(self, image):
+        out = cv2.remap(image, self.x, self.y, cv2.INTER_LINEAR,
+                        borderMode=cv2.BORDER_CONSTANT)
+        out[~self.visible] = (28, 28, 28)
         return out
 
 

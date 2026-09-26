@@ -10,20 +10,25 @@ import numpy as np
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'local_nav'))
 import fetch
 from evaluate_gpt_routes import Lens
-from trajectory_executor import CameraFloorProjection, encode
+from trajectory_executor import ZonedFloorProjection, encode
 
 @lru_cache(maxsize=1)
 def geometry():
     lens=Lens()
     lens.pixel=lambda x,z:fetch.Robot.pixel(lens,x,z)
-    return lens,CameraFloorProjection(lens)
+    return lens,ZonedFloorProjection(lens)
 
 def render_pair(camera,reference,proposal=(),target=None,previous=(),obstacles=(),remembered=(),target_cm=None,reference_weight=1.):
     lens,projection=geometry()
     rgb=camera.copy();floor=projection.apply(camera)
-    for v in range(0,640,40):
-        cv2.line(floor,(v,0),(v,639),(65,65,65),1)
-        cv2.line(floor,(0,v),(639,v),(65,65,65),1)
+    Z=ZonedFloorProjection
+    for degrees in range(-90,91,15):
+        a=math.radians(degrees)
+        cv2.line(floor,(320,320),(int(320+Z.EDGE_PX*math.sin(a)),
+                                  int(320-Z.EDGE_PX*math.cos(a))),(60,60,60),1)
+    for cm in (20,40,60,80,125,150,175):
+        cv2.circle(floor,(320,320),int(round(Z.radius_px(cm))),(86,86,86),1)
+    cv2.circle(floor,(320,320),int(round(Z.INNER_EDGE_PX)),(90,200,255),2)
     # A route is a list of places to go, so the leg the robot actually drives
     # first -- from where it stands to waypoint one -- is not in it. Drawing
     # only the supplied points renders a two-point route as one short segment
@@ -36,8 +41,7 @@ def render_pair(camera,reference,proposal=(),target=None,previous=(),obstacles=(
     reference,previous,proposal=from_robot(reference),from_robot(previous),from_robot(proposal)
     for points,color,width in [(reference,tuple(int(v*(.25+.75*reference_weight)) for v in (220,100,255)),9),(previous,(0,160,255),6),(proposal,(255,210,90),3)]:
         for a,b in zip(points,points[1:]):
-            cv2.line(floor,(round(320+a[0]*1.6),round(320-a[1]*1.6)),
-                     (round(320+b[0]*1.6),round(320-b[1]*1.6)),color,width)
+            cv2.line(floor,projection.place(*a),projection.place(*b),color,width)
             last=None
             for t in np.linspace(0,1,min(800,max(2,int(math.hypot(b[0]-a[0],b[1]-a[1])*2)))):
                 p=[a[i]+t*(b[i]-a[i]) for i in range(2)]
@@ -61,11 +65,11 @@ def render_pair(camera,reference,proposal=(),target=None,previous=(),obstacles=(
             cv2.putText(rgb,'(above the horizon: no floor position)',
                         (q[0]+12,q[1]+20),0,.38,(60,220,220),1)
         else:
-            at=(int(round(320+x*1.6)),int(round(320-z*1.6)))
+            at=projection.place(x,z)
             cv2.drawMarker(floor,at,(60,220,220),cv2.MARKER_STAR,18,2)
             cv2.putText(floor,'TARGET %.0f,%.0f'%(x,z),(at[0]+10,at[1]+4),0,.4,(60,220,220),1)
             target_cm=None        # already drawn from the pixel; no second star
-    def gp(p):return (int(round(320+p[0]*1.6)),int(round(320-p[1]*1.6)))
+    def gp(p):return projection.place(p[0],p[1])
     drawn=[]                      # answer obstacles, to dedupe the remembered ones
     dropped=[]                    # reported past the range the planner trusts
     unplaced=[]                   # base pixel above the horizon: no floor point
@@ -124,7 +128,8 @@ def render_pair(camera,reference,proposal=(),target=None,previous=(),obstacles=(
                 cv2.drawMarker(rgb,(int(q['x']),int(q['y'])),(80,80,255),
                                cv2.MARKER_TILTED_CROSS,10,2)
         c=gp(spot)
-        cv2.circle(floor,c,int(radius*1.6),(80,80,255),2)
+        edge=projection.place(spot[0]+radius,spot[1])
+        cv2.circle(floor,c,max(3,int(math.hypot(edge[0]-c[0],edge[1]-c[1]))),(80,80,255),2)
         cv2.putText(floor,o.get('label','obstacle')[:24],(c[0]+6,c[1]-6),0,.35,(100,100,255),1)
         drawn.append(spot)
         if spot[1] > 0:
@@ -147,14 +152,17 @@ def render_pair(camera,reference,proposal=(),target=None,previous=(),obstacles=(
         q=lens.pixel(*p) if p[1]>0 else None
         if q and 0<=q[0]<640 and 0<=q[1]<480:continue
         at=gp(p)
-        radius=int(max(6,min(fetch.OBSTACLE_MAX_RADIUS_CM*1.6,
-                            float(o.get('radius_cm') or o.get('uncertainty_cm') or 5)*1.6)))
+        widest=float(o.get('radius_cm') or o.get('uncertainty_cm') or 5)
+        widest=min(widest,fetch.OBSTACLE_MAX_RADIUS_CM)
+        rim=projection.place(p[0]+widest,p[1])
+        radius=int(max(6,math.hypot(rim[0]-at[0],rim[1]-at[1])))
         cv2.circle(floor,at,radius,(180,180,180),1)
         cv2.drawMarker(floor,at,(180,180,180),cv2.MARKER_TILTED_CROSS,12,2)
         cv2.putText(floor,o.get('label','remembered')[:24],at,0,.35,(200,200,200),1)
     if target_cm is not None:cv2.drawMarker(floor,gp(target_cm),(60,220,220),cv2.MARKER_STAR,22,2)
     cv2.arrowedLine(floor,(320,320),(320,296),(0,220,255),3)
-    cv2.putText(floor,'4 m x 4 m | 25 cm grid | camera at center',(8,20),0,.45,(255,255,255),1)
+    cv2.putText(floor,'radial | blue ring 100 cm, scale halves outside it '
+                '(as sent to GPT)',(8,20),0,.42,(255,255,255),1)
     if dropped:
         cv2.putText(floor,'%d obstacle(s) past %.0f cm: position uncertain'
                     %(len(dropped),fetch.ROUTE_RANGE_CM),(8,636),0,.4,(140,140,255),1)

@@ -3,7 +3,7 @@ import math
 import cv2
 import numpy as np
 import fetch
-from trajectory_executor import CameraFloorProjection,camera_path
+from trajectory_executor import CameraFloorProjection,ZonedFloorProjection,camera_path
 
 INSTRUCTIONS='''
 GPT DRIVE PAIRED OBSERVATION CONTRACT (overrides conflicting single-image rules):
@@ -287,15 +287,34 @@ def observation(lens,image,memory=None,pose=(0,0,0),reference=None,
         target_requires_fresh_rgb=goal_in_fov,
         reference_distance_cm=round(distance,1),
         reference_turn_deg=round(rotation,1))
-    floor=CameraFloorProjection(lens).apply(image)
-    for v in range(0,640,40):
-        cv2.line(floor,(v,0),(v,639),(65,65,65),1);cv2.line(floor,(0,v),(639,v),(65,65,65),1)
-    # The robot's own footprint, to scale, is the one mark left on the map: it
-    # defines the grid's scale visually and cannot be mistaken for a belief
-    # about the world. The heading arrow is gone -- it was the same yellow as
-    # the target star and read as a second goal.
-    cv2.rectangle(floor,(310,320),(330,344),(220,220,220),1)
-    cv2.putText(floor,'4m x 4m | 25cm grid | robot at centre facing up | DARK IS NOT KNOWN FREE',
-                (8,20),0,.42,(230,230,230),1)
+    zones=ZonedFloorProjection(lens);floor=zones.apply(image)
+    Z=ZonedFloorProjection
+    # Tint everything past the boundary, so which scale you are reading is
+    # visible before any label is read. A piecewise scale only works if the
+    # break cannot be missed.
+    shade=floor.copy()
+    cv2.circle(shade,(320,320),int(Z.EDGE_PX),(70,55,55),-1)
+    cv2.circle(shade,(320,320),int(Z.INNER_EDGE_PX),(0,0,0),-1)
+    floor[:]=cv2.addWeighted(floor,1.,shade,.22,0)
+    for degrees in range(-90,91,15):                 # bearing spokes
+        a=math.radians(degrees)
+        cv2.line(floor,(320,320),(int(320+Z.EDGE_PX*math.sin(a)),
+                                  int(320-Z.EDGE_PX*math.cos(a))),(60,60,60),1)
+    for cm,tone in [(20,0),(40,0),(60,0),(80,0),(125,1),(150,1),(175,1)]:
+        r=int(round(Z.radius_px(cm)))
+        cv2.circle(floor,(320,320),r,(86,74,74) if tone else (86,86,86),1)
+        cv2.putText(floor,'%d'%cm,(322,320-r+13),0,.36,
+                    (150,135,135) if tone else (150,150,150),1)
+    r=int(round(Z.INNER_EDGE_PX))
+    cv2.circle(floor,(320,320),r,(90,200,255),2)
+    cv2.putText(floor,'100cm  SCALE HALVES OUTSIDE THIS RING',(322,320-r+15),0,.40,(90,200,255),1)
+    cv2.circle(floor,(320,320),int(round(Z.EDGE_PX)),(120,120,160),1)
+    cv2.putText(floor,'200cm and beyond',(322,320-int(round(Z.EDGE_PX))+15),0,.38,(140,140,180),1)
+    body=[zones.place(x,z) for x,z in ((-6.,0.),(6.,0.),(6.,-15.),(-6.,-15.))]
+    cv2.polylines(floor,[np.array(body,np.int32)],True,(220,220,220),1)
+    cv2.putText(floor,'RADIAL MAP | rings = range | spokes = bearing, every 15 deg',
+                (8,18),0,.40,(230,230,230),1)
+    cv2.putText(floor,'inside blue ring %.1f px/cm | outside HALF that (tinted) | DARK IS NOT KNOWN FREE'
+                %Z.INNER_PX_PER_CM,(8,36),0,.38,(230,230,230),1)
     return image.copy(),floor,context
 
