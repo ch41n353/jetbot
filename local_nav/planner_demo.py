@@ -1802,6 +1802,7 @@ class Bench(object):
             # from the left and the stub is a couple of points aimed straight
             # ahead, so the next look has nothing of the curve to continue.
             if metric:
+                route, dropped_unsafe = self.trim_to_own_obstacles(route, obstacles)
                 route = self.face_the_target(route, goal, obstacles)
             planned = list(route)
             if memory:
@@ -1828,7 +1829,16 @@ class Bench(object):
                 if remembered_goal is not None:remembered_goal=fetch.rebase([remembered_goal],turn_pose)[0]
                 pose = [0., 0., 0.]  # memory below is now in the post-turn frame
 
-            if not route and memory:
+            if not route and memory and answer.get('motion') != 'turn':
+                # A turn is an answer, not an absence of one. This fallback was
+                # written for a call that came back with nothing usable, but an
+                # empty route is exactly what motion="turn" looks like, so it
+                # refilled the route from memory and the mission drove on --
+                # the turn branch below never saw an empty route to act on.
+                # Measured 2026-09-25: a call asked to turn 10 degrees off a
+                # block 14.5 cm dead ahead and the robot drove the remembered
+                # route straight past it instead.
+                #
                 # It answered with nothing usable. The remembered route is still
                 # a description of this room, so carry it rather than stop.
                 route = [spot for spot in fetch.rebase(memory['route'], pose)
@@ -2165,6 +2175,53 @@ class Bench(object):
         self.say('')
         self.say('mission %s' % ('complete' if reached else 'ended'))
         self.publish_snapshot('stopped')
+
+    def trim_to_own_obstacles(self, route, obstacles):
+        """Cut a route where it runs into something the model itself reported.
+
+        The model is told to keep 12 cm from every obstacle it lists, and it
+        does not always do it: measured 2026-09-25, a route came back with its
+        second waypoint 0.5 cm from a yellow block named in the same answer.
+        Everything downstream then behaved correctly and uselessly -- widening
+        pushed the route around the block until the first leg was 1.1 cm, the
+        executor drove it, and the escape turn found nothing blocking straight
+        ahead, because the obstruction was on the route rather than in front of
+        the robot. The mission stopped with every component having done its job.
+
+        Checking the answer against its own obstacle list costs nothing and
+        needs no cooperation: keep the part of the route that can actually be
+        driven and drop the rest, so what reaches the wheels is a short honest
+        route rather than a long one that collapses.
+        """
+        if not route or not obstacles:
+            return route, 0
+        kept, start = [], (0., 0.)
+        for point in route:
+            dx, dz = point[0] - start[0], point[1] - start[1]
+            span = math.hypot(dx, dz)
+            if span < 1e-6:
+                continue
+            room, blame = fetch.clear_distance(
+                obstacles, start, math.degrees(math.atan2(dx, dz)), span)
+            if room < span:
+                # Keep the drivable part of the blocked leg rather than throwing
+                # the leg away. Discarding it whole left nothing to drive at all
+                # when the very first leg was long and the obstacle was most of
+                # the way along it -- 56 clear centimetres binned because the
+                # 80 cm leg ended in a block. clear_distance has already taken
+                # off the obstacle's extent and the keep-back margin, so `room`
+                # is a distance the wheels can have.
+                if room >= fetch.ROUTE_MIN_LEG_CM:
+                    kept.append((start[0] + dx / span * room,
+                                 start[1] + dz / span * room))
+                self.say('  route runs into "%s" after %.0f of %.0f cm; '
+                         'keeping %d of %d waypoint(s)'
+                         % (blame or 'something', room, span,
+                            len(kept), len(route)))
+                return kept, len(route) - len(kept)
+            kept.append(point)
+            start = point
+        return kept, 0
 
     def face_the_target(self, route, goal, obstacles):
         """Make the last leg point at the goal, so the robot stops looking at it.

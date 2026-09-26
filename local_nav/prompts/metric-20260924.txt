@@ -57,13 +57,59 @@ WHAT TO RETURN
 
 Decide in this order. Each step is checked before the ones below it.
 
-1.  CLEARANCE. Every point of your route, and every segment between points,
-    stays at least 12 cm from the centre of every obstacle. Obstacle positions
-    carry error, so this is a floor and not a target; leave more where the floor
-    allows. The route is the path of the robot's centre, and the robot is 12 cm
-    wide, so a route 12 cm from an obstacle centre puts its edge 6 cm away. A
-    route that breaks this is refused by the controller and the robot does not
-    move, so returning one achieves nothing.
+1.  CLEARANCE. 12 cm from the centre of every obstacle, to every part of your
+    route. This is the rule the others are built on top of.
+
+    It is a distance from a LINE, not from your waypoints. The robot travels
+    the straight segments between the points you give, so an obstacle can be
+    far from every waypoint and still be run over by the path between two of
+    them. For each obstacle and each segment, the distance that matters is from
+    the obstacle's centre to the NEAREST POINT ON THAT SEGMENT, which is
+    usually somewhere in the middle of it, not at either end.
+
+    Do this before you answer. Take the obstacle nearest your route. Find the
+    segment it is closest to. Measure from its centre to the nearest point on
+    that segment. If that is under 12 cm, the route is wrong: move the waypoint
+    on either side of the crossing, or add one that carries the path around,
+    and measure again. Repeat until the closest obstacle in the whole scene is
+    at least 12 cm from every part of the route.
+
+    In note, name the closest obstacle and which side you pass it -- left or
+    right. Do not state a distance. Asked for the figure on 2026-09-25, six
+    calls answered "about 16 cm", "about 18 cm", "about 17 cm" and "about
+    14 cm" for routes that measured -2.7, -2.3, -1.2 and -2.8 cm: the routes
+    went through the block every time. A number that was not measured is worse
+    than no number, because it reads as a check that was carried out. Which
+    side you passed is something you actually chose, so say that instead.
+
+    Why 12 and not less: the route is the path of the robot's CENTRE and the
+    robot is 12 cm wide, so 12 cm from a centre leaves only 6 cm of air at the
+    edge, and the obstacle's own position carries error on top of that. 12 is
+    the floor. Leave more wherever the floor allows -- there is no prize for
+    passing close.
+
+    Measured 2026-09-25, with this rule stated but no procedure given: three
+    calls on one scene reported 4 to 7 obstacles each and returned routes
+    passing 3.9, 5.2 and 9.0 cm from them. The obstacles were seen. They were
+    listed. The routes went over them anyway.
+
+    WHEN NO ROUTE CAN CLEAR IT, TURN. Something close and near your heading
+    cannot be driven around, because the first metre of any forward route runs
+    past it: an obstacle 15 cm ahead is inside 12 cm of every path that goes
+    forward at all. Do not return the least-bad route in that case -- it will
+    be refused, and the robot will not move.
+
+    Return motion="turn" instead, with turn_degrees the rotation that puts the
+    obstacle off your heading, positive to the right. Turn toward the side with
+    more open floor. The robot pivots about a point 7.3 cm behind the camera
+    and sweeps 9.6 cm, so this is safe whenever nothing is closer than about
+    10 cm, and it costs no ground. After turning, the same obstacle is off to
+    one side and a forward route exists. Never ask for reverse; it is not a
+    motion this robot has.
+
+    The test is simple: if the closest obstacle is nearer than about 25 cm and
+    within roughly 30 degrees of straight ahead, no forward route satisfies
+    this rule. Turn.
 
 2.  ARRIVAL. Arrived means two things at once: within standoff_cm of the target
     AND facing it. Distance alone is not arrival.

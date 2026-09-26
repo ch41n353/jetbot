@@ -51,11 +51,20 @@ def render_pair(camera,reference,proposal=(),target=None,previous=(),obstacles=(
         q=(int(target['x']),int(target['y']))
         cv2.drawMarker(rgb,q,(60,220,220),cv2.MARKER_STAR,22,2)
         cv2.putText(rgb,'TARGET',(q[0]+12,q[1]+4),0,.45,(60,220,220),1)
-        x,z=lens.ground(float(target['x']),float(target['y']))
-        at=(int(round(320+x*1.6)),int(round(320-z*1.6)))
-        cv2.drawMarker(floor,at,(60,220,220),cv2.MARKER_STAR,18,2)
-        cv2.putText(floor,'TARGET %.0f,%.0f'%(x,z),(at[0]+10,at[1]+4),0,.4,(60,220,220),1)
-        target_cm=None            # already drawn from the pixel; no second star
+        # The pixel is always drawable; its floor position is not. A target
+        # reported at or above the horizon has no ground intersection, and
+        # projecting it unguarded took the whole view down -- 9 of 252 saved
+        # calls rendered nothing at all because of this one line.
+        try:
+            x,z=lens.ground(float(target['x']),float(target['y']))
+        except (fetch.Stop,ValueError,TypeError):
+            cv2.putText(rgb,'(above the horizon: no floor position)',
+                        (q[0]+12,q[1]+20),0,.38,(60,220,220),1)
+        else:
+            at=(int(round(320+x*1.6)),int(round(320-z*1.6)))
+            cv2.drawMarker(floor,at,(60,220,220),cv2.MARKER_STAR,18,2)
+            cv2.putText(floor,'TARGET %.0f,%.0f'%(x,z),(at[0]+10,at[1]+4),0,.4,(60,220,220),1)
+            target_cm=None        # already drawn from the pixel; no second star
     def gp(p):return (int(round(320+p[0]*1.6)),int(round(320-p[1]*1.6)))
     drawn=[]                      # answer obstacles, to dedupe the remembered ones
     dropped=[]                    # reported past the range the planner trusts
@@ -155,9 +164,13 @@ def render_pair(camera,reference,proposal=(),target=None,previous=(),obstacles=(
     return dict(camera=encode(rgb),floor=encode(floor))
 
 def pixels_to_floor(points):
+    # Historical calls answered in pixels, and any one of them can sit above
+    # the horizon. Drop those rather than raise: a route missing a point still
+    # renders, where an exception loses the whole view.
     lens,_=geometry();result=[]
-    for p in points:
-        result.append(list(lens.ground(float(p['x']),float(p['y']))))
+    for p in points or []:
+        try:result.append(list(lens.ground(float(p['x']),float(p['y']))))
+        except (fetch.Stop,ValueError,TypeError,KeyError):continue
     return result
 
 @lru_cache(maxsize=12)
