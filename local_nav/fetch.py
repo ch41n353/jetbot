@@ -87,7 +87,9 @@ SPEED_CM_S = 7.5           # measured on carpet at 0.16 duty: 17.9 cm in 2.4 s.
 ROUTE_RANGE_CM = 140.      # past this a pixel of contact error is worth too much
 ROUTE_MAX_CM = 200.
 ROUTE_MIN_LEG_CM = 4.
-INITIAL_TURN_LIMIT_DEG = 20. # planner routes must begin near the current heading
+INITIAL_TURN_LIMIT_DEG = None # retired 2026-09-26: the executor turns toward each
+                           # waypoint, so a sharp first leg is a rotation, not a
+                           # collision. Kept as a name because callers pass it.
 LEAD_POINT_CM = 10.        # a first waypoint nearer than this steers nothing
 CORRIDOR_HALF_CM = 6.      # physical half-width of the 12 cm chassis
 OBSTACLE_RADIUS_CM = 6.    # half-extent assumed for an obstacle given as ONE contact
@@ -1938,15 +1940,12 @@ def follow(robot, odometer, route, record, obstacles=(), complete=True,
             # points and async rebasing. A token point under the lens must not
             # license a sharp turn on the next point. Do not clamp or skip the
             # offending point: that would invent an unchecked connecting path.
-            if (initial_turn_limit_deg is not None and driven < LEAD_POINT_CM
-                    and (ahead <= 0. or
-                         abs(math.degrees(math.atan2(across, ahead))) > initial_turn_limit_deg
-                         or abs(bearing) > initial_turn_limit_deg)):
-                robot.hold(0., 0.)
-                record('route_start_rejected', waypoint=index,
-                       bearing_deg=round(bearing, 1),
-                       limit_deg=initial_turn_limit_deg, driven_cm=round(driven, 1))
-                return pose
+            # No start-bearing rejection. The executor aims at each waypoint
+            # before driving to it, so a route that begins off the current
+            # heading costs a rotation in place, not an arc into something.
+            # The 20 degree limit predated that and was throwing out routes
+            # this controller can drive -- and because the planner then fell
+            # back to a bare turn, the robot rotated instead of moving at all.
             if abs(bearing) > HEADING_TOLERANCE_DEG and leg < orbit:
                 # Turning swings the lens through a circle of `orbit` cm about
                 # the pivot. A waypoint nearer than that cannot be faced: every

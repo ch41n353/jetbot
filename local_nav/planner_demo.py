@@ -1152,22 +1152,23 @@ class Bench(object):
         """Execute one bounded planned turn, then rebase its paired floor route."""
         asked = answer.get('turn_degrees')
         if (not isinstance(asked, (int, float)) or isinstance(asked, bool)
-                or not math.isfinite(asked) or not 0 < abs(asked) <= MISSION_TURN_STEP_DEG
-                or not route):
-            raise fetch.Stop('combined plan needs a route and a turn within 30 degrees')
+                or not math.isfinite(asked) or asked == 0 or not route):
+            raise fetch.Stop('combined plan needs a route and a turn angle')
         # The requested angle belongs to the capture heading, not reply arrival.
         remaining = (asked - drift_heading + 180.) % 360. - 180.
-        if abs(remaining) > MISSION_TURN_STEP_DEG:
-            raise fetch.Stop('combined turn became stale; needs a fresh plan')
         if self.abort.is_set():
             raise fetch.Stop('combined plan cancelled')
         shift = fetch.pivot_shift(remaining)
         predicted = fetch.rebase(route, [shift[0], shift[1], remaining])
+        # No post-turn heading check. It rejected sound plans: on 2026-09-26 a
+        # -18 degree turn with a three-point route to a box at 94 cm was thrown
+        # out because the first waypoint -- a 15 cm stub -- sat 34 degrees off
+        # the new heading, while waypoints 2 and 3 were at 22 and 2 degrees.
+        # The executor aims at each waypoint as it goes, so a sharp first leg
+        # costs a rotation, not a collision.
         useful = next((p for p in predicted if math.hypot(*p) >= fetch.ROUTE_MIN_LEG_CM), None)
-        if (useful is None or useful[1] <= 0 or
-                abs(math.degrees(math.atan2(*useful))) > fetch.INITIAL_TURN_LIMIT_DEG or
-                abs(fetch.aim_turn([0., 0., 0.], useful)) > fetch.INITIAL_TURN_LIMIT_DEG):
-            raise fetch.Stop('combined route does not start near the post-turn heading')
+        if useful is None:
+            raise fetch.Stop('combined route has no leg long enough to drive')
         self.live_route = list(route)
         self.live_obstacles = list(obstacles)
         self.publish_snapshot('turn_then_follow', route)
@@ -1287,7 +1288,7 @@ class Bench(object):
                     from gpt_audit import plan_event
                     plan_event(answer, 'applied', mode='flow', sequence=newest['seq'])
                     points, found, spot, moved = build(answer, newest['shot'])
-                    if answer.get('motion') == 'turn' and points:
+                    if answer.get('motion') in ('turn', 'turn_then_follow') and points:
                         drift = self.since_pose(newest['shot'], world)
                         try:
                             points, found, spot, turn_pose = self.turn_then_follow_plan(
@@ -1628,8 +1629,8 @@ class Bench(object):
                                       # comes back with a plan of its own
         spins = 0.                    # degrees turned since anything was driven
         facing_turns = 0              # rotations spent aligning on arrival
-        turn_way = 0.                 # committed rotation direction, if any
-        turned_since_drive_reset = True   # cleared on a turn, set by real motion
+        turn_way = 0.                 # last rotation direction, if any
+        reversals = 0                 # direction changes since anything was driven
         once = seconds is None
         self.lines = []
         if once:
@@ -1838,7 +1839,7 @@ class Bench(object):
             # A turn carrying a route: turn first, then drive what was drawn.
             # There is no separate motion name -- the route's presence is what
             # says the robot has somewhere to go once it has turned.
-            if answer.get('motion') == 'turn' and route:
+            if answer.get('motion') in ('turn', 'turn_then_follow') and route:
                 try:
                     route, obstacles, goal, turn_pose = self.turn_then_follow_plan(
                         answer, route, obstacles, goal)
@@ -1920,12 +1921,15 @@ class Bench(object):
             # to drive around: at 10 cm an obstacle blocks every heading until
             # it is nearly behind, so no route exists to draw.
             asked_turn = answer.get('turn_degrees')
-            if (not (answer.get('motion') == 'turn' and route)
+            if (not (answer.get('motion') in ('turn', 'turn_then_follow') and route)
                     and isinstance(asked_turn, (int, float)) and math.isfinite(asked_turn)
                     and abs(asked_turn) >= MISSION_TURN_MIN_DEG
                     and (goal is None or math.hypot(*goal) > MISSION_STANDOFF_CM)):
-                asked_turn = max(-MISSION_TURN_MAX_DEG,
-                                 min(MISSION_TURN_MAX_DEG, float(asked_turn)))
+                # The angle the model asked for is the angle driven. It chose
+                # it by looking at the scene; slicing it into 30 degree steps
+                # made every turn take several looks and invited the model to
+                # change its mind mid-manoeuvre.
+                asked_turn = float(asked_turn)
                 # Each look is judged on its own, so the model can ask to turn
                 # back the way it just came without knowing it. Measured
                 # 2026-09-26 reaching for a tissue box: turn left to face the
@@ -1935,16 +1939,24 @@ class Bench(object):
                 # committed direction until something is actually driven --
                 # going the long way round a block reaches the target, and
                 # alternating never does.
-                if (turn_way and asked_turn * turn_way < 0
-                        and not turned_since_drive_reset):
-                    self.say('  it now asks %+.0f deg, reversing the last turn; '
-                             'holding %s until something moves'
-                             % (asked_turn, 'right' if turn_way > 0 else 'left'))
-                    asked_turn = math.copysign(abs(asked_turn), turn_way)
+                if turn_way and asked_turn * turn_way < 0:
+                    # A reversal without progress. Count it, but do NOT invert
+                    # it: the side was chosen by looking at the scene, and the
+                    # note explains the choice in those terms -- "turn right
+                    # and pass the yellow block on its right". Flipping the
+                    # sign keeps the angle and discards the reasoning, so the
+                    # robot executes a manoeuvre nobody planned. Measured
+                    # 2026-09-26: two right turns were inverted and the robot
+                    # rotated 105 degrees left while the model asked for right.
+                    reversals += 1
+                    self.say('  it now asks %+.0f deg, reversing the last turn '
+                             '(%d without driving)' % (asked_turn, reversals))
+                    if reversals >= 3:
+                        self.say('three direction reversals with no ground '
+                                 'covered; stopping rather than spinning')
+                        break
                 turn_way = math.copysign(1., asked_turn)
-                turned_since_drive_reset = False
-                step = math.copysign(min(abs(asked_turn), MISSION_TURN_STEP_DEG),
-                                     asked_turn)
+                step = asked_turn
                 spins += abs(step)
                 if spins > MISSION_TURN_BUDGET_DEG:
                     self.say('  %.0f deg of turning without driving; stopping'
@@ -2154,7 +2166,7 @@ class Bench(object):
                 # Real ground covered: the robot is somewhere new, so a request
                 # to turn the other way is no longer a contradiction.
                 turn_way = 0.
-                turned_since_drive_reset = True
+                reversals = 0
             if legs[0] == 0 or moved[0] < MISSION_MIN_PROGRESS_CM:
                 if goal is not None and math.hypot(*goal) <= MISSION_STANDOFF_CM + 15.:
                     # Arrived on distance. Arriving also means facing it: the
